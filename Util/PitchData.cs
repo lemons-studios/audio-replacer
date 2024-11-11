@@ -1,6 +1,6 @@
 ﻿namespace Audio_Replacer_2.Util
 {
-    public static class PitchData
+    public static class PitchData // Evil pitch data
     {
         public static string pitchJsonData = @"
 [

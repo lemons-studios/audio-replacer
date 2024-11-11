@@ -9,9 +9,10 @@ namespace AudioReplacer2.Util
 {
     public class FileInteractionUtils
     {
-        private string projectPath, currentFile, truncatedCurrentFile, currentOutFile, currentFileName, directoryName;
+        private string currentFile, truncatedCurrentFile, currentOutFile, currentFileName, directoryName;
         private readonly string outputFolderPath = $"{Environment.GetFolderPath(Environment.SpecialFolder.UserProfile)}\\AudioReplacer2-Out";
-        private readonly string setupIgnore;
+        private readonly string setupIgnore, projectPath;
+
         public FileInteractionUtils(string path)
         {
             projectPath = path;
@@ -55,7 +56,6 @@ namespace AudioReplacer2.Util
                 {
                     CreateDirectory($"{outputFolderPath}\\{subdirectoryNames[i]}");
                 }
-
                 File.Create(setupIgnore);
             }
         }
@@ -85,7 +85,6 @@ namespace AudioReplacer2.Util
                 truncatedDir.Append(splitDir[i]);
                 if (i != 0) truncatedDir.Append('\\');
             }
-
             return truncatedDir.ToString();
         }
 
@@ -99,16 +98,6 @@ namespace AudioReplacer2.Util
         {
             File.Delete(currentFile);
             SetCurrentFile();
-        }
-
-        public async Task<StorageFolder> GetDirectoryAsStorageFolder()
-        {
-            return await StorageFolder.GetFolderFromPathAsync($"{outputFolderPath}\\{directoryName}");
-        }
-
-        public string GetCurrentFile(bool truncated = true)
-        {
-            return truncated ? truncatedCurrentFile : currentFile;
         }
 
         public int GetFilesRemaining()
@@ -142,6 +131,16 @@ namespace AudioReplacer2.Util
         public string GetOutFilePath()
         {
             return currentOutFile;
+        }
+
+        public string GetCurrentFile(bool truncated = true)
+        {
+            return truncated ? truncatedCurrentFile : currentFile;
+        }
+
+        public async Task<StorageFolder> GetDirectoryAsStorageFolder()
+        {
+            return await StorageFolder.GetFolderFromPathAsync($"{outputFolderPath}\\{directoryName}");
         }
 
         public string GetCurrentFileName()

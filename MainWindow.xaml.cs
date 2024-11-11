@@ -35,10 +35,7 @@ namespace Audio_Replacer_2
             appWindow.Closing += OnWindowClose;
         }
 
-        private void OnWindowClose(object sender, AppWindowClosingEventArgs args)
-        {
-            if (fileInteractionUtils != null && (isProcessing || isRecording)) audioRecordingUtils.DiscardRecording(fileInteractionUtils.GetOutFilePath());
-        }
+        private void OnWindowClose(object sender, AppWindowClosingEventArgs args) { if (fileInteractionUtils != null && (isProcessing || isRecording)) audioRecordingUtils.DiscardRecording(fileInteractionUtils.GetOutFilePath()); }
 
         private async void SelectProjectFolder(object sender, RoutedEventArgs e)
         {

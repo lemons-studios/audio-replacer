@@ -8,13 +8,12 @@ using Windows.Storage;
 
 namespace Audio_Replacer_2.Util
 {
-    
     public class AudioRecordingUtils
     {
         public float pitchChange = 1;
         public bool requiresExtraEdits = false;
-
         private MediaCapture recordingCapture;
+
         public AudioRecordingUtils()
         {
             Task.Run(InitializeMediaCapture);
@@ -27,7 +26,6 @@ namespace Audio_Replacer_2.Util
             {
                 StreamingCaptureMode = StreamingCaptureMode.Audio
             };
-
             await recordingCapture.InitializeAsync(captureSettings);
         }
 
