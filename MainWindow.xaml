@@ -6,7 +6,7 @@
     xmlns:local="using:Audio_Replacer_2"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    Title="Audio Replacer 2. ©2024 Shob3r and Lemon Studios"
+    Title="Audio Replacer 2 ©2024 Shob3r and Lemon Studios"
     mc:Ignorable="d">
 
     <Grid>
@@ -16,27 +16,27 @@
         </Grid.ColumnDefinitions>
 
         <StackPanel Grid.Column="0" Background="#121212" Padding="15">
-            <TextBlock x:Name="currentFile" Text="Select a Folder" Style="{StaticResource TitleText}"/>
-            <Button x:Name="folderSelectButton" Click="SelectProjectFolder" Style="{StaticResource ButtonStyle}" Margin="0 15" Content="Select a folder"/>
-            <TextBlock x:Name="remainingFilesCounter" Style="{StaticResource fileCounter}" Text="Files remaining: no clue man select a folder first" Visibility="Collapsed"/>
-
-            <MediaPlayerElement x:Name="audioPreview" Style="{StaticResource AudioPlayer}" Visibility="Visible">
+            <TextBlock x:Name="CurrentFile" Text="Select a Folder" Style="{StaticResource TitleText}"/>
+            <Button x:Name="FolderSelector" Click="SelectProjectFolder" Style="{StaticResource ButtonStyle}" Margin="0 15" Content="Select a folder"/>
+            <TextBlock x:Name="RemainingFiles" Style="{StaticResource fileCounter}" Text="Files remaining: no clue man select a folder first" Visibility="Collapsed"/>
+            <MediaPlayerElement x:Name="AudioPreview" Style="{StaticResource AudioPlayer}" Visibility="Visible">
                 <MediaPlayerElement.TransportControls>
                     <MediaTransportControls  IsCompact="True" VerticalAlignment="Center" IsSeekBarVisible="True" ShowAndHideAutomatically="False"/>
                 </MediaPlayerElement.TransportControls>
             </MediaPlayerElement>
-
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                <Button x:Name="skipAudioTrack" Click="SkipCurrentAudioFile" Style="{StaticResource ButtonStyle}" Content="Skip" Margin="25 0"/>
-                <Button x:Name="recordAudioButton" Click="StartRecordingAudio" Style="{StaticResource ButtonStyle}" Content="Record" Margin="25 0"/>
-                <Button x:Name="submitAudioButton" Click="SubmitRecordedAudio" Style="{StaticResource ButtonStyle}" Content="Submit" IsEnabled="False" Margin="25 0" Visibility="Collapsed"/>
-                <Button x:Name="cancelRecordingButton" Click="CancelCurrentRecording" Style="{StaticResource ButtonStyle}" Content="Cancel" IsEnabled="False" Margin="25 0" Visibility="Collapsed"/>
+                <Button x:Name="SkipAudioButton" Click="SkipCurrentAudioFile" Style="{StaticResource ButtonStyle}" Content="Skip" Margin="25 0"/>
+                <Button x:Name="CancelRecordingButton" Click="CancelCurrentRecording" Style="{StaticResource ButtonStyle}" Content="Cancel" IsEnabled="False" Margin="25 0" Visibility="Collapsed"/>
+                <Button x:Name="DiscardRecordingButton" Click="DiscardRecording" Style="{StaticResource ButtonStyle}" Content="Reject" IsEnabled="False" Margin="25 0" Visibility="Collapsed"/>
+
+                <Button x:Name="StartRecordingButton" Click="StartRecordingAudio" Style="{StaticResource ButtonStyle}" Content="Record" Margin="25 0"/>
+                <Button x:Name="EndRecordingButton" Click="StopRecordingAudio" Style="{StaticResource ButtonStyle}" Content="End Recording" IsEnabled="False" Margin="25 0" Visibility="Collapsed"/>
+                <Button x:Name="SubmitRecordingButton" Click="ConfirmAudioSubmission" Style="{StaticResource ButtonStyle}" Content="Submit" IsEnabled="False" Margin="25 0" Visibility="Collapsed"/>
             </StackPanel>
         </StackPanel>
 
         <StackPanel Grid.Column="1" Background="#151515" Padding="15">
             <TextBlock Text="Audio Tuning" Style="{StaticResource TitleText}"/>
-
             <ComboBox x:Name="voiceTuneMenu" PlaceholderText="Pick Character" Margin="0 35" HorizontalAlignment="Center" Width="210" MaxDropDownHeight="300" IsTextSearchEnabled="True">
                 <x:String>Ai Ebihara</x:String>
                 <x:String>Ayane Matsunaga</x:String>
@@ -76,14 +76,12 @@
                 <x:String>Yumi Ozawa</x:String>
                 <x:String>Misc Character</x:String>
             </ComboBox>
-
             <TextBlock Text="Does Audio Require Extra Audio Effects?" Style="{StaticResource TitleText}" TextWrapping="Wrap" FontSize="21" Margin="0 15"/>
-
-            <ComboBox x:Name="extraEffectsPrompt" PlaceholderText="Yes/No?" Margin="0 10" HorizontalAlignment="Center" Width="175">
+            <ComboBox x:Name="RequiresEffectsPrompt" PlaceholderText="Yes/No?" Margin="0 10" HorizontalAlignment="Center" Width="175">
                 <x:String>No</x:String>
                 <x:String>Yes</x:String>
             </ComboBox>
-            <TextBlock x:Name="pitchValuesTest" HorizontalAlignment="Center" FontSize="13.5" Text="" TextAlignment="Center"/>
+            <TextBlock x:Name="PitchSettingsFeedback" HorizontalAlignment="Center" FontSize="13.5" Text="" TextAlignment="Center"/>
             <Button Click="ConfirmAudioProfile" Style="{StaticResource ButtonStyle}" Content="Confirm" Margin="0 20"/>
             
         </StackPanel>

@@ -15,7 +15,6 @@ namespace Audio_Replacer_2.Util
         public bool requiresExtraEdits = false;
 
         private MediaCapture recordingCapture;
-
         public AudioRecordingUtils()
         {
             Task.Run(InitializeMediaCapture);
@@ -74,10 +73,16 @@ namespace Audio_Replacer_2.Util
             // Move the FFMpeg file to the unedited location after deletion
             File.Move(outFile, file);
         }
+
         public async Task CancelRecording(string path)
         {
             // No need to delay here since the recording is getting discarded
             await recordingCapture.StopRecordAsync();
+            File.Delete(path);
+        }
+
+        public void DeleteRecording(string path)
+        {
             File.Delete(path);
         }
 

@@ -7,35 +7,47 @@ using Windows.Media.Core;
 using Windows.Media.Playback;
 using Windows.Storage;
 using Audio_Replacer_2.Util;
+using Microsoft.UI.Windowing;
 using WinRT.Interop;
-using System.IO;
 using Newtonsoft.Json.Linq;
+using Microsoft.UI;
 
 
 namespace Audio_Replacer_2
 {
+    // TODO: Split class into two different files to improve on readability
     public sealed partial class MainWindow : Window
     {
-        private FileInteractionUtils fileInteractionUtils;
+        private AppWindow appWindow;
+
         private AudioRecordingUtils audioRecordingUtils;
-        private string previousSuccessfulCharacterConfirm = "No Pitch Change";
-        private readonly string pitchData = PitchData.pitchJsonData;
+        private FileInteractionUtils fileInteractionUtils;
+
+        private string previousPitchSelection = "No Pitch Change";
+        private readonly string pitchData = PitchData.pitchJsonData; // Remove later
+        
+        private bool isProcessing;
+        private bool isRecording;
 
         public MainWindow()
         {
             InitializeComponent();
             AppWindow.MoveAndResize(new Windows.Graphics.RectInt32(500, 500, 950, 450));
-            audioPreview.MediaPlayer.IsLoopingEnabled = true;
-            audioPreview.MediaPlayer.MediaEnded += OnMediaEnded;
+            AudioPreview.MediaPlayer.IsLoopingEnabled = true;
+            AudioPreview.MediaPlayer.MediaEnded += OnMediaEnded;
             audioRecordingUtils = new AudioRecordingUtils();
-            // pitchJSONData = File.ReadAllText(pathToPitchJSON);
-
             AppWindow.SetIcon("Assets/Titlebar.ico");
+
+            appWindow = GetAppWindowForCurrentWindow();
+            appWindow.Closing += OnWindowClose;
         }
 
-        private void OnMediaEnded(MediaPlayer sender, object args)
+        private void OnWindowClose(object sender, AppWindowClosingEventArgs args)
         {
-            sender.PlaybackSession.Position = TimeSpan.Zero;
+            if (fileInteractionUtils != null && (isProcessing || isRecording))
+            {
+                audioRecordingUtils.DeleteRecording(fileInteractionUtils.GetOutFilePath());
+            }
         }
 
         private async void SelectProjectFolder(object sender, RoutedEventArgs e)
@@ -44,18 +56,17 @@ namespace Audio_Replacer_2
             {
                 SuggestedStartLocation = PickerLocationId.ComputerFolder
             };
-
             folderPicker.FileTypeFilter.Add("*");
 
-            // Initialize with window handle (required for desktop apps in WinUI 3, especially on Windows 10)
-            var hwnd = WinRT.Interop.WindowNative.GetWindowHandle(this);
-            InitializeWithWindow.Initialize(folderPicker, hwnd);
+            // For Windows 10 Combatibility
+            var hWnd = WinRT.Interop.WindowNative.GetWindowHandle(this);
+            InitializeWithWindow.Initialize(folderPicker, hWnd);
 
             var folder = await folderPicker.PickSingleFolderAsync();
             if (folder != null)
             {
                 Windows.Storage.AccessCache.StorageApplicationPermissions.FutureAccessList.AddOrReplace("PickedFolderToken", folder);
-                folderSelectButton.Visibility = Visibility.Collapsed;
+                FolderSelector.Visibility = Visibility.Collapsed;
                 InitialFileSetup(folder.Path);
             }
         }
@@ -63,7 +74,7 @@ namespace Audio_Replacer_2
         private async void SkipCurrentAudioFile(object sender, RoutedEventArgs e)
         {
             if (fileInteractionUtils == null) return;
-            audioPreview.MediaPlayer.Pause();
+            AudioPreview.MediaPlayer.Pause();
 
             var confirmSkip = new ContentDialog
             {
@@ -80,49 +91,37 @@ namespace Audio_Replacer_2
                 fileInteractionUtils.SkipAudioTrack();
                 UpdateFileElements();
             }
-            else audioPreview.MediaPlayer.Play();
-            
+            else AudioPreview.MediaPlayer.Play();
         }
 
         private async void StartRecordingAudio(object sender, RoutedEventArgs e)
         {
-            if (fileInteractionUtils == null) return;
-            audioPreview.MediaPlayer.Pause();
+            isRecording = true;
 
-            submitAudioButton.Visibility = Visibility.Visible;
-            recordAudioButton.IsEnabled = false;
-            recordAudioButton.Visibility = Visibility.Collapsed;
+            if (fileInteractionUtils == null) return;
+            AudioPreview.MediaPlayer.Pause();
+
             if (fileInteractionUtils != null)
             {
-                StorageFolder currentOutFolder = await fileInteractionUtils.GetDirNameAsStorageFolder();
+                StorageFolder currentOutFolder = await fileInteractionUtils.GetDirectoryAsStorageFolder();
                 await audioRecordingUtils.StartRecordingAudio(currentOutFolder, fileInteractionUtils.GetCurrentFileName());
             }
 
-            // Prevent audio from being submitted until after everything gets initialized
-            submitAudioButton.IsEnabled = true;
-            cancelRecordingButton.Visibility = Visibility.Visible;
-            cancelRecordingButton.IsEnabled = true;
+            ToggleButtonStates(true);
         }
 
-        private async void SubmitRecordedAudio(object sender, RoutedEventArgs e)
+        private async void StopRecordingAudio(object sender, RoutedEventArgs e)
         {
+            isRecording = false;
+            isProcessing = true;
+
             if (fileInteractionUtils == null) return;
+            await audioRecordingUtils.StopRecordingAudio(fileInteractionUtils.GetOutFilePath());
+            ToggleFinalReviewButtons(true);
 
-            recordAudioButton.Visibility = Visibility.Visible;
-            submitAudioButton.IsEnabled = false;
-            submitAudioButton.Visibility = Visibility.Collapsed;
-            if (fileInteractionUtils != null)
-            {
-                await audioRecordingUtils.StopRecordingAudio(fileInteractionUtils.GetOutFolderFile());
-                fileInteractionUtils.DeleteCurrentFile();
-            }
-
-            // Prevent accidental record starts before the previous file is done processing
-            recordAudioButton.IsEnabled = true;
-            cancelRecordingButton.Visibility = Visibility.Collapsed;
-            cancelRecordingButton.IsEnabled = false;
-
-            UpdateFileElements();
+            // Update source of audio player and the title manually
+            CurrentFile.Text = "Review your recording";
+            AudioPreview.Source = mediaSourceFromURI(fileInteractionUtils.GetOutFilePath());
         }
 
         private void ConfirmAudioProfile(object sender, RoutedEventArgs e)
@@ -130,52 +129,92 @@ namespace Audio_Replacer_2
             if (voiceTuneMenu.SelectedItem != null)
             {
                 audioRecordingUtils.pitchChange = GetPitchModifier(voiceTuneMenu.SelectedIndex);
-                previousSuccessfulCharacterConfirm = voiceTuneMenu.SelectedItem.ToString();
+                previousPitchSelection = voiceTuneMenu.SelectedItem.ToString();
             }
-            if (extraEffectsPrompt.SelectedItem != null)
+            if (RequiresEffectsPrompt.SelectedItem != null)
             {
-                audioRecordingUtils.requiresExtraEdits = ToBool(extraEffectsPrompt.SelectedIndex);
+                audioRecordingUtils.requiresExtraEdits = ToBool(RequiresEffectsPrompt.SelectedIndex);
             }
 
-            pitchValuesTest.Text = $"Pitch Modifier: {audioRecordingUtils.pitchChange} ({previousSuccessfulCharacterConfirm})\nDoes file require extra edits? {BoolToYesNo(audioRecordingUtils.requiresExtraEdits)}";
-        }
-
-        private void InitialFileSetup(string path)
-        {
-            remainingFilesCounter.Visibility = Visibility.Visible;
-
-            fileInteractionUtils = new FileInteractionUtils(path);
-
-            currentFile.Text = fileInteractionUtils.GetCurrentFile();
-            remainingFilesCounter.Text = $"Files Remaining: {fileInteractionUtils.GetFilesRemaining().ToString("N0")}";
-            audioPreview.Source = MediaSource.CreateFromUri(new Uri(fileInteractionUtils.GetCurrentFile(false)));
+            PitchSettingsFeedback.Text = $"Pitch Modifier: {audioRecordingUtils.pitchChange} ({previousPitchSelection})\nDoes file require extra edits? {BoolToYesNo(audioRecordingUtils.requiresExtraEdits)}";
         }
 
         private void UpdateFileElements()
         {
-            currentFile.Text = fileInteractionUtils.GetCurrentFile();
-            remainingFilesCounter.Text = $"Files Remaining: {fileInteractionUtils.GetFilesRemaining().ToString("N0")}";
-            audioPreview.Source = MediaSource.CreateFromUri(new Uri(fileInteractionUtils.GetCurrentFile(false)));
+            CurrentFile.Text = fileInteractionUtils.GetCurrentFile();
+            RemainingFiles.Text = $"Files Remaining: {fileInteractionUtils.GetFilesRemaining().ToString("N0")}";
+            AudioPreview.Source = mediaSourceFromURI(fileInteractionUtils.GetCurrentFile(false));
         }
 
         private async void CancelCurrentRecording(object sender, RoutedEventArgs e)
         {
-            await audioRecordingUtils.CancelRecording(fileInteractionUtils.GetOutFolderFile());
-
-            recordAudioButton.Visibility = Visibility.Visible;
-            recordAudioButton.IsEnabled = true;
-            submitAudioButton.IsEnabled = false;
-            submitAudioButton.Visibility = Visibility.Collapsed;
-            cancelRecordingButton.Visibility = Visibility.Collapsed;
-            cancelRecordingButton.IsEnabled = false;
+            isProcessing = false;
+            await audioRecordingUtils.CancelRecording(fileInteractionUtils.GetOutFilePath());
+            ToggleButtonStates(false);
         }
+
+        private void ConfirmAudioSubmission(object sender, RoutedEventArgs e)
+        {
+            isProcessing = false;
+            fileInteractionUtils.DeleteCurrentFile();
+            ToggleFinalReviewButtons(false);
+            ToggleButtonStates(false);
+            UpdateFileElements();
+        }
+
+        private void DiscardRecording(object sender, RoutedEventArgs e)
+        {
+            isProcessing = false;
+            audioRecordingUtils.DeleteRecording(fileInteractionUtils.GetOutFilePath());
+            ToggleFinalReviewButtons(false);
+            ToggleButtonStates(false);
+            UpdateFileElements();
+        }
+
+        private void InitialFileSetup(string path)
+        {
+            RemainingFiles.Visibility = Visibility.Visible;
+            fileInteractionUtils = new FileInteractionUtils(path);
+
+            UpdateFileElements();
+        }
+
+        private void ToggleButtonStates(bool recording)
+        {
+            Button[] buttonsRecording = [EndRecordingButton, CancelRecordingButton];
+            Button[] buttonsNotRecording = [StartRecordingButton, SkipAudioButton];
+
+            // Toggle Visibility for non recording panel
+            for (int i = 0; i < buttonsRecording.Length; i++)
+            {
+                ToggleButton(buttonsRecording[i], recording);
+                ToggleButton(buttonsNotRecording[i], !recording);
+            }
+        }
+
+        private void ToggleFinalReviewButtons(bool toggled)
+        {
+            // No reason to toggle between the EndRecordingButton states, hard-code to disable
+            ToggleButton(EndRecordingButton, false);
+            ToggleButton(CancelRecordingButton, false);
+
+            ToggleButton(DiscardRecordingButton, toggled);
+            ToggleButton(SubmitRecordingButton, toggled);
+        }
+
+        private void ToggleButton(Button button, bool toggle)
+        {
+            Visibility toggleVisibility = ToVisibility(toggle);
+
+            button.IsEnabled = toggle;
+            button.Visibility = toggleVisibility;
+        }
+
+
 
         private float GetPitchModifier(int index)
         { 
-           // The evil switch case is no more
-           // Each element in the JSON array in Util/PitchData.cs corresponds to the index of the dropdown menu to select the pitch modification from. 
-           // Easily modifiable if you know what you're doing
-
+           // TODO: JSON array is more evil than the evil switch case, replace with 2d array containing information on both character and pitch modification for (somewhat) easy edit-ability by any end user
            JArray jPitchData = JArray.Parse(pitchData);
            try
            {
@@ -196,6 +235,29 @@ namespace Audio_Replacer_2
         private string BoolToYesNo(bool value)
         {
             return value ? "Yes" : "No";
+        }
+
+        private Visibility ToVisibility(bool x)
+        {
+            return x ? Visibility.Visible : Visibility.Collapsed;
+        }
+
+        private void OnMediaEnded(MediaPlayer sender, object args)
+        {
+            sender.PlaybackSession.Position = TimeSpan.Zero;
+        }
+
+        private MediaSource mediaSourceFromURI(string path)
+        {
+            return MediaSource.CreateFromUri(new Uri(path));
+        }
+
+        // Thanks StackOverflow man!
+        private AppWindow GetAppWindowForCurrentWindow()
+        {
+            IntPtr hWnd = WindowNative.GetWindowHandle(this);
+            WindowId myWndId = Win32Interop.GetWindowIdFromWindow(hWnd);
+            return AppWindow.GetFromWindowId(myWndId);
         }
     }
 }
