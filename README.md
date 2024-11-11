@@ -24,7 +24,7 @@ Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManage
 ```
 This command was sourced from [this page](https://chocolatey.org/install)
 Once the above command is done, run the following command (still in the admin PowerShell window you opened):
-```
+```powershell
 choco install ffmpeg-full -y
 ```
 #### Manual Instal (For advanced users)
@@ -72,6 +72,6 @@ Once the software needed for development are both installed, you can clone the r
 ```sh
 git clone https://github.com/lemons-studios/audio-replacer-2.git
 ```
-if you plan on contributing back to the project, replace the above clone command with whatever the address is for the fork you created!
+If you plan on contributing back to the project, replace the above clone command with whatever the address is for the fork you created!
 
 Writing WinUI3 applications can only be done in Visual Studio, so open it and get developing!

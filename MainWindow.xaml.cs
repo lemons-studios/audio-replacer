@@ -8,7 +8,8 @@ using Windows.Media.Playback;
 using Windows.Storage;
 using Audio_Replacer_2.Util;
 using WinRT.Interop;
-using System.Threading.Tasks;
+using System.IO;
+using Newtonsoft.Json.Linq;
 
 
 namespace Audio_Replacer_2
@@ -18,6 +19,9 @@ namespace Audio_Replacer_2
         private FileInteractionUtils fileInteractionUtils;
         private AudioRecordingUtils audioRecordingUtils;
         private string previousSuccessfulCharacterConfirm = "No Pitch Change";
+        private readonly string pathToPitchJSON = $"{Path.Combine(AppContext.BaseDirectory, "Util", "PitchData.json")}";
+        private readonly string pitchJSONData;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -25,6 +29,7 @@ namespace Audio_Replacer_2
             audioPreview.MediaPlayer.IsLoopingEnabled = true;
             audioPreview.MediaPlayer.MediaEnded += OnMediaEnded;
             audioRecordingUtils = new AudioRecordingUtils();
+            pitchJSONData = File.ReadAllText(pathToPitchJSON);
 
             AppWindow.SetIcon("Assets/Titlebar.ico");
         }
@@ -128,7 +133,6 @@ namespace Audio_Replacer_2
                 audioRecordingUtils.pitchChange = GetPitchModifier();
                 previousSuccessfulCharacterConfirm = voiceTuneMenu.SelectedItem.ToString();
             }
-
             if (extraEffectsPrompt.SelectedItem != null)
             {
                 audioRecordingUtils.requiresExtraEdits = ToBool(extraEffectsPrompt.SelectedIndex);
@@ -168,89 +172,19 @@ namespace Audio_Replacer_2
         }
 
 
-        private float GetPitchModifier()
-        {
-            // "The best solution to a problem is usually the easiest one" -GlaDOS (In hindsight, maybe I should have made this a JSON)
-            switch (voiceTuneMenu.SelectedIndex)
-            {
-                case 0:
-                    return 1.025f; // Ai Ebihara
-                case 1:
-                    return 1.1f; // Ayane Matsunaga
-                case 2:
-                    return 0.475f; // Ameno-Sagiri
-                case 3:
-                    return 1.02f; // Chie Satonaka
-                case 4:
-                    return 1.05f; // Chihiro Fushimi
-                case 5:
-                    return 0.96f; // Daisuke Nagase
-                case 6:
-                    return 1.065f; // Eri Minami
-                case 7:
-                    return 1.05f; // Hanako Ohtani
-                case 8:
-                    return 1f; // Igor
-                case 9:
-                    return 1.085f; // Izanami
-                case 10:
-                    return 0.92f; // Kanji Tatsumi
-                case 11:
-                    return 0.94f; // Kinshiro Morooka
-                case 12:
-                    return 0.98f; // Kou Ichijo
-                case 13:
-                    return 0.91f; // Kunino-Sagiri
-                case 14:
-                    return 1.055f; // Kusumi-no-Okami
-                case 15:
-                    return 1.025f; // Margaret
-                case 16:
-                    return 1.03f; // Marie
-                case 17:
-                    return 0.965f; // Mitsuo Kubo
-                case 18:
-                    return 1.1f; // Nanako Dojima
-                case 19:
-                    return 0.94f; // Naoki Konishi
-                case 20:
-                    return 1.025f; // Naoto Shirogane
-                case 21:
-                    return 1.0475f; // Noriko Kashiwagi
-                case 22:
-                    return 0.92f; // Principal (Gekkoukan)
-                case 23:
-                    return 0.93f; // Principal (Yasogami)
-                case 24:
-                    return 1.0675f; // Rise Kujikawa
-                case 25:
-                    return 0.945f; // Ryotaro Dojima
-                case 26:
-                    return 1.065f; // Saki Konishi
-                case 27:
-                    return 0.015f; // Sayoko Uehara
-                case 28:
-                    return 1.0175f; // Shu Nakajima
-                case 29:
-                    return 0.935f; // Taro Namatame
-                case 30:
-                    return 1.07f; // Teddie
-                case 31:
-                    return 0.955f; // Tohru Adachi
-                case 32:
-                    return 1.017f; // Yukiko Amagi
-                case 33:
-                    return 0.945f; // Yosuke Hanamura
-                case 34:
-                    return 0.98f; // Yu Narukami
-                case 35:
-                    return 1.042f; // Yumi Ozawa
-                case 36:
-                    return 1f; // No pitch change 
-
-                default:
-                    return 1; // If for whatever reason the switch kills itself
-            }
+        private float GetPitchModifier(int index)
+        { 
+           // The evil switch case is no more
+           JArray pitchData = JArray.Parse(pitchJSONData);
+           try
+           {
+               return (float) pitchData[index]["pitchModification"];
+           }
+           catch (Exception e)
+           {
+               Console.WriteLine(e);
+               return 1;
+           }
         }
 
         private bool ToBool(int value)
@@ -262,6 +196,5 @@ namespace Audio_Replacer_2
         {
             return value ? "Yes" : "No";
         }
-
     }
 }
