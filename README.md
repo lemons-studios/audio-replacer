@@ -3,13 +3,13 @@ This is the tool used to create the assets for a Persona 4 Golden mod in which m
 
 While this tool is specifically made for the P4G mod I'm making in mind, it should theoretically work with anything so long as you change a few values in the code
 
-**This tool has been tested to work on any version above (and including) Windows 10 22h2**
+**This tool has been tested to work on any version above (and including) Windows 10 22H2**
 
 ## Why is it called Audio Replacer 2?
 Because there was a version before this one. It sucked really bad and I never published it to GitHub so it's not accessible
 
 ## How to install and run:
-As mentioned above, This tool has been tested to work on the latest versions of Windows 10 and any version of Windows 11. You will need to be running at least Windows 10 22h2 to run this application
+As mentioned above, This tool has been tested to work on the latest versions of Windows 10 and any version of Windows 11. You will need to be running at least Windows 10 22H2 to run this application
 ### Install pre-requisites
 > [!NOTE]  
 > Only first time users have to follow these steps. If an update to the application has released, You may ignore these steps and download the installer from the releases page
@@ -30,7 +30,7 @@ choco install ffmpeg-full -y
 #### Manual Instal (For advanced users)
 ##### Download FFMpeg
 > [!NOTE]  
-> If you are running a version of Windows 10 **OR** a version of Windows 11 below version 24h2, you may also want to install [7zip](https://www.7-zip.org/) to extract the archive you downloaded if you don't already have it installed
+> If you are running a version of Windows 10 **OR** a version of Windows 11 below version 24H2, you may also want to install [7zip](https://www.7-zip.org/) to extract the archive you downloaded if you don't already have it installed
 
 FFMpeg downloads can be found [here](https://ffmpeg.org/download.html). I typically download the **full build** from [Gyan.dev](https://www.gyan.dev/ffmpeg/builds/).
 ##### Add FFMpeg to your system path
@@ -45,7 +45,7 @@ Now that you have downloaded FFMpeg and extracted it, you'll have to add it to y
 ### Add my software signing certificate
 
 > [!CAUTION]
-> Only install software certificates from people you trust.
+> Only install software certificates from people you trust
 
 By default, WinUI3 packages applications as a .msix package, which requires a self-signed software certificate installed if the developer doesn't have 80$ a year to pay for a trusted SSL certificate
 In the future, I will probably make the application an executable rather than an msix, but you'll have to deal with this for now if you want this running
@@ -66,7 +66,7 @@ From here, installing is extremely straightforward. Just open the file you downl
 ## How to Develop:
 If you want to develop for this application, you'll need a few things:
 - FFMpeg installed on your system (If you do not have it installed, follow the steps above)
-- [Visual Studio 2022](https://visualstudio.microsoft.com/vs/) with the Windows Application Development and the .NET desktop development workloads with the Windows App SDK C# Templates optional component (Roughly 1-2Gb required to install everything)
+- [Visual Studio 2022](https://visualstudio.microsoft.com/vs/) with the Windows Application Development and the .NET desktop development workloads with the Windows App SDK C# Templates optional component (Roughly 1-2GB required to install everything)
 
 Once the software needed for development are both installed, you can clone the repository:
 ```sh
