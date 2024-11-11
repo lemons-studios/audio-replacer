@@ -23,7 +23,7 @@ namespace Audio_Replacer_2.Util
         private async Task InitializeMediaCapture()
         {
             recordingCapture = new MediaCapture();
-            MediaCaptureInitializationSettings captureSettings = new MediaCaptureInitializationSettings()
+            MediaCaptureInitializationSettings captureSettings = new MediaCaptureInitializationSettings
             {
                 StreamingCaptureMode = StreamingCaptureMode.Audio
             };
@@ -45,6 +45,7 @@ namespace Audio_Replacer_2.Util
             await recordingCapture.StopRecordAsync();
             var outFile = $"{file}0.wav"; // Temporary name, gets renamed back to actual file name at the end
 
+            // FFMpeg is used with shell commands here simply because I cannot bother figuring out .NET FFMpeg frameworks
             var ffmpegProcess = new Process
             {
                 StartInfo =
@@ -57,7 +58,6 @@ namespace Audio_Replacer_2.Util
                     CreateNoWindow = true
                 }
             };
-
             ffmpegProcess.Start();
             Task<string> outputTask = ffmpegProcess.StandardOutput.ReadToEndAsync();
             Task<string> errorOutputTask = ffmpegProcess.StandardError.ReadToEndAsync();
@@ -81,7 +81,7 @@ namespace Audio_Replacer_2.Util
             File.Delete(path);
         }
 
-        public void DeleteRecording(string path)
+        public void DiscardRecording(string path)
         {
             File.Delete(path);
         }

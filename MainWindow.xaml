@@ -25,13 +25,13 @@
                 </MediaPlayerElement.TransportControls>
             </MediaPlayerElement>
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                <Button x:Name="SkipAudioButton" Click="SkipCurrentAudioFile" Style="{StaticResource ButtonStyle}" Content="Skip" Margin="25 0"/>
+                <Button x:Name="SkipAudioButton" Click="SkipCurrentAudioFile" Style="{StaticResource ButtonStyle}" IsEnabled="False" Content="Skip" Margin="25 0"/>
                 <Button x:Name="CancelRecordingButton" Click="CancelCurrentRecording" Style="{StaticResource ButtonStyle}" Content="Cancel" IsEnabled="False" Margin="25 0" Visibility="Collapsed"/>
-                <Button x:Name="DiscardRecordingButton" Click="DiscardRecording" Style="{StaticResource ButtonStyle}" Content="Reject" IsEnabled="False" Margin="25 0" Visibility="Collapsed"/>
+                <Button x:Name="DiscardRecordingButton" Click="UpdateAudioStatus" Style="{StaticResource ButtonStyle}" Content="Reject" IsEnabled="False" Margin="25 0" Visibility="Collapsed"/>
 
-                <Button x:Name="StartRecordingButton" Click="StartRecordingAudio" Style="{StaticResource ButtonStyle}" Content="Record" Margin="25 0"/>
+                <Button x:Name="StartRecordingButton" Click="StartRecordingAudio" Style="{StaticResource ButtonStyle}" IsEnabled="False" Content="Record" Margin="25 0"/>
                 <Button x:Name="EndRecordingButton" Click="StopRecordingAudio" Style="{StaticResource ButtonStyle}" Content="End Recording" IsEnabled="False" Margin="25 0" Visibility="Collapsed"/>
-                <Button x:Name="SubmitRecordingButton" Click="ConfirmAudioSubmission" Style="{StaticResource ButtonStyle}" Content="Submit" IsEnabled="False" Margin="25 0" Visibility="Collapsed"/>
+                <Button x:Name="SubmitRecordingButton" Click="UpdateAudioStatus" Style="{StaticResource ButtonStyle}" Content="Submit" IsEnabled="False" Margin="25 0" Visibility="Collapsed"/>
             </StackPanel>
         </StackPanel>
 
