@@ -8,7 +8,7 @@ using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml.Controls;
 using Newtonsoft.Json.Linq;
 
-namespace Audio_Replacer_2.Util
+namespace AudioReplacer2.Util
 {
     // Easily removes a good chunk of code from MainWindow.xaml.cs. much easier to navigate through everything now!
     public class MainWindowFunctionality

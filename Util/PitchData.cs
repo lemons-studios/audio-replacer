@@ -1,4 +1,4 @@
-﻿namespace Audio_Replacer_2.Util
+﻿namespace AudioReplacer2.Util
 {
     public static class PitchData // Evil pitch data
     {

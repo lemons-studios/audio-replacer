@@ -4,11 +4,10 @@ using Microsoft.UI.Xaml.Controls;
 using System;
 using Windows.Storage.Pickers;
 using Windows.Storage;
-using Audio_Replacer_2.Util;
 using Microsoft.UI.Windowing;
 using WinRT.Interop;
 
-namespace Audio_Replacer_2
+namespace AudioReplacer2
 {
     public sealed partial class MainWindow : Window
     {
