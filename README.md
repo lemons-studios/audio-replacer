@@ -10,6 +10,9 @@ Because there was a version before this one. It sucked really bad and I never pu
 
 ## How to install and run:
 As mentioned above, This tool has been tested to work on the latest versions of Windows 10 and any version of Windows 11. You will need to be running at least Windows 10 22H2 to run this application
+> [!WARNING]  
+> This application only has builds for x64 (also known as AMD64). No other architectures are currently supported. If you don't know what this means and are running a computer that isn't very old, you are very likely running on x64
+
 ### Install pre-requisites
 > [!NOTE]  
 > Only first time users have to follow these steps. If an update to the application has released, You may ignore these steps and download the installer from the releases page
