@@ -19,8 +19,7 @@ namespace Audio_Replacer_2
         private FileInteractionUtils fileInteractionUtils;
         private AudioRecordingUtils audioRecordingUtils;
         private string previousSuccessfulCharacterConfirm = "No Pitch Change";
-        private readonly string pathToPitchJSON = $"{Path.Combine(AppContext.BaseDirectory, "Util", "PitchData.json")}";
-        private readonly string pitchJSONData;
+        private readonly string pitchData = PitchData.pitchJsonData;
 
         public MainWindow()
         {
@@ -29,7 +28,7 @@ namespace Audio_Replacer_2
             audioPreview.MediaPlayer.IsLoopingEnabled = true;
             audioPreview.MediaPlayer.MediaEnded += OnMediaEnded;
             audioRecordingUtils = new AudioRecordingUtils();
-            pitchJSONData = File.ReadAllText(pathToPitchJSON);
+            // pitchJSONData = File.ReadAllText(pathToPitchJSON);
 
             AppWindow.SetIcon("Assets/Titlebar.ico");
         }
@@ -130,7 +129,7 @@ namespace Audio_Replacer_2
         {
             if (voiceTuneMenu.SelectedItem != null)
             {
-                audioRecordingUtils.pitchChange = GetPitchModifier();
+                audioRecordingUtils.pitchChange = GetPitchModifier(voiceTuneMenu.SelectedIndex);
                 previousSuccessfulCharacterConfirm = voiceTuneMenu.SelectedItem.ToString();
             }
             if (extraEffectsPrompt.SelectedItem != null)
@@ -171,14 +170,16 @@ namespace Audio_Replacer_2
             cancelRecordingButton.IsEnabled = false;
         }
 
-
         private float GetPitchModifier(int index)
         { 
            // The evil switch case is no more
-           JArray pitchData = JArray.Parse(pitchJSONData);
+           // Each element in the JSON array in Util/PitchData.cs corresponds to the index of the dropdown menu to select the pitch modification from. 
+           // Easily modifiable if you know what you're doing
+
+           JArray jPitchData = JArray.Parse(pitchData);
            try
            {
-               return (float) pitchData[index]["pitchModification"];
+               return (float) jPitchData[index]["pitchModification"];
            }
            catch (Exception e)
            {
