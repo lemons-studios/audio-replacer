@@ -20,7 +20,7 @@ This tool requires on FFMpeg to run properly. I would suggest installing it thro
 
 #### Automatic Install (Recommended)
 > [!TIP]
-> Only follow these instructions if you will be using Chocolatey for individual use. For commercial use, see [this page](https://chocolatey.org/) 
+> These instructions assume you will be using Chocolatey for individual use. For commercial use, see [this page](https://chocolatey.org/) 
 Open a PowerShell window as administrator and run the following command:
 ```powershell
 Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
@@ -51,9 +51,10 @@ Now that you have downloaded FFMpeg and extracted it, you'll have to add it to y
 > Only install software certificates from people you trust
 
 By default, WinUI3 packages applications as a .msix package, which requires a self-signed software certificate installed if the developer doesn't have 80$ a year to pay for a trusted SSL certificate
+
 In the future, I will probably make the application an executable rather than an msix, but you'll have to deal with this for now if you want this running
 
-You can obtain my self-signed certificate through the [Releases](https://github.com/lemons-studios/audio-replacer-2) page
+You can obtain my self-signed certificate through the [releases](https://github.com/lemons-studios/audio-replacer-2/releases/latest) page
 To add the certificate properly, perform the following steps:
 1. Click "Install certificate" after opening the file
 2. Select "Local Machine" as the store location
@@ -62,7 +63,7 @@ To add the certificate properly, perform the following steps:
 
 ### Actually install the app!
 With the above two steps completed, you can actually install the Audio Replacer application!
-Once again, builds of the application can be found in the [Releases](https://github.com/lemons-studios/audio-replacer-2) page. You'll want to download the .msix package
+Once again, builds of the application can be found in the [releases](https://github.com/lemons-studios/audio-replacer-2/releases/latest) page. You'll want to download the .msix package
 
 From here, installing is extremely straightforward. Just open the file you downloaded and if you did everything correctly in the previous steps, it should install without any issue
 
