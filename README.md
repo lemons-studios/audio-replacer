@@ -79,3 +79,6 @@ git clone https://github.com/lemons-studios/audio-replacer-2.git
 If you plan on contributing back to the project, replace the above clone command with whatever the address is for the fork you created!
 
 Writing WinUI3 applications can only be done in Visual Studio, so open it and get developing!
+
+## Addendum
+There is an issue with the folder picker where you cannot select the first folder it opens up in. This is a bug with the Windows operating system itself and I cannot fix it. The best workaround is to move up one directory then enter the folder again if you want to select that folder for processing
