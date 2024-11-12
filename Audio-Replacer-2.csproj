@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net8.0-windows10.0.20348.0</TargetFramework>
+    <TargetFramework>net8.0-windows10.0.19041.0</TargetFramework>
     <TargetPlatformMinVersion>10.0.17763.0</TargetPlatformMinVersion>
     <RootNamespace>AudioReplacer2</RootNamespace>
     <ApplicationManifest>app.manifest</ApplicationManifest>
@@ -22,7 +22,7 @@
     <HoursBetweenUpdateChecks>0</HoursBetweenUpdateChecks>
     <AppxBundlePlatforms>x64</AppxBundlePlatforms>
     <AppxPackageDir>C:\Users\andre\Desktop\AudioReplacerBuilds\</AppxPackageDir>
-    <SupportedOSPlatformVersion>10.0.20348.0</SupportedOSPlatformVersion>
+    <SupportedOSPlatformVersion>10.0.19041.0</SupportedOSPlatformVersion>
     <Company>Lemon Studios</Company>
     <Authors>Shob3r</Authors>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>

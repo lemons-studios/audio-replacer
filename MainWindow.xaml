@@ -37,9 +37,9 @@
 
         <StackPanel Grid.Column="1" Background="#1c1c1c" Padding="15">
             <TextBlock Text="Audio Tuning" Style="{StaticResource TitleText}"/>
-            <ComboBox x:Name="voiceTuneMenu" PlaceholderText="Pick Character" Margin="0 35" HorizontalAlignment="Center" Width="210" MaxDropDownHeight="300" IsTextSearchEnabled="True" />
+            <ComboBox x:Name="voiceTuneMenu" SelectionChanged="UpdateRecordingValues" PlaceholderText="Pick Character" Margin="0 35" HorizontalAlignment="Center" Width="210" MaxDropDownHeight="300" IsTextSearchEnabled="True" />
             <TextBlock Text="Does Audio Require Extra Audio Effects?" Style="{StaticResource TitleText}" TextWrapping="Wrap" FontSize="21" Margin="0 15"/>
-            <ComboBox x:Name="RequiresEffectsPrompt" PlaceholderText="Yes/No?" Margin="0 10" HorizontalAlignment="Center" Width="175" />
+            <ComboBox x:Name="RequiresEffectsPrompt" SelectionChanged="UpdateRecordingValues" PlaceholderText="Yes/No?" Margin="0 10" HorizontalAlignment="Center" Width="175" SelectedIndex="1" />
         </StackPanel>
     </Grid>
 </Window>
