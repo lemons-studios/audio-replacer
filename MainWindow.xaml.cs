@@ -101,7 +101,7 @@ namespace AudioReplacer2
                 audioRecordingUtils.pitchChange = windowFunc.GetPitchModifier(voiceTuneMenu.SelectedIndex);
                 previousPitchSelection = voiceTuneMenu.SelectedItem.ToString();
             }
-            if (RequiresEffectsPrompt.SelectedItem != null) audioRecordingUtils.requiresExtraEdits = windowFunc.ToBool(RequiresEffectsPrompt.SelectedIndex);
+            if (RequiresEffectsPrompt.SelectedItem != null) audioRecordingUtils.requiresExtraEdits = !windowFunc.ToBool(RequiresEffectsPrompt.SelectedIndex); // Inverse because "Yes" is the first option in the ComboBox
             
             PitchSettingsFeedback.Text = $"Pitch Modifier: {audioRecordingUtils.pitchChange} ({previousPitchSelection})\nDoes file require extra edits? {windowFunc.BoolToYesNo(audioRecordingUtils.requiresExtraEdits)}";
         }
