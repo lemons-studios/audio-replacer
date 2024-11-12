@@ -51,7 +51,7 @@ namespace AudioReplacer2.Util
                 StartInfo =
                 {
                     FileName = "ffmpeg",
-                    Arguments = $"-i \"{file}\" -af \"rubberband=pitch={pitchChange} volume=1.25\" -y \"{outFile}\"",
+                    Arguments = $"-i \"{file}\" -af \"rubberband=pitch={pitchChange}, volume=1.25\" -y \"{outFile}\"",
                     RedirectStandardOutput = true,
                     RedirectStandardError = true,
                     UseShellExecute = false,

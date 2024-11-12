@@ -36,7 +36,7 @@ namespace AudioReplacer2
 
             AppWindow.SetIcon("Assets/Titlebar.ico");
             appWindow = windowMethods.GetAppWindowForCurrentWindow(this);
-            AppWindow.MoveAndResize(new Windows.Graphics.RectInt32(500, 500, 950, 375));
+            AppWindow.MoveAndResize(new Windows.Graphics.RectInt32(500, 500, 950, 385));
             appWindow.Closing += OnWindowClose;
         }
 
@@ -64,7 +64,8 @@ namespace AudioReplacer2
             InitializeWithWindow.Initialize(folderPicker, hWnd);
             var folder = await folderPicker.PickSingleFolderAsync();
             if (folder == null) return;
-            
+            Windows.Storage.AccessCache.StorageApplicationPermissions.FutureAccessList.AddOrReplace("PickedFolderToken", folder);
+
             FolderSelector.Visibility = Visibility.Collapsed;
             InitialFileSetup(folder.Path);
         }
