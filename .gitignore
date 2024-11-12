@@ -1,4 +1,4 @@
-# So it turns out the gold gitignore I was using previously completely prevented my project from building due to it excluding the folder when pushing to the project repo. 
+# So it turns out the old gitignore I was using previously completely prevented my project from building due to it excluding the folder when pushing to the project repo. 
 # I think I got it fixed now
 # For this project, only three folders have to be excluded:
 # 1. Builds (Bin)

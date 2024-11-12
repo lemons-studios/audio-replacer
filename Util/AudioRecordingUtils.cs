@@ -38,18 +38,20 @@ namespace AudioReplacer2.Util
 
         public async Task StopRecordingAudio(string file)
         {
-            await Task.Delay(250); // Artificial delay to add in the last moment of audio recording if the end-user stopped the recording prematurely
+            // Artificial delay to add in the last moment of audio recording if the end-user stopped the recording prematurely
+            // Task.Delay() is measured in milliseconds. 75 ms = 0.075s
+            await Task.Delay(75); 
 
             await recordingCapture.StopRecordAsync();
             var outFile = $"{file}0.wav"; // Temporary name, gets renamed back to actual file name at the end
 
-            // FFMpeg is used with shell commands here simply because I cannot bother figuring out .NET FFMpeg frameworks
+            // FFMpeg is used with shell commands here simply because I cannot bother trying to figure out .NET FFMpeg frameworks that are all just command wrappers anyways
             var ffmpegProcess = new Process
             {
                 StartInfo =
                 {
                     FileName = "ffmpeg",
-                    Arguments = $"-i \"{file}\" -af rubberband=pitch={pitchChange} -y \"{outFile}\"",
+                    Arguments = $"-i \"{file}\" -af \"rubberband=pitch={pitchChange} volume=1.25\" -y \"{outFile}\"",
                     RedirectStandardOutput = true,
                     RedirectStandardError = true,
                     UseShellExecute = false,
@@ -79,14 +81,9 @@ namespace AudioReplacer2.Util
             File.Delete(path);
         }
 
-        public void DiscardRecording(string path)
-        {
-            File.Delete(path);
-        }
-
         private string FormatFileName(string fileName)
         {
-            return requiresExtraEdits ? $"{fileName}-ExtraEditsRequired.wav" : fileName;
+            return requiresExtraEdits ? $"ExtraEditsRequired-{fileName}" : fileName;
         }
     }
 }

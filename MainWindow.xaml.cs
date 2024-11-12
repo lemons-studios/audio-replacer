@@ -3,6 +3,7 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using Windows.Storage.Pickers;
 using Windows.Storage;
 using Microsoft.UI.Windowing;
@@ -31,7 +32,8 @@ namespace AudioReplacer2
 
             AppWindow.MoveAndResize(new Windows.Graphics.RectInt32(500, 500, 950, 450));
 
-            AudioPreview.MediaPlayer.IsLoopingEnabled = true;
+            // Looping needs to be on to work around a bug in which the audio gets cut off for a split second after the first play.
+            AudioPreview.MediaPlayer.IsLoopingEnabled = true; 
             audioRecordingUtils = new AudioRecordingUtils();
 
             AppWindow.SetIcon("Assets/Titlebar.ico");
@@ -128,7 +130,7 @@ namespace AudioReplacer2
             {
                 isProcessing = false;
                 bool isSubmitButton = button.Name == "SubmitRecordingButton";
-                if(isSubmitButton) fileInteractionUtils.DeleteCurrentFile(/* This method essentially acts as a way to confirm the submission*/); else audioRecordingUtils.DiscardRecording(fileInteractionUtils.GetOutFilePath());
+                if(isSubmitButton) fileInteractionUtils.DeleteCurrentFile(/* This method essentially acts as a way to confirm the submission*/); else File.Delete(fileInteractionUtils.GetOutFilePath());
                 
                 ToggleFinalReviewButtons(false);
                 ToggleButtonStates(false);
