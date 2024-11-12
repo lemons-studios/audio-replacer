@@ -28,9 +28,11 @@ namespace AudioReplacer2
             InitializeComponent();
             windowFunc = new MainWindowFunctionality(voiceTuneMenu);
             voiceTuneMenu.ItemsSource = windowFunc.GetPitchTitles();
-            RequiresEffectsPrompt.ItemsSource = new List<string> {"Yes", "No"};
+            RequiresEffectsPrompt.ItemsSource = new List<string> {"Yes", "No"}; // Prevents clutter on the .xaml file (1 line added here is 3 lines removed from the xaml file)
 
-            AppWindow.MoveAndResize(new Windows.Graphics.RectInt32(500, 500, 950, 450));
+            // Usually Effects aren't needed so the default value should just be "no"
+            // Index 1 is "No" because I think it looks better visually. Makes no sense if you think of it from a programming mindset
+            RequiresEffectsPrompt.SelectedIndex = 1; 
 
             // Looping needs to be on to work around a bug in which the audio gets cut off for a split second after the first play.
             AudioPreview.MediaPlayer.IsLoopingEnabled = true; 
@@ -38,6 +40,7 @@ namespace AudioReplacer2
 
             AppWindow.SetIcon("Assets/Titlebar.ico");
             appWindow = windowFunc.GetAppWindowForCurrentWindow(this);
+            AppWindow.MoveAndResize(new Windows.Graphics.RectInt32(500, 500, 950, 450));
             appWindow.Closing += OnWindowClose;
         }
 
