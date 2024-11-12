@@ -11,8 +11,8 @@
 
     <Grid ColumnDefinitions="65*, 35*">
         <StackPanel Grid.Column="0" Background="#121212" Padding="15">
-            <TextBlock x:Name="CurrentFile" Text="Select a Folder" Style="{StaticResource TitleText}"/>
-            <Button x:Name="FolderSelector" Click="SelectProjectFolder" Style="{StaticResource ButtonStyle}" Margin="0 15" Content="Select a folder to begin"/>
+            <TextBlock x:Name="CurrentFile" Text="Select a folder to begin." Style="{StaticResource TitleText}"/>
+            <Button x:Name="FolderSelector" Click="SelectProjectFolder" Style="{StaticResource ButtonStyle}" Margin="0 15" Content="Select folder"/>
             <TextBlock x:Name="RemainingFiles" Style="{StaticResource FileCounter}" Visibility="Collapsed" Margin="0 25"/>
 
             <StackPanel>
