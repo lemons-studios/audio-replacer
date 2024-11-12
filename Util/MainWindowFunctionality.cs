@@ -1,18 +1,32 @@
 ﻿using Microsoft.UI.Xaml;
 using Microsoft.UI;
 using System;
+using System.Collections.Generic;
 using Windows.Media.Core;
-using Windows.Media.Playback;
 using WinRT.Interop;
 using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml.Controls;
-using Newtonsoft.Json.Linq;
 
 namespace AudioReplacer2.Util
 {
     // Easily removes a good chunk of code from MainWindow.xaml.cs. much easier to navigate through everything now!
     public class MainWindowFunctionality
     {
+        private readonly List<string> pitchMenuTitles;
+        private readonly List<float> pitchValues;
+
+        public MainWindowFunctionality(ComboBox pitchComboBox)
+        {
+            pitchMenuTitles = new List<string>();
+            pitchValues = new List<float>();
+
+            for (int i = 0; i < PitchData.pitchData.Length; i++)
+            {
+                pitchValues.Add(ParseFloat(PitchData.pitchData[i][0])); // Element 0 should always be a pitch value
+                pitchMenuTitles.Add(PitchData.pitchData[i][1]); // Element 1 should always be a name for the combo box
+            }
+        }
+
         public bool ToBool(int value)
         {
             return value > 0;
@@ -49,19 +63,19 @@ namespace AudioReplacer2.Util
             return AppWindow.GetFromWindowId(myWndId);
         }
 
-        public float GetPitchModifier(int index, string pitchData)
+        public List<string> GetPitchTitles()
         {
-            // TODO: JSON array is more evil than the evil switch case, replace with 2d array containing information on both character and pitch modification for (somewhat) easy edit-ability by any end user
-            JArray jPitchData = JArray.Parse(pitchData);
-            try
-            {
-                return (float)jPitchData[index]["pitchModification"];
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-                return 1;
-            }
+            return pitchMenuTitles;
+        }
+
+        public float GetPitchModifier(int index)
+        {
+            try { return pitchValues[index]; } catch { return 1; }
+        }
+
+        private float ParseFloat(string value)
+        {
+            try { return float.Parse(value); } catch { return 1; }
         }
     }
 }

@@ -37,45 +37,7 @@
 
         <StackPanel Grid.Column="1" Background="#151515" Padding="15">
             <TextBlock Text="Audio Tuning" Style="{StaticResource TitleText}"/>
-            <ComboBox x:Name="voiceTuneMenu" PlaceholderText="Pick Character" Margin="0 35" HorizontalAlignment="Center" Width="210" MaxDropDownHeight="300" IsTextSearchEnabled="True">
-                <x:String>Ai Ebihara</x:String>
-                <x:String>Ayane Matsunaga</x:String>
-                <x:String>Ameno-Sagiri</x:String>
-                <x:String>Chie Satonaka</x:String>
-                <x:String>Chihiro Fushimi</x:String>
-                <x:String>Daisuke Nagase</x:String>
-                <x:String>Eri Minami</x:String>
-                <x:String>Hanako Ohtani</x:String>
-                <x:String>Igor</x:String>
-                <x:String>Izanami</x:String>
-                <x:String>Kanji Tatsumi</x:String>
-                <x:String>Kinshiro Morooka</x:String>
-                <x:String>Kou Ichijo</x:String>
-                <x:String>Kunino-Sagiri </x:String>
-                <x:String>Kusumi-no-Okami</x:String>
-                <x:String>Margaret</x:String>
-                <x:String>Marie</x:String>
-                <x:String>Mitsuo Kubo</x:String>
-                <x:String>Nanako Dojima</x:String>
-                <x:String>Naoki Konishi</x:String>
-                <x:String>Naoto Shirogane</x:String>
-                <x:String>Noriko Kashiwagi</x:String>
-                <x:String>Principal (Gekkoukan)</x:String>
-                <x:String>Principal (Yasogami)</x:String>
-                <x:String>Rise Kujikawa</x:String>
-                <x:String>Ryotaro Dojima</x:String>
-                <x:String>Saki Konishi</x:String>
-                <x:String>Sayoko Uehara</x:String>
-                <x:String>Shu Nakajima</x:String>
-                <x:String>Taro Namatame</x:String>
-                <x:String>Teddie</x:String>
-                <x:String>Tohru Adachi</x:String>
-                <x:String>Yukiko Amagi</x:String>
-                <x:String>Yosuke Hanamura</x:String>
-                <x:String>Yu Narukami</x:String>
-                <x:String>Yumi Ozawa</x:String>
-                <x:String>Misc Character</x:String>
-            </ComboBox>
+            <ComboBox x:Name="voiceTuneMenu" PlaceholderText="Pick Character" Margin="0 35" HorizontalAlignment="Center" Width="210" MaxDropDownHeight="300" IsTextSearchEnabled="True" />
             <TextBlock Text="Does Audio Require Extra Audio Effects?" Style="{StaticResource TitleText}" TextWrapping="Wrap" FontSize="21" Margin="0 15"/>
             <ComboBox x:Name="RequiresEffectsPrompt" PlaceholderText="Yes/No?" Margin="0 10" HorizontalAlignment="Center" Width="175">
                 <x:String>No</x:String>

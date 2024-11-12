@@ -9,6 +9,7 @@ using WinRT.Interop;
 
 namespace AudioReplacer2
 {
+    
     public sealed partial class MainWindow : Window
     {
         private readonly AppWindow appWindow;
@@ -23,7 +24,9 @@ namespace AudioReplacer2
         public MainWindow() // This class has been somewhat minified for fun. Everything is still pretty readable though!!
         {
             InitializeComponent();
-            windowFunc = new MainWindowFunctionality();
+            windowFunc = new MainWindowFunctionality(voiceTuneMenu);
+            voiceTuneMenu.ItemsSource = windowFunc.GetPitchTitles();
+
             AppWindow.MoveAndResize(new Windows.Graphics.RectInt32(500, 500, 950, 450));
 
             AudioPreview.MediaPlayer.IsLoopingEnabled = true;
@@ -33,8 +36,6 @@ namespace AudioReplacer2
             appWindow = windowFunc.GetAppWindowForCurrentWindow(this);
             appWindow.Closing += OnWindowClose;
         }
-
-        private void OnWindowClose(object sender, AppWindowClosingEventArgs args) { if (fileInteractionUtils != null && (isProcessing || isRecording)) audioRecordingUtils.DiscardRecording(fileInteractionUtils.GetOutFilePath()); }
 
         private async void SelectProjectFolder(object sender, RoutedEventArgs e)
         {
@@ -97,7 +98,7 @@ namespace AudioReplacer2
         {
             if (voiceTuneMenu.SelectedItem != null)
             {
-                audioRecordingUtils.pitchChange = windowFunc.GetPitchModifier(voiceTuneMenu.SelectedIndex, PitchData.pitchJsonData);
+                audioRecordingUtils.pitchChange = windowFunc.GetPitchModifier(voiceTuneMenu.SelectedIndex);
                 previousPitchSelection = voiceTuneMenu.SelectedItem.ToString();
             }
             if (RequiresEffectsPrompt.SelectedItem != null) audioRecordingUtils.requiresExtraEdits = windowFunc.ToBool(RequiresEffectsPrompt.SelectedIndex);
@@ -163,5 +164,7 @@ namespace AudioReplacer2
             windowFunc.ToggleButton(DiscardRecordingButton, toggled);
             windowFunc.ToggleButton(SubmitRecordingButton, toggled);
         }
+
+        private void OnWindowClose(object sender, AppWindowClosingEventArgs args) { if (fileInteractionUtils != null && (isProcessing || isRecording)) audioRecordingUtils.DiscardRecording(fileInteractionUtils.GetOutFilePath()); }
     }
 }
