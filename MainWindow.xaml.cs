@@ -40,8 +40,24 @@ namespace AudioReplacer2
 
             AppWindow.SetIcon("Assets/Titlebar.ico");
             appWindow = windowFunc.GetAppWindowForCurrentWindow(this);
-            AppWindow.MoveAndResize(new Windows.Graphics.RectInt32(500, 500, 950, 450));
+            AppWindow.MoveAndResize(new Windows.Graphics.RectInt32(500, 500, 950, 375));
             appWindow.Closing += OnWindowClose;
+
+            // Set up event listeners for the two dropdowns
+            voiceTuneMenu.SelectionChanged += UpdateRecordingValues;
+            RequiresEffectsPrompt.SelectionChanged += UpdateRecordingValues;
+        }
+
+        private void UpdateRecordingValues(object sender, SelectionChangedEventArgs e)
+        {
+            if (voiceTuneMenu.SelectedItem != null)
+            {
+                audioRecordingUtils.pitchChange = windowFunc.GetPitchModifier(voiceTuneMenu.SelectedIndex);
+                previousPitchSelection = voiceTuneMenu.SelectedItem.ToString();
+            }
+            if (RequiresEffectsPrompt.SelectedItem != null) audioRecordingUtils.requiresExtraEdits = !windowFunc.ToBool(RequiresEffectsPrompt.SelectedIndex); // Inverse because "Yes" is the first option in the ComboBox
+
+            PitchSettingsFeedback.Text = $"Pitch Modifier: {audioRecordingUtils.pitchChange} ({previousPitchSelection})\nDoes file require extra edits? {windowFunc.BoolToYesNo(audioRecordingUtils.requiresExtraEdits)}";
         }
 
         private async void SelectProjectFolder(object sender, RoutedEventArgs e)
@@ -99,18 +115,6 @@ namespace AudioReplacer2
             // Update source of audio player and the title manually
             CurrentFile.Text = "Review your recording...";
             AudioPreview.Source = windowFunc.MediaSourceFromURI(fileInteractionUtils.GetOutFilePath());
-        }
-
-        private void ConfirmAudioProfile(object sender, RoutedEventArgs e)
-        {
-            if (voiceTuneMenu.SelectedItem != null)
-            {
-                audioRecordingUtils.pitchChange = windowFunc.GetPitchModifier(voiceTuneMenu.SelectedIndex);
-                previousPitchSelection = voiceTuneMenu.SelectedItem.ToString();
-            }
-            if (RequiresEffectsPrompt.SelectedItem != null) audioRecordingUtils.requiresExtraEdits = !windowFunc.ToBool(RequiresEffectsPrompt.SelectedIndex); // Inverse because "Yes" is the first option in the ComboBox
-            
-            PitchSettingsFeedback.Text = $"Pitch Modifier: {audioRecordingUtils.pitchChange} ({previousPitchSelection})\nDoes file require extra edits? {windowFunc.BoolToYesNo(audioRecordingUtils.requiresExtraEdits)}";
         }
 
         private void UpdateFileElements()

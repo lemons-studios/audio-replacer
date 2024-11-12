@@ -9,8 +9,8 @@
 
   <Identity
     Name="5c3ef8c0-0434-491c-8dc3-220953453a32"
-    Publisher="CN=Shob3r"
-    Version="2.1.0.0" />
+    Publisher="CN=Lemon Studios"
+    Version="2.1.2.0" />
 
   <mp:PhoneIdentity PhoneProductId="5c3ef8c0-0434-491c-8dc3-220953453a32" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 
