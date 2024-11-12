@@ -169,6 +169,6 @@ namespace AudioReplacer2
             windowFunc.ToggleButton(SubmitRecordingButton, toggled);
         }
 
-        private void OnWindowClose(object sender, AppWindowClosingEventArgs args) { if (fileInteractionUtils != null && (isProcessing || isRecording)) audioRecordingUtils.DiscardRecording(fileInteractionUtils.GetOutFilePath()); }
+        private void OnWindowClose(object sender, AppWindowClosingEventArgs args) { if (fileInteractionUtils != null && (isProcessing || isRecording)) File.Delete(fileInteractionUtils.GetOutFilePath()); }
     }
 }
