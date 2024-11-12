@@ -2,6 +2,7 @@ using AudioReplacer2.Util;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using System;
+using System.Collections.Generic;
 using Windows.Storage.Pickers;
 using Windows.Storage;
 using Microsoft.UI.Windowing;
@@ -16,7 +17,7 @@ namespace AudioReplacer2
         private readonly AudioRecordingUtils audioRecordingUtils;
         private FileInteractionUtils fileInteractionUtils;
         private readonly MainWindowFunctionality windowFunc;
-        private string previousPitchSelection = "No Pitch Change";
+        private string previousPitchSelection = "None Selected";
         
         private bool isProcessing;
         private bool isRecording;
@@ -26,6 +27,7 @@ namespace AudioReplacer2
             InitializeComponent();
             windowFunc = new MainWindowFunctionality(voiceTuneMenu);
             voiceTuneMenu.ItemsSource = windowFunc.GetPitchTitles();
+            RequiresEffectsPrompt.ItemsSource = new List<string> {"Yes", "No"};
 
             AppWindow.MoveAndResize(new Windows.Graphics.RectInt32(500, 500, 950, 450));
 

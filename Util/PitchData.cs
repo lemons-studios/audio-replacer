@@ -6,7 +6,7 @@
         // Use multiplicative values for pitch values (for example, if you want to reduce the pitch of the recording by 4%, you would want to enter in "0.96"
         public static string[][] pitchData =
         [
-            ["1.0075", "Ai Ebihara"], ["1.025", "Ayane Matsunaga"], ["0.655", "Ameno-Sagiri"], ["1.015", "Chie Satonaka"],
+            ["1.0075", "Ai Ebihara"], ["1.025", "Ayane Matsunaga"], ["0.555", "Ameno-Sagiri"], ["1.015", "Chie Satonaka"],
             ["1.012", "Chihiro Fushimi"], ["0.9925", "Daisuke Nagase"], ["1.0195", "Eri Minami"], ["1.0065", "Hanako Ohtani"],
             ["1.0", "Igor"],
             ["1.0085", "Izanami"], ["0.9970", "Kanji Tatsumi"], ["0.9875", "Kinshiro Morooka"], ["0.9975", "Kou Ichijo"],
@@ -26,7 +26,7 @@
         // So for my specific use case, here are the percentage decreases and whatnot:
         // Ai Ebihara receives a 0.75% Increase
         // Ayane Matsunaga receives a 2.5% Increase
-        // Ameno-Sagiri receives a 34.5% Decrease
+        // Ameno-Sagiri receives a 44.5% Decrease
         // Chie Satonaka receives a 1.5% Increase
         // Chihiro Fushimi receives a 1.2% Increase
         // Daisuke Nagase receives a 0.75% Decrease
