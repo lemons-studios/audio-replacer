@@ -74,7 +74,7 @@ namespace AudioReplacer2
         {
             if (fileInteractionUtils == null) return;
             AudioPreview.MediaPlayer.Pause();
-            var confirmSkip = new ContentDialog { Title = "Skip this file?", Content = "Are you sure you want to skip this file? You cannot reverse this action", PrimaryButtonText = "Skip", CloseButtonText = "Do not skip", XamlRoot = base.Content.XamlRoot };
+            var confirmSkip = new ContentDialog { Title = "Skip this file?", Content = "Are you sure you want to skip this file?", PrimaryButtonText = "Skip", CloseButtonText = "Don't Skip", XamlRoot = base.Content.XamlRoot };
             var confirmResult = await confirmSkip.ShowAsync();
 
             if (confirmResult == ContentDialogResult.Primary)
