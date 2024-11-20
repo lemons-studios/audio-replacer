@@ -1,16 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Window
+<WinUiEx:WindowEx
     x:Class="AudioReplacer2.MainWindow"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:AudioReplacer2"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:WinUiEx="using:WinUIEx"
     Title="Audio Replacer 2.1 ©2024 Shob3r and Lemon Studios"
-    mc:Ignorable="d">
+    mc:Ignorable="d"
+    MinHeight="400"
+    MaxHeight="400"
+    MinWidth="1024"
+    MaxWidth="1024">
 
-    <Grid ColumnDefinitions="65*, 35*">
-        <StackPanel Grid.Column="0" Background="#121212" Padding="15">
+    <Grid ColumnDefinitions="65*, 35*" Background="{ThemeResource LayerFillColorDefaultBrush}">
+        <StackPanel Grid.Column="0" Padding="15">
+            <Border Style="{StaticResource PanelCard}"/>
             <TextBlock x:Name="CurrentFile" Text="Select a folder to begin." Style="{StaticResource TitleText}"/>
             <Button x:Name="FolderSelector" Click="SelectProjectFolder" Style="{StaticResource ButtonStyle}" Margin="0 15" Content="Select folder"/>
             <TextBlock x:Name="RemainingFiles" Style="{StaticResource FileCounter}" Visibility="Collapsed" Margin="0 25"/>
@@ -35,11 +41,12 @@
             </StackPanel>
         </StackPanel>
 
-        <StackPanel Grid.Column="1" Background="#1c1c1c" Padding="15">
+        <StackPanel Grid.Column="1" Padding="15">
+            <Border Style="{StaticResource PanelCard}"/>
             <TextBlock Text="Audio Tuning" Style="{StaticResource TitleText}"/>
             <ComboBox x:Name="voiceTuneMenu" SelectionChanged="UpdateRecordingValues" PlaceholderText="Pick Character" Margin="0 35" HorizontalAlignment="Center" Width="210" MaxDropDownHeight="300" IsTextSearchEnabled="True" />
             <TextBlock Text="Does Audio Require Extra Audio Effects?" Style="{StaticResource TitleText}" TextWrapping="Wrap" FontSize="21" Margin="0 15"/>
             <ComboBox x:Name="RequiresEffectsPrompt" SelectionChanged="UpdateRecordingValues" PlaceholderText="Yes/No?" Margin="0 10" HorizontalAlignment="Center" Width="175" SelectedIndex="1" />
         </StackPanel>
     </Grid>
-</Window>
+</WinUiEx:WindowEx>

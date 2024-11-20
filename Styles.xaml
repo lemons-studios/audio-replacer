@@ -35,4 +35,11 @@
         <Setter Property="AutoPlay" Value="True"/>
         <Setter Property="HorizontalAlignment" Value="Center"/>
     </Style>
+
+    <Style x:Key="PanelCard" TargetType="Border">
+        <Setter Property="Background" Value="{ThemeResource LayerFillColorAltBrush}"/>
+        <Setter Property="BorderBrush" Value="{ThemeResource SurfaceStrokeColorDefaultBrush}"/>
+        <Setter Property="CornerRadius" Value="7.5"/>
+        <Setter Property="Padding" Value="1.5"/>
+    </Style>
 </ResourceDictionary>

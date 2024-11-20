@@ -1,4 +1,5 @@
 ﻿using Microsoft.UI.Xaml;
+using WinUIEx;
 
 namespace AudioReplacer2
 {
@@ -14,7 +15,6 @@ namespace AudioReplacer2
             mainWindow = new MainWindow();
             mainWindow.Activate();
         }
-
-        private Window mainWindow;
+        private MainWindow mainWindow;
     }
 }

@@ -8,11 +8,11 @@ using Windows.Storage.Pickers;
 using Windows.Storage;
 using Microsoft.UI.Windowing;
 using WinRT.Interop;
+using WinUIEx;
 
 namespace AudioReplacer2
 {
-    
-    public sealed partial class MainWindow : Window
+    public sealed partial class MainWindow : WindowEx
     {
         private readonly AppWindow appWindow;
         private readonly AudioRecordingUtils audioRecordingUtils;
@@ -34,9 +34,7 @@ namespace AudioReplacer2
             AudioPreview.MediaPlayer.IsLoopingEnabled = true; 
             audioRecordingUtils = new AudioRecordingUtils();
 
-            AppWindow.SetIcon("Assets/Titlebar.ico");
             appWindow = windowMethods.GetAppWindowForCurrentWindow(this);
-            AppWindow.MoveAndResize(new Windows.Graphics.RectInt32(500, 500, 950, 385));
             appWindow.Closing += OnWindowClose;
         }
 
@@ -74,7 +72,7 @@ namespace AudioReplacer2
         {
             if (fileInteractionUtils == null) return;
             AudioPreview.MediaPlayer.Pause();
-            var confirmSkip = new ContentDialog { Title = "Skip this file?", Content = "Are you sure you want to skip this file? You cannot reverse this action", PrimaryButtonText = "Skip", CloseButtonText = "Do not skip", XamlRoot = Content.XamlRoot };
+            var confirmSkip = new ContentDialog { Title = "Skip this file?", Content = "Are you sure you want to skip this file? You cannot reverse this action", PrimaryButtonText = "Skip", CloseButtonText = "Do not skip", XamlRoot = base.Content.XamlRoot };
             var confirmResult = await confirmSkip.ShowAsync();
 
             if (confirmResult == ContentDialogResult.Primary)
@@ -114,7 +112,7 @@ namespace AudioReplacer2
         private void UpdateFileElements()
         {
             CurrentFile.Text = fileInteractionUtils.GetCurrentFile();
-            RemainingFiles.Text = $"Files Remaining: {fileInteractionUtils.GetFilesRemaining().ToString("N0")}";
+            RemainingFiles.Text = $"Files Remaining: {fileInteractionUtils.GetFilesRemaining():N0}";
             AudioPreview.Source = windowMethods.MediaSourceFromURI(fileInteractionUtils.GetCurrentFile(false));
         }
 
