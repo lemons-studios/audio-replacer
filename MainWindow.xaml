@@ -7,7 +7,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:WinUiEx="using:WinUIEx"
-    Title="Audio Replacer 2.1 ©2024 Shob3r and Lemon Studios"
+    Title="Audio Replacer 2.3 ©2024 Shob3r and Lemon Studios"
     mc:Ignorable="d"
     MinHeight="400"
     MaxHeight="400"
@@ -15,7 +15,8 @@
     MaxWidth="1024">
 
     <Grid ColumnDefinitions="60*, 40*" Background="{ThemeResource LayerFillColorDefaultBrush}" Padding="2.5">
-        <Border Style="{StaticResource PanelCard}" Grid.Column="0" Width="550"/>
+        <Border Style="{StaticResource PanelCard}" Grid.Column="0" Width="575"/>
+
         <StackPanel Grid.Column="0" Padding="5" VerticalAlignment="Center">
             <TextBlock x:Name="CurrentFile" Text="Select a folder to begin." Style="{StaticResource TitleText}"/>
             <Button x:Name="FolderSelector" Click="SelectProjectFolder" Style="{StaticResource ButtonStyle}" Content="Select folder"/>
