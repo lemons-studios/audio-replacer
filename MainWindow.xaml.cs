@@ -113,7 +113,7 @@ namespace AudioReplacer2
 
         private void UpdateFileElements()
         {
-            CurrentFile.Text = fileInteractionUtils.GetCurrentFile();
+            CurrentFile.Text = windowBackend.GetFormattedCurrentFile(fileInteractionUtils.GetCurrentFile());
             RemainingFiles.Text = $"Files Remaining: {fileInteractionUtils.GetFilesRemaining():N0}";
             AudioPreview.Source = windowBackend.MediaSourceFromURI(fileInteractionUtils.GetCurrentFile(false));
         }

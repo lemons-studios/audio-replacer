@@ -84,6 +84,11 @@ namespace AudioReplacer2.Util
             return build != 0 ? $"{major}.{minor}.{build}" : $"{major}.{minor}";
         }
 
+        public string GetFormattedCurrentFile(string input)
+        {
+            return input.Replace(@"\", "/");
+        }
+
         private float ParseFloat(string value)
         {
             try { return float.Parse(value); } catch { return 1; }

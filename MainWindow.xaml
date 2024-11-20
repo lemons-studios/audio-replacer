@@ -7,6 +7,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:WinUiEx="using:WinUIEx"
+    xmlns:audioReplacer2="using:AudioReplacer2"
     mc:Ignorable="d"
     MinHeight="400"
     MaxHeight="400"
@@ -18,7 +19,7 @@
 
         <StackPanel Grid.Column="0" Padding="5" VerticalAlignment="Center">
             <TextBlock x:Name="CurrentFile" Text="Select a folder to begin." Style="{StaticResource TitleText}"/>
-            <Button x:Name="FolderSelector" Click="SelectProjectFolder" Style="{StaticResource ButtonStyle}" Content="Select folder"/>
+            <Button x:Name="FolderSelector" Click="SelectProjectFolder" Style="{StaticResource ButtonStyle}" Content="Select folder" />
             <TextBlock x:Name="RemainingFiles" Style="{StaticResource FileCounter}" Visibility="Collapsed"/>
 
             <StackPanel>

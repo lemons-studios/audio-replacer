@@ -24,7 +24,7 @@
         <Setter Property="CornerRadius" Value="1.5"/>
     </Style>
 
-    <Style x:Key="OperationButton" TargetType="Button" BasedOn="{StaticResource ButtonStyle}">
+    <Style x:Key="OperationButton" TargetType="Button" BasedOn="{StaticResource AccentButtonStyle}">
         <Setter Property="Margin" Value="20 0"/>
     </Style>
 

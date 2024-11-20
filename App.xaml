@@ -6,13 +6,18 @@
     xmlns:local="using:AudioReplacer2">
     <Application.Resources>
         <ResourceDictionary>
-                <ResourceDictionary.MergedDictionaries>
+            <ResourceDictionary.MergedDictionaries>
                     <XamlControlsResources xmlns="using:Microsoft.UI.Xaml.Controls" />
-                    <ResourceDictionary Source="Styles.xaml"/>
+                <ResourceDictionary Source="Styles.xaml"/>
+                <ResourceDictionary Source="Button_themeresources.xaml"/>
                 <!-- Other merged dictionaries here -->
                 </ResourceDictionary.MergedDictionaries>
-                <!-- Other app resources here -->
-            </ResourceDictionary>
+            <ResourceDictionary.ThemeDictionaries>
+                <ResourceDictionary x:Key="Dark">
+                    <SolidColorBrush x:Key="ButtonBackgroundPointerOver" Color="{ThemeResource AccentFillColorTertiaryBrush}"/>
+                </ResourceDictionary>
+            </ResourceDictionary.ThemeDictionaries>
+        </ResourceDictionary>
     </Application.Resources>
 </Application>
 
