@@ -39,7 +39,8 @@
     <Style x:Key="PanelCard" TargetType="Border">
         <Setter Property="Background" Value="{ThemeResource LayerFillColorAltBrush}"/>
         <Setter Property="BorderBrush" Value="{ThemeResource SurfaceStrokeColorDefaultBrush}"/>
-        <Setter Property="CornerRadius" Value="7.5"/>
+        <Setter Property="CornerRadius" Value="12"/>
         <Setter Property="Padding" Value="1.5"/>
+        <Setter Property="Height" Value="325"/>
     </Style>
 </ResourceDictionary>

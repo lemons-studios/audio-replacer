@@ -14,12 +14,12 @@
     MinWidth="1024"
     MaxWidth="1024">
 
-    <Grid ColumnDefinitions="65*, 35*" Background="{ThemeResource LayerFillColorDefaultBrush}">
-        <StackPanel Grid.Column="0" Padding="15">
-            <Border Style="{StaticResource PanelCard}"/>
+    <Grid ColumnDefinitions="60*, 40*" Background="{ThemeResource LayerFillColorDefaultBrush}" Padding="2.5">
+        <Border Style="{StaticResource PanelCard}" Grid.Column="0" Width="550"/>
+        <StackPanel Grid.Column="0" Padding="5" VerticalAlignment="Center">
             <TextBlock x:Name="CurrentFile" Text="Select a folder to begin." Style="{StaticResource TitleText}"/>
-            <Button x:Name="FolderSelector" Click="SelectProjectFolder" Style="{StaticResource ButtonStyle}" Margin="0 15" Content="Select folder"/>
-            <TextBlock x:Name="RemainingFiles" Style="{StaticResource FileCounter}" Visibility="Collapsed" Margin="0 25"/>
+            <Button x:Name="FolderSelector" Click="SelectProjectFolder" Style="{StaticResource ButtonStyle}" Content="Select folder"/>
+            <TextBlock x:Name="RemainingFiles" Style="{StaticResource FileCounter}" Visibility="Collapsed"/>
 
             <StackPanel>
                 <MediaPlayerElement x:Name="AudioPreview" Style="{StaticResource AudioPlayer}" Visibility="Visible">
@@ -41,11 +41,11 @@
             </StackPanel>
         </StackPanel>
 
-        <StackPanel Grid.Column="1" Padding="15">
-            <Border Style="{StaticResource PanelCard}"/>
+        <Border Style="{StaticResource PanelCard}" Grid.Column="1" Width="350"/>
+        <StackPanel Grid.Column="1" Padding="5" VerticalAlignment="Center">
             <TextBlock Text="Audio Tuning" Style="{StaticResource TitleText}"/>
             <ComboBox x:Name="voiceTuneMenu" SelectionChanged="UpdateRecordingValues" PlaceholderText="Pick Character" Margin="0 35" HorizontalAlignment="Center" Width="210" MaxDropDownHeight="300" IsTextSearchEnabled="True" />
-            <TextBlock Text="Does Audio Require Extra Audio Effects?" Style="{StaticResource TitleText}" TextWrapping="Wrap" FontSize="21" Margin="0 15"/>
+            <TextBlock Text="Does Audio Require Extra Audio Effects?" Style="{StaticResource TitleText}" TextWrapping="WrapWholeWords" FontSize="21" Margin="0 15" Width="275"/>
             <ComboBox x:Name="RequiresEffectsPrompt" SelectionChanged="UpdateRecordingValues" PlaceholderText="Yes/No?" Margin="0 10" HorizontalAlignment="Center" Width="175" SelectedIndex="1" />
         </StackPanel>
     </Grid>
