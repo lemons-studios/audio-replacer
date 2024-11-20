@@ -18,13 +18,13 @@ namespace AudioReplacer2.Util
 
         public MainWindowFunctionality(ComboBox pitchComboBox)
         {
-            pitchMenuTitles = new List<string>();
-            pitchValues = new List<float>();
+            pitchMenuTitles = [];
+            pitchValues = [];
 
-            for (int i = 0; i < PitchData.pitchData.Length; i++)
+            foreach (var data in PitchData.pitchData)
             {
-                pitchValues.Add(ParseFloat(PitchData.pitchData[i][0])); // Element 0 should always be a pitch value
-                pitchMenuTitles.Add(PitchData.pitchData[i][1]); // Element 1 should always be a name for the combo box
+                pitchValues.Add(ParseFloat(data[0])); // Position 0 of each array in the 2d array should have the pitch data, as mentioned in PitchData.cs
+                pitchMenuTitles.Add(data[1]); // Position 1 of each array in the 2d array should have the name of the character, as mentioned in PitchData.cs
             }
         }
 
@@ -45,13 +45,13 @@ namespace AudioReplacer2.Util
 
         public void ToggleButton(Button button, bool toggle)
         {
-            Visibility toggleVisibility = ToVisibility(toggle);
+            var toggleVisibility = ToVisibility(toggle);
 
             button.IsEnabled = toggle;
             button.Visibility = toggleVisibility;
         }
 
-        public MediaSource MediaSourceFromURI(string path)
+        public MediaSource MediaSourceFromUri(string path)
         {
             return MediaSource.CreateFromUri(new Uri(path));
         }
@@ -59,8 +59,9 @@ namespace AudioReplacer2.Util
         // Thanks StackOverflow man!
         public AppWindow GetAppWindowForCurrentWindow(object window)
         {
-            IntPtr hWnd = WindowNative.GetWindowHandle(window);
-            WindowId myWndId = Win32Interop.GetWindowIdFromWindow(hWnd);
+            var hWnd = WindowNative.GetWindowHandle(window);
+            var myWndId = Win32Interop.GetWindowIdFromWindow(hWnd);
+
             return AppWindow.GetFromWindowId(myWndId);
         }
 

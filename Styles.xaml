@@ -35,6 +35,7 @@
         <Setter Property="AutoPlay" Value="True"/>
         <Setter Property="HorizontalAlignment" Value="Center"/>
         <Setter Property="CornerRadius" Value="4"/>
+        <Setter Property="Background" Value="{ThemeResource LayerOnMicaBaseAltFillColorTertiaryBrush}"/>
     </Style>
 
     <Style x:Key="PanelCard" TargetType="Border">
@@ -44,5 +45,4 @@
         <Setter Property="Padding" Value="1.5"/>
         <Setter Property="Height" Value="325"/>
     </Style>
-    
 </ResourceDictionary>

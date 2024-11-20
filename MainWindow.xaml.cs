@@ -108,14 +108,14 @@ namespace AudioReplacer2
 
             // Update source of audio player and the title manually
             CurrentFile.Text = "Review your recording...";
-            AudioPreview.Source = windowBackend.MediaSourceFromURI(fileInteractionUtils.GetOutFilePath());
+            AudioPreview.Source = windowBackend.MediaSourceFromUri(fileInteractionUtils.GetOutFilePath());
         }
 
         private void UpdateFileElements()
         {
             CurrentFile.Text = windowBackend.GetFormattedCurrentFile(fileInteractionUtils.GetCurrentFile());
             RemainingFiles.Text = $"Files Remaining: {fileInteractionUtils.GetFilesRemaining():N0}";
-            AudioPreview.Source = windowBackend.MediaSourceFromURI(fileInteractionUtils.GetCurrentFile(false));
+            AudioPreview.Source = windowBackend.MediaSourceFromUri(fileInteractionUtils.GetCurrentFile(false));
         }
 
         private async void CancelCurrentRecording(object sender, RoutedEventArgs e)
