@@ -7,7 +7,6 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:WinUiEx="using:WinUIEx"
-    Title="Audio Replacer 2.3 ©2024 Shob3r and Lemon Studios"
     mc:Ignorable="d"
     MinHeight="400"
     MaxHeight="400"

@@ -18,7 +18,7 @@ namespace AudioReplacer2
         private readonly AppWindow appWindow;
         private readonly AudioRecordingUtils audioRecordingUtils;
         private FileInteractionUtils fileInteractionUtils;
-        private readonly MainWindowFunctionality windowMethods;
+        private readonly MainWindowFunctionality windowBackend;
         private string previousPitchSelection = "None Selected";
         
         private bool isProcessing;
@@ -27,15 +27,16 @@ namespace AudioReplacer2
         public MainWindow() // This class has been somewhat minified for fun. Everything is still pretty readable though!!
         {
             InitializeComponent();
-            windowMethods = new MainWindowFunctionality(voiceTuneMenu);
-            voiceTuneMenu.ItemsSource = windowMethods.GetPitchTitles();
+            windowBackend = new MainWindowFunctionality(voiceTuneMenu);
+            this.Title = $"Audio Replacer {windowBackend.GetAppVersion()}";
+            voiceTuneMenu.ItemsSource = windowBackend.GetPitchTitles();
             RequiresEffectsPrompt.ItemsSource = new List<string> {"Yes", "No"}; // Prevents clutter on the .xaml file (1 line added here is 3 lines removed from the xaml file)
 
             // Looping needs to be on to work around a bug in which the audio gets cut off for a split second after the first play.
             AudioPreview.MediaPlayer.IsLoopingEnabled = true; 
             audioRecordingUtils = new AudioRecordingUtils();
 
-            appWindow = windowMethods.GetAppWindowForCurrentWindow(this);
+            appWindow = windowBackend.GetAppWindowForCurrentWindow(this);
             appWindow.Closing += OnWindowClose;
         }
 
@@ -44,12 +45,12 @@ namespace AudioReplacer2
             if (audioRecordingUtils == null) return;
             if (voiceTuneMenu.SelectedItem != null)
             {
-                audioRecordingUtils.pitchChange = windowMethods.GetPitchModifier(voiceTuneMenu.SelectedIndex);
+                audioRecordingUtils.pitchChange = windowBackend.GetPitchModifier(voiceTuneMenu.SelectedIndex);
                 previousPitchSelection = voiceTuneMenu.SelectedItem.ToString();
             }
-            if (RequiresEffectsPrompt.SelectedItem != null) audioRecordingUtils.requiresExtraEdits = !windowMethods.ToBool(RequiresEffectsPrompt.SelectedIndex); // Inverse because "Yes" is the first option in the ComboBox
+            if (RequiresEffectsPrompt.SelectedItem != null) audioRecordingUtils.requiresExtraEdits = !windowBackend.ToBool(RequiresEffectsPrompt.SelectedIndex); // Inverse because "Yes" is the first option in the ComboBox
 
-            PitchSettingsFeedback.Text = $"Pitch Modifier: {audioRecordingUtils.pitchChange} ({previousPitchSelection})\nDoes file require extra edits? {windowMethods.BoolToYesNo(audioRecordingUtils.requiresExtraEdits)}";
+            PitchSettingsFeedback.Text = $"Pitch Modifier: {audioRecordingUtils.pitchChange} ({previousPitchSelection})\nDoes file require extra edits? {windowBackend.BoolToYesNo(audioRecordingUtils.requiresExtraEdits)}";
         }
 
         private async void SelectProjectFolder(object sender, RoutedEventArgs e)
@@ -107,14 +108,14 @@ namespace AudioReplacer2
 
             // Update source of audio player and the title manually
             CurrentFile.Text = "Review your recording...";
-            AudioPreview.Source = windowMethods.MediaSourceFromURI(fileInteractionUtils.GetOutFilePath());
+            AudioPreview.Source = windowBackend.MediaSourceFromURI(fileInteractionUtils.GetOutFilePath());
         }
 
         private void UpdateFileElements()
         {
             CurrentFile.Text = fileInteractionUtils.GetCurrentFile();
             RemainingFiles.Text = $"Files Remaining: {fileInteractionUtils.GetFilesRemaining():N0}";
-            AudioPreview.Source = windowMethods.MediaSourceFromURI(fileInteractionUtils.GetCurrentFile(false));
+            AudioPreview.Source = windowBackend.MediaSourceFromURI(fileInteractionUtils.GetCurrentFile(false));
         }
 
         private async void CancelCurrentRecording(object sender, RoutedEventArgs e)
@@ -141,8 +142,8 @@ namespace AudioReplacer2
         private void InitialFileSetup(string path)
         {
             RemainingFiles.Visibility = Visibility.Visible;
-            windowMethods.ToggleButton(SkipAudioButton, true);
-            windowMethods.ToggleButton(StartRecordingButton, true);
+            windowBackend.ToggleButton(SkipAudioButton, true);
+            windowBackend.ToggleButton(StartRecordingButton, true);
 
             fileInteractionUtils = new FileInteractionUtils(path);
             UpdateFileElements();
@@ -154,19 +155,19 @@ namespace AudioReplacer2
             Button[] buttonsNotRecording = [StartRecordingButton, SkipAudioButton];
             for (int i = 0; i < buttonsRecording.Length; i++)
             {
-                windowMethods.ToggleButton(buttonsRecording[i], recording); // Any buttons that appear during recording get toggled by the recording bool
-                windowMethods.ToggleButton(buttonsNotRecording[i], !recording); // Any buttons that appear before recording get toggled by the inverse of the recording bool
+                windowBackend.ToggleButton(buttonsRecording[i], recording); // Any buttons that appear during recording get toggled by the recording bool
+                windowBackend.ToggleButton(buttonsNotRecording[i], !recording); // Any buttons that appear before recording get toggled by the inverse of the recording bool
             }
         }
 
         private void ToggleFinalReviewButtons(bool toggled)
         {
             // No reason to toggle between the EndRecordingButton states, hard-code to disable
-            windowMethods.ToggleButton(EndRecordingButton, false);
-            windowMethods.ToggleButton(CancelRecordingButton, false);
+            windowBackend.ToggleButton(EndRecordingButton, false);
+            windowBackend.ToggleButton(CancelRecordingButton, false);
 
-            windowMethods.ToggleButton(DiscardRecordingButton, toggled);
-            windowMethods.ToggleButton(SubmitRecordingButton, toggled);
+            windowBackend.ToggleButton(DiscardRecordingButton, toggled);
+            windowBackend.ToggleButton(SubmitRecordingButton, toggled);
         }
 
         private void OnWindowClose(object sender, AppWindowClosingEventArgs args) { if (fileInteractionUtils != null && (isProcessing || isRecording)) File.Delete(fileInteractionUtils.GetOutFilePath()); }

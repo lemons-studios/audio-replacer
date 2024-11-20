@@ -6,6 +6,7 @@ using Windows.Media.Core;
 using WinRT.Interop;
 using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml.Controls;
+using Windows.ApplicationModel;
 
 namespace AudioReplacer2.Util
 {
@@ -71,6 +72,16 @@ namespace AudioReplacer2.Util
         public float GetPitchModifier(int index)
         {
             try { return pitchValues[index]; } catch { return 1; }
+        }
+
+        public string GetAppVersion()
+        {
+            var appVersion = Package.Current.Id.Version;
+            int major = appVersion.Major;
+            int minor = appVersion.Minor;
+            int build = appVersion.Build;
+
+            return build != 0 ? $"{major}.{minor}.{build}" : $"{major}.{minor}";
         }
 
         private float ParseFloat(string value)
