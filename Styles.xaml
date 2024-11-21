@@ -45,4 +45,32 @@
         <Setter Property="Padding" Value="1.5"/>
         <Setter Property="Height" Value="325"/>
     </Style>
+
+    <Style x:Key="TitleBarText" TargetType="TextBlock">
+        <Setter Property="VerticalAlignment" Value="Center"/>
+        <Setter Property="Margin" Value="7.5 0 0 0"/>
+        <Setter Property="FontSize" Value="13.5"/>
+    </Style>
+
+    <Style x:Key="TitleBarIcon" TargetType="Image">
+        <Setter Property="Width" Value="22"/>
+        <Setter Property="Height" Value="22"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+        <Setter Property="Margin" Value="5 0 5 0"/>
+    </Style>
+
+    <Style x:Key="DropdownMenu" TargetType="ComboBox">
+        <Setter Property="HorizontalAlignment" Value="Center"/>
+        <Setter Property="MaxDropDownHeight" Value="285"/>
+        <Setter Property="Width" Value="210"/>
+        <Setter Property="CornerRadius" Value="4"/>
+    </Style>
+
+    <Style x:Key="ToastNotification" TargetType="InfoBar">
+        <Setter Property="HorizontalAlignment" Value="Center"/>
+        <Setter Property="VerticalAlignment" Value="Top"/>
+        <Setter Property="Margin" Value="0 20 0 15"/>
+        <Setter Property="Width" Value="450"/>
+        <Setter Property="CornerRadius" Value="4"/>
+    </Style>
 </ResourceDictionary>

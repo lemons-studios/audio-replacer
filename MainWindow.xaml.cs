@@ -1,9 +1,9 @@
-
 using AudioReplacer2.Util;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using Windows.Storage.Pickers;
 using Windows.Storage;
@@ -173,6 +173,12 @@ namespace AudioReplacer2
 
             windowBackend.ToggleButton(DiscardRecordingButton, toggled);
             windowBackend.ToggleButton(SubmitRecordingButton, toggled);
+        }
+
+        private void OpenGithubReleases(object sender, RoutedEventArgs e)
+        {
+            string url = "https://github.com/lemons-studios/audio-replacer-2/releases/latest";
+            Process.Start(new ProcessStartInfo("cmd", $"/c start {url}") { CreateNoWindow = true });
         }
 
         private void OnWindowClose(object sender, AppWindowClosingEventArgs args) { if (fileInteractionUtils != null && (isProcessing || isRecording)) File.Delete(fileInteractionUtils.GetOutFilePath()); }
