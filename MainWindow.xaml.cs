@@ -93,9 +93,13 @@ namespace AudioReplacer2
             {
                 fileInteractionUtils.SkipAudioTrack();
                 UpdateFileElements();
+                windowBackend.UpdateInfoBar(ToastNotification, "Success!", "File skipped!", 1);
             }
-            else AudioPreview.MediaPlayer.Play();
-            windowBackend.UpdateInfoBar(ToastNotification, "Success!", "File skipped!", 1);
+            else
+            {
+                AudioPreview.MediaPlayer.Play();
+                windowBackend.UpdateInfoBar(ToastNotification, "Cancelled", "File skip cancelled" , 2);
+            }
         }
 
         private async void StartRecordingAudio(object sender, RoutedEventArgs e)
