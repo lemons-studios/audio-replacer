@@ -20,7 +20,7 @@
             ["1.015", "Sayoko Uehara"], ["1.00175", "Shu Nakajima"], ["0.9835", "Taro Namatame"], ["1", "Teddie"],
             ["0.975", "Tohru Adachi"],
             ["1.0165", "Yukiko Amagi"], ["0.9975", "Yosuke Hanamura"], ["0.9875", "Yu Narukami"], ["1.0135", "Yumi Ozawa"],
-            ["1.0", "Other NPC"]
+            ["1.00", "Other NPC"]
         ];
 
         // So for my specific use case, here are the percentage decreases and whatnot:

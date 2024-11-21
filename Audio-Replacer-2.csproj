@@ -29,6 +29,7 @@
     <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
     <WindowsPackageType>MSIX</WindowsPackageType>
     <StartupObject></StartupObject>
+    <ApplicationIcon>Assets\Titlebar.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
     <Content Remove="Assets\BadgeLogo.scale-100.png" />

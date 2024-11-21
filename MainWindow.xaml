@@ -16,41 +16,46 @@
     <Window.SystemBackdrop>
         <MicaBackdrop />
     </Window.SystemBackdrop>
+    <StackPanel>
+        <Border x:Name="AppTitleBar" Grid.Column="1" VerticalAlignment="Center" Padding="5">
+            <TextBlock x:Name="AppTitle" Text="Temp" VerticalAlignment="Center" HorizontalAlignment="Left" TextAlignment="Left" Margin="15,8,0,0" FontSize="13"/>
+        </Border>
 
-    <Grid ColumnDefinitions="60*, 40*" Padding="2.5">
-        <Border Style="{StaticResource PanelCard}" Grid.Column="0" Width="575"/>
+        <Grid ColumnDefinitions="60*, 40*" Padding="2.5">
+            <Border Style="{StaticResource PanelCard}" Grid.Column="0" Width="575"/>
 
-        <StackPanel Grid.Column="0" Padding="5" VerticalAlignment="Center">
-            <TextBlock x:Name="CurrentFile" Text="Select a folder to begin." Style="{StaticResource TitleText}" Margin="0 7.5"/>
-            <Button x:Name="FolderSelector" Click="SelectProjectFolder" Style="{StaticResource ButtonStyle}" Content="Select folder" />
-            <TextBlock x:Name="RemainingFiles" Style="{StaticResource FileCounter}" Visibility="Collapsed"/>
+            <StackPanel Grid.Column="0" Padding="5" VerticalAlignment="Center">
+                <TextBlock x:Name="CurrentFile" Text="Select a folder to begin." Style="{StaticResource TitleText}" Margin="0 7.5"/>
+                <Button x:Name="FolderSelector" Click="SelectProjectFolder" Style="{StaticResource ButtonStyle}" Content="Select folder" />
+                <TextBlock x:Name="RemainingFiles" Style="{StaticResource FileCounter}" Visibility="Collapsed"/>
 
-            <StackPanel>
-                <MediaPlayerElement x:Name="AudioPreview" Style="{StaticResource AudioPlayer}" Visibility="Visible">
-                    <MediaPlayerElement.TransportControls>
-                        <MediaTransportControls  IsCompact="True" VerticalAlignment="Center" IsSeekBarVisible="True" ShowAndHideAutomatically="False"/>
-                    </MediaPlayerElement.TransportControls>
-                </MediaPlayerElement>
-                <TextBlock x:Name="PitchSettingsFeedback" HorizontalAlignment="Center" FontSize="13.5" TextAlignment="Center" Text="Set pitch values in the right-hand panel"/>
+                <StackPanel>
+                    <MediaPlayerElement x:Name="AudioPreview" Style="{StaticResource AudioPlayer}" Visibility="Visible">
+                        <MediaPlayerElement.TransportControls>
+                            <MediaTransportControls x:Name="AudioPreviewControls" IsCompact="True" VerticalAlignment="Center" IsSeekBarVisible="True" ShowAndHideAutomatically="False" IsEnabled="False"/>
+                        </MediaPlayerElement.TransportControls>
+                    </MediaPlayerElement>
+                    <TextBlock x:Name="PitchSettingsFeedback" HorizontalAlignment="Center" FontSize="13.5" TextAlignment="Center" Text="Set pitch values in the right-hand panel"/>
+                </StackPanel>
+
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0 25">
+                    <Button x:Name="SkipAudioButton" Click="SkipCurrentAudioFile" Style="{StaticResource OperationButton}" IsEnabled="False" Content="Skip" />
+                    <Button x:Name="CancelRecordingButton" Click="CancelCurrentRecording" Style="{StaticResource OperationButton}" Content="Cancel" IsEnabled="False" Visibility="Collapsed" />
+                    <Button x:Name="DiscardRecordingButton" Click="UpdateAudioStatus" Style="{StaticResource OperationButton}" Content="Reject" IsEnabled="False" Visibility="Collapsed" />
+
+                    <Button x:Name="StartRecordingButton" Click="StartRecordingAudio" Style="{StaticResource OperationButton}" IsEnabled="False" Content="Record"/>
+                    <Button x:Name="EndRecordingButton" Click="StopRecordingAudio" Style="{StaticResource OperationButton}" Content="End Recording" IsEnabled="False" Visibility="Collapsed" />
+                    <Button x:Name="SubmitRecordingButton" Click="UpdateAudioStatus" Style="{StaticResource OperationButton}" Content="Submit" IsEnabled="False" Visibility="Collapsed" />
+                </StackPanel>
             </StackPanel>
 
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0 25">
-                <Button x:Name="SkipAudioButton" Click="SkipCurrentAudioFile" Style="{StaticResource OperationButton}" IsEnabled="False" Content="Skip" />
-                <Button x:Name="CancelRecordingButton" Click="CancelCurrentRecording" Style="{StaticResource OperationButton}" Content="Cancel" IsEnabled="False" Visibility="Collapsed" />
-                <Button x:Name="DiscardRecordingButton" Click="UpdateAudioStatus" Style="{StaticResource OperationButton}" Content="Reject" IsEnabled="False" Visibility="Collapsed" />
-
-                <Button x:Name="StartRecordingButton" Click="StartRecordingAudio" Style="{StaticResource OperationButton}" IsEnabled="False" Content="Record"/>
-                <Button x:Name="EndRecordingButton" Click="StopRecordingAudio" Style="{StaticResource OperationButton}" Content="End Recording" IsEnabled="False" Visibility="Collapsed" />
-                <Button x:Name="SubmitRecordingButton" Click="UpdateAudioStatus" Style="{StaticResource OperationButton}" Content="Submit" IsEnabled="False" Visibility="Collapsed" />
+            <Border Style="{StaticResource PanelCard}" Grid.Column="1" Width="375"/>
+            <StackPanel Grid.Column="1" Padding="5" VerticalAlignment="Center">
+                <TextBlock Text="Audio Tuning" Style="{StaticResource TitleText}"/>
+                <ComboBox x:Name="VoiceTuneMenu" SelectionChanged="UpdateRecordingValues" PlaceholderText="Pick Character" Margin="0 35" HorizontalAlignment="Center" Width="210" MaxDropDownHeight="300" IsTextSearchEnabled="True" />
+                <TextBlock Text="Does Audio Require Extra Audio Effects?" Style="{StaticResource TitleText}" TextWrapping="WrapWholeWords" FontSize="21" Margin="0 15" Width="275"/>
+                <ComboBox x:Name="RequiresEffectsPrompt" SelectionChanged="UpdateRecordingValues" PlaceholderText="Yes/No?" Margin="0 10" HorizontalAlignment="Center" Width="210" SelectedIndex="1" />
             </StackPanel>
-        </StackPanel>
-
-        <Border Style="{StaticResource PanelCard}" Grid.Column="1" Width="375"/>
-        <StackPanel Grid.Column="1" Padding="5" VerticalAlignment="Center">
-            <TextBlock Text="Audio Tuning" Style="{StaticResource TitleText}"/>
-            <ComboBox x:Name="voiceTuneMenu" SelectionChanged="UpdateRecordingValues" PlaceholderText="Pick Character" Margin="0 35" HorizontalAlignment="Center" Width="210" MaxDropDownHeight="300" IsTextSearchEnabled="True" />
-            <TextBlock Text="Does Audio Require Extra Audio Effects?" Style="{StaticResource TitleText}" TextWrapping="WrapWholeWords" FontSize="21" Margin="0 15" Width="275"/>
-            <ComboBox x:Name="RequiresEffectsPrompt" SelectionChanged="UpdateRecordingValues" PlaceholderText="Yes/No?" Margin="0 10" HorizontalAlignment="Center" Width="210" SelectedIndex="1" />
-        </StackPanel>
-    </Grid>
+        </Grid>
+    </StackPanel>
 </WinUiEx:WindowEx>

@@ -27,9 +27,9 @@ namespace AudioReplacer2
         public MainWindow() // This class has been somewhat minified for fun. Everything is still pretty readable though!!
         {
             InitializeComponent();
-            windowBackend = new MainWindowFunctionality(voiceTuneMenu);
-            this.Title = $"Audio Replacer {windowBackend.GetAppVersion()}";
-            voiceTuneMenu.ItemsSource = windowBackend.GetPitchTitles();
+            windowBackend = new MainWindowFunctionality(VoiceTuneMenu);
+            
+            VoiceTuneMenu.ItemsSource = windowBackend.GetPitchTitles();
             RequiresEffectsPrompt.ItemsSource = new List<string> {"Yes", "No"}; // Prevents clutter on the .xaml file (1 line added here is 3 lines removed from the xaml file)
 
             // Looping needs to be on to work around a bug in which the audio gets cut off for a split second after the first play.
@@ -38,15 +38,18 @@ namespace AudioReplacer2
 
             appWindow = windowBackend.GetAppWindowForCurrentWindow(this);
             appWindow.Closing += OnWindowClose;
+            this.ExtendsContentIntoTitleBar = true;
+            this.SetTitleBar(AppTitleBar);
+            AppTitle.Text = $"Audio Replacer {windowBackend.GetAppVersion()}";
         }
 
         private void UpdateRecordingValues(object sender, SelectionChangedEventArgs e)
         {
             if (audioRecordingUtils == null) return;
-            if (voiceTuneMenu.SelectedItem != null)
+            if (VoiceTuneMenu.SelectedItem != null)
             {
-                audioRecordingUtils.pitchChange = windowBackend.GetPitchModifier(voiceTuneMenu.SelectedIndex);
-                previousPitchSelection = voiceTuneMenu.SelectedItem.ToString();
+                audioRecordingUtils.pitchChange = windowBackend.GetPitchModifier(VoiceTuneMenu.SelectedIndex);
+                previousPitchSelection = VoiceTuneMenu.SelectedItem.ToString();
             }
             if (RequiresEffectsPrompt.SelectedItem != null) audioRecordingUtils.requiresExtraEdits = !windowBackend.ToBool(RequiresEffectsPrompt.SelectedIndex); // Inverse because "Yes" is the first option in the ComboBox
 
@@ -66,8 +69,7 @@ namespace AudioReplacer2
             if (folder == null) return;
             Windows.Storage.AccessCache.StorageApplicationPermissions.FutureAccessList.AddOrReplace("PickedFolderToken", folder);
 
-            FolderSelector.Visibility = Visibility.Collapsed;
-            InitialFileSetup(folder.Path);
+            ProjectSetup(folder.Path);
         }
 
         private async void SkipCurrentAudioFile(object sender, RoutedEventArgs e)
@@ -139,11 +141,14 @@ namespace AudioReplacer2
             }
         }
 
-        private void InitialFileSetup(string path)
+        private void ProjectSetup(string path)
         {
             RemainingFiles.Visibility = Visibility.Visible;
             windowBackend.ToggleButton(SkipAudioButton, true);
             windowBackend.ToggleButton(StartRecordingButton, true);
+
+            FolderSelector.Visibility = Visibility.Collapsed;
+            AudioPreviewControls.IsEnabled = true;
 
             fileInteractionUtils = new FileInteractionUtils(path);
             UpdateFileElements();
