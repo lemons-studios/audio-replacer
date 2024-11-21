@@ -2,6 +2,8 @@
 using Microsoft.UI;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Threading.Tasks;
 using Windows.Media.Core;
 using WinRT.Interop;
 using Microsoft.UI.Windowing;
@@ -15,9 +17,12 @@ namespace AudioReplacer2.Util
     {
         private readonly List<string> pitchMenuTitles;
         private readonly List<float> pitchValues;
+        private readonly WebRequest webRequest;
+        private string webVersion;
 
         public MainWindowFunctionality(ComboBox pitchComboBox)
         {
+            webRequest = new WebRequest();
             pitchMenuTitles = [];
             pitchValues = [];
 
@@ -30,7 +35,7 @@ namespace AudioReplacer2.Util
 
         public bool ToBool(int value)
         {
-            return value > 0;
+            return value != 0;
         }
 
         public string BoolToYesNo(bool value)
@@ -75,19 +80,46 @@ namespace AudioReplacer2.Util
             try { return pitchValues[index]; } catch { return 1; }
         }
 
-        public string GetAppVersion()
+        public string GetAppVersion(bool forceBuildNumber = false)
         {
-            var appVersion = Package.Current.Id.Version;
-            int major = appVersion.Major;
-            int minor = appVersion.Minor;
-            int build = appVersion.Build;
-
-            return build != 0 ? $"{major}.{minor}.{build}" : $"{major}.{minor}";
+            var currentBuild = GetVersion();
+            // We do a bit of array shenanigans (loving this word)
+            return currentBuild[2] != 0 || forceBuildNumber ? $"{currentBuild[0]}.{currentBuild[1]}.{currentBuild[2]}" : $"{currentBuild[0]}.{currentBuild[1]}";
         }
 
         public string GetFormattedCurrentFile(string input)
         {
             return input.Replace(@"\", "/");
+        }
+
+        public async Task<bool> IsUpdateAvailable()
+        {
+            string url = "https://api.github.com/repos/lemons-studios/audio-replacer-2/releases/latest";
+            string currentVersion = GetAppVersion(true);
+
+            try
+            {
+                string json = await webRequest.GetWebRequest(url);
+                webVersion = webRequest.SelectWebData(json); // GitHub API goes crazy
+
+                return webVersion == currentVersion;
+            }
+            catch(Exception ex)
+            {
+                Debug.WriteLine($"An error occured while checking for updates: {ex}");
+                return false;
+            }
+        }
+
+        public string GetWebVersion()
+        {
+            return webVersion != string.Empty ? webVersion : GetAppVersion(); // App version used as fallback when no internet is available
+        }
+
+        private int[] GetVersion()
+        {
+            var appVersion = Package.Current.Id.Version;
+            return [ appVersion.Major, appVersion.Minor, appVersion.Build ];
         }
 
         private float ParseFloat(string value)

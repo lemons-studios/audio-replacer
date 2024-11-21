@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Threading.Tasks;
 using Windows.Storage.Pickers;
 using Windows.Storage;
 using Microsoft.UI.Windowing;
@@ -38,10 +39,19 @@ namespace AudioReplacer2
 
             appWindow = windowBackend.GetAppWindowForCurrentWindow(this);
             appWindow.Closing += OnWindowClose;
-            this.ExtendsContentIntoTitleBar = true;
-            this.SetTitleBar(AppTitleBar);
+
+            ExtendsContentIntoTitleBar = true;
+            SetTitleBar(AppTitleBar);
             AppTitle.Text = $"Audio Replacer {windowBackend.GetAppVersion()}";
+
+            bool updatesNeeded = Task.Run(windowBackend.IsUpdateAvailable).Result;
+            if (!updatesNeeded)
+            {
+                UpdateToast.Message = $"Latest Version: {windowBackend.GetWebVersion()}";
+                UpdateToast.IsOpen = true;
+            }
         }
+
 
         private void UpdateRecordingValues(object sender, SelectionChangedEventArgs e)
         {

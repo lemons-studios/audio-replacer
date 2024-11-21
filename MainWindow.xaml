@@ -16,6 +16,7 @@
     <Window.SystemBackdrop>
         <MicaBackdrop />
     </Window.SystemBackdrop>
+
     <Grid>
         <StackPanel>
             <Border x:Name="AppTitleBar" VerticalAlignment="Center" Height="40" Padding="5" Background="Transparent">
@@ -63,7 +64,7 @@
         </StackPanel>
 
         <InfoBar x:Name="ToastNotification" Style="{StaticResource ToastNotification}" Title="Placeholder" Message="Test notification!!!" Severity="Success"/>
-        <InfoBar x:Name="UpdateToast" Style="{StaticResource ToastNotification}" Title="Update Available" Message="Latest Version: {LATEST_VER}" Severity="Informational" IsOpen="True" Background="{ThemeResource SystemFillColorSolidAttentionBackgroundBrush}">
+        <InfoBar x:Name="UpdateToast" Style="{StaticResource ToastNotification}" Title="Update Available" Message="Latest Version: {LATEST_VER}" Severity="Informational" Background="{ThemeResource SystemFillColorSolidAttentionBackgroundBrush}">
             <InfoBar.IconSource>
                 <SymbolIconSource Symbol="Download"/>
             </InfoBar.IconSource>
