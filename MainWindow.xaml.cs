@@ -28,7 +28,7 @@ namespace AudioReplacer2
         public MainWindow() // This class has been somewhat minified for fun. Everything is still pretty readable though!!
         {
             InitializeComponent();
-            windowBackend = new MainWindowFunctionality(VoiceTuneMenu);
+            windowBackend = new MainWindowFunctionality(VoiceTuneMenu, [ToastNotification, SavingToast, UpdateToast]);
             
             VoiceTuneMenu.ItemsSource = windowBackend.GetPitchTitles();
             RequiresEffectsPrompt.ItemsSource = new List<string> {"Yes", "No"}; // Prevents clutter on the .xaml file (1 line added here is 3 lines removed from the xaml file)
@@ -95,12 +95,14 @@ namespace AudioReplacer2
                 UpdateFileElements();
             }
             else AudioPreview.MediaPlayer.Play();
+            windowBackend.UpdateInfoBar(ToastNotification, "Success!", "File skipped!", 1);
         }
 
         private async void StartRecordingAudio(object sender, RoutedEventArgs e)
         {
             isRecording = true;
             AudioPreview.MediaPlayer.Pause();
+            windowBackend.UpdateInfoBar(SavingToast, "Recording In Progress...", "", 0, autoClose: false);
 
             if (fileInteractionUtils != null)
             {
@@ -113,10 +115,12 @@ namespace AudioReplacer2
         private async void StopRecordingAudio(object sender, RoutedEventArgs e)
         {
             isRecording = false; isProcessing = true;
+            windowBackend.UpdateInfoBar(SavingToast, "Saving File....", "", 0);
 
             if (fileInteractionUtils == null) return;
             await audioRecordingUtils.StopRecordingAudio(fileInteractionUtils.GetOutFilePath());
             ToggleFinalReviewButtons(true);
+            windowBackend.UpdateInfoBar(ToastNotification, "Save Completed!", "Entering review phase...", 1);
 
             // Update source of audio player and the title manually
             CurrentFile.Text = "Review your recording...";
@@ -135,6 +139,7 @@ namespace AudioReplacer2
             isProcessing = false;
             await audioRecordingUtils.CancelRecording(fileInteractionUtils.GetOutFilePath());
             ToggleButtonStates(false);
+            windowBackend.UpdateInfoBar(ToastNotification, "Recording Cancelled", "", 2);
         }
 
         private void UpdateAudioStatus(object sender, RoutedEventArgs e)
@@ -143,7 +148,19 @@ namespace AudioReplacer2
             {
                 isProcessing = false;
                 bool isSubmitButton = button.Name == "SubmitRecordingButton";
-                if(isSubmitButton) fileInteractionUtils.DeleteCurrentFile(/* This method essentially acts as a way to confirm the submission*/); else File.Delete(fileInteractionUtils.GetOutFilePath());
+                switch (isSubmitButton)
+                {
+                    case true:
+                        // Submission Accepted
+                        fileInteractionUtils.DeleteCurrentFile(/* This method essentially acts as a way to confirm the submission*/);
+                        windowBackend.UpdateInfoBar(ToastNotification, "Submission Accepted!!", "Moving to next file...", 1);
+                        break;
+                    case false:
+                        // Submission Rejected
+                        File.Delete(fileInteractionUtils.GetOutFilePath());
+                        windowBackend.UpdateInfoBar(ToastNotification, "Submission Rejected", "Returning to record phase...", 3);
+                        break;
+                }
                 
                 ToggleFinalReviewButtons(false);
                 ToggleButtonStates(false);
@@ -153,6 +170,7 @@ namespace AudioReplacer2
 
         private void ProjectSetup(string path)
         {
+            windowBackend.UpdateInfoBar(SavingToast, "Setting up project...", "", 0, autoClose: false);
             RemainingFiles.Visibility = Visibility.Visible;
             windowBackend.ToggleButton(SkipAudioButton, true);
             windowBackend.ToggleButton(StartRecordingButton, true);
@@ -162,6 +180,7 @@ namespace AudioReplacer2
 
             fileInteractionUtils = new FileInteractionUtils(path);
             UpdateFileElements();
+            windowBackend.UpdateInfoBar(ToastNotification, "Success!", "Project loaded!", 1);
         }
 
         private void ToggleButtonStates(bool recording)
