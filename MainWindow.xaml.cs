@@ -48,7 +48,10 @@ namespace AudioReplacer2
 
             if (!windowBackend.IsFFMpegInstalled())
             {
-                // Do not check for updates if FFMpeg is not installed
+                // Do not check for updates if FFMpeg is not installed. Also disable any interactable elements on the page
+                windowBackend.ToggleButton(FolderSelector, false);
+                VoiceTuneMenu.IsEnabled = false;
+                RequiresEffectsPrompt.IsEnabled = false;
                 DependencyToast.IsOpen = true;
             }
             else

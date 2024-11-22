@@ -176,7 +176,7 @@ namespace AudioReplacer2.Util
                 StartInfo =
                 {
                     FileName = "cmd",
-                    Arguments = "/c winget install ffmpeg --accept-source-agreements --accept-package-agreements",
+                    Arguments = "/c start /min cmd /c winget install ffmpeg --accept-source-agreements --accept-package-agreements",
                     UseShellExecute = true,
                     RedirectStandardOutput = false,
                     RedirectStandardError = false,
@@ -187,11 +187,6 @@ namespace AudioReplacer2.Util
             process.Start();
             process.WaitForExit();
 
-        }
-
-        public void UpdatePathEnvironmentVariable(string path)
-        {
-            Environment.SetEnvironmentVariable("PATH", $"{path};%PATH%", EnvironmentVariableTarget.User);
         }
     }
 }

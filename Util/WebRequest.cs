@@ -32,27 +32,6 @@ namespace AudioReplacer2.Util
             }
             throw new Exception($"GitHub API responded with non-successful status code {apiResponse.StatusCode}");
         }
-
-        public async Task DownloadAndExtractFile(string url, string extractPath)
-        {
-            using (var client = new HttpClient())
-            {
-                var response = await client.GetAsync(url);
-                response.EnsureSuccessStatusCode();
-
-                using (var stream = await response.Content.ReadAsStreamAsync())
-                {
-                    using (var archive = new ZipArchive(stream, ZipArchiveMode.Read))
-                    {
-                        foreach (var entry in archive.Entries)
-                        {
-                            var destinationPath = Path.Combine(extractPath, entry.FullName);
-                            entry.ExtractToFile(destinationPath, true);
-                        }
-                    }
-                }
-            }
-        }
     }
 
     internal class Tag
