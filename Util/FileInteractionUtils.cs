@@ -22,7 +22,7 @@ namespace AudioReplacer2.Util
             SetCurrentFile();
         }
 
-        public void SetCurrentFile()
+        private void SetCurrentFile()
         {
             if (IsFirstDirEmpty())
             {
@@ -70,7 +70,7 @@ namespace AudioReplacer2.Util
             return notTruncatedDirectories.Select(dir => dir.Split(Path.DirectorySeparatorChar).Last()).ToArray();
         }
 
-        public string TruncateDirectory(string inputPath, int dirLevels, string delimiter = "\\")
+        private string TruncateDirectory(string inputPath, int dirLevels, string delimiter = "\\")
         {
             if (string.IsNullOrEmpty(inputPath) || string.IsNullOrEmpty(delimiter) || dirLevels <= 0) return inputPath;
 

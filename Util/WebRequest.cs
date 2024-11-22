@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Text.Json;
@@ -12,12 +11,11 @@ namespace AudioReplacer2.Util
         public async Task<string> GetWebVersion()
         {
             string url = "https://api.github.com/repos/lemons-studios/audio-replacer-2/tags";
-
             using HttpClient client = new HttpClient();
             
             client.DefaultRequestHeaders.Add("User-Agent", "Audio Replacer 2");
-
             var apiResponse = await client.GetAsync(url);
+
             if (apiResponse.IsSuccessStatusCode)
             {
                 string responseData = await apiResponse.Content.ReadAsStringAsync();
@@ -30,7 +28,6 @@ namespace AudioReplacer2.Util
                 throw new Exception("No tags found in data");
             }
             throw new Exception($"GitHub API responded with non-successful status code {apiResponse.StatusCode}");
-            
         }
     }
 

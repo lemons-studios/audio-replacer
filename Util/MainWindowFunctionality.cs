@@ -9,7 +9,6 @@ using WinRT.Interop;
 using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml.Controls;
 using Windows.ApplicationModel;
-using Microsoft.UI.Dispatching;
 
 namespace AudioReplacer2.Util
 {

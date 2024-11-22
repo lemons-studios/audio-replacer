@@ -64,7 +64,7 @@
         </StackPanel>
 
         <InfoBar x:Name="ToastNotification" Style="{StaticResource ToastNotification}" Title="Placeholder" Message="Test notification!!!" Severity="Success"/>
-        <InfoBar x:Name="UpdateToast" Style="{StaticResource ToastNotification}" Title="Update Available" Message="Latest Version: {LATEST_VER}" Severity="Informational" Background="{ThemeResource SystemFillColorSolidAttentionBackgroundBrush}">
+        <InfoBar x:Name="UpdateToast" Style="{StaticResource ToastNotification}" Title="Update(s) Available" Message="Latest Version: {LATEST_VER}" Severity="Informational" Background="{ThemeResource SystemFillColorCriticalBackgroundBrush}">
             <InfoBar.IconSource>
                 <SymbolIconSource Symbol="Download"/>
             </InfoBar.IconSource>
