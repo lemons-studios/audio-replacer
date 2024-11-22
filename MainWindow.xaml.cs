@@ -5,12 +5,14 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Threading.Tasks;
 using Windows.Storage.Pickers;
 using Windows.Storage;
 using Microsoft.UI.Windowing;
 using WinRT.Interop;
 using WinUIEx;
+using System.IO.Compression;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace AudioReplacer2
 {
@@ -18,14 +20,14 @@ namespace AudioReplacer2
     {
         private readonly AppWindow appWindow;
         private readonly AudioRecordingUtils audioRecordingUtils;
-        private FileInteractionUtils fileInteractionUtils;
+        private ProjectFileManagementUtils projectFileManagementUtils;
         private readonly MainWindowFunctionality windowBackend;
         private string previousPitchSelection = "None Selected";
         
         private bool isProcessing;
         private bool isRecording;
 
-        public MainWindow() // This class has been somewhat minified for fun. Everything is still pretty readable though!!
+        public MainWindow()
         {
             InitializeComponent();
             windowBackend = new MainWindowFunctionality(VoiceTuneMenu, [ToastNotification, SavingToast, UpdateToast]);
@@ -44,14 +46,21 @@ namespace AudioReplacer2
             SetTitleBar(AppTitleBar);
             AppTitle.Text = $"Audio Replacer {windowBackend.GetAppVersion()}";
 
-            var updatesAvailable = windowBackend.IsUpdateAvailable();
-            if (updatesAvailable)
+            if (!windowBackend.IsFFMpegInstalled())
             {
-                UpdateToast.Message = $"Latest Version: {windowBackend.GetWebVersion()}";
-                UpdateToast.IsOpen = true;
+                // Do not check for updates if FFMpeg is not installed
+                DependencyToast.IsOpen = true;
+            }
+            else
+            {
+                var updatesAvailable = windowBackend.IsUpdateAvailable();
+                if (updatesAvailable)
+                {
+                    UpdateToast.Message = $"Latest Version: {windowBackend.GetWebVersion()}";
+                    UpdateToast.IsOpen = true;
+                }
             }
         }
-
 
         private void UpdateRecordingValues(object sender, SelectionChangedEventArgs e)
         {
@@ -84,14 +93,14 @@ namespace AudioReplacer2
 
         private async void SkipCurrentAudioFile(object sender, RoutedEventArgs e)
         {
-            if (fileInteractionUtils == null) return;
+            if (projectFileManagementUtils == null) return;
             AudioPreview.MediaPlayer.Pause();
             var confirmSkip = new ContentDialog { Title = "Skip this file?", Content = "Are you sure you want to skip this file?", PrimaryButtonText = "Skip", CloseButtonText = "Don't Skip", XamlRoot = base.Content.XamlRoot };
             var confirmResult = await confirmSkip.ShowAsync();
 
             if (confirmResult == ContentDialogResult.Primary)
             {
-                fileInteractionUtils.SkipAudioTrack();
+                projectFileManagementUtils.SkipAudioTrack();
                 UpdateFileElements();
                 windowBackend.UpdateInfoBar(ToastNotification, "Success!", "File skipped!", InfoBarSeverity.Success);
             }
@@ -108,10 +117,10 @@ namespace AudioReplacer2
             AudioPreview.MediaPlayer.Pause();
             windowBackend.UpdateInfoBar(SavingToast, "Recording In Progress...", "", 0, autoClose: false);
 
-            if (fileInteractionUtils != null)
+            if (projectFileManagementUtils != null)
             {
-                StorageFolder currentOutFolder = await fileInteractionUtils.GetDirectoryAsStorageFolder();
-                await audioRecordingUtils.StartRecordingAudio(currentOutFolder, fileInteractionUtils.GetCurrentFileName());
+                StorageFolder currentOutFolder = await projectFileManagementUtils.GetDirectoryAsStorageFolder();
+                await audioRecordingUtils.StartRecordingAudio(currentOutFolder, projectFileManagementUtils.GetCurrentFileName());
             }
             ToggleButtonStates(true);
         }
@@ -121,27 +130,27 @@ namespace AudioReplacer2
             isRecording = false; isProcessing = true;
             windowBackend.UpdateInfoBar(SavingToast, "Saving File....", "", 0);
 
-            if (fileInteractionUtils == null) return;
-            await audioRecordingUtils.StopRecordingAudio(fileInteractionUtils.GetOutFilePath());
+            if (projectFileManagementUtils == null) return;
+            await audioRecordingUtils.StopRecordingAudio(projectFileManagementUtils.GetOutFilePath());
             ToggleFinalReviewButtons(true);
             windowBackend.UpdateInfoBar(ToastNotification, "Save Completed!", "Entering review phase...", InfoBarSeverity.Success);
 
             // Update source of audio player and the title manually
             CurrentFile.Text = "Review your recording...";
-            AudioPreview.Source = windowBackend.MediaSourceFromUri(fileInteractionUtils.GetOutFilePath());
+            AudioPreview.Source = windowBackend.MediaSourceFromUri(projectFileManagementUtils.GetOutFilePath());
         }
 
         private void UpdateFileElements()
         {
-            CurrentFile.Text = windowBackend.GetFormattedCurrentFile(fileInteractionUtils.GetCurrentFile());
-            RemainingFiles.Text = $"Files Remaining: {fileInteractionUtils.GetFilesRemaining():N0}";
-            AudioPreview.Source = windowBackend.MediaSourceFromUri(fileInteractionUtils.GetCurrentFile(false));
+            CurrentFile.Text = windowBackend.GetFormattedCurrentFile(projectFileManagementUtils.GetCurrentFile());
+            RemainingFiles.Text = $"Files Remaining: {projectFileManagementUtils.GetFilesRemaining():N0}";
+            AudioPreview.Source = windowBackend.MediaSourceFromUri(projectFileManagementUtils.GetCurrentFile(false));
         }
 
         private async void CancelCurrentRecording(object sender, RoutedEventArgs e)
         {
             isProcessing = false;
-            await audioRecordingUtils.CancelRecording(fileInteractionUtils.GetOutFilePath());
+            await audioRecordingUtils.CancelRecording(projectFileManagementUtils.GetOutFilePath());
             ToggleButtonStates(false);
             windowBackend.UpdateInfoBar(ToastNotification, "Recording Cancelled", "", InfoBarSeverity.Informational);
         }
@@ -156,12 +165,12 @@ namespace AudioReplacer2
                 {
                     case true:
                         // Submission Accepted
-                        fileInteractionUtils.DeleteCurrentFile(/* This method essentially acts as a way to confirm the submission*/);
+                        projectFileManagementUtils.DeleteCurrentFile(/* This method essentially acts as a way to confirm the submission*/);
                         windowBackend.UpdateInfoBar(ToastNotification, "Submission Accepted!!", "Moving to next file...", InfoBarSeverity.Success);
                         break;
                     case false:
                         // Submission Rejected
-                        File.Delete(fileInteractionUtils.GetOutFilePath());
+                        File.Delete(projectFileManagementUtils.GetOutFilePath());
                         windowBackend.UpdateInfoBar(ToastNotification, "Submission Rejected", "Returning to record phase...", InfoBarSeverity.Informational);
                         break;
                 }
@@ -182,7 +191,7 @@ namespace AudioReplacer2
             FolderSelector.Visibility = Visibility.Collapsed;
             AudioPreviewControls.IsEnabled = true;
 
-            fileInteractionUtils = new FileInteractionUtils(path);
+            projectFileManagementUtils = new ProjectFileManagementUtils(path);
             UpdateFileElements();
             windowBackend.UpdateInfoBar(ToastNotification, "Success!", "Project loaded!", InfoBarSeverity.Success);
         }
@@ -214,6 +223,16 @@ namespace AudioReplacer2
             Process.Start(new ProcessStartInfo("cmd", $"/c start {url}") { CreateNoWindow = true });
         }
 
-        private void OnWindowClose(object sender, AppWindowClosingEventArgs args) { if (fileInteractionUtils != null && (isProcessing || isRecording)) File.Delete(fileInteractionUtils.GetOutFilePath()); }
+        private void OnWindowClose(object sender, AppWindowClosingEventArgs args) { if (projectFileManagementUtils != null && (isProcessing || isRecording)) File.Delete(projectFileManagementUtils.GetOutFilePath()); }
+
+        private void DownloadRuntimeDependencies(object sender, RoutedEventArgs e)
+        {
+            DependencyToast.IsOpen = false;
+            windowBackend.UpdateInfoBar(SavingToast, "Installing Dependencies", "App will restart after finishing. Please stay connected to the internet", InfoBarSeverity.Informational, autoClose: false);
+            windowBackend.DownloadDependencies();
+
+            // Restart app
+            Windows.ApplicationModel.Core.AppRestartFailureReason failureReason = Microsoft.Windows.AppLifecycle.AppInstance.Restart("");
+        }
     }
 }

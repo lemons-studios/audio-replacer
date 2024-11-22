@@ -89,6 +89,15 @@
             </InfoBar.Transitions>
         </InfoBar>
 
+        <InfoBar x:Name="DependencyToast" Style="{StaticResource ToastNotification}" Title="Error" Message="Required Dependencies Not Found" Severity="Error" Background="{ThemeResource SystemFillColorCriticalBackgroundBrush}" IsOpen="False" IsClosable="False">
+                <InfoBar.ActionButton>
+                <Button Content="Download Dependencies" Click="DownloadRuntimeDependencies" CornerRadius="4"/>
+            </InfoBar.ActionButton>
+            <InfoBar.Transitions>
+                <PopupThemeTransition />
+            </InfoBar.Transitions>
+        </InfoBar>
+
         <InfoBar x:Name="SavingToast" Style="{StaticResource ToastNotification}" Title="Placeholder" Message="Test notification!!!" Severity="Informational" IsClosable="False" Background="{ThemeResource SystemFillColorSolidAttentionBackgroundBrush}">
             <InfoBar.Content>
                 <ProgressBar IsIndeterminate="True" MaxWidth="500" Margin="0 0 0 6"/>

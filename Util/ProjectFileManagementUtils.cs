@@ -7,13 +7,13 @@ using Windows.Storage;
 
 namespace AudioReplacer2.Util
 {
-    public class FileInteractionUtils
+    public class ProjectFileManagementUtils
     {
         private string currentFile, truncatedCurrentFile, currentOutFile, currentFileName, directoryName;
         private readonly string outputFolderPath = $"{Environment.GetFolderPath(Environment.SpecialFolder.UserProfile)}\\AudioReplacer2-Out";
         private readonly string setupIgnore, projectPath;
 
-        public FileInteractionUtils(string path)
+        public ProjectFileManagementUtils(string path)
         {
             projectPath = path;
             setupIgnore = $"{outputFolderPath}\\.setupIgnore";
@@ -33,7 +33,7 @@ namespace AudioReplacer2.Util
             // Refresh subdirectories after potential deletion
             string[] subdirectories = GetPathSubdirectories(projectPath);
 
-            currentFile = subdirectories.Length > 0 ? GetFiles(subdirectories[0])[0] : "YOU ARE DONE!!!!!!";
+            currentFile = subdirectories.Length > 0 ? GetFilesInFolder(subdirectories[0])[0] : "YOU ARE DONE!!!!!!";
 
             truncatedCurrentFile = currentFile == "YOU ARE DONE!!!!!!" ? currentFile : TruncateDirectory(currentFile, 2);
             currentOutFile = $"{outputFolderPath}\\{truncatedCurrentFile}";
@@ -44,9 +44,9 @@ namespace AudioReplacer2.Util
         private void CreateInitialData()
         {
             string[] inFolderStructure = GetPathSubdirectories(projectPath);
-            if (!DoesDirExist(outputFolderPath))
+            if (!DoesDirectoryExist(outputFolderPath))
             {
-                CreateDirectory(outputFolderPath);
+                GetFilesInFolder(outputFolderPath);
             }
 
             if (inFolderStructure != GetPathSubdirectories(outputFolderPath) && !File.Exists(setupIgnore)) 
@@ -100,6 +100,11 @@ namespace AudioReplacer2.Util
             SetCurrentFile();
         }
 
+        public string GetOutFilePath()
+        {
+            return currentOutFile;
+        }
+
         public int GetFilesRemaining()
         {
             int x = 0;
@@ -110,27 +115,6 @@ namespace AudioReplacer2.Util
                 x += Directory.GetFiles(dir, "*", SearchOption.AllDirectories).Length;
             }
             return x;
-        }
-
-        // Next 3 methods are Probably not needed, but I'd rather type out one method than a class then method
-        private void CreateDirectory(string path)
-        {
-            Directory.CreateDirectory(path);
-        }
-
-        private string[] GetFiles(string path)
-        {
-            return Directory.GetFiles(path);
-        }
-
-        private bool DoesDirExist(string path)
-        {
-            return Directory.Exists(path);
-        }
-
-        public string GetOutFilePath()
-        {
-            return currentOutFile;
         }
 
         public string GetCurrentFile(bool truncated = true)
@@ -152,6 +136,31 @@ namespace AudioReplacer2.Util
         {
             string[] subdirs = GetPathSubdirectories(projectPath);
             return subdirs.Length > 0 && Directory.GetFiles(subdirs[0]).Length == 0;
+        }
+
+        public void CreateDirectory(string dir)
+        {
+            Directory.CreateDirectory(dir);
+        }
+
+        public string[] GetFilesInFolder(string dir)
+        {
+            return Directory.GetFiles(dir);
+        }
+
+        public string GetDownloadsFolder()
+        {
+            return $"{Environment.GetFolderPath(Environment.SpecialFolder.UserProfile)}\\Downloads";
+        }
+
+        public bool DoesDirectoryExist(string dir)
+        {
+            return Directory.Exists(dir);
+        }
+
+        public bool DoesFileExist(string filePath)
+        {
+            return File.Exists(filePath);
         }
     }
 }

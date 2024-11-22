@@ -1,10 +1,14 @@
-﻿namespace AudioReplacer2.Util
+﻿using System;
+using System.IO;
+
+namespace AudioReplacer2.Util
 {
-    public static class PitchData // No more evil pitch data!
+    public static class GlobalData
     {
-        // Modify THIS variable to add, remove, or modify pitch values.
+        // Modify THIS variable to add, remove, or modify default pitch values.
         // Use multiplicative values for pitch values (for example, if you want to reduce the pitch of the recording by 4%, you would want to enter in "0.96"
-        public static string[][] pitchData =
+        // TODO: switch to a real JSON file to configure json data and use this PitchData string as the default values. Users can configure pitch data using that file
+        public static string[][] PitchData =
         [
             ["1.0075", "Ai Ebihara"], ["1.025", "Ayane Matsunaga"], ["0.555", "Ameno-Sagiri"], ["1.015", "Chie Satonaka"],
             ["1.012", "Chihiro Fushimi"], ["0.9925", "Daisuke Nagase"], ["1.0195", "Eri Minami"], ["1.0065", "Hanako Ohtani"],

@@ -9,16 +9,20 @@ using WinRT.Interop;
 using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml.Controls;
 using Windows.ApplicationModel;
+using System.IO.Compression;
+using System.IO;
+using System.Net.Http;
 
 namespace AudioReplacer2.Util
 {
     // Easily removes a good chunk of code from MainWindow.xaml.cs. much easier to navigate through everything now!
     public class MainWindowFunctionality
     {
+        public readonly WebRequest webRequest;
+
         private readonly InfoBar[] windowInfoBars;
         private readonly List<string> pitchMenuTitles;
         private readonly List<float> pitchValues;
-        private readonly WebRequest webRequest;
         private readonly string webVersion;
 
         public MainWindowFunctionality(ComboBox pitchComboBox, InfoBar[] windowInfoBars)
@@ -28,10 +32,10 @@ namespace AudioReplacer2.Util
             pitchValues = [];
             this.windowInfoBars = windowInfoBars;
 
-            foreach (var data in PitchData.pitchData)
+            foreach (var data in GlobalData.PitchData)
             {
-                pitchValues.Add(ParseFloat(data[0])); // Position 0 of each array in the 2d array should have the pitch data, as mentioned in PitchData.cs
-                pitchMenuTitles.Add(data[1]); // Position 1 of each array in the 2d array should have the name of the character, as mentioned in PitchData.cs
+                pitchValues.Add(ParseFloat(data[0])); // Position 0 of each array in the 2d array should have the pitch data, as mentioned in GlobalData.cs
+                pitchMenuTitles.Add(data[1]); // Position 1 of each array in the 2d array should have the name of the character, as mentioned in GlobalData.cs
             }
 
             webVersion = Task.Run(webRequest.GetWebVersion).Result;
@@ -153,6 +157,41 @@ namespace AudioReplacer2.Util
             {
                 infoBar.IsOpen = false;
             });
+        }
+
+        public bool IsFFMpegInstalled()
+        {
+            // I know that using WinGet to install ffmpeg is not a great idea, especially for users who already have it installed
+            // But let me tell you how much I hate trying to check for global installations on the path
+            // It will be kept this way because frankly it just works
+            // 100 extra megabytes idc anymore :(
+            return File.Exists($"{Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData)}\\Microsoft\\WinGet\\Links\\ffmpeg.exe");
+        }
+
+
+        public void DownloadDependencies()
+        {
+            var process = new Process
+            {
+                StartInfo =
+                {
+                    FileName = "cmd",
+                    Arguments = "/c winget install ffmpeg --accept-source-agreements --accept-package-agreements",
+                    UseShellExecute = true,
+                    RedirectStandardOutput = false,
+                    RedirectStandardError = false,
+                    CreateNoWindow = true
+                }
+            };
+
+            process.Start();
+            process.WaitForExit();
+
+        }
+
+        public void UpdatePathEnvironmentVariable(string path)
+        {
+            Environment.SetEnvironmentVariable("PATH", $"{path};%PATH%", EnvironmentVariableTarget.User);
         }
     }
 }
