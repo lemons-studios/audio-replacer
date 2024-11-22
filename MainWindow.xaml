@@ -29,7 +29,11 @@
                 <Border Style="{StaticResource PanelCard}" Grid.Column="0" Width="575"/>
 
                 <StackPanel Grid.Column="0" Padding="5" VerticalAlignment="Center">
-                    <TextBlock x:Name="CurrentFile" Text="Select a folder to begin." Style="{StaticResource TitleText}" Margin="0 7.5"/>
+                    <TextBlock x:Name="CurrentFile" Text="Select a folder to begin." Style="{StaticResource TitleText}" Margin="0 7.5">
+                        <TextBlock.Transitions>
+                            <ContentThemeTransition/>
+                        </TextBlock.Transitions>
+                    </TextBlock>
                     <Button x:Name="FolderSelector" Click="SelectProjectFolder" Style="{StaticResource ButtonStyle}" Content="Select folder" />
                     <TextBlock x:Name="RemainingFiles" Style="{StaticResource FileCounter}" Visibility="Collapsed"/>
 
@@ -39,7 +43,11 @@
                                 <MediaTransportControls x:Name="AudioPreviewControls" IsCompact="True" VerticalAlignment="Center" IsSeekBarVisible="True" ShowAndHideAutomatically="False" IsEnabled="False"/>
                             </MediaPlayerElement.TransportControls>
                         </MediaPlayerElement>
-                        <TextBlock x:Name="PitchSettingsFeedback" HorizontalAlignment="Center" FontSize="13.5" TextAlignment="Center" Text="Set pitch values in the right-hand panel"/>
+                        <TextBlock x:Name="PitchSettingsFeedback" HorizontalAlignment="Center" FontSize="13.5" TextAlignment="Center" Text="Set pitch values in the right-hand panel">
+                            <TextBlock.Transitions>
+                                <ContentThemeTransition/>
+                            </TextBlock.Transitions>
+                        </TextBlock>
                     </StackPanel>
 
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0 25">
@@ -63,7 +71,12 @@
             </Grid>
         </StackPanel>
 
-        <InfoBar x:Name="ToastNotification" Style="{StaticResource ToastNotification}" Title="Placeholder" Message="Test notification!!!" Severity="Success"/>
+        <InfoBar x:Name="ToastNotification" Style="{StaticResource ToastNotification}" Title="Placeholder" Message="Test notification!!!" Severity="Success">
+            <InfoBar.Transitions>
+                <PopupThemeTransition />
+            </InfoBar.Transitions>
+        </InfoBar>
+
         <InfoBar x:Name="UpdateToast" Style="{StaticResource ToastNotification}" Title="Update(s) Available" Message="Latest Version: {LATEST_VER}" Severity="Informational" Background="{ThemeResource SystemFillColorCriticalBackgroundBrush}">
             <InfoBar.IconSource>
                 <SymbolIconSource Symbol="Download"/>
@@ -71,11 +84,18 @@
             <InfoBar.ActionButton>
                 <Button Content="Download Update" Click="OpenGithubReleases" CornerRadius="4"/>
             </InfoBar.ActionButton>
+            <InfoBar.Transitions>
+                <PopupThemeTransition />
+            </InfoBar.Transitions>
         </InfoBar>
+
         <InfoBar x:Name="SavingToast" Style="{StaticResource ToastNotification}" Title="Placeholder" Message="Test notification!!!" Severity="Informational" IsClosable="False" Background="{ThemeResource SystemFillColorSolidAttentionBackgroundBrush}">
             <InfoBar.Content>
                 <ProgressBar IsIndeterminate="True" MaxWidth="500" Margin="0 0 0 6"/>
             </InfoBar.Content>
+            <InfoBar.Transitions>
+                <PopupThemeTransition />
+            </InfoBar.Transitions>
         </InfoBar>
     </Grid>
 </WinUiEx:WindowEx>
