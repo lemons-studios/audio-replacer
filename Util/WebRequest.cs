@@ -1,50 +1,42 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Net.Http;
 using System.Threading.Tasks;
-using Newtonsoft.Json.Linq;
-using System.Net.Http.Headers;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace AudioReplacer2.Util
 {
     public class WebRequest
     {
-        public async Task<string> GetWebRequest(string url)
+        public async Task<string> GetWebVersion()
         {
-            using var httpClient = new HttpClient();
+            string url = "https://api.github.com/repos/lemons-studios/audio-replacer-2/tags";
 
-            // Add User-Agent header
-            httpClient.DefaultRequestHeaders.UserAgent.Add(new ProductInfoHeaderValue("Audio Replacer 2 Update Checker", "2.x"));
+            using HttpClient client = new HttpClient();
+            
+            client.DefaultRequestHeaders.Add("User-Agent", "Audio Replacer 2");
 
-            try
+            var apiResponse = await client.GetAsync(url);
+            if (apiResponse.IsSuccessStatusCode)
             {
-                var response = await httpClient.GetAsync(url);
-                response.EnsureSuccessStatusCode();
+                string responseData = await apiResponse.Content.ReadAsStringAsync();
+                var jsonTags = JsonSerializer.Deserialize<Tag[]>(responseData);
 
-                return await response.Content.ReadAsStringAsync();
+                if (jsonTags != null && jsonTags.Length > 0)
+                {
+                    return jsonTags[0].Name;
+                }
+                throw new Exception("No tags found in data");
             }
-            catch (HttpRequestException e)
-            {
-                Console.WriteLine($"HttpRequestException: {e.Message}");
-                return string.Empty;
-            }
+            throw new Exception($"GitHub API responded with non-successful status code {apiResponse.StatusCode}");
+            
         }
+    }
 
-        public string SelectWebData(string data)
-        {
-            try
-            {
-                // Parse the JSON data (which is now a single object instead of an array)
-                var json = JObject.Parse(data);
-
-                // Return the latest release tag
-                return json["tag_name"]?.ToString();
-            }
-            catch (Exception e)
-            {
-                // Handle any exceptions that occur during JSON parsing
-                Console.WriteLine($"Error parsing the response data: {e.Message}");
-                return $"Ruh ruh {e}";
-            }
-        }
+    internal class Tag
+    {
+        [JsonPropertyName("name")]
+        public string Name { get; set; }
     }
 }

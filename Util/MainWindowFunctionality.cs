@@ -20,7 +20,7 @@ namespace AudioReplacer2.Util
         private readonly List<string> pitchMenuTitles;
         private readonly List<float> pitchValues;
         private readonly WebRequest webRequest;
-        private string webVersion;
+        private readonly string webVersion;
 
         public MainWindowFunctionality(ComboBox pitchComboBox, InfoBar[] windowInfoBars)
         {
@@ -34,42 +34,17 @@ namespace AudioReplacer2.Util
                 pitchValues.Add(ParseFloat(data[0])); // Position 0 of each array in the 2d array should have the pitch data, as mentioned in PitchData.cs
                 pitchMenuTitles.Add(data[1]); // Position 1 of each array in the 2d array should have the name of the character, as mentioned in PitchData.cs
             }
+
+            webVersion = Task.Run(webRequest.GetWebVersion).Result;
         }
 
-        public void UpdateInfoBar(InfoBar infoBar, string title, string message, int severity, bool show = true, bool autoClose = true)
+        public void UpdateInfoBar(InfoBar infoBar, string title, string message, InfoBarSeverity severity, bool show = true, bool autoClose = true)
         {
             // Disable any active InfoBar before showing a new one
             DisableActiveInfoBars();
             infoBar.Title = title;
             infoBar.Message = message;
 
-            // Informational: 0
-            // Success: 1
-            // Warning: 2
-            // Error: 3
-
-            try
-            {
-                switch (severity)
-                {
-                    case 0:
-                        infoBar.Severity = InfoBarSeverity.Informational;
-                        break;
-                    case 1:
-                        infoBar.Severity = InfoBarSeverity.Success;
-                        break;
-                    case 2:
-                        infoBar.Severity = InfoBarSeverity.Warning;
-                        break;
-                    case 3:
-                        infoBar.Severity = InfoBarSeverity.Error;
-                        break;
-                    default:
-                        infoBar.Severity = InfoBarSeverity.Informational;
-                        break;
-                }
-            }
-            catch { infoBar.Severity = InfoBarSeverity.Informational; }
 
             infoBar.IsOpen = show;
             if (autoClose) Task.Run(() => WaitHideInfoBar(infoBar));
@@ -126,7 +101,8 @@ namespace AudioReplacer2.Util
         {
             var currentBuild = GetVersion();
             // We do a bit of array shenanigans (loving this word)
-            return currentBuild[2] != 0 || forceBuildNumber ? $"{currentBuild[0]}.{currentBuild[1]}.{currentBuild[2]}" : $"{currentBuild[0]}.{currentBuild[1]}";
+            bool returnBuildNumber = currentBuild[2] != 0 || forceBuildNumber;
+            return returnBuildNumber ? $"{currentBuild[0]}.{currentBuild[1]}.{currentBuild[2]}" : $"{currentBuild[0]}.{currentBuild[1]}";
         }
 
         public string GetFormattedCurrentFile(string input)
@@ -134,17 +110,11 @@ namespace AudioReplacer2.Util
             return input.Replace(@"\", "/");
         }
 
-        public async Task<bool> IsUpdateAvailable()
+        public bool IsUpdateAvailable()
         {
-            string url = "https://api.github.com/repos/lemons-studios/audio-replacer-2/releases/latest";
-            string currentVersion = GetAppVersion(true);
-
             try
             {
-                string json = await webRequest.GetWebRequest(url);
-                webVersion = webRequest.SelectWebData(json); // GitHub API goes crazy
-
-                return webVersion == currentVersion;
+                return webVersion != GetAppVersion(true);
             }
             catch(Exception ex)
             {

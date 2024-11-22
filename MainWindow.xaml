@@ -69,7 +69,7 @@
                 <SymbolIconSource Symbol="Download"/>
             </InfoBar.IconSource>
             <InfoBar.ActionButton>
-                <Button Content="Update Now" Click="OpenGithubReleases" CornerRadius="4"/>
+                <Button Content="Download Update" Click="OpenGithubReleases" CornerRadius="4"/>
             </InfoBar.ActionButton>
         </InfoBar>
         <InfoBar x:Name="SavingToast" Style="{StaticResource ToastNotification}" Title="Placeholder" Message="Test notification!!!" Severity="Informational" IsClosable="False" Background="{ThemeResource SystemFillColorSolidAttentionBackgroundBrush}">

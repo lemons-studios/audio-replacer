@@ -44,8 +44,8 @@ namespace AudioReplacer2
             SetTitleBar(AppTitleBar);
             AppTitle.Text = $"Audio Replacer {windowBackend.GetAppVersion()}";
 
-            bool updatesNeeded = Task.Run(windowBackend.IsUpdateAvailable).Result;
-            if (!updatesNeeded)
+            var updatesAvailable = windowBackend.IsUpdateAvailable();
+            if (updatesAvailable)
             {
                 UpdateToast.Message = $"Latest Version: {windowBackend.GetWebVersion()}";
                 UpdateToast.IsOpen = true;
@@ -93,12 +93,12 @@ namespace AudioReplacer2
             {
                 fileInteractionUtils.SkipAudioTrack();
                 UpdateFileElements();
-                windowBackend.UpdateInfoBar(ToastNotification, "Success!", "File skipped!", 1);
+                windowBackend.UpdateInfoBar(ToastNotification, "Success!", "File skipped!", InfoBarSeverity.Success);
             }
-            else
+            else if (confirmResult == ContentDialogResult.Secondary)
             {
                 AudioPreview.MediaPlayer.Play();
-                windowBackend.UpdateInfoBar(ToastNotification, "Cancelled", "File skip cancelled" , 2);
+                windowBackend.UpdateInfoBar(ToastNotification, "Cancelled", "File skip cancelled" , InfoBarSeverity.Informational);
             }
         }
 
@@ -124,7 +124,7 @@ namespace AudioReplacer2
             if (fileInteractionUtils == null) return;
             await audioRecordingUtils.StopRecordingAudio(fileInteractionUtils.GetOutFilePath());
             ToggleFinalReviewButtons(true);
-            windowBackend.UpdateInfoBar(ToastNotification, "Save Completed!", "Entering review phase...", 1);
+            windowBackend.UpdateInfoBar(ToastNotification, "Save Completed!", "Entering review phase...", InfoBarSeverity.Success);
 
             // Update source of audio player and the title manually
             CurrentFile.Text = "Review your recording...";
@@ -143,7 +143,7 @@ namespace AudioReplacer2
             isProcessing = false;
             await audioRecordingUtils.CancelRecording(fileInteractionUtils.GetOutFilePath());
             ToggleButtonStates(false);
-            windowBackend.UpdateInfoBar(ToastNotification, "Recording Cancelled", "", 2);
+            windowBackend.UpdateInfoBar(ToastNotification, "Recording Cancelled", "", InfoBarSeverity.Informational);
         }
 
         private void UpdateAudioStatus(object sender, RoutedEventArgs e)
@@ -157,12 +157,12 @@ namespace AudioReplacer2
                     case true:
                         // Submission Accepted
                         fileInteractionUtils.DeleteCurrentFile(/* This method essentially acts as a way to confirm the submission*/);
-                        windowBackend.UpdateInfoBar(ToastNotification, "Submission Accepted!!", "Moving to next file...", 1);
+                        windowBackend.UpdateInfoBar(ToastNotification, "Submission Accepted!!", "Moving to next file...", InfoBarSeverity.Success);
                         break;
                     case false:
                         // Submission Rejected
                         File.Delete(fileInteractionUtils.GetOutFilePath());
-                        windowBackend.UpdateInfoBar(ToastNotification, "Submission Rejected", "Returning to record phase...", 3);
+                        windowBackend.UpdateInfoBar(ToastNotification, "Submission Rejected", "Returning to record phase...", InfoBarSeverity.Informational);
                         break;
                 }
                 
@@ -174,7 +174,7 @@ namespace AudioReplacer2
 
         private void ProjectSetup(string path)
         {
-            windowBackend.UpdateInfoBar(SavingToast, "Setting up project...", "", 0, autoClose: false);
+            windowBackend.UpdateInfoBar(SavingToast, "Setting up project...", "", InfoBarSeverity.Informational, autoClose: false);
             RemainingFiles.Visibility = Visibility.Visible;
             windowBackend.ToggleButton(SkipAudioButton, true);
             windowBackend.ToggleButton(StartRecordingButton, true);
@@ -184,7 +184,7 @@ namespace AudioReplacer2
 
             fileInteractionUtils = new FileInteractionUtils(path);
             UpdateFileElements();
-            windowBackend.UpdateInfoBar(ToastNotification, "Success!", "Project loaded!", 1);
+            windowBackend.UpdateInfoBar(ToastNotification, "Success!", "Project loaded!", InfoBarSeverity.Success);
         }
 
         private void ToggleButtonStates(bool recording)
