@@ -168,25 +168,22 @@ namespace AudioReplacer2.Util
             return File.Exists($"{Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData)}\\Microsoft\\WinGet\\Links\\ffmpeg.exe");
         }
 
-
         public void DownloadDependencies()
         {
-            var process = new Process
-            {
-                StartInfo =
+                var process = new Process
                 {
-                    FileName = "cmd",
-                    Arguments = "/c start /min cmd /c winget install ffmpeg --accept-source-agreements --accept-package-agreements",
-                    UseShellExecute = true,
-                    RedirectStandardOutput = false,
-                    RedirectStandardError = false,
-                    CreateNoWindow = true
-                }
-            };
-
-            process.Start();
-            process.WaitForExit();
-
+                    StartInfo =
+                    {
+                        FileName = "winget",
+                        Arguments = "install ffmpeg --accept-source-agreements --accept-package-agreements",
+                        UseShellExecute = true,
+                        RedirectStandardOutput = false,
+                        RedirectStandardError = false,
+                        CreateNoWindow = true
+                    }
+                };
+                process.Start();
+                process.WaitForExit();
         }
     }
 }
