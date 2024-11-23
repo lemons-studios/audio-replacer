@@ -7,12 +7,11 @@ using System.Diagnostics;
 using System.IO;
 using Windows.Storage.Pickers;
 using Windows.Storage;
+using Microsoft.UI.Composition.SystemBackdrops;
 using Microsoft.UI.Windowing;
+using Microsoft.UI.Xaml.Media;
 using WinRT.Interop;
 using WinUIEx;
-using System.IO.Compression;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace AudioReplacer2
 {
@@ -24,6 +23,7 @@ namespace AudioReplacer2
         private readonly MainWindowFunctionality windowBackend;
         private string previousPitchSelection = "None Selected";
         
+        // Needed for button state switching
         private bool isProcessing;
         private bool isRecording;
 
@@ -46,7 +46,7 @@ namespace AudioReplacer2
             SetTitleBar(AppTitleBar);
             AppTitle.Text = $"Audio Replacer {windowBackend.GetAppVersion()}";
 
-            if (!windowBackend.IsFFMpegInstalled())
+            if (!windowBackend.FFMpegAvailable())
             {
                 // Do not check for updates if FFMpeg is not installed. Also disable any interactable elements on the page
                 windowBackend.ToggleButton(FolderSelector, false);
@@ -62,6 +62,20 @@ namespace AudioReplacer2
                     UpdateToast.Message = $"Latest Version: {windowBackend.GetWebVersion()}";
                     UpdateToast.IsOpen = true;
                 }
+            }
+
+            // Enable mica if it's supported. If not, fall back to Acrylic
+            switch (MicaController.IsSupported())
+            {
+                case true:
+                    var micaBackdrop = new MicaBackdrop();
+                    micaBackdrop.Kind = MicaKind.Base;
+                    SystemBackdrop = micaBackdrop;
+                    break;
+                case false:
+                    var acrylicBackdrop = new DesktopAcrylicBackdrop();
+                    SystemBackdrop = acrylicBackdrop;
+                    break;
             }
         }
 

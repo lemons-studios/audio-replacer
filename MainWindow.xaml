@@ -13,15 +13,12 @@
     MinWidth="1024"
     MaxWidth="1024">
 
-    <Window.SystemBackdrop>
-        <MicaBackdrop />
-    </Window.SystemBackdrop>
-
     <Grid>
         <StackPanel>
             <Border x:Name="AppTitleBar" VerticalAlignment="Center" Height="40" Padding="5" Background="Transparent">
-                <Grid ColumnDefinitions="Auto, *">
-                    <Image Source="Assets/Square44x44Logo.targetsize-48.png" Style="{StaticResource TitleBarIcon}"/>
+                <Grid ColumnDefinitions="Auto, Auto, Auto, *">
+                    <Image Source="Assets/Icon/Square44x44Logo.targetsize-48.png" Style="{StaticResource TitleBarIcon}"/>
+
                     <TextBlock x:Name="AppTitle" Style="{StaticResource TitleBarText}" Text="Temp" Grid.Column="1"/>
                 </Grid>
             </Border>
