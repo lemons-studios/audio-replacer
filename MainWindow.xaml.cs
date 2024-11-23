@@ -22,7 +22,6 @@ namespace AudioReplacer2
         public static bool isProcessing;
         public static bool isRecording;
         public static bool projectInitialized;
-
         public static string currentFile;
 
         public MainWindow()
@@ -57,18 +56,12 @@ namespace AudioReplacer2
         {
             var hWnd = WindowNative.GetWindowHandle(window);
             var currentWndId = Win32Interop.GetWindowIdFromWindow(hWnd);
-
             return AppWindow.GetFromWindowId(currentWndId);
         }
 
         private void SwitchPageContent(NavigationView sender, NavigationViewItemInvokedEventArgs args)
         {
-            var navigationOptions = new FrameNavigationOptions
-            {
-                TransitionInfoOverride = args.RecommendedNavigationTransitionInfo,
-                IsNavigationStackEnabled = false
-            };
-
+            var navigationOptions = new FrameNavigationOptions { TransitionInfoOverride = args.RecommendedNavigationTransitionInfo, IsNavigationStackEnabled = false };
             Type pageSwitchType = typeof(RecordPage); // Default page
 
             if (args.InvokedItemContainer != null && args.InvokedItemContainer.Tag is string tag)
@@ -91,7 +84,6 @@ namespace AudioReplacer2
             }
             ContentFrame.Content = page;
         }
-
 
         private void OnWindowClose(object sender, AppWindowClosingEventArgs args) { if (MainWindow.projectInitialized && (MainWindow.isProcessing || MainWindow.isRecording)) File.Delete(MainWindow.currentFile); }
     }

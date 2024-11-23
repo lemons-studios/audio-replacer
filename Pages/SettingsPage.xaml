@@ -5,10 +5,17 @@
     xmlns:local="using:AudioReplacer2.Pages"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    mc:Ignorable="d"
-    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    mc:Ignorable="d">
 
     <Grid>
-        <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Text="Gaming"/>
+        <StackPanel Height="500">
+            <Border Style="{StaticResource PanelCard}" Width="900" Margin="0 15 0 0">
+                <ScrollViewer Width="900" ZoomMode="Disabled" HorizontalScrollBarVisibility="Disabled" HorizontalAlignment="Center" VerticalAlignment="Top" Padding="25">
+                    <StackPanel>
+                        <TextBlock Text="test"/>
+                    </StackPanel>
+                </ScrollViewer>
+            </Border>
+        </StackPanel>
     </Grid>
 </Page>
