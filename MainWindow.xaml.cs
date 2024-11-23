@@ -1,5 +1,5 @@
-using AudioReplacer2.Util;
 using System.IO;
+using AudioReplacer2.Util;
 using AudioReplacer2.Pages;
 using Microsoft.UI.Composition.SystemBackdrops;
 using Microsoft.UI.Windowing;
@@ -7,19 +7,25 @@ using Microsoft.UI.Xaml.Media;
 using WinRT.Interop;
 using WinUIEx;
 using Microsoft.UI;
-using Microsoft.UI.Xaml.Controls;
 
 namespace AudioReplacer2
 {
     public sealed partial class MainWindow : WindowEx
     {
+        // Needed for button state switching. These are in MainWindow because checking for them is a part of the window shutting down
+        // (Okay this probably isn't the best way to do this but if it ain't broke, don't fix it)
+        public static bool isProcessing;
+        public static bool isRecording;
+        public static bool projectInitialized;
+
+        public static string currentFile;
+
 
         public MainWindow()
         {
             InitializeComponent();
-
             GlobalData.appWindow = GetAppWindowForCurrentWindow(this);
-            // appWindow.Closing += OnWindowClose;
+            GlobalData.appWindow.Closing += OnWindowClose;
 
             ExtendsContentIntoTitleBar = true;
             SetTitleBar(AppTitleBar);
@@ -43,7 +49,6 @@ namespace AudioReplacer2
         }
 
         // Thanks StackOverflow man!
-
         private AppWindow GetAppWindowForCurrentWindow(object window)
         {
             var hWnd = WindowNative.GetWindowHandle(window);
@@ -52,6 +57,6 @@ namespace AudioReplacer2
             return AppWindow.GetFromWindowId(myWndId);
         }
 
-        // private void OnWindowClose(object sender, AppWindowClosingEventArgs args) { if (projectFileManagementUtils != null && (isProcessing || isRecording)) File.Delete(projectFileManagementUtils.GetOutFilePath()); }
+        private void OnWindowClose(object sender, AppWindowClosingEventArgs args) { if (MainWindow.projectInitialized && (MainWindow.isProcessing || MainWindow.isRecording)) File.Delete(MainWindow.currentFile); }
     }
 }

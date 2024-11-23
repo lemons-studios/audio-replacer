@@ -1,5 +1,4 @@
 ﻿using Microsoft.UI.Xaml;
-using WinUIEx;
 
 namespace AudioReplacer2
 {

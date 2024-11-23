@@ -7,7 +7,6 @@ using System.Diagnostics;
 using System.IO;
 using Windows.Storage;
 using Windows.Storage.Pickers;
-using Microsoft.UI.Windowing;
 using WinRT.Interop;
 
 namespace AudioReplacer2.Pages
@@ -18,10 +17,6 @@ namespace AudioReplacer2.Pages
         private ProjectFileManagementUtils projectFileManagementUtils;
         private readonly MainWindowFunctionality windowBackend;
         private string previousPitchSelection = "None Selected";
-
-        // Needed for button state switching
-        private bool isProcessing;
-        private bool isRecording;
 
         public RecordPage()
         {
@@ -105,7 +100,7 @@ namespace AudioReplacer2.Pages
 
         private async void StartRecordingAudio(object sender, RoutedEventArgs e)
         {
-            isRecording = true;
+            MainWindow.isRecording = true;
             AudioPreview.MediaPlayer.Pause();
             windowBackend.UpdateInfoBar(SavingToast, "Recording In Progress...", "", 0, autoClose: false);
 
@@ -119,7 +114,7 @@ namespace AudioReplacer2.Pages
 
         private async void StopRecordingAudio(object sender, RoutedEventArgs e)
         {
-            isRecording = false; isProcessing = true;
+            MainWindow.isRecording = false; MainWindow.isProcessing = true;
             windowBackend.UpdateInfoBar(SavingToast, "Saving File....", "", 0);
 
             if (projectFileManagementUtils == null) return;
@@ -137,11 +132,12 @@ namespace AudioReplacer2.Pages
             CurrentFile.Text = windowBackend.GetFormattedCurrentFile(projectFileManagementUtils.GetCurrentFile());
             RemainingFiles.Text = $"Files Remaining: {projectFileManagementUtils.GetFilesRemaining():N0}";
             AudioPreview.Source = windowBackend.MediaSourceFromUri(projectFileManagementUtils.GetCurrentFile(false));
+            MainWindow.currentFile = projectFileManagementUtils.GetOutFilePath();
         }
 
         private async void CancelCurrentRecording(object sender, RoutedEventArgs e)
         {
-            isProcessing = false;
+            MainWindow.isRecording = false;
             await audioRecordingUtils.CancelRecording(projectFileManagementUtils.GetOutFilePath());
             ToggleButtonStates(false);
             windowBackend.UpdateInfoBar(ToastNotification, "Recording Cancelled", "", InfoBarSeverity.Informational);
@@ -151,8 +147,9 @@ namespace AudioReplacer2.Pages
         {
             if (sender is Button button)
             {
-                isProcessing = false;
-                bool isSubmitButton = button.Name == "SubmitRecordingButton";
+                MainWindow.isProcessing = false;
+                var isSubmitButton = button.Name == "SubmitRecordingButton";
+
                 switch (isSubmitButton)
                 {
                     case true:
@@ -166,7 +163,6 @@ namespace AudioReplacer2.Pages
                         windowBackend.UpdateInfoBar(ToastNotification, "Submission Rejected", "Returning to record phase...", InfoBarSeverity.Informational);
                         break;
                 }
-
                 ToggleFinalReviewButtons(false);
                 ToggleButtonStates(false);
                 UpdateFileElements();
@@ -184,6 +180,8 @@ namespace AudioReplacer2.Pages
             AudioPreviewControls.IsEnabled = true;
 
             projectFileManagementUtils = new ProjectFileManagementUtils(path);
+            MainWindow.projectInitialized = true;
+
             UpdateFileElements();
             windowBackend.UpdateInfoBar(ToastNotification, "Success!", "Project loaded!", InfoBarSeverity.Success);
         }

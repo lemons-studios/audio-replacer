@@ -130,10 +130,17 @@ namespace AudioReplacer2.Util
         private async Task WaitHideInfoBar(InfoBar infoBar)
         {
             await Task.Delay(1500);
-            infoBar.DispatcherQueue.TryEnqueue(() =>
+            try
             {
-                infoBar.IsOpen = false;
-            });
+                infoBar.DispatcherQueue.TryEnqueue(() =>
+                {
+                    infoBar.IsOpen = false;
+                });
+            }
+            catch
+            {
+                return;
+            }
         }
 
         public bool FFMpegAvailable()
