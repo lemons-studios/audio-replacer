@@ -16,4 +16,6 @@
     <BadgeLogoSource>C:\Users\andre\Desktop\audio-replacer-2\Assets\Icon\AppIcon.png</BadgeLogoSource>
     <PackageLogoSource>C:\Users\andre\Desktop\audio-replacer-2\Assets\Icon\AppIcon.png</PackageLogoSource>
   </PropertyGroup>
+  <ItemGroup />
+  <ItemGroup />
 </Project>

@@ -159,7 +159,7 @@ namespace AudioReplacer2.Util
             });
         }
 
-        public bool IsFFMpegInstalled()
+        public bool FFMpegAvailable()
         {
             // I know that using WinGet to install ffmpeg is not a great idea, especially for users who already have it installed
             // But let me tell you how much I hate trying to check for global installations on the path

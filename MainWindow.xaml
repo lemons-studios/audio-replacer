@@ -16,12 +16,12 @@
     <Grid>
         <StackPanel>
             <Border x:Name="AppTitleBar" VerticalAlignment="Center" Height="40" Padding="5" Background="Transparent">
-                <Grid ColumnDefinitions="Auto, Auto, Auto, *">
+                <Grid ColumnDefinitions="Auto, *">
                     <Image Source="Assets/Icon/Square44x44Logo.targetsize-48.png" Style="{StaticResource TitleBarIcon}"/>
-
                     <TextBlock x:Name="AppTitle" Style="{StaticResource TitleBarText}" Text="Temp" Grid.Column="1"/>
                 </Grid>
             </Border>
+
             <Grid ColumnDefinitions="60*, 40*" Padding="2.5">
                 <Border Style="{StaticResource PanelCard}" Grid.Column="0" Width="575"/>
 
@@ -87,7 +87,7 @@
         </InfoBar>
 
         <InfoBar x:Name="DependencyToast" Style="{StaticResource ToastNotification}" Title="Error" Message="Required Dependencies Not Found" Severity="Error" Background="{ThemeResource SystemFillColorCriticalBackgroundBrush}" IsOpen="False" IsClosable="False">
-                <InfoBar.ActionButton>
+            <InfoBar.ActionButton>
                 <Button Content="Download Dependencies" Click="DownloadRuntimeDependencies" CornerRadius="4"/>
             </InfoBar.ActionButton>
             <InfoBar.Transitions>
@@ -104,4 +104,5 @@
             </InfoBar.Transitions>
         </InfoBar>
     </Grid>
+
 </WinUiEx:WindowEx>

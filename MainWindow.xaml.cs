@@ -12,6 +12,7 @@ using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml.Media;
 using WinRT.Interop;
 using WinUIEx;
+using Microsoft.UI.Xaml.Media.Animation;
 
 namespace AudioReplacer2
 {
@@ -64,12 +65,11 @@ namespace AudioReplacer2
                 }
             }
 
-            // Enable mica if it's supported. If not, fall back to Acrylic
+            // Enable mica if it's supported. If not, fall back to Acrylic. Mica is not supported on any version of Windows 10
             switch (MicaController.IsSupported())
             {
                 case true:
                     var micaBackdrop = new MicaBackdrop();
-                    micaBackdrop.Kind = MicaKind.Base;
                     SystemBackdrop = micaBackdrop;
                     break;
                 case false:
