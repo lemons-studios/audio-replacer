@@ -81,15 +81,6 @@ namespace AudioReplacer2.Util
             return MediaSource.CreateFromUri(new Uri(path));
         }
 
-        // Thanks StackOverflow man!
-        public AppWindow GetAppWindowForCurrentWindow(object window)
-        {
-            var hWnd = WindowNative.GetWindowHandle(window);
-            var myWndId = Win32Interop.GetWindowIdFromWindow(hWnd);
-
-            return AppWindow.GetFromWindowId(myWndId);
-        }
-
         public List<string> GetPitchTitles()
         {
             return pitchMenuTitles;
@@ -98,14 +89,6 @@ namespace AudioReplacer2.Util
         public float GetPitchModifier(int index)
         {
             try { return pitchValues[index]; } catch { return 1; }
-        }
-
-        public string GetAppVersion(bool forceBuildNumber = false)
-        {
-            var currentBuild = GetVersion();
-            // We do a bit of array shenanigans (loving this word)
-            bool returnBuildNumber = currentBuild[2] != 0 || forceBuildNumber;
-            return returnBuildNumber ? $"{currentBuild[0]}.{currentBuild[1]}.{currentBuild[2]}" : $"{currentBuild[0]}.{currentBuild[1]}";
         }
 
         public string GetFormattedCurrentFile(string input)
@@ -117,7 +100,7 @@ namespace AudioReplacer2.Util
         {
             try
             {
-                return webVersion != GetAppVersion(true);
+                return webVersion != GlobalData.GetAppVersion(true);
             }
             catch(Exception ex)
             {
@@ -128,13 +111,7 @@ namespace AudioReplacer2.Util
 
         public string GetWebVersion()
         {
-            return webVersion != string.Empty ? webVersion : GetAppVersion(); // App version used as fallback when no internet is available
-        }
-
-        private int[] GetVersion()
-        {
-            var appVersion = Package.Current.Id.Version;
-            return [ appVersion.Major, appVersion.Minor, appVersion.Build ];
+            return webVersion != string.Empty ? webVersion : GlobalData.GetAppVersion(); // App version used as fallback when no internet is available
         }
 
         private float ParseFloat(string value)

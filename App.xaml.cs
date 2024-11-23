@@ -5,6 +5,9 @@ namespace AudioReplacer2
 {
     public partial class App : Application
     {
+
+        public static MainWindow MainWindow { get; private set; }
+
         public App()
         {
             InitializeComponent();
@@ -12,9 +15,9 @@ namespace AudioReplacer2
 
         protected override void OnLaunched(LaunchActivatedEventArgs args)
         {
-            mainWindow = new MainWindow();
-            mainWindow.Activate();
+            MainWindow = new MainWindow();
+            MainWindow.Activate();
         }
-        private MainWindow mainWindow;
+        
     }
 }

@@ -1,10 +1,26 @@
-﻿using System;
+﻿using Microsoft.UI;
+using System;
 using System.IO;
+using Windows.ApplicationModel;
+using Microsoft.UI.Windowing;
+using WinRT.Interop;
 
 namespace AudioReplacer2.Util
 {
     public static class GlobalData
     {
+        public static AppWindow appWindow;
+
+        public static string GetAppVersion(bool forceBuildNumber = false)
+        {
+            var appVersion = Package.Current.Id.Version;
+            int[] currentBuild = [appVersion.Major, appVersion.Minor, appVersion.Build];
+
+            // We do a bit of array shenanigans (loving this word)
+            bool returnBuildNumber = currentBuild[2] != 0 || forceBuildNumber;
+            return returnBuildNumber ? $"{currentBuild[0]}.{currentBuild[1]}.{currentBuild[2]}" : $"{currentBuild[0]}.{currentBuild[1]}";
+        }
+
         // Modify THIS variable to add, remove, or modify default pitch values.
         // Use multiplicative values for pitch values (for example, if you want to reduce the pitch of the recording by 4%, you would want to enter in "0.96"
         // TODO: switch to a real JSON file to configure json data and use this PitchData string as the default values. Users can configure pitch data using that file
