@@ -8,12 +8,12 @@
     xmlns:WinUiEx="using:WinUIEx"
     xmlns:audioReplacer2="using:AudioReplacer2"
     mc:Ignorable="d"
-    MinHeight="400"
-    MaxHeight="400"
+    MinHeight="460"
+    MaxHeight="460"
     MinWidth="1024"
     MaxWidth="1024">
 
-    <Grid>
+    <StackPanel>
         <Border x:Name="AppTitleBar" VerticalAlignment="Top" Height="40" Padding="5" Background="Transparent">
             <Grid ColumnDefinitions="Auto, *">
                 <Image Source="Assets/Icon/Square44x44Logo.targetsize-48.png" Style="{StaticResource TitleBarIcon}"/>
@@ -21,7 +21,32 @@
             </Grid>
         </Border>
 
-        <Frame x:Name="ContentFrame" />
-    </Grid>
-
+        <NavigationView x:Name="AppNavigation" Style="{StaticResource PageNavigation}" ItemInvoked="SwitchPageContent">
+            <NavigationView.MenuItems>
+                <NavigationViewItem x:Name="RecordItem" Tag="Record">
+                    <NavigationViewItem.Content>
+                        <TextBlock Text="Record" FontWeight="Light"/>
+                    </NavigationViewItem.Content>
+                    <NavigationViewItem.Icon>
+                        <FontIcon Glyph="&#xF8B1;" />
+                    </NavigationViewItem.Icon>
+                </NavigationViewItem>
+                <NavigationViewItem x:Name="SettingsItem" Tag="Settings">
+                    <NavigationViewItem.Content>
+                        <TextBlock Text="Settings" FontWeight="Light"/>
+                    </NavigationViewItem.Content>
+                    <NavigationViewItem.Icon>
+                        <FontIcon Glyph="&#xE713;" />
+                    </NavigationViewItem.Icon>
+                </NavigationViewItem>
+            </NavigationView.MenuItems>
+            <Frame x:Name="ContentFrame">
+                <Frame.ContentTransitions>
+                    <TransitionCollection>
+                        <NavigationThemeTransition/>
+                    </TransitionCollection>
+                </Frame.ContentTransitions>
+            </Frame>
+        </NavigationView>
+    </StackPanel>
 </WinUiEx:WindowEx>
