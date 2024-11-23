@@ -4,9 +4,7 @@ namespace AudioReplacer2
 {
     public partial class App : Application
     {
-
         public static MainWindow MainWindow { get; private set; }
-
         public App()
         {
             InitializeComponent();
@@ -17,6 +15,5 @@ namespace AudioReplacer2
             MainWindow = new MainWindow();
             MainWindow.Activate();
         }
-        
     }
 }

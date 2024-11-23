@@ -15,13 +15,13 @@ namespace AudioReplacer2.Pages
     {
         private readonly AudioRecordingUtils audioRecordingUtils;
         private ProjectFileManagementUtils projectFileManagementUtils;
-        private readonly MainWindowFunctionality windowBackend;
+        private readonly RecordPageFunctionality windowBackend;
         private string previousPitchSelection = "None Selected";
 
         public RecordPage()
         {
             InitializeComponent();
-            windowBackend = new MainWindowFunctionality(VoiceTuneMenu, [ToastNotification, SavingToast, UpdateToast]);
+            windowBackend = new RecordPageFunctionality(VoiceTuneMenu, [ToastNotification, SavingToast, UpdateToast]);
 
             VoiceTuneMenu.ItemsSource = windowBackend.GetPitchTitles();
             RequiresEffectsPrompt.ItemsSource = new List<string> { "Yes", "No" }; // Prevents clutter on the .xaml file (1 line added here is 3 lines removed from the xaml file)
@@ -30,7 +30,7 @@ namespace AudioReplacer2.Pages
             AudioPreview.MediaPlayer.IsLoopingEnabled = true;
             audioRecordingUtils = new AudioRecordingUtils();
 
-            if (!windowBackend.FFMpegAvailable())
+            if (!windowBackend.IsFfMpegAvailable())
             {
                 // Do not check for updates if FFMpeg is not installed. Also disable any interactable elements on the page
                 windowBackend.ToggleButton(FolderSelector, false);

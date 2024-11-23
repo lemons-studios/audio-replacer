@@ -1,22 +1,15 @@
 ﻿using Microsoft.UI.Xaml;
-using Microsoft.UI;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using Windows.Media.Core;
-using WinRT.Interop;
-using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml.Controls;
-using Windows.ApplicationModel;
-using System.IO.Compression;
 using System.IO;
-using System.Net.Http;
 
 namespace AudioReplacer2.Util
 {
-    // Easily removes a good chunk of code from MainWindow.xaml.cs. much easier to navigate through everything now!
-    public class MainWindowFunctionality
+    public class RecordPageFunctionality
     {
         public readonly WebRequest webRequest;
 
@@ -25,7 +18,7 @@ namespace AudioReplacer2.Util
         private readonly List<float> pitchValues;
         private readonly string webVersion;
 
-        public MainWindowFunctionality(ComboBox pitchComboBox, InfoBar[] windowInfoBars)
+        public RecordPageFunctionality(ComboBox pitchComboBox, InfoBar[] windowInfoBars)
         {
             webRequest = new WebRequest();
             pitchMenuTitles = [];
@@ -37,7 +30,6 @@ namespace AudioReplacer2.Util
                 pitchValues.Add(ParseFloat(data[0])); // Position 0 of each array in the 2d array should have the pitch data, as mentioned in GlobalData.cs
                 pitchMenuTitles.Add(data[1]); // Position 1 of each array in the 2d array should have the name of the character, as mentioned in GlobalData.cs
             }
-
             webVersion = Task.Run(webRequest.GetWebVersion).Result;
         }
 
@@ -48,9 +40,35 @@ namespace AudioReplacer2.Util
             infoBar.Title = title;
             infoBar.Message = message;
 
-
             infoBar.IsOpen = show;
             if (autoClose) Task.Run(() => WaitHideInfoBar(infoBar));
+        }
+
+        public void DownloadDependencies()
+        {
+            var process = new Process
+            {
+                StartInfo =
+                {
+                    FileName = "winget",
+                    Arguments = "install ffmpeg --accept-source-agreements --accept-package-agreements",
+                    UseShellExecute = true,
+                    RedirectStandardOutput = false,
+                    RedirectStandardError = false,
+                    CreateNoWindow = true
+                }
+            };
+            process.Start();
+            process.WaitForExit();
+        }
+
+        public bool IsFfMpegAvailable()
+        {
+            // I know that using WinGet to install ffmpeg is not a great idea, especially for users who already have it installed
+            // But let me tell you how much I hate trying to check for global installations on the path
+            // It will be kept this way because frankly it just works
+            // 100 extra megabytes idc anymore :(
+            return File.Exists($"{Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData)}\\Microsoft\\WinGet\\Links\\ffmpeg.exe");
         }
 
         public bool ToBool(int value)
@@ -130,6 +148,8 @@ namespace AudioReplacer2.Util
         private async Task WaitHideInfoBar(InfoBar infoBar)
         {
             await Task.Delay(1500);
+
+            // This try-catch is needed in the case that the TryEnqueue is running while the window is closing
             try
             {
                 infoBar.DispatcherQueue.TryEnqueue(() =>
@@ -137,37 +157,7 @@ namespace AudioReplacer2.Util
                     infoBar.IsOpen = false;
                 });
             }
-            catch
-            {
-                return;
-            }
-        }
-
-        public bool FFMpegAvailable()
-        {
-            // I know that using WinGet to install ffmpeg is not a great idea, especially for users who already have it installed
-            // But let me tell you how much I hate trying to check for global installations on the path
-            // It will be kept this way because frankly it just works
-            // 100 extra megabytes idc anymore :(
-            return File.Exists($"{Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData)}\\Microsoft\\WinGet\\Links\\ffmpeg.exe");
-        }
-
-        public void DownloadDependencies()
-        {
-                var process = new Process
-                {
-                    StartInfo =
-                    {
-                        FileName = "winget",
-                        Arguments = "install ffmpeg --accept-source-agreements --accept-package-agreements",
-                        UseShellExecute = true,
-                        RedirectStandardOutput = false,
-                        RedirectStandardError = false,
-                        CreateNoWindow = true
-                    }
-                };
-                process.Start();
-                process.WaitForExit();
+            catch { return; } 
         }
     }
 }
