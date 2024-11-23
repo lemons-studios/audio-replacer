@@ -25,12 +25,12 @@ namespace AudioReplacer2.Util
             pitchValues = [];
             this.windowInfoBars = windowInfoBars;
 
-            foreach (var data in GlobalData.PitchData)
+            foreach (var data in GlobalData.pitchData)
             {
                 pitchValues.Add(ParseFloat(data[0])); // Position 0 of each array in the 2d array should have the pitch data, as mentioned in GlobalData.cs
                 pitchMenuTitles.Add(data[1]); // Position 1 of each array in the 2d array should have the name of the character, as mentioned in GlobalData.cs
             }
-            webVersion = Task.Run(webRequest.GetWebVersion).Result;
+            webVersion = Task.Run(() => webRequest.GetWebVersion("https://api.github.com/repos/lemons-studios/audio-replacer-2/tags")).Result;
         }
 
         public void UpdateInfoBar(InfoBar infoBar, string title, string message, InfoBarSeverity severity, bool show = true, bool autoClose = true)
@@ -46,20 +46,9 @@ namespace AudioReplacer2.Util
 
         public void DownloadDependencies()
         {
-            var process = new Process
-            {
-                StartInfo =
-                {
-                    FileName = "winget",
-                    Arguments = "install ffmpeg --accept-source-agreements --accept-package-agreements",
-                    UseShellExecute = true,
-                    RedirectStandardOutput = false,
-                    RedirectStandardError = false,
-                    CreateNoWindow = true
-                }
-            };
-            process.Start();
-            process.WaitForExit();
+            var downloadProcess = ShellCommandManager.CreateProcess("winget", "install ffmpeg --accept-source-agreements --accept-package-agreements", true, false, false, true);
+            downloadProcess.Start();
+            downloadProcess.WaitForExit();
         }
 
         public bool IsFfMpegAvailable()

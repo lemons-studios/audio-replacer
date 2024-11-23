@@ -12,14 +12,12 @@ namespace AudioReplacer2
 {
     public sealed partial class MainWindow : WindowEx
     {
-        // Needed for button state switching. These are in MainWindow because checking for them is a part of the window shutting down
-        // (Okay this probably isn't the best way to do this but if it ain't broke, don't fix it)
+        // Needed for button state switching. These are in MainWindow because checking for them is a part of the window shutting down (Okay this probably isn't the best way to do this but if it ain't broke, don't fix it)
         public static bool isProcessing;
         public static bool isRecording;
         public static bool projectInitialized;
 
         public static string currentFile;
-
 
         public MainWindow()
         {

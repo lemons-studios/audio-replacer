@@ -1,9 +1,5 @@
-﻿using Microsoft.UI;
-using System;
-using System.IO;
-using Windows.ApplicationModel;
+﻿using Windows.ApplicationModel;
 using Microsoft.UI.Windowing;
-using WinRT.Interop;
 
 namespace AudioReplacer2.Util
 {
@@ -23,8 +19,8 @@ namespace AudioReplacer2.Util
 
         // Modify THIS variable to add, remove, or modify default pitch values.
         // Use multiplicative values for pitch values (for example, if you want to reduce the pitch of the recording by 4%, you would want to enter in "0.96"
-        // TODO: switch to a real JSON file to configure json data and use this PitchData string as the default values. Users can configure pitch data using that file
-        public static string[][] PitchData =
+        // TODO: switch to a real JSON file to configure json data and use this pitchData string as the default values. Users can configure pitch data using that file
+        public static string[][] pitchData =
         [
             ["1.0075", "Ai Ebihara"], ["1.025", "Ayane Matsunaga"], ["0.555", "Ameno-Sagiri"], ["1.015", "Chie Satonaka"],
             ["1.012", "Chihiro Fushimi"], ["0.9925", "Daisuke Nagase"], ["1.0195", "Eri Minami"], ["1.0065", "Hanako Ohtani"],
@@ -42,42 +38,5 @@ namespace AudioReplacer2.Util
             ["1.0165", "Yukiko Amagi"], ["0.9975", "Yosuke Hanamura"], ["0.9875", "Yu Narukami"], ["1.0135", "Yumi Ozawa"],
             ["1.00", "Other NPC"]
         ];
-
-        // So for my specific use case, here are the percentage decreases and whatnot:
-        // Ai Ebihara receives a 0.75% Increase
-        // Ayane Matsunaga receives a 2.5% Increase
-        // Ameno-Sagiri receives a 44.5% Decrease
-        // Chie Satonaka receives a 1.5% Increase
-        // Chihiro Fushimi receives a 1.2% Increase
-        // Daisuke Nagase receives a 0.75% Decrease
-        // Eri Minami receives a 1.95% Increase
-        // Hanako Ohtani receives a 0.65% Increase
-        // Igor does not receive a pitch change
-        // Izanami receives a 0.85% Increase
-        // Kanji Tatsumi receives a 0.30% Decrease
-        // Kinshiro Morooka receives a 1.25% Decrease
-        // Kou Ichijo receives a 0.25% Decrease
-        // Kunino-Sagiri receives a 1.75% Decrease
-        // Margaret receives a 1.75% Increase
-        // Marie receives a 2% Increase
-        // Mitsuo Kubo receives a 1.9% Decrease
-        // Nanako Dojima receives a 3% Increase
-        // Naoki Konishi receives a 2% Decrease
-        // Naoto Shirogane receives a 1.25% Increase
-        // Noriko Kashiwagi receives a 1.575% Increase
-        // Gekkoukan & Yasogami Principals both get a 2% Decrease
-        // Rise Kujikawa receives a 1.675% Increase
-        // Ryotaro Dojima receives a 1.55% Decrease
-        // Saki Konishi receives a 2.25% Increase
-        // Sayoko Uehara receives a 1.5% Increase
-        // Shu Nakajima receives a 0.175% Increase
-        // Taro Namatame receives a 1.65% Decrease
-        // Teddie does not receive a pitch change
-        // Tohru Adachi receives a 2.25% Decrease
-        // Yukiko Amagi receives a 1.65% Increase
-        // Yosuka Hanamura receives a 0.25% Decrease
-        // Yu Narukami receives a 1.25% Decrease
-        // Yumi Ozawa receives a 1.35% Increase
-        // Then of course there's the No pitch change option at the end
     }
 }

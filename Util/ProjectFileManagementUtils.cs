@@ -34,7 +34,6 @@ namespace AudioReplacer2.Util
             string[] subdirectories = GetPathSubdirectories(projectPath);
 
             currentFile = subdirectories.Length > 0 ? GetFilesInFolder(subdirectories[0])[0] : "YOU ARE DONE!!!!!!";
-
             truncatedCurrentFile = currentFile == "YOU ARE DONE!!!!!!" ? currentFile : TruncateDirectory(currentFile, 2);
             currentOutFile = $"{outputFolderPath}\\{truncatedCurrentFile}";
             currentFileName = TruncateDirectory(currentFile, 1);

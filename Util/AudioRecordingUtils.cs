@@ -46,18 +46,8 @@ namespace AudioReplacer2.Util
             var outFile = $"{file}0.wav"; // Temporary name, gets renamed back to actual file name at the end
 
             // FFMpeg is used with shell commands here simply because I cannot bother trying to figure out .NET FFMpeg frameworks that are all just command wrappers anyway
-            var ffmpegProcess = new Process
-            {
-                StartInfo =
-                {
-                    FileName = "ffmpeg",
-                    Arguments = $"-i \"{file}\" -af \"rubberband=pitch={pitchChange}, volume=1.25\" -y \"{outFile}\"",
-                    RedirectStandardOutput = true,
-                    RedirectStandardError = true,
-                    UseShellExecute = false,
-                    CreateNoWindow = true
-                }
-            };
+            var ffmpegProcess = ShellCommandManager.CreateProcess("ffmpeg", $"-i \"{file}\" -af \"rubberband=pitch={pitchChange}, volume=1.25\" -y \"{outFile}\"");
+
             ffmpegProcess.Start();
             Task<string> outputTask = ffmpegProcess.StandardOutput.ReadToEndAsync();
             Task<string> errorOutputTask = ffmpegProcess.StandardError.ReadToEndAsync();

@@ -214,13 +214,15 @@ namespace AudioReplacer2.Pages
             windowBackend.DownloadDependencies();
 
             // Restart app
-            Windows.ApplicationModel.Core.AppRestartFailureReason failureReason = Microsoft.Windows.AppLifecycle.AppInstance.Restart("");
+            var failureReason = Microsoft.Windows.AppLifecycle.AppInstance.Restart("");
         }
 
         private void OpenGithubReleases(object sender, RoutedEventArgs e)
         {
             string url = "https://github.com/lemons-studios/audio-replacer-2/releases/latest";
-            Process.Start(new ProcessStartInfo("cmd", $"/c start {url}") { CreateNoWindow = true });
+
+            Process openReleasesProcess = ShellCommandManager.CreateProcess("cmd", $"/c start {url}");
+            openReleasesProcess.Start();
         }
     }
 }
