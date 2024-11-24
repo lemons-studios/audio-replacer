@@ -6,6 +6,7 @@ namespace AudioReplacer2.Util
     public static class GlobalData
     {
         public static AppWindow appWindow;
+        public static bool updateChecksAllowed = true;
 
         public static string GetAppVersion(bool forceBuildNumber = false)
         {
@@ -16,6 +17,9 @@ namespace AudioReplacer2.Util
             bool returnBuildNumber = currentBuild[2] != 0 || forceBuildNumber;
             return returnBuildNumber ? $"{currentBuild[0]}.{currentBuild[1]}.{currentBuild[2]}" : $"{currentBuild[0]}.{currentBuild[1]}";
         }
+
+        // I love my 2d arrays
+        public static string[][] defaultSettingValues = [["2", "appTheme"], ["0", "appTransparency"], ["1", "appUpdateChecks"], ["1550", "toastTimeout"], ["75", "recordStopDelay"]];
 
         // Modify THIS variable to add, remove, or modify default pitch values.
         // Use multiplicative values for pitch values (for example, if you want to reduce the pitch of the recording by 4%, you would want to enter in "0.96"

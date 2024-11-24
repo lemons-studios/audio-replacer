@@ -28,7 +28,7 @@
                         <TextBlock Text="Record" FontWeight="Light"/>
                     </NavigationViewItem.Content>
                     <NavigationViewItem.Icon>
-                        <FontIcon Glyph="&#xF8B1;" />
+                        <FontIcon Glyph="&#xE720;" />
                     </NavigationViewItem.Icon>
                 </NavigationViewItem>
                 <NavigationViewItem x:Name="SettingsItem" Tag="Settings">

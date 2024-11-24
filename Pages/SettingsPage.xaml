@@ -3,19 +3,43 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:AudioReplacer2.Pages"
+    xmlns:controls="using:CommunityToolkit.WinUI.Controls"
+    xmlns:ui="using:CommunityToolkit.WinUI"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
 
     <Grid>
         <StackPanel Height="500">
-            <Border Style="{StaticResource PanelCard}" Width="900" Margin="0 15 0 0">
-                <ScrollViewer Width="900" ZoomMode="Disabled" HorizontalScrollBarVisibility="Disabled" HorizontalAlignment="Center" VerticalAlignment="Top" Padding="25">
-                    <StackPanel>
-                        <TextBlock Text="test"/>
-                    </StackPanel>
-                </ScrollViewer>
-            </Border>
+            <ScrollViewer Width="900" ZoomMode="Disabled" HorizontalScrollBarVisibility="Disabled" HorizontalAlignment="Center" VerticalAlignment="Top" Padding="25">
+                <StackPanel>
+                    <controls:SettingsCard Header="App Theme" Margin="0 0 0 7.5">
+                        <controls:SettingsCard.HeaderIcon>
+                            <FontIcon Glyph="&#xE790;" />
+                        </controls:SettingsCard.HeaderIcon>
+                        <ComboBox SelectedIndex="0">
+                            <ComboBoxItem>Light</ComboBoxItem>
+                            <ComboBoxItem>Dark</ComboBoxItem>
+                            <ComboBoxItem>System Theme</ComboBoxItem>
+                        </ComboBox>
+                    </controls:SettingsCard>
+                    <controls:SettingsCard Header="Transparency Effects" Description="These changes will only take effect if you have enabled transparency effects in the system settings" Margin="0 0 0 7.5">
+                        <controls:SettingsCard.HeaderIcon>
+                            <FontIcon Glyph="&#xF4A5;" />
+                        </controls:SettingsCard.HeaderIcon>
+                        <ComboBox SelectedIndex="0">
+                            <ComboBoxItem>Mica (Windows 11 Only)</ComboBoxItem>
+                            <ComboBoxItem>Acrylic</ComboBoxItem>
+                        </ComboBox>
+                    </controls:SettingsCard>
+                    <controls:SettingsCard Header="Enable Update Checks" Description="Check is performed each launch by checking GitHub for new releases" Margin="0 0 0 7.5">
+                        <controls:SettingsCard.HeaderIcon>
+                            <FontIcon Glyph="&#xECC5;" />
+                        </controls:SettingsCard.HeaderIcon>
+                        <ToggleSwitch x:Name="UpdateCheckSwitch" IsOn="True"/>
+                    </controls:SettingsCard>
+                </StackPanel>
+            </ScrollViewer>
         </StackPanel>
     </Grid>
 </Page>

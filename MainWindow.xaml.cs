@@ -11,6 +11,7 @@ using Microsoft.UI;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
 using System.Collections.Generic;
+using Microsoft.UI.System;
 
 namespace AudioReplacer2
 {
@@ -34,7 +35,7 @@ namespace AudioReplacer2
             SetTitleBar(AppTitleBar);
             AppTitle.Text = $"Audio Replacer {GlobalData.GetAppVersion()}";
 
-            // Enable mica if it's supported. If not, fall back to Acrylic. Mica is not supported on any version of Windows 10
+            // Enable mica if it's supported. If not, fall back to Acrylic. Mica is only supported on Windows 11
             switch (MicaController.IsSupported())
             {
                 case true:
@@ -49,6 +50,18 @@ namespace AudioReplacer2
 
             // Finally, open the recording page
             ContentFrame.Navigate(typeof(RecordPage));
+            ApplySettingsTheming();
+        }
+
+        private void ApplySettingsTheming()
+        {
+            foreach (var settings in GlobalData.defaultSettingValues)
+            {
+                if (!SystemUtils.DoesSettingExist(settings[1]))
+                {
+                    SystemUtils.CreateSetting(settings[1], settings[0]);
+                }
+            }
         }
 
         // Thanks StackOverflow man!

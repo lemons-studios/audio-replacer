@@ -32,11 +32,13 @@ namespace AudioReplacer2.Pages
             switch (windowBackend.IsFfMpegAvailable())
             {
                 case true: // Check For Updates
+                    if (!GlobalData.updateChecksAllowed) break;
                     var updatesAvailable = windowBackend.IsUpdateAvailable();
                     if (!updatesAvailable) break;
                     UpdateToast.Message = $"Latest Version: {windowBackend.GetWebVersion()}";
                     UpdateToast.IsOpen = true;
                     break;
+
                 case false: // Show popup for dependency install requirement
                     windowBackend.ToggleButton(FolderSelector, false);
                     VoiceTuneMenu.IsEnabled = false;
