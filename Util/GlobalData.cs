@@ -1,4 +1,5 @@
-﻿using Windows.ApplicationModel;
+﻿using System;
+using Windows.ApplicationModel;
 using Microsoft.UI.Windowing;
 
 namespace AudioReplacer2.Util

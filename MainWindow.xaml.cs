@@ -53,6 +53,11 @@ namespace AudioReplacer2
 
             // Finally, open the recording page
             ContentFrame.Navigate(typeof(RecordPage));
+
+            if (Content is FrameworkElement rootElement)
+            {
+                rootElement.RequestedTheme = (ElementTheme) App.AppSettings.AppThemeSetting;
+            }
         }
 
         // Thanks StackOverflow man!

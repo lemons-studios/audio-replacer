@@ -26,7 +26,7 @@ namespace AudioReplacer2.Pages
                     if(MicaController.IsSupported()) App.MainWindow.SystemBackdrop = new MicaBackdrop();
                     else
                     {
-                        App.systemAppTheme = ApplicationTheme.Light;
+                        App.SystemAppTheme = ApplicationTheme.Light;
                         App.MainWindow.SystemBackdrop = new DesktopAcrylicBackdrop();
                         TransparencyDropdown.SelectedIndex = 1;
                     }

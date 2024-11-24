@@ -21,7 +21,7 @@
                     <controls:SettingsCard.HeaderIcon>
                         <FontIcon Glyph="&#xE790;" />
                     </controls:SettingsCard.HeaderIcon>
-                    <ComboBox x:Name="ThemeDropdown" SelectedIndex="2" SelectionChanged="UpdateAppTheme">
+                    <ComboBox x:Name="ThemeDropdown" SelectedIndex="0" SelectionChanged="UpdateAppTheme">
                         <ComboBoxItem>System Theme</ComboBoxItem>
                         <ComboBoxItem>Light</ComboBoxItem>
                         <ComboBoxItem>Dark</ComboBoxItem>
