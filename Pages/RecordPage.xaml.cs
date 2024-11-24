@@ -128,7 +128,7 @@ namespace AudioReplacer2.Pages
 
         private void UpdateFileElements()
         {
-            var progressPercentage = projectFileManagementUtils.GetPercentageComplete();
+            var progressPercentage = projectFileManagementUtils.CalculatePercentageComplete();
             var projectPath = projectFileManagementUtils.GetProjectPath();
 
             CurrentFile.Text = windowBackend.GetFormattedCurrentFile(projectFileManagementUtils.GetCurrentFile());

@@ -8,7 +8,6 @@ namespace AudioReplacer2.Util
 {
     public class WebRequest
     {
-        
         private readonly HttpClient client = new HttpClient
         {
             DefaultRequestHeaders = { { "User-Agent", "Audio Replacer 2" } }

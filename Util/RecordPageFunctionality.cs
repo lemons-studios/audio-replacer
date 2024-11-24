@@ -1,7 +1,6 @@
 ﻿using Microsoft.UI.Xaml;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Threading.Tasks;
 using Windows.Media.Core;
 using Microsoft.UI.Xaml.Controls;
@@ -121,9 +120,8 @@ namespace AudioReplacer2.Util
             {
                 return webVersion != GlobalData.GetAppVersion(true);
             }
-            catch(Exception ex)
+            catch
             {
-                Debug.WriteLine($"An error occured while checking for updates: {ex}");
                 return false;
             }
         }
@@ -158,7 +156,7 @@ namespace AudioReplacer2.Util
                     infoBar.IsOpen = false;
                 });
             }
-            catch { return; } 
+            catch { return; }
         }
     }
 }
