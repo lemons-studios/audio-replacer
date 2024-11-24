@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.Storage.Pickers;
 using WinRT.Interop;
@@ -209,11 +210,11 @@ namespace AudioReplacer2.Pages
             windowBackend.ToggleButton(SubmitRecordingButton, toggled);
         }
 
-        private void DownloadRuntimeDependencies(object sender, RoutedEventArgs e)
+        private async void DownloadRuntimeDependencies(object sender, RoutedEventArgs e)
         {
             DependencyToast.IsOpen = false;
             windowBackend.UpdateInfoBar(ProgressToast, "Installing Dependencies", "App will restart after finishing. Please stay connected to the internet", InfoBarSeverity.Informational, autoClose: false);
-            windowBackend.DownloadDependencies();
+            await Task.Run(windowBackend.DownloadDependencies); // Prevents window from freezing when installing dependencies
 
             // Restart app
             var failureReason = Microsoft.Windows.AppLifecycle.AppInstance.Restart("");
