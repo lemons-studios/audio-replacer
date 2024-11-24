@@ -9,7 +9,7 @@ namespace AudioReplacer2
     public partial class App : Application
     {
         public static MainWindow MainWindow { get; private set; }
-        public static ApplicationTheme systemAppTheme { get; private set; } = ApplicationTheme.Dark;
+        public static ApplicationTheme systemAppTheme { get; set; } = ApplicationTheme.Dark;
 
         public App()
         {

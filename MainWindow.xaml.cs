@@ -11,7 +11,8 @@ using Microsoft.UI;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
 using System.Collections.Generic;
-using Microsoft.UI.System;
+using Microsoft.UI.Xaml.Controls.Primitives;
+using Microsoft.UI.Xaml;
 
 namespace AudioReplacer2
 {
@@ -48,20 +49,10 @@ namespace AudioReplacer2
                     break;
             }
 
+
+
             // Finally, open the recording page
             ContentFrame.Navigate(typeof(RecordPage));
-            ApplySettingsTheming();
-        }
-
-        private void ApplySettingsTheming()
-        {
-            foreach (var settings in GlobalData.defaultSettingValues)
-            {
-                if (!SystemUtils.DoesSettingExist(settings[1]))
-                {
-                    SystemUtils.CreateSetting(settings[1], settings[0]);
-                }
-            }
         }
 
         // Thanks StackOverflow man!
@@ -97,6 +88,8 @@ namespace AudioReplacer2
             }
             ContentFrame.Content = page;
         }
+
+
 
         private void OnWindowClose(object sender, AppWindowClosingEventArgs args) { if (MainWindow.projectInitialized && (MainWindow.isProcessing || MainWindow.isRecording)) File.Delete(MainWindow.currentFile); }
     }

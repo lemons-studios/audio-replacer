@@ -9,37 +9,61 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
 
-    <Grid>
-        <StackPanel Height="500">
-            <ScrollViewer Width="900" ZoomMode="Disabled" HorizontalScrollBarVisibility="Disabled" HorizontalAlignment="Center" VerticalAlignment="Top" Padding="25">
-                <StackPanel>
-                    <controls:SettingsCard Header="App Theme" Margin="0 0 0 7.5">
-                        <controls:SettingsCard.HeaderIcon>
-                            <FontIcon Glyph="&#xE790;" />
-                        </controls:SettingsCard.HeaderIcon>
-                        <ComboBox SelectedIndex="0">
-                            <ComboBoxItem>Light</ComboBoxItem>
-                            <ComboBoxItem>Dark</ComboBoxItem>
-                            <ComboBoxItem>System Theme</ComboBoxItem>
-                        </ComboBox>
-                    </controls:SettingsCard>
-                    <controls:SettingsCard Header="Transparency Effects" Description="These changes will only take effect if you have enabled transparency effects in the system settings" Margin="0 0 0 7.5">
-                        <controls:SettingsCard.HeaderIcon>
-                            <FontIcon Glyph="&#xF4A5;" />
-                        </controls:SettingsCard.HeaderIcon>
-                        <ComboBox SelectedIndex="0">
-                            <ComboBoxItem>Mica (Windows 11 Only)</ComboBoxItem>
-                            <ComboBoxItem>Acrylic</ComboBoxItem>
-                        </ComboBox>
-                    </controls:SettingsCard>
-                    <controls:SettingsCard Header="Enable Update Checks" Description="Check is performed each launch by checking GitHub for new releases" Margin="0 0 0 7.5">
-                        <controls:SettingsCard.HeaderIcon>
-                            <FontIcon Glyph="&#xECC5;" />
-                        </controls:SettingsCard.HeaderIcon>
-                        <ToggleSwitch x:Name="UpdateCheckSwitch" IsOn="True"/>
-                    </controls:SettingsCard>
-                </StackPanel>
-            </ScrollViewer>
-        </StackPanel>
-    </Grid>
+
+    <ScrollViewer Height="400" Width="900" ZoomMode="Disabled"
+                  IsTabStop="True" IsVerticalScrollChainingEnabled="True"
+                  HorizontalAlignment="Center" VerticalAlignment="Top"
+                  HorizontalScrollMode="Disabled" HorizontalScrollBarVisibility="Disabled"
+                  VerticalScrollMode="Enabled" VerticalScrollBarVisibility="Auto" Padding="25">
+        <ScrollViewer.Content>
+            <StackPanel>
+                <controls:SettingsCard Header="App Theme" Margin="0 0 0 7.5">
+                    <controls:SettingsCard.HeaderIcon>
+                        <FontIcon Glyph="&#xE790;" />
+                    </controls:SettingsCard.HeaderIcon>
+                    <ComboBox x:Name="ThemeDropdown" SelectedIndex="2" SelectionChanged="UpdateAppTheme">
+                        <ComboBoxItem>System Theme</ComboBoxItem>
+                        <ComboBoxItem>Light</ComboBoxItem>
+                        <ComboBoxItem>Dark</ComboBoxItem>
+                    </ComboBox>
+                </controls:SettingsCard>
+                <controls:SettingsCard Header="Transparency Effects" Description="These changes will only take effect if you have enabled transparency effects in the system settings" Margin="0 0 0 7.5">
+                    <controls:SettingsCard.HeaderIcon>
+                        <FontIcon Glyph="&#xF4A5;" />
+                    </controls:SettingsCard.HeaderIcon>
+                    <ComboBox x:Name="TransparencyDropdown" SelectedIndex="0" SelectionChanged="ToggleTransparencyMode">
+                        <ComboBoxItem>Mica (Windows 11 Only)</ComboBoxItem>
+                        <ComboBoxItem>Acrylic</ComboBoxItem>
+                    </ComboBox>
+                </controls:SettingsCard>
+                <controls:SettingsCard Header="Enable Update Checks" Description="Check is performed each launch by checking GitHub for new releases" Margin="0 0 0 7.5">
+                    <controls:SettingsCard.HeaderIcon>
+                        <FontIcon Glyph="&#xECC5;" />
+                    </controls:SettingsCard.HeaderIcon>
+                    <ToggleSwitch x:Name="UpdateCheckSwitch" IsOn="True" Toggled="ToggleUpdateChecks"/>
+                </controls:SettingsCard>
+
+                <controls:SettingsExpander Header="About Audio Replacer 2" Description="©2024 Shob3r/Lemon Studios">
+                    <controls:SettingsExpander.HeaderIcon>
+                        <ImageIcon Source="/Assets/Icon/AppIcon.png"/>
+                    </controls:SettingsExpander.HeaderIcon>
+                    <controls:SettingsExpander.Items>
+                        <StackPanel Padding="20" Background="{ThemeResource LayerFillColorAltBrush}">
+                            <TextBlock Text="App Dependencies:" FontWeight="SemiBold" Margin="0,0,0,5" TextAlignment="Left" HorizontalAlignment="Left" Padding="0 0 0 0"/>
+                            <HyperlinkButton Content="Windows App SDK 1.6" NavigateUri="https://github.com/microsoft/WindowsAppSDK"/>
+                            <HyperlinkButton Content="WinUIEx" NavigateUri="https://github.com/dotMorten/WinUIEx"/>
+                            <HyperlinkButton Content="Windows Community Toolkit" NavigateUri="https://github.com/CommunityToolkit/WindowsCommunityToolkit"/>
+                            <HyperlinkButton Content="WinGet CLI" NavigateUri="https://github.com/microsoft/winget-cli"/>
+                            <HyperlinkButton Content="FFMpeg (Gyan.Dev)" NavigateUri="https://github.com/GyanD/codexffmpeg" Margin=" 0 0 0 15"/>
+
+                            <TextBlock Text="Socials:" FontWeight="SemiBold" Margin="0 0 0 5"/>
+                            <HyperlinkButton Content="Project Repository"/>
+                            <HyperlinkButton Content="Creator (Shob3r)" NavigateUri="https://github.com/Shob3r"/>
+                            <HyperlinkButton Content="Project License" NavigateUri="https://github.com/lemons-studios/audio-replacer-2/blob/main/LICENSE"/>
+                        </StackPanel>
+                    </controls:SettingsExpander.Items>
+                </controls:SettingsExpander>
+            </StackPanel>
+        </ScrollViewer.Content>
+    </ScrollViewer>
 </Page>
