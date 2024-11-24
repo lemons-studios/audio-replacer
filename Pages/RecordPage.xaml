@@ -72,7 +72,7 @@
             </InfoBar.Transitions>
         </InfoBar>
 
-        <InfoBar x:Name="DependencyToast" Style="{StaticResource ToastNotification}" Title="Error" Severity="Error" Background="{ThemeResource SystemFillColorCriticalBackgroundBrush}" IsOpen="False" IsClosable="False">
+        <InfoBar x:Name="DependencyToast" Style="{StaticResource ToastNotification}" Title="Error" Message="Required Dependencies Not Installed" Severity="Error" Background="{ThemeResource SystemFillColorCriticalBackgroundBrush}" IsOpen="False" IsClosable="False">
             <InfoBar.ActionButton>
                 <Button Content="Download Dependencies" Click="DownloadRuntimeDependencies" CornerRadius="4"/>
             </InfoBar.ActionButton>

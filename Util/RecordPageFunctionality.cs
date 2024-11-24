@@ -53,11 +53,23 @@ namespace AudioReplacer2.Util
 
         public bool IsFfMpegAvailable()
         {
-            // I know that using WinGet to install ffmpeg is not a great idea, especially for users who already have it installed
-            // But let me tell you how much I hate trying to check for global installations on the path
-            // It will be kept this way because frankly it just works
-            // 100 extra megabytes idc anymore :(
-            return File.Exists($"{Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData)}\\Microsoft\\WinGet\\Links\\ffmpeg.exe");
+            // Get path variable from system and loop through all of it to check if the path contains ffmpeg.exe
+            // This also allows for installs that don't come from winget (such as ffmpeg installed from Chocolatey or a manually installed copy of ffmpeg)
+            try
+            {
+                var pathEnv = Environment.GetEnvironmentVariable("PATH");
+                if (string.IsNullOrEmpty(pathEnv)) return false;
+                
+                var paths = pathEnv.Split(Path.PathSeparator);
+
+                foreach (var path in paths)
+                {
+                    var ffmpegPath = Path.Combine(path, "ffmpeg.exe");
+                    if (File.Exists(ffmpegPath)) return true;
+                }
+                return false;
+            }
+            catch { return false; }
         }
 
         public bool ToBool(int value)

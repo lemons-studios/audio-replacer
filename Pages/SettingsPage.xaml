@@ -61,11 +61,11 @@
                     <controls:SettingsExpander.Items>
                         <StackPanel Padding="20" Background="{ThemeResource LayerFillColorAltBrush}">
                             <TextBlock Text="App Dependencies:" FontWeight="SemiBold" Margin="0,0,0,5" TextAlignment="Left" HorizontalAlignment="Left" Padding="0 0 0 0"/>
-                            <HyperlinkButton Content="Windows App SDK 1.6" NavigateUri="https://github.com/microsoft/WindowsAppSDK"/>
+                            <HyperlinkButton Content="Windows App SDK" NavigateUri="https://github.com/microsoft/WindowsAppSDK"/>
                             <HyperlinkButton Content="WinUIEx" NavigateUri="https://github.com/dotMorten/WinUIEx"/>
                             <HyperlinkButton Content="Windows Community Toolkit" NavigateUri="https://github.com/CommunityToolkit/WindowsCommunityToolkit"/>
                             <HyperlinkButton Content="WinGet CLI" NavigateUri="https://github.com/microsoft/winget-cli"/>
-                            <HyperlinkButton Content="FFMpeg (Gyan.Dev)" NavigateUri="https://github.com/GyanD/codexffmpeg"/>
+                            <HyperlinkButton Content="FFMpeg" NavigateUri="https://ffmpeg.org"/> 
                             <HyperlinkButton Content="Config.Net" NavigateUri="https://github.com/aloneguid/config" Margin=" 0 0 0 15"/>
                             <TextBlock Text="Socials:" FontWeight="SemiBold" Margin="0 0 0 5"/>
                             <HyperlinkButton Content="Project Repository"/>
