@@ -1,41 +1,42 @@
 ﻿using System;
 using System.Net.Http;
 using System.Threading.Tasks;
-using System.Text.Json;
-using System.Text.Json.Serialization;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace AudioReplacer2.Util
 {
     public class WebRequest
     {
+        
+        private readonly HttpClient client = new HttpClient
+        {
+            DefaultRequestHeaders = { { "User-Agent", "Audio Replacer 2" } }
+        };
+
         public async Task<string> GetWebVersion(string url)
         {
-            using var client = new HttpClient();
-            
-            client.DefaultRequestHeaders.Add("User-Agent", "Audio Replacer 2");
-            var apiResponse = await client.GetAsync(url);
-
-            if (apiResponse.IsSuccessStatusCode)
+            try
             {
+                var apiResponse = await client.GetAsync(url);
+                if (!apiResponse.IsSuccessStatusCode) throw new Exception($"API responded with status code {apiResponse.StatusCode}");
                 var responseData = await apiResponse.Content.ReadAsStringAsync();
-                var jsonTags = JsonSerializer.Deserialize<Tag[]>(responseData);
-                if (IsJsonValid(jsonTags)) return jsonTags[0].Name;
+                
+                var jsonTags = JArray.Parse(responseData);
+                if (jsonTags.Count == 0) throw new Exception("No valid tags found in response data");
 
-                throw new Exception("No tags found in data");
+                var name = jsonTags[0]["name"]?.ToString();
+                if (string.IsNullOrEmpty(name)) throw new Exception("The 'name' property is missing or empty in the first tag.");
+                return name;
             }
-            throw new Exception($"GitHub API responded with non-successful status code {apiResponse.StatusCode}");
+            catch (JsonException ex)
+            {
+                throw new Exception($"Failed to parse JSON: {ex}");
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"An error occurred during the web request: {ex.Message}");
+            }
         }
-
-        private bool IsJsonValid(Tag[] jsonTags)
-        {
-            // Yummy boolean pattern
-            return jsonTags is { Length: > 0 };
-        }
-    }
-
-    internal class Tag
-    {
-        [JsonPropertyName("name")]
-        public string Name { get; set; }
     }
 }
