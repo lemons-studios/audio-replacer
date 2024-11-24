@@ -11,7 +11,6 @@ using Microsoft.UI;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
 using System.Collections.Generic;
-using Microsoft.UI.Xaml.Controls.Primitives;
 using Microsoft.UI.Xaml;
 
 namespace AudioReplacer2
@@ -37,27 +36,41 @@ namespace AudioReplacer2
             AppTitle.Text = $"Audio Replacer {GlobalData.GetAppVersion()}";
 
             // Enable mica if it's supported. If not, fall back to Acrylic. Mica is only supported on Windows 11
-            switch (MicaController.IsSupported())
-            {
-                case true:
-                    var micaBackdrop = new MicaBackdrop();
-                    SystemBackdrop = micaBackdrop;
-                    break;
-                case false:
-                    var acrylicBackdrop = new DesktopAcrylicBackdrop();
-                    SystemBackdrop = acrylicBackdrop;
-                    break;
-            }
 
 
-
-            // Finally, open the recording page
-            ContentFrame.Navigate(typeof(RecordPage));
+            // Set everything that can be set by the settings
 
             if (Content is FrameworkElement rootElement)
             {
                 rootElement.RequestedTheme = (ElementTheme) App.AppSettings.AppThemeSetting;
             }
+
+            if (App.AppSettings.AppTransparencySetting == 0)
+            {
+                switch (MicaController.IsSupported())
+                {
+                    case true:
+                        var micaBackdrop = new MicaBackdrop();
+                        SystemBackdrop = micaBackdrop;
+                        break;
+                    case false:
+                        var acrylicBackdrop = new DesktopAcrylicBackdrop();
+                        SystemBackdrop = acrylicBackdrop;
+                        break;
+                }
+            }
+            else if (App.AppSettings.AppTransparencySetting == 1)
+            {
+                var acrylicBackdrop = new DesktopAcrylicBackdrop();
+                SystemBackdrop = acrylicBackdrop;
+            }
+            else
+            {
+                SystemBackdrop = null;
+            }
+
+            // Finally, open the recording page
+            ContentFrame.Navigate(typeof(RecordPage));
         }
 
         // Thanks StackOverflow man!
@@ -93,8 +106,6 @@ namespace AudioReplacer2
             }
             ContentFrame.Content = page;
         }
-
-
 
         private void OnWindowClose(object sender, AppWindowClosingEventArgs args) { if (MainWindow.projectInitialized && (MainWindow.isProcessing || MainWindow.isRecording)) File.Delete(MainWindow.currentFile); }
     }

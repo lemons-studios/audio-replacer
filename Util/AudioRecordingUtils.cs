@@ -37,9 +37,7 @@ namespace AudioReplacer2.Util
 
         public async Task StopRecordingAudio(string file)
         {
-            // Artificial delay to add in the last moment of audio recording if the end-user stopped the recording prematurely
-            // Task.Delay() is measured in milliseconds. 75 ms = 0.075s
-            await Task.Delay(75); 
+            await Task.Delay(GlobalData.recordStopDelay); 
 
             await recordingCapture.StopRecordAsync();
             var outFile = $"{file}0.wav"; // Temporary name, gets renamed back to actual file name at the end
@@ -48,8 +46,8 @@ namespace AudioReplacer2.Util
             var ffmpegProcess = ShellCommandManager.CreateProcess("ffmpeg", $"-i \"{file}\" -af \"rubberband=pitch={pitchChange}, volume=1.25\" -y \"{outFile}\"");
 
             ffmpegProcess.Start();
-            Task<string> outputTask = ffmpegProcess.StandardOutput.ReadToEndAsync();
-            Task<string> errorOutputTask = ffmpegProcess.StandardError.ReadToEndAsync();
+            var outputTask = ffmpegProcess.StandardOutput.ReadToEndAsync();
+            var errorOutputTask = ffmpegProcess.StandardError.ReadToEndAsync();
 
             // Wait for the process to exit
             await Task.WhenAll(outputTask, errorOutputTask, Task.Run(() => ffmpegProcess.WaitForExit()));

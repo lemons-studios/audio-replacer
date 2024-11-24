@@ -9,12 +9,11 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
 
-
-    <ScrollViewer Height="400" Width="900" ZoomMode="Disabled"
+    <ScrollViewer Height="365" Width="900" ZoomMode="Disabled"
                   IsTabStop="True" IsVerticalScrollChainingEnabled="True"
                   HorizontalAlignment="Center" VerticalAlignment="Top"
                   HorizontalScrollMode="Disabled" HorizontalScrollBarVisibility="Disabled"
-                  VerticalScrollMode="Enabled" VerticalScrollBarVisibility="Auto" Padding="25">
+                  VerticalScrollMode="Enabled" VerticalScrollBarVisibility="Auto" Padding="15">
         <ScrollViewer.Content>
             <StackPanel>
                 <controls:SettingsCard Header="App Theme" Margin="0 0 0 7.5">
@@ -34,6 +33,7 @@
                     <ComboBox x:Name="TransparencyDropdown" SelectedIndex="0" SelectionChanged="ToggleTransparencyMode">
                         <ComboBoxItem>Mica (Windows 11 Only)</ComboBoxItem>
                         <ComboBoxItem>Acrylic</ComboBoxItem>
+                        <ComboBoxItem>None</ComboBoxItem>
                     </ComboBox>
                 </controls:SettingsCard>
                 <controls:SettingsCard Header="Enable Update Checks" Description="Check is performed each launch by checking GitHub for new releases" Margin="0 0 0 7.5">
@@ -42,10 +42,21 @@
                     </controls:SettingsCard.HeaderIcon>
                     <ToggleSwitch x:Name="UpdateCheckSwitch" IsOn="True" Toggled="ToggleUpdateChecks"/>
                 </controls:SettingsCard>
-
+                <controls:SettingsCard Header="Notification Stay Time" Description="Measured in milliseconds" Margin="0 0 0 7.5">
+                    <controls:SettingsCard.HeaderIcon>
+                        <FontIcon Glyph="&#xE8BD;" />
+                    </controls:SettingsCard.HeaderIcon>
+                    <NumberBox x:Name="ToastDelayBox" SpinButtonPlacementMode="Inline" SmallChange="10" LargeChange="50" Value="1500" Minimum="500" Maximum="5500" ValueChanged="UpdateToastStayTime"/>
+                </controls:SettingsCard>
+                <controls:SettingsCard Header="Record Stop Delay" Description="Changes the amount of time it takes for recording to stop after clicking the stop recording button. Measured in milliseconds" Margin="0 0 0 7.5">
+                    <controls:SettingsCard.HeaderIcon>
+                        <FontIcon Glyph="&#xF781;" />
+                    </controls:SettingsCard.HeaderIcon>
+                    <NumberBox x:Name="RecordDelayBox" Minimum="25" SpinButtonPlacementMode="Inline" SmallChange="10" LargeChange="50" Value="75" Maximum="5000" ValueChanged="UpdateRecordDelay"/>
+                </controls:SettingsCard>
                 <controls:SettingsExpander Header="About Audio Replacer 2" Description="©2024 Shob3r/Lemon Studios">
                     <controls:SettingsExpander.HeaderIcon>
-                        <ImageIcon Source="/Assets/Icon/AppIcon.png"/>
+                        <FontIcon Glyph="&#xF8B1;" />
                     </controls:SettingsExpander.HeaderIcon>
                     <controls:SettingsExpander.Items>
                         <StackPanel Padding="20" Background="{ThemeResource LayerFillColorAltBrush}">
@@ -54,8 +65,8 @@
                             <HyperlinkButton Content="WinUIEx" NavigateUri="https://github.com/dotMorten/WinUIEx"/>
                             <HyperlinkButton Content="Windows Community Toolkit" NavigateUri="https://github.com/CommunityToolkit/WindowsCommunityToolkit"/>
                             <HyperlinkButton Content="WinGet CLI" NavigateUri="https://github.com/microsoft/winget-cli"/>
-                            <HyperlinkButton Content="FFMpeg (Gyan.Dev)" NavigateUri="https://github.com/GyanD/codexffmpeg" Margin=" 0 0 0 15"/>
-
+                            <HyperlinkButton Content="FFMpeg (Gyan.Dev)" NavigateUri="https://github.com/GyanD/codexffmpeg"/>
+                            <HyperlinkButton Content="Config.Net" NavigateUri="https://github.com/aloneguid/config" Margin=" 0 0 0 15"/>
                             <TextBlock Text="Socials:" FontWeight="SemiBold" Margin="0 0 0 5"/>
                             <HyperlinkButton Content="Project Repository"/>
                             <HyperlinkButton Content="Creator (Shob3r)" NavigateUri="https://github.com/Shob3r"/>

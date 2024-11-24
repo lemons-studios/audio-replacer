@@ -25,6 +25,10 @@ namespace AudioReplacer2
                 .UseJsonFile(filePath)
                 .Build();
 
+            GlobalData.updateChecksAllowed = AppSettings.AppUpdateCheck == 1;
+            GlobalData.notificationTimeout = AppSettings.NotificationTimeout;
+            GlobalData.recordStopDelay = AppSettings.RecordEndWaitTime;
+
             InitializeComponent();
         }
 
@@ -34,6 +38,7 @@ namespace AudioReplacer2
             {
                 Directory.CreateDirectory(directoryPath);
             }
+
             if (!File.Exists(filePath))
             {
                 var defaultConfig = new
@@ -41,11 +46,11 @@ namespace AudioReplacer2
                     Theme = 0,
                     TransparencyEffect = 0,
                     EnableUpdateChecks = 1,
-                    RecordEndWaitTime = "75",
-                    NotificationTimeout = "1.75"
+                    RecordEndWaitTime = 75,
+                    NotificationTimeout = 1750
                 };
 
-                string defaultJson = JsonSerializer.Serialize(defaultConfig, new JsonSerializerOptions { WriteIndented = true });
+                var defaultJson = JsonSerializer.Serialize(defaultConfig, new JsonSerializerOptions { WriteIndented = true });
                 File.WriteAllText(filePath, defaultJson); // File gets created automatically at this point
             }
         }

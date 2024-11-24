@@ -6,8 +6,11 @@ namespace AudioReplacer2.Util
 {
     public static class GlobalData
     {
+
         public static AppWindow appWindow;
         public static bool updateChecksAllowed = true;
+
+        public static int notificationTimeout, recordStopDelay;
 
         public static string GetAppVersion(bool forceBuildNumber = false)
         {

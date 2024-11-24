@@ -11,11 +11,19 @@ namespace AudioReplacer2.Pages
         public SettingsPage()
         {
             InitializeComponent();
+            // Initialize all the data
+            ThemeDropdown.SelectedItem = App.AppSettings.AppThemeSetting;
+            TransparencyDropdown.SelectedItem = App.AppSettings.AppTransparencySetting;
+            UpdateCheckSwitch.IsOn = GlobalData.updateChecksAllowed;
+            ToastDelayBox.Value = GlobalData.notificationTimeout;
+            RecordDelayBox.Value = GlobalData.recordStopDelay;
+
         }
 
         private void ToggleUpdateChecks(object sender, RoutedEventArgs e)
         {
             GlobalData.updateChecksAllowed = UpdateCheckSwitch.IsOn;
+            App.AppSettings.AppUpdateCheck = BoolToInt(UpdateCheckSwitch.IsOn);
         }
 
         private void ToggleTransparencyMode(object sender, SelectionChangedEventArgs e)
@@ -34,7 +42,12 @@ namespace AudioReplacer2.Pages
                 case 1:
                     App.MainWindow.SystemBackdrop = new DesktopAcrylicBackdrop();
                     break;
+                case 2:
+                    App.MainWindow.SystemBackdrop = null;
+                    break;
             }
+
+            App.AppSettings.AppTransparencySetting = TransparencyDropdown.SelectedIndex;
         }
 
         private void UpdateAppTheme(object sender, SelectionChangedEventArgs e)
@@ -42,7 +55,31 @@ namespace AudioReplacer2.Pages
             if (App.MainWindow.Content is FrameworkElement rootElement)
             {
                 rootElement.RequestedTheme = (ElementTheme) ThemeDropdown.SelectedIndex;
+                App.AppSettings.AppThemeSetting = ThemeDropdown.SelectedIndex;
             }
+        }
+
+        private void UpdateRecordDelay(NumberBox sender, NumberBoxValueChangedEventArgs args)
+        {
+            int newDelayTime = (int) RecordDelayBox.Value;
+            if (newDelayTime <= 0) newDelayTime = 75;
+
+            GlobalData.recordStopDelay = newDelayTime;
+            App.AppSettings.RecordEndWaitTime = newDelayTime;
+        }
+
+        private void UpdateToastStayTime(NumberBox sender, NumberBoxValueChangedEventArgs args)
+        {
+            int newStayTime = (int) ToastDelayBox.Value;
+            if (newStayTime <= 0) newStayTime = 1750;
+
+            GlobalData.notificationTimeout = newStayTime;
+            App.AppSettings.NotificationTimeout = newStayTime;
+        }
+
+        private int BoolToInt(bool value)
+        {
+            return value == false ? 0 : 1;
         }
     }
 }

@@ -136,7 +136,7 @@ namespace AudioReplacer2.Util
 
         private async Task WaitHideInfoBar(InfoBar infoBar)
         {
-            await Task.Delay(1500);
+            await Task.Delay(GlobalData.notificationTimeout);
 
             // This try-catch is needed in the case that the TryEnqueue is running while the window is closing
             try
