@@ -8,6 +8,7 @@ namespace AudioReplacer2.Pages
 {
     public sealed partial class SettingsPage : Page
     {
+        private bool firstOpening = true;
         public SettingsPage()
         {
             InitializeComponent();
@@ -17,17 +18,19 @@ namespace AudioReplacer2.Pages
             UpdateCheckSwitch.IsOn = GlobalData.updateChecksAllowed;
             ToastDelayBox.Value = GlobalData.notificationTimeout;
             RecordDelayBox.Value = GlobalData.recordStopDelay;
-
+            firstOpening = false;
         }
 
         private void ToggleUpdateChecks(object sender, RoutedEventArgs e)
         {
+            if (firstOpening) return;
             GlobalData.updateChecksAllowed = UpdateCheckSwitch.IsOn;
             App.AppSettings.AppUpdateCheck = BoolToInt(UpdateCheckSwitch.IsOn);
         }
 
         private void ToggleTransparencyMode(object sender, SelectionChangedEventArgs e)
         {
+            if (firstOpening) return;
             switch (TransparencyDropdown.SelectedIndex)
             {
                 case 0:
@@ -52,6 +55,7 @@ namespace AudioReplacer2.Pages
 
         private void UpdateAppTheme(object sender, SelectionChangedEventArgs e)
         {
+            if (firstOpening) return;
             if (App.MainWindow.Content is FrameworkElement rootElement)
             {
                 rootElement.RequestedTheme = (ElementTheme) ThemeDropdown.SelectedIndex;
@@ -61,6 +65,7 @@ namespace AudioReplacer2.Pages
 
         private void UpdateRecordDelay(NumberBox sender, NumberBoxValueChangedEventArgs args)
         {
+            if (firstOpening) return;
             int newDelayTime = (int) RecordDelayBox.Value;
             if (newDelayTime <= 0) newDelayTime = 75;
 
@@ -70,6 +75,7 @@ namespace AudioReplacer2.Pages
 
         private void UpdateToastStayTime(NumberBox sender, NumberBoxValueChangedEventArgs args)
         {
+            if (firstOpening) return;
             int newStayTime = (int) ToastDelayBox.Value;
             if (newStayTime <= 0) newStayTime = 1750;
 

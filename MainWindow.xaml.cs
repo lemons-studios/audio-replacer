@@ -35,11 +35,7 @@ namespace AudioReplacer2
             SetTitleBar(AppTitleBar);
             AppTitle.Text = $"Audio Replacer {GlobalData.GetAppVersion()}";
 
-            // Enable mica if it's supported. If not, fall back to Acrylic. Mica is only supported on Windows 11
-
-
-            // Set everything that can be set by the settings
-
+            // Set everything that can be set by the settings.
             if (Content is FrameworkElement rootElement)
             {
                 rootElement.RequestedTheme = (ElementTheme) App.AppSettings.AppThemeSetting;
@@ -64,10 +60,7 @@ namespace AudioReplacer2
                 var acrylicBackdrop = new DesktopAcrylicBackdrop();
                 SystemBackdrop = acrylicBackdrop;
             }
-            else
-            {
-                SystemBackdrop = null;
-            }
+            else SystemBackdrop = null;
 
             // Finally, open the recording page
             ContentFrame.Navigate(typeof(RecordPage));

@@ -17,8 +17,8 @@ namespace AudioReplacer2
 
         public App()
         {
-            directoryPath = $"{Environment.GetFolderPath(Environment.SpecialFolder.UserProfile)}\\AudioReplacer2-conf";
-            filePath = $"{directoryPath}\\config.json";
+            directoryPath = $"{Environment.GetFolderPath(Environment.SpecialFolder.UserProfile)}\\AudioReplacer2-Config";
+            filePath = $"{directoryPath}\\AudioReplacer2-Config.json";
             CreateSettingsData();
 
             AppSettings = new ConfigurationBuilder<IAppSettings>()
