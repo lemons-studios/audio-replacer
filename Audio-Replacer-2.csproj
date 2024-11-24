@@ -31,6 +31,9 @@
     <StartupObject></StartupObject>
     <ApplicationIcon>Assets\Icon\Titlebar.ico</ApplicationIcon>
     <PublishTrimmed>False</PublishTrimmed>
+	<TrimMode>link</TrimMode>
+	<TrimmerRootAssembly>AudioReplacer2</TrimmerRootAssembly>
+	<TrimmerRootAssumedType>AudioReplacer2.Util.IAppSettings</TrimmerRootAssumedType>
   </PropertyGroup>
   <ItemGroup>
     <Content Remove="Assets\BadgeLogo.scale-100.png" />

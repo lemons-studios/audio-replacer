@@ -1,4 +1,5 @@
 ﻿using Config.Net;
+using System.Diagnostics.CodeAnalysis;
 
 namespace AudioReplacer2.Util
 {
