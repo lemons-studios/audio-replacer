@@ -13,11 +13,12 @@ namespace AudioReplacer2.Pages
         {
             InitializeComponent();
             // Initialize all the data
-            ThemeDropdown.SelectedItem = App.AppSettings.AppThemeSetting;
-            TransparencyDropdown.SelectedItem = App.AppSettings.AppTransparencySetting;
+            ThemeDropdown.SelectedIndex = App.AppSettings.AppThemeSetting;
+            TransparencyDropdown.SelectedIndex = App.AppSettings.AppTransparencySetting;
             UpdateCheckSwitch.IsOn = GlobalData.updateChecksAllowed;
             ToastDelayBox.Value = GlobalData.notificationTimeout;
             RecordDelayBox.Value = GlobalData.recordStopDelay;
+
             firstOpening = false;
         }
 
@@ -34,7 +35,7 @@ namespace AudioReplacer2.Pages
             switch (TransparencyDropdown.SelectedIndex)
             {
                 case 0:
-                    if(MicaController.IsSupported()) App.MainWindow.SystemBackdrop = new MicaBackdrop();
+                    if (MicaController.IsSupported()) App.MainWindow.SystemBackdrop = new MicaBackdrop();
                     else
                     {
                         App.SystemAppTheme = ApplicationTheme.Light;
@@ -49,13 +50,13 @@ namespace AudioReplacer2.Pages
                     App.MainWindow.SystemBackdrop = null;
                     break;
             }
-
             App.AppSettings.AppTransparencySetting = TransparencyDropdown.SelectedIndex;
         }
 
         private void UpdateAppTheme(object sender, SelectionChangedEventArgs e)
         {
             if (firstOpening) return;
+
             if (App.MainWindow.Content is FrameworkElement rootElement)
             {
                 rootElement.RequestedTheme = (ElementTheme) ThemeDropdown.SelectedIndex;
