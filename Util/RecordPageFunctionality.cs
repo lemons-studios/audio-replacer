@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Windows.Media.Core;
 using Microsoft.UI.Xaml.Controls;
 using System.IO;
+using SevenZipExtractor;
 
 namespace AudioReplacer2.Util
 {
@@ -45,9 +46,25 @@ namespace AudioReplacer2.Util
 
         public void DownloadDependencies()
         {
-            var downloadProcess = ShellCommandManager.CreateProcess("winget", "install ffmpeg --accept-source-agreements --accept-package-agreements", true, false, false, true);
-            downloadProcess.Start();
-            downloadProcess.WaitForExit();
+            var latestFfMpegVersion = Task.Run(() => webRequest.GetWebData("https://www.gyan.dev/ffmpeg/builds/release-version")).Result;
+            var ffMpegUrl = $"https://www.gyan.dev/ffmpeg/builds/packages/ffmpeg-{latestFfMpegVersion}-full_build.7z";
+            var outPath = $"{Environment.GetFolderPath(Environment.SpecialFolder.UserProfile)}\\AudioReplacer2-Config";
+            var fullOutPath = $"{outPath}\\ffmpeg";
+            var currentSystemPath = Environment.GetEnvironmentVariable("PATH", EnvironmentVariableTarget.User);
+
+            webRequest.DownloadFile(ffMpegUrl, outPath, "ffmpeg.7z");
+
+            using (ArchiveFile ffmpegArchive = new ArchiveFile($"{fullOutPath}.7z"))
+            {
+                ffmpegArchive.Extract($"{fullOutPath}");
+            }
+
+            Directory.Move(@$"{fullOutPath}\ffmpeg-{latestFfMpegVersion}-full_build\bin", @$"{outPath}\ffmpeg-bin");
+            Environment.SetEnvironmentVariable("PATH", @$"{currentSystemPath};{outPath}\ffmpeg-bin\", EnvironmentVariableTarget.User);
+
+            // Delete both the downloaded 7z archive and the ffmpeg folder it came in
+            File.Delete($"{fullOutPath}.7z");
+            Directory.Delete($"{fullOutPath}", true); // Setting the second parameter to true also deletes all files in the folder, which is needed to occur
         }
 
         public bool IsFfMpegAvailable()
@@ -56,7 +73,7 @@ namespace AudioReplacer2.Util
             // This also allows for installs that don't come from winget (such as ffmpeg installed from Chocolatey or a manually installed copy of ffmpeg)
             try
             {
-                var pathEnv = Environment.GetEnvironmentVariable("PATH");
+                var pathEnv = Environment.GetEnvironmentVariable("PATH", EnvironmentVariableTarget.User);
                 if (string.IsNullOrEmpty(pathEnv)) return false;
                 
                 var paths = pathEnv.Split(Path.PathSeparator);

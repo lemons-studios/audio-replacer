@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
@@ -36,6 +37,29 @@ namespace AudioReplacer2.Util
             {
                 throw new Exception($"An error occurred during the web request: {ex.Message}");
             }
+        }
+
+        public async Task<string> GetWebData(string url) // I sure do love stealing my own code!!
+        {
+            using HttpClient httpClient = new HttpClient();
+            try
+            {
+                HttpResponseMessage response = await httpClient.GetAsync(url);
+                response.EnsureSuccessStatusCode();
+                return await response.Content.ReadAsStringAsync();
+            }
+            catch (HttpRequestException e)
+            {
+                Console.WriteLine(e);
+                return string.Empty;
+            }
+        }
+
+        public void DownloadFile(string url, string outPath, string outName)
+        {
+            using var webStream = client.GetStreamAsync(url);
+            using var fileStream = new FileStream($"{outPath}\\{outName}", FileMode.OpenOrCreate);
+            webStream.Result.CopyTo(fileStream);
         }
     }
 }
