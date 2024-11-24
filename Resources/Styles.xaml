@@ -20,7 +20,7 @@
         <Setter Property="TextAlignment" Value="Center"/>
         <Setter Property="HorizontalAlignment" Value="Center"/>
         <Setter Property="FontSize" Value="15"/>
-        <Setter Property="FontWeight" Value="Small"/>
+        <Setter Property="FontWeight" Value="Normal"/>
     </Style>
 
     <Style x:Key="ButtonStyle" TargetType="Button" BasedOn="{StaticResource AccentButtonStyle}">

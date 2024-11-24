@@ -104,16 +104,29 @@ namespace AudioReplacer2.Util
             return currentOutFile;
         }
 
-        public int GetFilesRemaining()
+        public string GetProjectPath()
+        {
+            return projectPath;
+        }
+
+        public int GetFileCount(string path)
         {
             int x = 0;
-            string[] directories = GetPathSubdirectories(projectPath);
+            string[] directories = GetPathSubdirectories(path);
 
             foreach (string dir in directories)
             {
                 x += Directory.GetFiles(dir, "*", SearchOption.AllDirectories).Length;
             }
             return x;
+        }
+
+        public float GetPercentageComplete()
+        {
+            float inputFolderCount = GetFileCount(projectPath);
+            float outputFolderCount = GetFileCount(outputFolderPath);
+
+            return float.Round((outputFolderCount / (outputFolderCount + inputFolderCount)) * 100, 2);
         }
 
         public string GetCurrentFile(bool truncated = true)
@@ -145,11 +158,6 @@ namespace AudioReplacer2.Util
         public string[] GetFilesInFolder(string dir)
         {
             return Directory.GetFiles(dir);
-        }
-
-        public string GetDownloadsFolder()
-        {
-            return $"{Environment.GetFolderPath(Environment.SpecialFolder.UserProfile)}\\Downloads";
         }
 
         public bool DoesDirectoryExist(string dir)

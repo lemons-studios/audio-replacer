@@ -18,7 +18,11 @@
                         </TextBlock.Transitions>
                     </TextBlock>
                     <Button x:Name="FolderSelector" Click="SelectProjectFolder" Style="{StaticResource ButtonStyle}" Content="Select folder" />
-                    <TextBlock x:Name="RemainingFiles" Style="{StaticResource FileCounter}" Visibility="Collapsed"/>
+
+                    <StackPanel x:Name="FileProgressPanel" Visibility="Collapsed">
+                        <TextBlock x:Name="RemainingFiles" Style="{StaticResource FileCounter}"/>
+                        <ProgressBar x:Name="RemainingFilesProgress" Width="275" Height="20" Value="32"/>
+                    </StackPanel>
 
                     <StackPanel>
                         <MediaPlayerElement x:Name="AudioPreview" Style="{StaticResource AudioPlayer}" Visibility="Visible">
@@ -26,7 +30,7 @@
                                 <MediaTransportControls x:Name="AudioPreviewControls" IsCompact="True" VerticalAlignment="Center" IsSeekBarVisible="True" ShowAndHideAutomatically="False" IsEnabled="False"/>
                             </MediaPlayerElement.TransportControls>
                         </MediaPlayerElement>
-                        <TextBlock x:Name="PitchSettingsFeedback" HorizontalAlignment="Center" FontSize="13.5" TextAlignment="Center" Text="Set pitch values in the right-hand panel">
+                        <TextBlock x:Name="PitchSettingsFeedback" FontWeight="Normal" HorizontalAlignment="Center" FontSize="13.5" TextAlignment="Center" Text="Set pitch values in the right-hand panel">
                             <TextBlock.Transitions>
                                 <ContentThemeTransition/>
                             </TextBlock.Transitions>

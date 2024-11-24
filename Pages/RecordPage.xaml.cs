@@ -128,8 +128,12 @@ namespace AudioReplacer2.Pages
 
         private void UpdateFileElements()
         {
+            var progressPercentage = projectFileManagementUtils.GetPercentageComplete();
+            var projectPath = projectFileManagementUtils.GetProjectPath();
+
             CurrentFile.Text = windowBackend.GetFormattedCurrentFile(projectFileManagementUtils.GetCurrentFile());
-            RemainingFiles.Text = $"Files Remaining: {projectFileManagementUtils.GetFilesRemaining():N0}";
+            RemainingFiles.Text = $"Files Remaining: {projectFileManagementUtils.GetFileCount(projectPath):N0} ({progressPercentage}%)";
+            RemainingFilesProgress.Value = progressPercentage;
             AudioPreview.Source = windowBackend.MediaSourceFromUri(projectFileManagementUtils.GetCurrentFile(false));
             MainWindow.currentFile = projectFileManagementUtils.GetOutFilePath();
         }
@@ -171,7 +175,7 @@ namespace AudioReplacer2.Pages
         private void ProjectSetup(string path)
         {
             windowBackend.UpdateInfoBar(ProgressToast, "Setting up project...", "", InfoBarSeverity.Informational, autoClose: false);
-            RemainingFiles.Visibility = Visibility.Visible;
+            FileProgressPanel.Visibility = Visibility.Visible;
             windowBackend.ToggleButton(SkipAudioButton, true);
             windowBackend.ToggleButton(StartRecordingButton, true);
 
