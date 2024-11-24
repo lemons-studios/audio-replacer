@@ -22,14 +22,6 @@ To add the certificate properly, perform the following steps:
 3. In the next page, Choose "Place all certificates in the following store:". Click the browse button and Select the "Trusted People" store
 4. Continue with setup normally until Windows tells you that you're done!
 
-Now, you'll want to follow some extra steps before installing the application:
-
-### If you are on Windows 10:
-Download [this file](https://github.com/microsoft/winget-cli/releases/download/v1.9.25200/Microsoft.DesktopAppInstaller_8wekyb3d8bbwe.msixbundle) and install it. It is a required runtime dependency ~~due to my own laziness~~
-
-### If you are on Windows 11:
-Nothing extra needed!
-
 ### Install The App
 You can download the latest release [here](https://github.com/lemons-studios/audio-replacer-2/releases/latest). The .msix file is the installer. Just open it up, click the install button, and you're all good!
 
@@ -45,5 +37,5 @@ git clone https://github.com/lemons-studios/audio-replacer-2.git
 If you plan on contributing back to the project, replace the above clone command with whatever the address is for the fork you created!
 
 
-## Addendum
+## Note from myself:
 There is an issue with the folder picker where you cannot select the first folder it opens up in. This is a bug with the Windows operating system itself and I cannot fix it. The best workaround is to move up one directory then enter the folder again if you want to select that folder for processing
