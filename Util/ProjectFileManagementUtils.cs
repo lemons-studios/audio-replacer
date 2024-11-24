@@ -24,17 +24,14 @@ namespace AudioReplacer2.Util
 
         private void SetCurrentFile()
         {
-            if (IsFirstDirEmpty())
-            {
-                // Delete the empty first folder
-                Directory.Delete(GetPathSubdirectories(projectPath)[0], recursive: true);
-            }
+            FindDeleteEmptyDirs();
 
             // Refresh subdirectories after potential deletion
             string[] subdirectories = GetPathSubdirectories(projectPath);
 
-            currentFile = subdirectories.Length > 0 ? GetFilesInFolder(subdirectories[0])[0] : "YOU ARE DONE!!!!!!";
-            truncatedCurrentFile = currentFile == "YOU ARE DONE!!!!!!" ? currentFile : TruncateDirectory(currentFile, 2);
+            currentFile = GetFirstAudioFilePath(projectPath);
+            truncatedCurrentFile = currentFile == "" ? "YOU ARE DONE!!!" : TruncateDirectory(currentFile, 2);
+
             currentOutFile = $"{outputFolderPath}\\{truncatedCurrentFile}";
             currentFileName = TruncateDirectory(currentFile, 1);
             directoryName = truncatedCurrentFile.Split("\\")[0];
@@ -57,6 +54,33 @@ namespace AudioReplacer2.Util
                 }
                 File.Create(setupIgnore);
             }
+        }
+
+        public void FindDeleteEmptyDirs()
+        {
+            foreach (var directory in Directory.GetDirectories(projectPath))
+            {
+                if (Directory.GetFiles(directory).Length == 0)
+                {
+                    Directory.Delete(directory);
+                }
+            }
+        }
+
+        private string GetFirstAudioFilePath(string path)
+        {
+            string[] pathSubfiles = Directory.GetFiles(path, "*.*", SearchOption.AllDirectories);
+            foreach (string projectFile in Directory.GetFiles(path, "*.*", SearchOption.AllDirectories))
+            {
+                if (IsAudioFile(projectFile)) return projectFile;
+            }
+            return "";
+        }
+
+        private bool IsAudioFile(string path)
+        {
+            string[] supportedFileTypes = [".wav", ".mp3", ".aac", ".m4a", ".flac", ".ogg"]; // This is not an 
+            return supportedFileTypes.Any(fileType => path.EndsWith(fileType, StringComparison.OrdinalIgnoreCase));
         }
 
         private string[] GetPathSubdirectories(string path)
@@ -144,12 +168,6 @@ namespace AudioReplacer2.Util
             return currentFileName;
         }
 
-        private bool IsFirstDirEmpty()
-        {
-            string[] subdirs = GetPathSubdirectories(projectPath);
-            return subdirs.Length > 0 && Directory.GetFiles(subdirs[0]).Length == 0;
-        }
-
         public void CreateDirectory(string dir)
         {
             Directory.CreateDirectory(dir);
@@ -163,11 +181,6 @@ namespace AudioReplacer2.Util
         public bool DoesDirectoryExist(string dir)
         {
             return Directory.Exists(dir);
-        }
-
-        public bool DoesFileExist(string filePath)
-        {
-            return File.Exists(filePath);
         }
     }
 }
