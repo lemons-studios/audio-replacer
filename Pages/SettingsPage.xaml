@@ -91,52 +91,30 @@
                         <FontIcon Glyph="&#xE74D;" />
                     </controls:SettingsExpander.HeaderIcon>
                     <controls:SettingsExpander.Items>
-                        <StackPanel Padding="20" Background="{ThemeResource LayerFillColorAltBrush}">
-                            <controls:SettingsCard Header="Reset Settings" Margin="0 0 0 2.5" IsClickEnabled="True" Click="ResetSettings">
-                                <controls:SettingsCard.ActionIcon>
-                                    <FontIcon Glyph="&#xE76C;" />
-                                </controls:SettingsCard.ActionIcon>
-                                <controls:SettingsCard.HeaderIcon>
-                                    <FontIcon Glyph="&#xE713;" />
-                                </controls:SettingsCard.HeaderIcon>
-                            </controls:SettingsCard>
-                            <controls:SettingsCard Header="Reset Pitch Data" Margin="0 0 0 2.5" IsClickEnabled="True" Click="ResetPitchData">
-                                <controls:SettingsCard.ActionIcon>
-                                    <FontIcon Glyph="&#xE76C;" />
-                                </controls:SettingsCard.ActionIcon>
-                                <controls:SettingsCard.HeaderIcon>
-                                    <FontIcon Glyph="&#xEC56;" />
-                                </controls:SettingsCard.HeaderIcon>
-                            </controls:SettingsCard>
-                            <controls:SettingsCard Header="Reset All" Margin="0 0 0 2.5" IsClickEnabled="True" Click="ResetAll">
-                                <controls:SettingsCard.ActionIcon>
-                                    <FontIcon Glyph="&#xE76C;" />
-                                </controls:SettingsCard.ActionIcon>
-                                <controls:SettingsCard.HeaderIcon>
-                                    <FontIcon Glyph="&#xE7BA;" />
-                                </controls:SettingsCard.HeaderIcon>
-                            </controls:SettingsCard>
-                        </StackPanel>
-                    </controls:SettingsExpander.Items>
-                </controls:SettingsExpander>
-
-                <controls:SettingsExpander Header="About Audio Replacer 2" Description="©2024 Shob3r/Lemon Studios">
-                    <controls:SettingsExpander.HeaderIcon>
-                        <FontIcon Glyph="&#xEC71;" />
-                    </controls:SettingsExpander.HeaderIcon>
-                    <controls:SettingsExpander.Items>
-                        <StackPanel Padding="20" Background="{ThemeResource LayerFillColorAltBrush}">
-                            <TextBlock Text="App Dependencies:" FontWeight="SemiBold" Margin="0,0,0,5" TextAlignment="Left" HorizontalAlignment="Left" Padding="0 0 0 0"/>
-                            <HyperlinkButton Content="Windows App SDK" NavigateUri="https://github.com/microsoft/WindowsAppSDK"/>
-                            <HyperlinkButton Content="WinUIEx" NavigateUri="https://github.com/dotMorten/WinUIEx"/>
-                            <HyperlinkButton Content="Windows Community Toolkit" NavigateUri="https://github.com/CommunityToolkit/WindowsCommunityToolkit"/>
-                            <HyperlinkButton Content="FFMpeg" NavigateUri="https://ffmpeg.org"/> 
-                            <HyperlinkButton Content="Config.Net" NavigateUri="https://github.com/aloneguid/config" Margin=" 0 0 0 15"/>
-                            <TextBlock Text="Socials:" FontWeight="SemiBold" Margin="0 0 0 5"/>
-                            <HyperlinkButton Content="Project Repository"/>
-                            <HyperlinkButton Content="Creator (Shob3r)" NavigateUri="https://github.com/Shob3r"/>
-                            <HyperlinkButton Content="Project License" NavigateUri="https://github.com/lemons-studios/audio-replacer-2/blob/main/LICENSE"/>
-                        </StackPanel>
+                        <controls:SettingsCard Header="Reset Settings" Margin="0 0 0 2.5" IsClickEnabled="True" Click="ResetSettings">
+                        <controls:SettingsCard.ActionIcon>
+                            <FontIcon Glyph="&#xE76C;" />
+                        </controls:SettingsCard.ActionIcon>
+                        <controls:SettingsCard.HeaderIcon>
+                            <FontIcon Glyph="&#xE713;" />
+                        </controls:SettingsCard.HeaderIcon>
+                    </controls:SettingsCard>
+                    <controls:SettingsCard Header="Reset Pitch Data" Margin="0 0 0 2.5" IsClickEnabled="True" Click="ResetPitchData">
+                        <controls:SettingsCard.ActionIcon>
+                            <FontIcon Glyph="&#xE76C;" />
+                        </controls:SettingsCard.ActionIcon>
+                        <controls:SettingsCard.HeaderIcon>
+                            <FontIcon Glyph="&#xEC56;" />
+                        </controls:SettingsCard.HeaderIcon>
+                    </controls:SettingsCard>
+                    <controls:SettingsCard Header="Reset All" Margin="0 0 0 2.5" IsClickEnabled="True" Click="ResetAll">
+                        <controls:SettingsCard.ActionIcon>
+                            <FontIcon Glyph="&#xE76C;" />
+                        </controls:SettingsCard.ActionIcon>
+                        <controls:SettingsCard.HeaderIcon>
+                            <FontIcon Glyph="&#xE7BA;" />
+                        </controls:SettingsCard.HeaderIcon>
+                    </controls:SettingsCard>
                     </controls:SettingsExpander.Items>
                 </controls:SettingsExpander>
             </StackPanel>

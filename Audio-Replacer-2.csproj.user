@@ -16,7 +16,6 @@
     <BadgeLogoSource>C:\Users\andre\Desktop\audio-replacer-2\Assets\Icon\AppIcon.png</BadgeLogoSource>
     <PackageLogoSource>C:\Users\andre\Desktop\audio-replacer-2\Assets\Icon\AppIcon.png</PackageLogoSource>
   </PropertyGroup>
-  <ItemGroup />
   <ItemGroup>
     <Page Update="Pages\SettingsPage.xaml">
       <SubType>Designer</SubType>
