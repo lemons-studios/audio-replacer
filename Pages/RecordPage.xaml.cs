@@ -5,9 +5,11 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.Storage.Pickers;
+using Microsoft.UI.Xaml.Navigation;
 using WinRT.Interop;
 
 namespace AudioReplacer2.Pages
@@ -225,6 +227,13 @@ namespace AudioReplacer2.Pages
             string url = "https://github.com/lemons-studios/audio-replacer-2/releases/latest";
             Process openReleasesProcess = ShellCommandManager.CreateProcess("cmd", $"/c start {url}");
             openReleasesProcess.Start();
+        }
+
+        protected override void OnNavigatedTo(NavigationEventArgs e)
+        {
+            base.OnNavigatedTo(e);
+            GlobalData.deserializedPitchData = JsonSerializer.Deserialize<string[][]>(File.ReadAllText($"{Environment.GetFolderPath(Environment.SpecialFolder.UserProfile)}\\AudioReplacer2-Config\\defaultPitchData.json"));
+            VoiceTuneMenu.ItemsSource = windowBackend.GetPitchTitles();
         }
     }
 }

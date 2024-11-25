@@ -13,16 +13,18 @@ namespace AudioReplacer2
 
         public static MainWindow MainWindow { get; private set; }
         public static ApplicationTheme SystemAppTheme { get; set; } = ApplicationTheme.Dark;
-        private readonly string directoryPath, filePath;
+        private readonly string directoryPath, settingsFilePath, pitchDataPath;
 
         public App()
         {
             directoryPath = $"{Environment.GetFolderPath(Environment.SpecialFolder.UserProfile)}\\AudioReplacer2-Config";
-            filePath = $"{directoryPath}\\AudioReplacer2-Config.json";
+            settingsFilePath = $"{directoryPath}\\AudioReplacer2-Config.json";
+            pitchDataPath = $"{directoryPath}\\defaultPitchData.json";
             CreateSettingsData();
+            CreatePitchData();
 
             AppSettings = new ConfigurationBuilder<IAppSettings>()
-                .UseJsonFile(filePath)
+                .UseJsonFile(settingsFilePath)
                 .Build();
 
             GlobalData.updateChecksAllowed = AppSettings.AppUpdateCheck == 1;
@@ -39,7 +41,7 @@ namespace AudioReplacer2
                 Directory.CreateDirectory(directoryPath);
             }
 
-            if (!File.Exists(filePath))
+            if (!File.Exists(settingsFilePath))
             {
                 var defaultConfig = new
                 {
@@ -51,8 +53,19 @@ namespace AudioReplacer2
                 };
 
                 var defaultJson = JsonSerializer.Serialize(defaultConfig, new JsonSerializerOptions { WriteIndented = true });
-                File.WriteAllText(filePath, defaultJson); // File gets created automatically at this point
+                File.WriteAllText(settingsFilePath, defaultJson); // File gets created automatically at this point
             }
+        }
+
+        private void CreatePitchData()
+        {
+            if (!File.Exists(pitchDataPath))
+            {
+                string json = JsonSerializer.Serialize(GlobalData.pitchData, new JsonSerializerOptions { WriteIndented = true });
+                File.WriteAllText(pitchDataPath, json);
+            }
+
+            GlobalData.deserializedPitchData = JsonSerializer.Deserialize<string[][]>(File.ReadAllText(pitchDataPath));
         }
 
         protected override void OnLaunched(LaunchActivatedEventArgs args)

@@ -1,4 +1,6 @@
-﻿using AudioReplacer2.Util;
+﻿using System;
+using System.Diagnostics;
+using AudioReplacer2.Util;
 using Microsoft.UI.Composition.SystemBackdrops;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -82,6 +84,18 @@ namespace AudioReplacer2.Pages
 
             GlobalData.notificationTimeout = newStayTime;
             App.AppSettings.NotificationTimeout = newStayTime;
+        }
+
+        private void OpenPitchValuesFile(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                Process.Start(new ProcessStartInfo($"{Environment.GetFolderPath(Environment.SpecialFolder.UserProfile)}\\AudioReplacer2-Config\\defaultPitchData.json") { UseShellExecute = true });
+            }
+            catch
+            {
+                return;
+            }
         }
 
         private int BoolToInt(bool value)

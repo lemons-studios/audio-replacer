@@ -14,22 +14,16 @@ namespace AudioReplacer2.Util
         public readonly WebRequest webRequest;
 
         private readonly InfoBar[] windowInfoBars;
-        private readonly List<string> pitchMenuTitles;
-        private readonly List<float> pitchValues;
+        private readonly List<string> pitchMenuTitles = [];
+        private readonly List<float> pitchValues = [];
         private readonly string webVersion;
 
         public RecordPageFunctionality(ComboBox pitchComboBox, InfoBar[] windowInfoBars)
         {
             webRequest = new WebRequest();
-            pitchMenuTitles = [];
-            pitchValues = [];
             this.windowInfoBars = windowInfoBars;
+            UpdatePitchData();
 
-            foreach (var data in GlobalData.pitchData)
-            {
-                pitchValues.Add(ParseFloat(data[0])); // Position 0 of each array in the 2d array should have the pitch data, as mentioned in GlobalData.cs
-                pitchMenuTitles.Add(data[1]); // Position 1 of each array in the 2d array should have the name of the character, as mentioned in GlobalData.cs
-            }
             webVersion = Task.Run(() => webRequest.GetWebVersion("https://api.github.com/repos/lemons-studios/audio-replacer-2/tags")).Result;
         }
 
@@ -88,21 +82,6 @@ namespace AudioReplacer2.Util
             catch { return false; }
         }
 
-        public bool ToBool(int value)
-        {
-            return value != 0;
-        }
-
-        public string BoolToYesNo(bool value)
-        {
-            return value ? "Yes" : "No";
-        }
-
-        public Visibility ToVisibility(bool x)
-        {
-            return x ? Visibility.Visible : Visibility.Collapsed;
-        }
-
         public void ToggleButton(Button button, bool toggle)
         {
             var toggleVisibility = ToVisibility(toggle);
@@ -118,11 +97,13 @@ namespace AudioReplacer2.Util
 
         public List<string> GetPitchTitles()
         {
+            UpdatePitchData();
             return pitchMenuTitles;
         }
 
         public float GetPitchModifier(int index)
         {
+            UpdatePitchData();
             try { return pitchValues[index]; } catch { return 1; }
         }
 
@@ -146,6 +127,15 @@ namespace AudioReplacer2.Util
         public string GetWebVersion()
         {
             return webVersion != string.Empty ? webVersion : GlobalData.GetAppVersion(); // App version used as fallback when no internet is available
+        }
+
+        public void UpdatePitchData()
+        {
+            foreach (var data in GlobalData.deserializedPitchData)
+            {
+                pitchValues.Add(ParseFloat(data[0])); // Position 0 of each array in the 2d array should have the pitch data, as mentioned in GlobalData.cs
+                pitchMenuTitles.Add(data[1]); // Position 1 of each array in the 2d array should have the name of the character, as mentioned in GlobalData.cs
+            }
         }
 
         private float ParseFloat(string value)
@@ -174,6 +164,21 @@ namespace AudioReplacer2.Util
                 });
             }
             catch { return; }
+        }
+
+        public bool ToBool(int value)
+        {
+            return value != 0;
+        }
+
+        public string BoolToYesNo(bool value)
+        {
+            return value ? "Yes" : "No";
+        }
+
+        public Visibility ToVisibility(bool x)
+        {
+            return x ? Visibility.Visible : Visibility.Collapsed;
         }
     }
 }

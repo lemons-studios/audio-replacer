@@ -54,6 +54,14 @@
                     </controls:SettingsCard.HeaderIcon>
                     <NumberBox x:Name="RecordDelayBox" Minimum="25" SpinButtonPlacementMode="Inline" SmallChange="10" LargeChange="50" Value="75" Maximum="5000" ValueChanged="UpdateRecordDelay"/>
                 </controls:SettingsCard>
+                <controls:SettingsCard Header="Edit Pitch Values" Description="Opens a text editor to edit the pitch values" IsClickEnabled="True" Margin="0 0 0 7.5" Click="OpenPitchValuesFile">
+                    <controls:SettingsCard.ActionIcon>
+                        <FontIcon Glyph="&#xE8A7;" />
+                    </controls:SettingsCard.ActionIcon>
+                    <controls:SettingsCard.HeaderIcon>
+                        <FontIcon Glyph="&#xEB7E;" />
+                    </controls:SettingsCard.HeaderIcon>
+                </controls:SettingsCard>
                 <controls:SettingsExpander Header="About Audio Replacer 2" Description="©2024 Shob3r/Lemon Studios">
                     <controls:SettingsExpander.HeaderIcon>
                         <FontIcon Glyph="&#xF8B1;" />

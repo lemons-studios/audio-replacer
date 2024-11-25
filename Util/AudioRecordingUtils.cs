@@ -21,10 +21,7 @@ namespace AudioReplacer2.Util
         private async Task InitializeMediaCapture()
         {
             recordingCapture = new MediaCapture();
-            MediaCaptureInitializationSettings captureSettings = new MediaCaptureInitializationSettings
-            {
-                StreamingCaptureMode = StreamingCaptureMode.Audio
-            };
+            var captureSettings = new MediaCaptureInitializationSettings { StreamingCaptureMode = StreamingCaptureMode.Audio };
             await recordingCapture.InitializeAsync(captureSettings);
         }
 
