@@ -2,10 +2,12 @@
 using System.Diagnostics;
 using System.IO;
 using AudioReplacer2.Util;
+using Microsoft.UI;
 using Microsoft.UI.Composition.SystemBackdrops;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
+using WinUIEx;
 
 namespace AudioReplacer2.Pages
 {
@@ -37,21 +39,27 @@ namespace AudioReplacer2.Pages
         private void ToggleTransparencyMode(object sender, SelectionChangedEventArgs e)
         {
             if (firstOpening) return;
+
             switch (TransparencyDropdown.SelectedIndex)
             {
-                case 0:
-                    if (MicaController.IsSupported()) App.MainWindow.SystemBackdrop = new MicaBackdrop();
+                case 0: // Mica Backdrop
+                    if (MicaController.IsSupported())
+                    {
+                        App.MainWindow.SystemBackdrop = new MicaBackdrop();
+                    }
                     else
                     {
                         App.MainWindow.SystemBackdrop = new DesktopAcrylicBackdrop();
-                        TransparencyDropdown.SelectedIndex = 1;
+                        TransparencyDropdown.SelectedIndex = 1; // If mica isn't supported, switch to acrylic
                     }
                     break;
-                case 1:
+                case 1: // Desktop Acrylic Backdrop
                     App.MainWindow.SystemBackdrop = new DesktopAcrylicBackdrop();
                     break;
-                case 2:
+                case 2: // No Transparency
                     App.MainWindow.SystemBackdrop = null;
+
+                    App.MainWindow.SetTitleBarBackgroundColors(Application.Current.RequestedTheme == ApplicationTheme.Light ? Colors.White : Colors.Black);
                     break;
             }
             App.AppSettings.AppTransparencySetting = TransparencyDropdown.SelectedIndex;

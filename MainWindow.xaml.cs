@@ -11,6 +11,7 @@ using Microsoft.UI;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
 using System.Collections.Generic;
+using Windows.UI;
 using Microsoft.UI.Xaml;
 
 namespace AudioReplacer2
@@ -77,7 +78,7 @@ namespace AudioReplacer2
         private void SwitchPageContent(NavigationView sender, NavigationViewItemInvokedEventArgs args)
         {
             var navigationOptions = new FrameNavigationOptions { TransitionInfoOverride = args.RecommendedNavigationTransitionInfo, IsNavigationStackEnabled = false };
-            Type pageSwitchType = typeof(RecordPage); // Default page
+            var pageSwitchType = typeof(RecordPage); // Default page of project
             if (args.InvokedItemContainer != null && args.InvokedItemContainer.Tag is string tag)
             {
                 switch (tag)

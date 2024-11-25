@@ -21,7 +21,7 @@
     <AppxBundle>Always</AppxBundle>
     <HoursBetweenUpdateChecks>0</HoursBetweenUpdateChecks>
     <AppxBundlePlatforms>x64</AppxBundlePlatforms>
-    <AppxPackageDir>C:\Users\andre\Desktop\AudioReplacerBuilds\</AppxPackageDir>
+    <AppxPackageDir>C:\Users\Shob3r\Desktop\</AppxPackageDir>
     <SupportedOSPlatformVersion>10.0.20348.0</SupportedOSPlatformVersion>
     <Company>Lemon Studios</Company>
     <Authors>Shob3r</Authors>

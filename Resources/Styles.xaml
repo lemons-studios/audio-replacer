@@ -89,6 +89,7 @@
         <Setter Property="IsSettingsVisible" Value="False"/>
         <Setter Property="IsBackButtonVisible" Value="Collapsed"/>
         <Setter Property="Padding" Value="0"/>
+        <Setter Property="Background" Value="Transparent"/>
     </Style>
 
     <Style x:Key="SettingsCardStyle" TargetType="communityToolkit:SettingsCard">

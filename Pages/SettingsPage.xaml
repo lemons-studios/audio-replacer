@@ -34,7 +34,6 @@
                     <ComboBox x:Name="TransparencyDropdown" SelectedIndex="0" SelectionChanged="ToggleTransparencyMode">
                         <ComboBoxItem>Mica (Windows 11 Only)</ComboBoxItem>
                         <ComboBoxItem>Acrylic</ComboBoxItem>
-                        <ComboBoxItem>None (Buggy On Light Mode)</ComboBoxItem>
                     </ComboBox>
                 </controls:SettingsCard>
 
