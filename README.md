@@ -9,10 +9,10 @@ This tool was made for the purpose of being a useful tool for a Persona 4 Golden
 **This tool WILL work on Windows 10 Version 22H2**, although this app was designed with windows 11 in mind
 
 ## How To Install:
-You can download the latest release [here](https://github.com/lemons-studios/audio-replacer-2/releases/latest). The .msix file is the installer. Just open it up, click the install button, and you're all good!
+You can download the latest release [here](https://github.com/lemons-studios/audio-replacer-2/releases/latest). The .msix file is the installer. You must have the code signing certificate installed on your system before installing. Instructions on how to do that are below
 
 > [!Important]
-> If you are on windows 10, you should also install the [Segoe Fluent Icons](https://raw.githubusercontent.com/lemons-studios/audio-replacer-2/refs/heads/main/Assets/Font/SegoeFluentIcons/SegoeFluentIcons.ttf) font. While not required, some icons will not render correctly without this font installed
+> If you are on Windows 10, you should also install the [Segoe Fluent Icons](https://raw.githubusercontent.com/lemons-studios/audio-replacer-2/refs/heads/main/Assets/Font/SegoeFluentIcons/SegoeFluentIcons.ttf) font. While not required, some icons will not render correctly without this font installed
 
 Before installing, you must also have my code signing certificate installed on your computer. This only has to be done once, downloading newer versions will use the installed code signing certificate
 > [!CAUTION]
