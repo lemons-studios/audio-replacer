@@ -16,7 +16,7 @@
     <StackPanel>
         <Border x:Name="AppTitleBar" VerticalAlignment="Top" Height="40" Padding="5" Background="Transparent">
             <Grid ColumnDefinitions="Auto, *">
-                <Image Source="Assets/Icon/Square44x44Logo.targetsize-48.png" Style="{StaticResource TitleBarIcon}"/>
+                <Image x:Name="appIcon" Source="{StaticResource AppIconSource}" Style="{StaticResource TitleBarIcon}"/>
                 <TextBlock x:Name="AppTitle" Style="{StaticResource TitleBarText}" Text="Temp" Grid.Column="1"/>
             </Grid>
         </Border>

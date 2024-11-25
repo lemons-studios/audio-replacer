@@ -5,11 +5,9 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Text.Json;
 using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.Storage.Pickers;
-using Microsoft.UI.Xaml.Navigation;
 using WinRT.Interop;
 
 namespace AudioReplacer2.Pages
@@ -83,7 +81,7 @@ namespace AudioReplacer2.Pages
         {
             if (projectFileManagementUtils == null) return;
             AudioPreview.MediaPlayer.Pause();
-            var confirmSkip = new ContentDialog { Title = "Skip this file?", Content = "Are you sure you want to skip this file?", PrimaryButtonText = "Skip", CloseButtonText = "Don't Skip", XamlRoot = base.Content.XamlRoot };
+            var confirmSkip = new ContentDialog { Title = "Skip this file?", Content = "Are you sure you want to skip this file?", PrimaryButtonText = "Skip", CloseButtonText = "Don't Skip", XamlRoot = Content.XamlRoot };
             var confirmResult = await confirmSkip.ShowAsync();
 
             switch (confirmResult == ContentDialogResult.Primary)
@@ -205,11 +203,8 @@ namespace AudioReplacer2.Pages
 
         private void ToggleFinalReviewButtons(bool toggled)
         {
-            // No reason to toggle between the EndRecordingButton states, hard-code to disable
-            windowBackend.ToggleButton(EndRecordingButton, false);
-            windowBackend.ToggleButton(CancelRecordingButton, false);
-            windowBackend.ToggleButton(DiscardRecordingButton, toggled);
-            windowBackend.ToggleButton(SubmitRecordingButton, toggled);
+            Button[] buttons = [EndRecordingButton, CancelRecordingButton, DiscardRecordingButton, SubmitRecordingButton];
+            for (int i = 0; i < buttons.Length; i++) { windowBackend.ToggleButton(buttons[i], i > 1 && toggled); } // Making my code slightly unreadable in exchange for less lines 🔥🔥🔥
         }
 
         private async void DownloadRuntimeDependencies(object sender, RoutedEventArgs e)
@@ -219,7 +214,7 @@ namespace AudioReplacer2.Pages
             await Task.Run(windowBackend.DownloadDependencies); // Prevents window from freezing when installing dependencies
 
             // Restart app
-            var failureReason = Microsoft.Windows.AppLifecycle.AppInstance.Restart("");
+            Microsoft.Windows.AppLifecycle.AppInstance.Restart("");
         }
 
         private void OpenGithubReleases(object sender, RoutedEventArgs e)
@@ -227,13 +222,6 @@ namespace AudioReplacer2.Pages
             string url = "https://github.com/lemons-studios/audio-replacer-2/releases/latest";
             Process openReleasesProcess = ShellCommandManager.CreateProcess("cmd", $"/c start {url}");
             openReleasesProcess.Start();
-        }
-
-        protected override void OnNavigatedTo(NavigationEventArgs e)
-        {
-            base.OnNavigatedTo(e);
-            GlobalData.deserializedPitchData = JsonSerializer.Deserialize<string[][]>(File.ReadAllText($"{Environment.GetFolderPath(Environment.SpecialFolder.UserProfile)}\\AudioReplacer2-Config\\defaultPitchData.json"));
-            VoiceTuneMenu.ItemsSource = windowBackend.GetPitchTitles();
         }
     }
 }

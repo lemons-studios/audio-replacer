@@ -10,7 +10,6 @@ namespace AudioReplacer2
     public partial class App : Application
     {
         public static IAppSettings AppSettings { get; private set; }
-
         public static MainWindow MainWindow { get; private set; }
         public static ApplicationTheme SystemAppTheme { get; set; } = ApplicationTheme.Dark;
         private readonly string directoryPath, settingsFilePath, pitchDataPath;
@@ -30,17 +29,12 @@ namespace AudioReplacer2
             GlobalData.updateChecksAllowed = AppSettings.AppUpdateCheck == 1;
             GlobalData.notificationTimeout = AppSettings.NotificationTimeout;
             GlobalData.recordStopDelay = AppSettings.RecordEndWaitTime;
-
             InitializeComponent();
         }
 
         private void CreateSettingsData()
         {
-            if (!Directory.Exists(directoryPath))
-            {
-                Directory.CreateDirectory(directoryPath);
-            }
-
+            if (!Directory.Exists(directoryPath)) Directory.CreateDirectory(directoryPath); 
             if (!File.Exists(settingsFilePath))
             {
                 var defaultConfig = new
@@ -51,7 +45,6 @@ namespace AudioReplacer2
                     RecordEndWaitTime = 75,
                     NotificationTimeout = 1750
                 };
-
                 var defaultJson = JsonSerializer.Serialize(defaultConfig, new JsonSerializerOptions { WriteIndented = true });
                 File.WriteAllText(settingsFilePath, defaultJson); // File gets created automatically at this point
             }
@@ -59,12 +52,7 @@ namespace AudioReplacer2
 
         private void CreatePitchData()
         {
-            if (!File.Exists(pitchDataPath))
-            {
-                string json = JsonSerializer.Serialize(GlobalData.pitchData, new JsonSerializerOptions { WriteIndented = true });
-                File.WriteAllText(pitchDataPath, json);
-            }
-
+            if (!File.Exists(pitchDataPath)) { File.WriteAllText(pitchDataPath, JsonSerializer.Serialize(GlobalData.pitchData, new JsonSerializerOptions { WriteIndented = true })); }
             GlobalData.deserializedPitchData = JsonSerializer.Deserialize<string[][]>(File.ReadAllText(pitchDataPath));
         }
 
@@ -73,6 +61,5 @@ namespace AudioReplacer2
             MainWindow = new MainWindow();
             MainWindow.Activate();
         }
-
     }
 }

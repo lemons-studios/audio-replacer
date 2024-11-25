@@ -10,7 +10,7 @@ namespace AudioReplacer2.Pages
 {
     public sealed partial class SettingsPage : Page
     {
-        private bool firstOpening = true;
+        private readonly bool firstOpening = true;
         public SettingsPage()
         {
             InitializeComponent();
@@ -40,7 +40,6 @@ namespace AudioReplacer2.Pages
                     if (MicaController.IsSupported()) App.MainWindow.SystemBackdrop = new MicaBackdrop();
                     else
                     {
-                        App.SystemAppTheme = ApplicationTheme.Light;
                         App.MainWindow.SystemBackdrop = new DesktopAcrylicBackdrop();
                         TransparencyDropdown.SelectedIndex = 1;
                     }
@@ -58,12 +57,12 @@ namespace AudioReplacer2.Pages
         private void UpdateAppTheme(object sender, SelectionChangedEventArgs e)
         {
             if (firstOpening) return;
-
             if (App.MainWindow.Content is FrameworkElement rootElement)
             {
                 rootElement.RequestedTheme = (ElementTheme) ThemeDropdown.SelectedIndex;
                 App.AppSettings.AppThemeSetting = ThemeDropdown.SelectedIndex;
             }
+            App.MainWindow.UpdateAppIcon();
         }
 
         private void UpdateRecordDelay(NumberBox sender, NumberBoxValueChangedEventArgs args)
@@ -86,23 +85,6 @@ namespace AudioReplacer2.Pages
             App.AppSettings.NotificationTimeout = newStayTime;
         }
 
-        private void OpenPitchValuesFile(object sender, RoutedEventArgs e)
-        {
-            try
-            {
-                Process.Start(new ProcessStartInfo($"{Environment.GetFolderPath(Environment.SpecialFolder.UserProfile)}\\AudioReplacer2-Config\\defaultPitchData.json") { UseShellExecute = true });
-            }
-            catch
-            {
-                return;
-            }
-        }
-
-        private int BoolToInt(bool value)
-        {
-            return value == false ? 0 : 1;
-        }
-
         private async void RefreshPitchData(object sender, RoutedEventArgs e)
         {
             // Actually, it just restarts the application.
@@ -111,9 +93,18 @@ namespace AudioReplacer2.Pages
 
             if (confirmResult == ContentDialogResult.Primary)
             {
-                var failureReason = Microsoft.Windows.AppLifecycle.AppInstance.Restart("");
+                Microsoft.Windows.AppLifecycle.AppInstance.Restart("");
             }
-            else return;
+        }
+
+        private void OpenPitchValuesFile(object sender, RoutedEventArgs e)
+        {
+            try { Process.Start(new ProcessStartInfo($"{Environment.GetFolderPath(Environment.SpecialFolder.UserProfile)}\\AudioReplacer2-Config\\defaultPitchData.json") { UseShellExecute = true }); } catch { return; }
+        }
+
+        private int BoolToInt(bool value)
+        {
+            return value == false ? 0 : 1;
         }
     }
 }

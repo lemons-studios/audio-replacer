@@ -22,19 +22,17 @@ namespace AudioReplacer2.Util
         {
             webRequest = new WebRequest();
             this.windowInfoBars = windowInfoBars;
-            UpdatePitchData();
-
             webVersion = Task.Run(() => webRequest.GetWebVersion("https://api.github.com/repos/lemons-studios/audio-replacer-2/tags")).Result;
+            UpdatePitchData();
         }
 
         public void UpdateInfoBar(InfoBar infoBar, string title, string message, InfoBarSeverity severity, bool show = true, bool autoClose = true)
         {
-            // Disable any active InfoBar before showing a new one
-            DisableActiveInfoBars();
+            DisableActiveInfoBars(); // Disable any active InfoBar before showing a new one
             infoBar.Title = title;
             infoBar.Message = message;
-
             infoBar.IsOpen = show;
+
             if (autoClose) Task.Run(() => WaitHideInfoBar(infoBar));
         }
 
@@ -47,11 +45,7 @@ namespace AudioReplacer2.Util
             var currentSystemPath = Environment.GetEnvironmentVariable("PATH", EnvironmentVariableTarget.User);
 
             webRequest.DownloadFile(ffMpegUrl, outPath, "ffmpeg.7z");
-
-            using (ArchiveFile ffmpegArchive = new ArchiveFile($"{fullOutPath}.7z"))
-            {
-                ffmpegArchive.Extract($"{fullOutPath}");
-            }
+            using (ArchiveFile ffmpegArchive = new ArchiveFile($"{fullOutPath}.7z")) { ffmpegArchive.Extract($"{fullOutPath}"); }
 
             Directory.Move(@$"{fullOutPath}\ffmpeg-{latestFfMpegVersion}-full_build\bin", @$"{outPath}\ffmpeg-bin");
             Environment.SetEnvironmentVariable("PATH", @$"{currentSystemPath};{outPath}\ffmpeg-bin\", EnvironmentVariableTarget.User);
@@ -90,45 +84,6 @@ namespace AudioReplacer2.Util
             button.Visibility = toggleVisibility;
         }
 
-        public MediaSource MediaSourceFromUri(string path)
-        {
-            return MediaSource.CreateFromUri(new Uri(path));
-        }
-
-        public List<string> GetPitchTitles()
-        {
-            UpdatePitchData();
-            return pitchMenuTitles;
-        }
-
-        public float GetPitchModifier(int index)
-        {
-            UpdatePitchData();
-            try { return pitchValues[index]; } catch { return 1; }
-        }
-
-        public string GetFormattedCurrentFile(string input)
-        {
-            return input.Replace(@"\", "/");
-        }
-
-        public bool IsUpdateAvailable()
-        {
-            try
-            {
-                return webVersion != GlobalData.GetAppVersion(true);
-            }
-            catch
-            {
-                return false;
-            }
-        }
-
-        public string GetWebVersion()
-        {
-            return webVersion != string.Empty ? webVersion : GlobalData.GetAppVersion(); // App version used as fallback when no internet is available
-        }
-
         public void UpdatePitchData()
         {
             foreach (var data in GlobalData.deserializedPitchData)
@@ -136,11 +91,6 @@ namespace AudioReplacer2.Util
                 pitchValues.Add(ParseFloat(data[0])); // Position 0 of each array in the 2d array should have the pitch data, as mentioned in GlobalData.cs
                 pitchMenuTitles.Add(data[1]); // Position 1 of each array in the 2d array should have the name of the character, as mentioned in GlobalData.cs
             }
-        }
-
-        private float ParseFloat(string value)
-        {
-            try { return float.Parse(value); } catch { return 1; }
         }
 
         private void DisableActiveInfoBars()
@@ -151,19 +101,36 @@ namespace AudioReplacer2.Util
             }
         }
 
-        private async Task WaitHideInfoBar(InfoBar infoBar)
+        public float GetPitchModifier(int index)
         {
-            await Task.Delay(GlobalData.notificationTimeout);
+            UpdatePitchData();
+            try { return pitchValues[index]; } catch { return 1; }
+        }
 
-            // This try-catch is needed in the case that the TryEnqueue is running while the window is closing
-            try
-            {
-                infoBar.DispatcherQueue.TryEnqueue(() =>
-                {
-                    infoBar.IsOpen = false;
-                });
-            }
-            catch { return; }
+        public List<string> GetPitchTitles()
+        {
+            UpdatePitchData();
+            return pitchMenuTitles;
+        }
+
+        public string GetWebVersion()
+        {
+            return webVersion != string.Empty ? webVersion : GlobalData.GetAppVersion(); // App version used as fallback when no internet is available
+        }
+
+        public string GetFormattedCurrentFile(string input)
+        {
+            return input.Replace(@"\", "/");
+        }
+
+        public bool IsUpdateAvailable()
+        {
+            try { return webVersion != GlobalData.GetAppVersion(true); } catch { return false; }
+        }
+
+        private float ParseFloat(string value)
+        {
+            try { return float.Parse(value); } catch { return 1; }
         }
 
         public bool ToBool(int value)
@@ -179,6 +146,26 @@ namespace AudioReplacer2.Util
         public Visibility ToVisibility(bool x)
         {
             return x ? Visibility.Visible : Visibility.Collapsed;
+        }
+
+        public MediaSource MediaSourceFromUri(string path)
+        {
+            return MediaSource.CreateFromUri(new Uri(path));
+        }
+
+        private async Task WaitHideInfoBar(InfoBar infoBar)
+        {
+            await Task.Delay(GlobalData.notificationTimeout);
+
+            // This try-catch is needed in the case that the TryEnqueue is running while the window is closing
+            try
+            {
+                infoBar.DispatcherQueue.TryEnqueue(() =>
+                {
+                    infoBar.IsOpen = false;
+                });
+            }
+            catch { return; }
         }
     }
 }

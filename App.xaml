@@ -19,6 +19,10 @@
             <ResourceDictionary.ThemeDictionaries>
                 <ResourceDictionary x:Key="Dark">
                     <SolidColorBrush x:Key="ButtonBackgroundPointerOver" Color="{ThemeResource AccentFillColorTertiaryBrush}"/>
+                    <BitmapImage x:Key="AppIconSource" UriSource="Assets/Icon/AppIcon-Dark.png" />
+                </ResourceDictionary>
+                <ResourceDictionary x:Key="Light">
+                    <BitmapImage x:Key="AppIconSource" UriSource="Assets/Icon/AppIcon-Light.png" />
                 </ResourceDictionary>
             </ResourceDictionary.ThemeDictionaries>
         </ResourceDictionary>

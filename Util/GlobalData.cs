@@ -5,26 +5,12 @@ namespace AudioReplacer2.Util
 {
     public static class GlobalData
     {
-
         public static AppWindow appWindow;
         public static bool updateChecksAllowed = true;
-
         public static int notificationTimeout, recordStopDelay;
+
         public static string[][] deserializedPitchData;
-
-        public static string GetAppVersion(bool forceBuildNumber = false)
-        {
-            var appVersion = Package.Current.Id.Version;
-            int[] currentBuild = [appVersion.Major, appVersion.Minor, appVersion.Build];
-
-            // We do a bit of array shenanigans (loving this word)
-            bool returnBuildNumber = currentBuild[2] != 0 || forceBuildNumber;
-            return returnBuildNumber ? $"{currentBuild[0]}.{currentBuild[1]}.{currentBuild[2]}" : $"{currentBuild[0]}.{currentBuild[1]}";
-        }
-
-        // Modify THIS variable to add, remove, or modify default pitch values.
-        // Use multiplicative values for pitch values (for example, if you want to reduce the pitch of the recording by 4%, you would want to enter in "0.96"
-        // TODO: switch to a real JSON file to configure json data and use this pitchData string as the default values. Users can configure pitch data using that file
+        // Values here are the starting values and can be edited through the app's pich config json file
         public static string[][] pitchData =
         [
             ["1.0075", "Ai Ebihara"], ["1.025", "Ayane Matsunaga"], ["0.555", "Ameno-Sagiri"], ["1.015", "Chie Satonaka"],
@@ -43,5 +29,15 @@ namespace AudioReplacer2.Util
             ["1.0165", "Yukiko Amagi"], ["0.9975", "Yosuke Hanamura"], ["0.9875", "Yu Narukami"], ["1.0135", "Yumi Ozawa"],
             ["1.00", "Other NPC"]
         ];
+
+        public static string GetAppVersion(bool forceBuildNumber = false)
+        {
+            var appVersion = Package.Current.Id.Version;
+            int[] currentBuild = [appVersion.Major, appVersion.Minor, appVersion.Build];
+
+            // We do a bit of array shenanigans (loving this word)
+            bool returnBuildNumber = currentBuild[2] != 0 || forceBuildNumber;
+            return returnBuildNumber ? $"{currentBuild[0]}.{currentBuild[1]}.{currentBuild[2]}" : $"{currentBuild[0]}.{currentBuild[1]}";
+        }
     }
 }

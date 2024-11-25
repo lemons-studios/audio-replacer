@@ -66,6 +66,14 @@ namespace AudioReplacer2
             ContentFrame.Navigate(typeof(RecordPage));
         }
 
+        public void UpdateAppIcon()
+        {
+            if (App.MainWindow.Content is FrameworkElement rootElement)
+            {
+
+            }
+        }
+
         // Thanks StackOverflow man!
         private AppWindow GetAppWindowForCurrentWindow(object window)
         {
