@@ -13,7 +13,7 @@
     <StackPanel>
         <Border x:Name="AppTitleBar" VerticalAlignment="Top" Height="40" Padding="5" Background="Transparent">
             <Grid ColumnDefinitions="Auto, *">
-                <Image x:Name="AppIcon" Source="{StaticResource AppIconSource}" Style="{StaticResource TitleBarIcon}"/>
+                <FontIcon Glyph="&#xEC71;" Style="{StaticResource TitleBarIcon}"/>
                 <TextBlock x:Name="AppTitle" Style="{StaticResource TitleBarText}" Text="Temp" Grid.Column="1"/>
             </Grid>
         </Border>

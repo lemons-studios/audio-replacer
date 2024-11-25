@@ -9,7 +9,6 @@ This tool was made for the purpose of being a useful tool for a Persona 4 Golden
 **This tool WILL work on Windows 10 Version 22H2**, although this app was designed with windows 11 in mind
 
 ## How To Install:
-You will want to have the [.NET 8.0 Runtime](https://dotnet.microsoft.com/en-us/download/dotnet/thank-you/runtime-8.0.11-windows-x64-installer) installed before installing.
 You can download the latest release [here](https://github.com/lemons-studios/audio-replacer-2/releases/latest). The .msix file is the installer. Just open it up, click the install button, and you're all good!
 
 Before installing, you must also have my code signing certificate installed on your computer. This only has to be done once, downloading newer versions will use the installed code signing certificate
@@ -37,5 +36,4 @@ If you plan on contributing back to the project, replace the above clone command
 ## Known Issues:
 - Folder picker doesn't allow you to select the directory it opens in. This is (from what I can tell) a bug with the Windows operating system, and cannot be fixed by me
 - Light mode with the no transparency option selected looks a little strange
-- App Icon doesn't update when switching themes
-- Opening the credits dropdown on the settings page sometimes crashes the application
+- Opening the credits or reset settings dropdown on the settings page crashes the application after a restart or if running on Windows 10

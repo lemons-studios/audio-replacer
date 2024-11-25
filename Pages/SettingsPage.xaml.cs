@@ -12,6 +12,8 @@ namespace AudioReplacer2.Pages
     public sealed partial class SettingsPage : Page
     {
         private readonly bool firstOpening = true;
+        private readonly string configFolder = $"{Environment.GetFolderPath(Environment.SpecialFolder.UserProfile)}\\AudioReplacer2-Config";
+
         public SettingsPage()
         {
             InitializeComponent();
@@ -113,6 +115,44 @@ namespace AudioReplacer2.Pages
             if (!Directory.Exists(outFolder)) Directory.CreateDirectory(outFolder); // The output folder could not exist if the user hasn't initialized a project for the first time
             Process outFolderOpenProcess = ShellCommandManager.CreateProcess("explorer", outFolder);
             outFolderOpenProcess.Start();
+        }
+
+        // Got lazy. It works though
+        private async void ResetSettings(object sender, RoutedEventArgs e)
+        {
+            var confirmRefresh = new ContentDialog { Title = "Reset Settings?", Content = "Only your settings will be reverted to default values. App will restart", PrimaryButtonText = "Reset", CloseButtonText = "Cancel", XamlRoot = base.Content.XamlRoot };
+            var result = await confirmRefresh.ShowAsync();
+
+            if (result == ContentDialogResult.Primary)
+            {
+                File.Delete($"{configFolder}\\AudioReplacer2-Config.json");
+                Microsoft.Windows.AppLifecycle.AppInstance.Restart("");
+            }
+        }
+
+        private async void ResetPitchData(object sender, RoutedEventArgs e)
+        {
+            var confirmRefresh = new ContentDialog { Title = "Reset Pitch Data?", Content = "Your custom pitch data will be reverted to default values. App will restart", PrimaryButtonText = "Reset", CloseButtonText = "Cancel", XamlRoot = base.Content.XamlRoot };
+            var result = await confirmRefresh.ShowAsync();
+
+            if (result == ContentDialogResult.Primary)
+            {
+                File.Delete($"{configFolder}\\PitchData.json");
+                Microsoft.Windows.AppLifecycle.AppInstance.Restart("");
+            }
+        }
+
+        private async void ResetAll(object sender, RoutedEventArgs e)
+        {
+            var confirmRefresh = new ContentDialog { Title = "Reset Everything?", Content = "Both your settings and your custom pitch data will be reverted to original values. App will restart", PrimaryButtonText = "Reset", CloseButtonText = "Cancel", XamlRoot = base.Content.XamlRoot };
+            var result = await confirmRefresh.ShowAsync();
+
+            if (result == ContentDialogResult.Primary)
+            {
+                File.Delete($"{configFolder}\\PitchData.json");
+                File.Delete($"{configFolder}\\AudioReplacer2-Config.json");
+                Microsoft.Windows.AppLifecycle.AppInstance.Restart("");
+            }
         }
     }
 }

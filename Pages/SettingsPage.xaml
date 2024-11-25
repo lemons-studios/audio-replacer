@@ -26,6 +26,7 @@
                         <ComboBoxItem>Dark</ComboBoxItem>
                     </ComboBox>
                 </controls:SettingsCard>
+
                 <controls:SettingsCard Header="Transparency Effects" Description="These changes will only take effect if you have enabled transparency effects in the system settings" Margin="0 0 0 7.5">
                     <controls:SettingsCard.HeaderIcon>
                         <FontIcon Glyph="&#xF4A5;" />
@@ -36,24 +37,28 @@
                         <ComboBoxItem>None (Buggy On Light Mode)</ComboBoxItem>
                     </ComboBox>
                 </controls:SettingsCard>
+
                 <controls:SettingsCard Header="Enable Update Checks" Description="Check is performed each launch by checking GitHub for new releases" Margin="0 0 0 7.5">
                     <controls:SettingsCard.HeaderIcon>
                         <FontIcon Glyph="&#xECC5;" />
                     </controls:SettingsCard.HeaderIcon>
                     <ToggleSwitch x:Name="UpdateCheckSwitch" IsOn="True" Toggled="ToggleUpdateChecks"/>
                 </controls:SettingsCard>
+
                 <controls:SettingsCard Header="Notification Stay Time" Description="Measured in milliseconds" Margin="0 0 0 7.5">
                     <controls:SettingsCard.HeaderIcon>
                         <FontIcon Glyph="&#xE8BD;" />
                     </controls:SettingsCard.HeaderIcon>
                     <NumberBox x:Name="ToastDelayBox" SpinButtonPlacementMode="Inline" SmallChange="10" LargeChange="50" Value="1500" Minimum="500" Maximum="5500" ValueChanged="UpdateToastStayTime"/>
                 </controls:SettingsCard>
+
                 <controls:SettingsCard Header="Record Stop Delay" Description="Changes the amount of time it takes for recording to stop after clicking the stop recording button. Measured in milliseconds" Margin="0 0 0 7.5">
                     <controls:SettingsCard.HeaderIcon>
                         <FontIcon Glyph="&#xF781;" />
                     </controls:SettingsCard.HeaderIcon>
                     <NumberBox x:Name="RecordDelayBox" Minimum="25" SpinButtonPlacementMode="Inline" SmallChange="10" LargeChange="50" Value="75" Maximum="5000" ValueChanged="UpdateRecordDelay"/>
                 </controls:SettingsCard>
+
                 <controls:SettingsCard Header="Open Output Directory" Description="Opens an explorer window into the output directory of the app" IsClickEnabled="True" Margin="0 0 0 7.5" Click="OpenOutputFolder">
                     <controls:SettingsCard.ActionIcon>
                         <FontIcon Glyph="&#xE8A7;" />
@@ -62,6 +67,7 @@
                         <FontIcon Glyph="&#xE8DA;" />
                     </controls:SettingsCard.HeaderIcon>
                 </controls:SettingsCard>
+
                 <controls:SettingsCard Header="Edit Pitch Values" Description="Opens a text editor to edit the pitch values" IsClickEnabled="True" Margin="0 0 0 7.5" Click="OpenPitchValuesFile">
                     <controls:SettingsCard.ActionIcon>
                         <FontIcon Glyph="&#xE8A7;" />
@@ -70,6 +76,7 @@
                         <FontIcon Glyph="&#xE792;" />
                     </controls:SettingsCard.HeaderIcon>
                 </controls:SettingsCard>
+
                 <controls:SettingsCard Header="Refresh Pitch Values" Description="Did you finish changing pitch values? Click here for them to update!" IsClickEnabled="True" Margin="0 0 0 7.5" Click="RefreshPitchData">
                     <controls:SettingsCard.ActionIcon>
                         <FontIcon Glyph="&#xE76C;" />
@@ -78,9 +85,44 @@
                         <FontIcon Glyph="&#xE72C;" />
                     </controls:SettingsCard.HeaderIcon>
                 </controls:SettingsCard>
+
+                <controls:SettingsExpander Header="Reset Data" Description="App will restart if anything is reset" Margin="0 0 0 7.5">
+                    <controls:SettingsExpander.HeaderIcon>
+                        <FontIcon Glyph="&#xE74D;" />
+                    </controls:SettingsExpander.HeaderIcon>
+                    <controls:SettingsExpander.Items>
+                        <StackPanel Padding="20" Background="{ThemeResource LayerFillColorAltBrush}">
+                            <controls:SettingsCard Header="Reset Settings" Margin="0 0 0 2.5" IsClickEnabled="True" Click="ResetSettings">
+                                <controls:SettingsCard.ActionIcon>
+                                    <FontIcon Glyph="&#xE76C;" />
+                                </controls:SettingsCard.ActionIcon>
+                                <controls:SettingsCard.HeaderIcon>
+                                    <FontIcon Glyph="&#xE713;" />
+                                </controls:SettingsCard.HeaderIcon>
+                            </controls:SettingsCard>
+                            <controls:SettingsCard Header="Reset Pitch Data" Margin="0 0 0 2.5" IsClickEnabled="True" Click="ResetPitchData">
+                                <controls:SettingsCard.ActionIcon>
+                                    <FontIcon Glyph="&#xE76C;" />
+                                </controls:SettingsCard.ActionIcon>
+                                <controls:SettingsCard.HeaderIcon>
+                                    <FontIcon Glyph="&#xEC56;" />
+                                </controls:SettingsCard.HeaderIcon>
+                            </controls:SettingsCard>
+                            <controls:SettingsCard Header="Reset All" Margin="0 0 0 2.5" IsClickEnabled="True" Click="ResetAll">
+                                <controls:SettingsCard.ActionIcon>
+                                    <FontIcon Glyph="&#xE76C;" />
+                                </controls:SettingsCard.ActionIcon>
+                                <controls:SettingsCard.HeaderIcon>
+                                    <FontIcon Glyph="&#xE7BA;" />
+                                </controls:SettingsCard.HeaderIcon>
+                            </controls:SettingsCard>
+                        </StackPanel>
+                    </controls:SettingsExpander.Items>
+                </controls:SettingsExpander>
+
                 <controls:SettingsExpander Header="About Audio Replacer 2" Description="©2024 Shob3r/Lemon Studios">
                     <controls:SettingsExpander.HeaderIcon>
-                        <FontIcon Glyph="&#xF8B1;" />
+                        <FontIcon Glyph="&#xEC71;" />
                     </controls:SettingsExpander.HeaderIcon>
                     <controls:SettingsExpander.Items>
                         <StackPanel Padding="20" Background="{ThemeResource LayerFillColorAltBrush}">

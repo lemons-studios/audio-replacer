@@ -11,14 +11,13 @@ namespace AudioReplacer2
     {
         public static IAppSettings AppSettings { get; private set; }
         public static MainWindow MainWindow { get; private set; }
-        public static ApplicationTheme SystemAppTheme { get; set; } = ApplicationTheme.Dark;
         private readonly string directoryPath, settingsFilePath, pitchDataPath;
 
         public App()
         {
             directoryPath = $"{Environment.GetFolderPath(Environment.SpecialFolder.UserProfile)}\\AudioReplacer2-Config";
             settingsFilePath = $"{directoryPath}\\AudioReplacer2-Config.json";
-            pitchDataPath = $"{directoryPath}\\defaultPitchData.json";
+            pitchDataPath = $"{directoryPath}\\PitchData.json";
             CreateSettingsData();
             CreatePitchData();
 
@@ -45,8 +44,9 @@ namespace AudioReplacer2
                     RecordEndWaitTime = 75,
                     NotificationTimeout = 1750
                 };
+
                 var defaultJson = JsonSerializer.Serialize(defaultConfig, new JsonSerializerOptions { WriteIndented = true });
-                File.WriteAllText(settingsFilePath, defaultJson); // File gets created automatically at this point
+                File.WriteAllText(settingsFilePath, defaultJson); // File gets created automatically by File.WriteAllText() before it writes to anything
             }
         }
 

@@ -64,7 +64,7 @@
             </InfoBar.Transitions>
         </InfoBar>
 
-        <InfoBar x:Name="UpdateToast" Style="{StaticResource ToastNotification}" Title="Update(s) Available" Severity="Informational" Background="{ThemeResource SystemFillColorCriticalBackgroundBrush}">
+        <InfoBar x:Name="UpdateToast" Style="{StaticResource ToastNotification}" Title="Update Available" Severity="Informational" Background="{ThemeResource SystemFillColorCriticalBackgroundBrush}">
             <InfoBar.IconSource>
                 <FontIconSource Glyph="&#xECC5;" />
             </InfoBar.IconSource>
