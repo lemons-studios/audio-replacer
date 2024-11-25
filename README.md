@@ -11,6 +11,9 @@ This tool was made for the purpose of being a useful tool for a Persona 4 Golden
 ## How To Install:
 You can download the latest release [here](https://github.com/lemons-studios/audio-replacer-2/releases/latest). The .msix file is the installer. Just open it up, click the install button, and you're all good!
 
+> [!Important]
+> If you are on windows 10, you should also install the [Segoe Fluent Icons](https://raw.githubusercontent.com/lemons-studios/audio-replacer-2/refs/heads/main/Assets/Font/SegoeFluentIcons/SegoeFluentIcons.ttf) font. While not required, some icons will not render correctly without this font installed
+
 Before installing, you must also have my code signing certificate installed on your computer. This only has to be done once, downloading newer versions will use the installed code signing certificate
 > [!CAUTION]
 > Only install software certificates from people you trust. If you don't trust me, go build the application yourself. Steps on how to do this are below
