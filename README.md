@@ -8,10 +8,12 @@ While this tool is specifically made for the P4G mod I'm making in mind, it shou
 ## Why is it called Audio Replacer 2?
 Because there was a version before this one. It sucked really bad and I never published it to GitHub so it's not accessible
 
-## How to install:
-You will want to have the [.NET 8.0 Runtime](https://dotnet.microsoft.com/en-us/download/dotnet/thank-you/runtime-8.0.11-windows-x64-installer) installed before installing.
 
-Next, you'll want to install my software signing certificate. Without it, the installer will refuse to install the application
+## How To Install:
+You will want to have the [.NET 8.0 Runtime](https://dotnet.microsoft.com/en-us/download/dotnet/thank-you/runtime-8.0.11-windows-x64-installer) installed before installing.
+You can download the latest release [here](https://github.com/lemons-studios/audio-replacer-2/releases/latest). The .msix file is the installer. Just open it up, click the install button, and you're all good!
+
+Before installing, you must also have my code signing certificate installed on your computer
 > [!CAUTION]
 > Only install software certificates from people you trust. If you don't trust me, go build the application yourself. Steps on how to do this are below
 
@@ -21,9 +23,6 @@ To add the certificate properly, perform the following steps:
 2. Select "Local Machine" as the store location
 3. In the next page, Choose "Place all certificates in the following store:". Click the browse button and Select the "Trusted People" store
 4. Continue with setup normally until Windows tells you that you're done!
-
-### Install The App
-You can download the latest release [here](https://github.com/lemons-studios/audio-replacer-2/releases/latest). The .msix file is the installer. Just open it up, click the install button, and you're all good!
 
 ## How to Develop:
 If you want to develop for this application, you'll need a few things:
