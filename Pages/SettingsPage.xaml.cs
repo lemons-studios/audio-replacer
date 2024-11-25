@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.IO;
 using AudioReplacer2.Util;
 using Microsoft.UI.Composition.SystemBackdrops;
 using Microsoft.UI.Xaml;
@@ -62,7 +63,6 @@ namespace AudioReplacer2.Pages
                 rootElement.RequestedTheme = (ElementTheme) ThemeDropdown.SelectedIndex;
                 App.AppSettings.AppThemeSetting = ThemeDropdown.SelectedIndex;
             }
-            App.MainWindow.UpdateAppIcon();
         }
 
         private void UpdateRecordDelay(NumberBox sender, NumberBoxValueChangedEventArgs args)
@@ -105,6 +105,14 @@ namespace AudioReplacer2.Pages
         private int BoolToInt(bool value)
         {
             return value == false ? 0 : 1;
+        }
+
+        private void OpenOutputFolder(object sender, RoutedEventArgs e)
+        {
+            string outFolder = $"{Environment.GetFolderPath(Environment.SpecialFolder.UserProfile)}\\AudioReplacer2-Out";
+            if (!Directory.Exists(outFolder)) Directory.CreateDirectory(outFolder); // The output folder could not exist if the user hasn't initialized a project for the first time
+            Process outFolderOpenProcess = ShellCommandManager.CreateProcess("explorer", outFolder);
+            outFolderOpenProcess.Start();
         }
     }
 }

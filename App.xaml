@@ -7,15 +7,12 @@
     xmlns:local="using:AudioReplacer2">
     <Application.Resources>
         <ResourceDictionary>
-
+            <FontFamily x:Key="SegoeFluentIcons">Assets/Font/SegoeFluentIcons/SegoeFluentIcons.ttf#SegoeFluentIcons</FontFamily>
             <ResourceDictionary.MergedDictionaries>
                 <XamlControlsResources xmlns="using:Microsoft.UI.Xaml.Controls" />
                 <ResourceDictionary Source="/Resources/Styles.xaml"/>
                 <ResourceDictionary Source="/Resources/ButtonResources.xaml"/>
             </ResourceDictionary.MergedDictionaries>
-
-            <FontFamily x:Key="SegoeFluentIcons">Assets/Font/SegoeFluentIcons/SegoeFluentIcons.ttf#SegoeFluentIcons</FontFamily>
-
             <ResourceDictionary.ThemeDictionaries>
                 <ResourceDictionary x:Key="Dark">
                     <SolidColorBrush x:Key="ButtonBackgroundPointerOver" Color="{ThemeResource AccentFillColorTertiaryBrush}"/>

@@ -8,15 +8,12 @@
     xmlns:WinUiEx="using:WinUIEx"
     xmlns:audioReplacer2="using:AudioReplacer2"
     mc:Ignorable="d"
-    MinHeight="460"
-    MaxHeight="460"
-    MinWidth="1024"
-    MaxWidth="1024">
-
+    MinHeight="460" MaxHeight="460"
+    MinWidth="1024" MaxWidth="1024">
     <StackPanel>
         <Border x:Name="AppTitleBar" VerticalAlignment="Top" Height="40" Padding="5" Background="Transparent">
             <Grid ColumnDefinitions="Auto, *">
-                <Image x:Name="appIcon" Source="{StaticResource AppIconSource}" Style="{StaticResource TitleBarIcon}"/>
+                <Image x:Name="AppIcon" Source="{StaticResource AppIconSource}" Style="{StaticResource TitleBarIcon}"/>
                 <TextBlock x:Name="AppTitle" Style="{StaticResource TitleBarText}" Text="Temp" Grid.Column="1"/>
             </Grid>
         </Border>

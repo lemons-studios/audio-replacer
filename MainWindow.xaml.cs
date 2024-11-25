@@ -28,6 +28,7 @@ namespace AudioReplacer2
         public MainWindow()
         {
             InitializeComponent();
+
             GlobalData.appWindow = GetAppWindowForCurrentWindow(this);
             GlobalData.appWindow.Closing += OnWindowClose;
 
@@ -66,16 +67,7 @@ namespace AudioReplacer2
             ContentFrame.Navigate(typeof(RecordPage));
         }
 
-        public void UpdateAppIcon()
-        {
-            if (App.MainWindow.Content is FrameworkElement rootElement)
-            {
-
-            }
-        }
-
-        // Thanks StackOverflow man!
-        private AppWindow GetAppWindowForCurrentWindow(object window)
+        private AppWindow GetAppWindowForCurrentWindow(object window) // Thanks StackOverflow man!
         {
             var hWnd = WindowNative.GetWindowHandle(window);
             var currentWndId = Win32Interop.GetWindowIdFromWindow(hWnd);
@@ -86,7 +78,6 @@ namespace AudioReplacer2
         {
             var navigationOptions = new FrameNavigationOptions { TransitionInfoOverride = args.RecommendedNavigationTransitionInfo, IsNavigationStackEnabled = false };
             Type pageSwitchType = typeof(RecordPage); // Default page
-
             if (args.InvokedItemContainer != null && args.InvokedItemContainer.Tag is string tag)
             {
                 switch (tag)
@@ -100,14 +91,9 @@ namespace AudioReplacer2
                 }
             }
 
-            if (!pageCache.TryGetValue(pageSwitchType, out var page))
-            {
-                page = (Page) Activator.CreateInstance(pageSwitchType);
-                pageCache[pageSwitchType] = page;
-            }
+            if (!pageCache.TryGetValue(pageSwitchType, out var page)) { page = (Page) Activator.CreateInstance(pageSwitchType); pageCache[pageSwitchType] = page; }
             ContentFrame.Content = page;
         }
-
         private void OnWindowClose(object sender, AppWindowClosingEventArgs args) { if (MainWindow.projectInitialized && (MainWindow.isProcessing || MainWindow.isRecording)) File.Delete(MainWindow.currentFile); }
     }
 }
