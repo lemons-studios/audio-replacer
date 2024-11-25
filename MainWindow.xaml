@@ -28,6 +28,14 @@
                         <FontIcon Glyph="&#xE720;" />
                     </NavigationViewItem.Icon>
                 </NavigationViewItem>
+                <NavigationViewItem x:Name="PitchEditorItem" Tag="Pitch Editor">
+                    <NavigationViewItem.Content>
+                        <TextBlock Text="Pitch Editor" FontWeight="Light"/>
+                    </NavigationViewItem.Content>
+                    <NavigationViewItem.Icon>
+                        <FontIcon Glyph="&#xE7C3;" />
+                    </NavigationViewItem.Icon>
+                </NavigationViewItem>
                 <NavigationViewItem x:Name="SettingsItem" Tag="Settings">
                     <NavigationViewItem.Content>
                         <TextBlock Text="Settings" FontWeight="Light"/>

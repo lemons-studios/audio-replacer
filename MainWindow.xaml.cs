@@ -12,6 +12,7 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
 using System.Collections.Generic;
 using Windows.UI;
+using AudioReplacer2.Resources;
 using Microsoft.UI.Xaml;
 
 namespace AudioReplacer2
@@ -88,6 +89,9 @@ namespace AudioReplacer2
                         break;
                     case "Settings":
                         pageSwitchType = typeof(SettingsPage);
+                        break;
+                    case "Pitch Editor":
+                        pageSwitchType = typeof(PitchDataEditor);
                         break;
                 }
             }
