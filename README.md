@@ -3,6 +3,7 @@
   <img src="https://img.shields.io/badge/c%23-%23239120.svg?style=for-the-badge&logo=csharp&logoColor=white">
   <img src="https://img.shields.io/badge/.NET-5C2D91?style=for-the-badge&logo=.net&logoColor=white">
 </p>
+
 This tool was made for the purpose of being a useful tool for a Persona 4 Golden mod I am working on; where one of my friends dubs the entire game over. However, Not only have I made it publically available, I have turned it into a batch audio replacement processor that works with any input folder structure!
 
 **This tool WILL work on Windows 10 Version 22H2**, although this app was designed with windows 11 in mind
@@ -33,8 +34,8 @@ git clone https://github.com/lemons-studios/audio-replacer-2.git
 ```
 If you plan on contributing back to the project, replace the above clone command with whatever the address is for the fork you created!
 
-
 ## Known Issues:
 - Folder picker doesn't allow you to select the directory it opens in. This is (from what I can tell) a bug with the Windows operating system, and cannot be fixed by me
 - Light mode with the no transparency option selected looks a little strange
 - App Icon doesn't update when switching themes
+- Opening the credits dropdown on the settings page sometimes crashes the application
