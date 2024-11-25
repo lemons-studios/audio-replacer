@@ -33,7 +33,7 @@
                     <ComboBox x:Name="TransparencyDropdown" SelectedIndex="0" SelectionChanged="ToggleTransparencyMode">
                         <ComboBoxItem>Mica (Windows 11 Only)</ComboBoxItem>
                         <ComboBoxItem>Acrylic</ComboBoxItem>
-                        <ComboBoxItem>None</ComboBoxItem>
+                        <ComboBoxItem>None (Buggy On Light Mode)</ComboBoxItem>
                     </ComboBox>
                 </controls:SettingsCard>
                 <controls:SettingsCard Header="Enable Update Checks" Description="Check is performed each launch by checking GitHub for new releases" Margin="0 0 0 7.5">
@@ -59,7 +59,15 @@
                         <FontIcon Glyph="&#xE8A7;" />
                     </controls:SettingsCard.ActionIcon>
                     <controls:SettingsCard.HeaderIcon>
-                        <FontIcon Glyph="&#xEB7E;" />
+                        <FontIcon Glyph="&#xE792;" />
+                    </controls:SettingsCard.HeaderIcon>
+                </controls:SettingsCard>
+                <controls:SettingsCard Header="Refresh Pitch Values" Description="Did you finish changing pitch values? Click here for them to update!" IsClickEnabled="True" Margin="0 0 0 7.5" Click="RefreshPitchData">
+                    <controls:SettingsCard.ActionIcon>
+                        <FontIcon Glyph="&#xE76C;" />
+                    </controls:SettingsCard.ActionIcon>
+                    <controls:SettingsCard.HeaderIcon>
+                        <FontIcon Glyph="&#xE72C;" />
                     </controls:SettingsCard.HeaderIcon>
                 </controls:SettingsCard>
                 <controls:SettingsExpander Header="About Audio Replacer 2" Description="©2024 Shob3r/Lemon Studios">

@@ -102,5 +102,18 @@ namespace AudioReplacer2.Pages
         {
             return value == false ? 0 : 1;
         }
+
+        private async void RefreshPitchData(object sender, RoutedEventArgs e)
+        {
+            // Actually, it just restarts the application.
+            var confirmRefresh = new ContentDialog { Title = "Refresh Pitch Values?", Content = "Please save any unsaved work before refreshing", PrimaryButtonText = "Refresh", CloseButtonText = "Cancel", XamlRoot = base.Content.XamlRoot };
+            var confirmResult = await confirmRefresh.ShowAsync();
+
+            if (confirmResult == ContentDialogResult.Primary)
+            {
+                var failureReason = Microsoft.Windows.AppLifecycle.AppInstance.Restart("");
+            }
+            else return;
+        }
     }
 }

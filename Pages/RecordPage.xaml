@@ -66,7 +66,7 @@
 
         <InfoBar x:Name="UpdateToast" Style="{StaticResource ToastNotification}" Title="Update(s) Available" Severity="Informational" Background="{ThemeResource SystemFillColorCriticalBackgroundBrush}">
             <InfoBar.IconSource>
-                <SymbolIconSource Symbol="Download"/>
+                <FontIconSource Glyph="&#xECC5;" />
             </InfoBar.IconSource>
             <InfoBar.ActionButton>
                 <Button Content="Download Update" Click="OpenGithubReleases" CornerRadius="4"/>
