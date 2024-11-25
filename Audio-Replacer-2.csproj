@@ -22,19 +22,20 @@
     <HoursBetweenUpdateChecks>0</HoursBetweenUpdateChecks>
     <AppxBundlePlatforms>x64</AppxBundlePlatforms>
     <AppxPackageDir>C:\Users\andre\Desktop\AudioReplacerBuilds\</AppxPackageDir>
-    <SupportedOSPlatformVersion>10.0.19041.0</SupportedOSPlatformVersion>
+    <SupportedOSPlatformVersion>10.0.20348.0</SupportedOSPlatformVersion>
     <Company>Lemon Studios</Company>
     <Authors>Shob3r</Authors>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
     <WindowsPackageType>MSIX</WindowsPackageType>
-    <StartupObject></StartupObject>
+    <StartupObject>AudioReplacer2.Program</StartupObject>
     <ApplicationIcon>Assets\Icon\Titlebar.ico</ApplicationIcon>
     <PublishTrimmed>False</PublishTrimmed>
 	<TrimMode>link</TrimMode>
 	<TrimmerRootAssembly>AudioReplacer2</TrimmerRootAssembly>
 	<TrimmerRootAssumedType>AudioReplacer2.Util.IAppSettings</TrimmerRootAssumedType>
   </PropertyGroup>
+	
   <ItemGroup>
     <Content Remove="Assets\BadgeLogo.scale-100.png" />
     <Content Remove="Assets\BadgeLogo.scale-125.png" />
@@ -87,6 +88,7 @@
     <Content Remove="Assets\Wide310x150Logo.scale-150.png" />
     <Content Remove="Assets\Wide310x150Logo.scale-400.png" />
   </ItemGroup>
+	
   <ItemGroup>
     <None Remove="Pages\SettingsPage.xaml" />
     <None Remove="Styles.xaml" />
@@ -107,7 +109,15 @@
     <ProjectCapability Include="Msix" />
   </ItemGroup>
   <ItemGroup>
+    <None Update="Assets\Icon\AppIcon.png">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
     <None Update="LICENSE">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+    <None Update="README.md">
       <Pack>True</Pack>
       <PackagePath>\</PackagePath>
     </None>
@@ -127,28 +137,41 @@
 	  </Content>
   </ItemGroup>
 
+  <PropertyGroup Label="Globals">
+    <WebView2EnableCsWinRTProjection>False</WebView2EnableCsWinRTProjection>
+    <WebView2WinRTWrapSystemTypes>False</WebView2WinRTWrapSystemTypes>
+    <WV2WinRTPlatformReferencesLevel>explicit</WV2WinRTPlatformReferencesLevel>
+    <NeutralLanguage>en-CA</NeutralLanguage>
+    <AssemblyVersion>3.0.2.0</AssemblyVersion>
+    <FileVersion>3.0.2.0</FileVersion>
+    <Copyright>Shob3r &amp; Lemon Studios</Copyright>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageIcon>AppIcon.png</PackageIcon>
+    <Version>3.0.2</Version>
+  </PropertyGroup>
+
   <PropertyGroup Condition="'$(DisableHasPackageAndPublishMenuAddedByProject)'!='true' and '$(EnableMsixTooling)'=='true'">
     <HasPackageAndPublishMenu>true</HasPackageAndPublishMenu>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x86'">
-    <IsPublishable>False</IsPublishable>
+    <IsPublishable>True</IsPublishable>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IsPublishable>False</IsPublishable>
+    <IsPublishable>True</IsPublishable>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">
-    <IsPublishable>False</IsPublishable>
+    <IsPublishable>True</IsPublishable>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x86'">
-    <IsPublishable>False</IsPublishable>
+    <IsPublishable>True</IsPublishable>
     <Optimize>True</Optimize>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IsPublishable>False</IsPublishable>
+    <IsPublishable>True</IsPublishable>
     <Optimize>True</Optimize>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">
-    <IsPublishable>False</IsPublishable>
+    <IsPublishable>True</IsPublishable>
     <Optimize>True</Optimize>
   </PropertyGroup>
 </Project>
