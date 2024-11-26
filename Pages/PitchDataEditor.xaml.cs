@@ -8,6 +8,7 @@ namespace AudioReplacer2.Pages
     public sealed partial class PitchDataEditor
     {
         private readonly string pitchDataFile = $@"{Environment.GetFolderPath(Environment.SpecialFolder.UserProfile)}\AudioReplacer2-Config\PitchData.json";
+
         public PitchDataEditor()
         {
             InitializeComponent();

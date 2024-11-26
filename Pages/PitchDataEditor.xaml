@@ -6,22 +6,21 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
-    xmlns:Editor="using:WinUIEditor"
-    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    xmlns:Editor="using:WinUIEditor">
 
-    <StackPanel>
-        <StackPanel Orientation="Horizontal">
-            <Button Click="SaveFile" Margin="15 0 0 0">
+    <StackPanel Padding="5.5">
+        <StackPanel Orientation="Horizontal" Margin="0 5.5 0 5" VerticalAlignment="Center">
+            <Button Click="SaveFile" Margin="15 0 0 0" ToolTipService.ToolTip="Save Changes">
                 <Button.Content>
                     <FontIcon Glyph="&#xE74E;" />
                 </Button.Content>
             </Button>
-            <Button Click="DiscardChanges" Margin="15 0 0 0">
+            <Button Click="DiscardChanges" Margin="15 0 0 0" ToolTipService.ToolTip="Discard Changes">
                 <Button.Content>
-                    <FontIcon Glyph="&#xED61;" />
+                    <FontIcon Glyph="&#xE845;" />
                 </Button.Content>
             </Button>
         </StackPanel>
-        <Editor:CodeEditorControl x:Name="PitchEditor" HighlightingLanguage="json" MinHeight="400"  ManipulationCompleted="SaveFile"/>
+        <Editor:CodeEditorControl x:Name="PitchEditor" HighlightingLanguage="json" MinHeight="400" />
     </StackPanel>
 </Page>

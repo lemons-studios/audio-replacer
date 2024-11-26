@@ -13,10 +13,7 @@ namespace AudioReplacer2.Util
         public bool requiresExtraEdits = false;
         private MediaCapture recordingCapture;
 
-        public AudioRecordingUtils()
-        {
-            Task.Run(InitializeMediaCapture);
-        }
+        public AudioRecordingUtils() { Task.Run(InitializeMediaCapture); }
 
         private async Task InitializeMediaCapture()
         {
@@ -35,26 +32,19 @@ namespace AudioReplacer2.Util
         public async Task StopRecordingAudio(string file)
         {
             await Task.Delay(GlobalData.RecordStopDelay); 
-
             await recordingCapture.StopRecordAsync();
             string outFile = $"{file}0.wav"; // Temporary name, gets renamed back to actual file name at the end
+            float truePitchChange = MathF.Max(pitchChange, 0.001f); // Rubberband does not support pitch values <= 0
 
             // FFMpeg is used with shell commands here simply because I cannot bother trying to figure out .NET FFMpeg frameworks that are all just command wrappers anyway
-            var ffmpegProcess = ShellCommandManager.CreateProcess("ffmpeg", $"-i \"{file}\" -af \"rubberband=pitch={pitchChange}, volume=1.25\" -y \"{outFile}\"");
-
+            var ffmpegProcess = ShellCommandManager.CreateProcess("ffmpeg", $"-i \"{file}\" -af \"rubberband=pitch={truePitchChange}, volume=1.25\" -y \"{outFile}\"");
             ffmpegProcess.Start();
-            var outputTask = ffmpegProcess.StandardOutput.ReadToEndAsync();
-            var errorOutputTask = ffmpegProcess.StandardError.ReadToEndAsync();
 
-            // Wait for the process to exit
-            await Task.WhenAll(outputTask, errorOutputTask, Task.Run(() => ffmpegProcess.WaitForExit()));
-
+            await ffmpegProcess.WaitForExitAsync();
             if (ffmpegProcess.ExitCode != 0) throw new Exception();
 
-            // Delete unedited FFMpeg file
+            // Delete unedited file and move the processed file to the unedited location after deletion
             File.Delete(file);
-
-            // Move the FFMpeg file to the unedited location after deletion
             File.Move(outFile, file);
         }
 

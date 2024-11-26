@@ -20,11 +20,9 @@ namespace AudioReplacer2
             pitchDataPath = $"{directoryPath}\\PitchData.json";
             CreateSettingsData();
             CreatePitchData();
-
             AppSettings = new ConfigurationBuilder<IAppSettings>()
                 .UseJsonFile(settingsFilePath)
                 .Build();
-
             GlobalData.UpdateChecksAllowed = AppSettings.AppUpdateCheck == 1;
             GlobalData.NotificationTimeout = AppSettings.NotificationTimeout;
             GlobalData.RecordStopDelay = AppSettings.RecordEndWaitTime;
@@ -35,16 +33,14 @@ namespace AudioReplacer2
         {
             if (!Directory.Exists(directoryPath)) Directory.CreateDirectory(directoryPath);
             if (File.Exists(settingsFilePath)) return;
-            
             var defaultConfig = new
             {
                 Theme = 0,
                 TransparencyEffect = 0,
                 EnableUpdateChecks = 1,
-                RecordEndWaitTime = 75,
+                RecordEndWaitTime = 25,
                 NotificationTimeout = 1750
             };
-
             string defaultJson = JsonSerializer.Serialize(defaultConfig, new JsonSerializerOptions { WriteIndented = true });
             File.WriteAllText(settingsFilePath, defaultJson); // File gets created automatically by File.WriteAllText() before it writes to anything
         }

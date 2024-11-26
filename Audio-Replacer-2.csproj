@@ -147,12 +147,13 @@
     <WebView2WinRTWrapSystemTypes>False</WebView2WinRTWrapSystemTypes>
     <WV2WinRTPlatformReferencesLevel>explicit</WV2WinRTPlatformReferencesLevel>
     <NeutralLanguage>en-CA</NeutralLanguage>
-    <AssemblyVersion>3.0.2.0</AssemblyVersion>
-    <FileVersion>3.0.2.0</FileVersion>
+    <AssemblyVersion>3.1.0.0</AssemblyVersion>
+    <FileVersion>3.1.0.0</FileVersion>
     <Copyright>Shob3r &amp; Lemon Studios</Copyright>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageIcon>AppIcon.png</PackageIcon>
-    <Version>3.0.2</Version>
+    <Version>3.1.0</Version>
+    <WV2WinRTDisallowEmptyAdapter>False</WV2WinRTDisallowEmptyAdapter>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(DisableHasPackageAndPublishMenuAddedByProject)'!='true' and '$(EnableMsixTooling)'=='true'">
