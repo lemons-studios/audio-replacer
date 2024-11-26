@@ -6,7 +6,7 @@
 
 This tool was made for the purpose of being a useful tool for a Persona 4 Golden mod I am working on; where one of my friends dubs the entire game over. However, Not only have I made it publically available, I have turned it into a batch audio replacement processor that works with any input folder structure!
 
-**This tool WILL work on Windows 10 Version 22H2**, although this app was designed with windows 11 in mind
+**This tool WILL work on Windows 10 Version 22H2**, although this app was designed with Windows 11 in mind
 
 ## How To Install:
 You can download the latest release [here](https://github.com/lemons-studios/audio-replacer-2/releases/latest). The .msix file is the installer. You must have the code signing certificate installed on your system before installing. Instructions on how to do that are below
