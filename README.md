@@ -38,5 +38,3 @@ If you plan on contributing back to the project, replace the above clone command
 
 ## Known Issues:
 - Folder picker doesn't allow you to select the directory it opens in. This is (from what I can tell) a bug with the Windows operating system, and cannot be fixed by me
-- Light mode with the no transparency option selected looks a little strange
-- Opening the credits or reset settings dropdown on the settings page crashes the application after a restart or if running on Windows 10
