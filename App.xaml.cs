@@ -11,15 +11,17 @@ namespace AudioReplacer
     {
         public static IAppSettings AppSettings { get; private set; }
         public static MainWindow MainWindow { get; private set; }
-        private readonly string directoryPath, settingsFilePath, pitchDataPath;
+        private readonly string directoryPath, settingsFilePath, pitchDataPath, effectDataPath;
 
         public App()
         {
             directoryPath = $"{Environment.GetFolderPath(Environment.SpecialFolder.UserProfile)}\\AudioReplacer2-Config";
             settingsFilePath = $"{directoryPath}\\AudioReplacer2-Config.json";
             pitchDataPath = $"{directoryPath}\\PitchData.json";
+            effectDataPath = $"{directoryPath}\\EffectData.json";
+
             CreateSettingsData();
-            CreatePitchData();
+            CreateJsonData();
             AppSettings = new ConfigurationBuilder<IAppSettings>()
                 .UseJsonFile(settingsFilePath)
                 .Build();
@@ -45,10 +47,12 @@ namespace AudioReplacer
             File.WriteAllText(settingsFilePath, defaultJson); // File gets created automatically by File.WriteAllText() before it writes to anything
         }
 
-        private void CreatePitchData()
+        private void CreateJsonData()
         {
-            if (!File.Exists(pitchDataPath)) { File.WriteAllText(pitchDataPath, JsonSerializer.Serialize(GlobalData.pitchData, new JsonSerializerOptions { WriteIndented = true })); }
+            if (!File.Exists(pitchDataPath)) { File.WriteAllText(pitchDataPath, JsonSerializer.Serialize(GlobalData.DefaultPitchData, new JsonSerializerOptions { WriteIndented = true })); }
+            if (!File.Exists(effectDataPath)) { File.WriteAllText(effectDataPath, JsonSerializer.Serialize(GlobalData.DefaultEffectData, new JsonSerializerOptions { WriteIndented = true })); }
             GlobalData.DeserializedPitchData = JsonSerializer.Deserialize<string[][]>(File.ReadAllText(pitchDataPath));
+            GlobalData.DeserializedEffectData = JsonSerializer.Deserialize<string[][]>(File.ReadAllText(effectDataPath));
         }
 
         protected override void OnLaunched(LaunchActivatedEventArgs args)
