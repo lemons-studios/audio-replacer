@@ -10,17 +10,17 @@
 
     <StackPanel Padding="5.5">
         <StackPanel Orientation="Horizontal" Margin="0 5.5 0 5" VerticalAlignment="Center">
-            <Button Click="SaveFile" Margin="15 0 0 0" ToolTipService.ToolTip="Save Changes">
+            <Button Click="SaveFile" Margin="15 0 0 0" ToolTipService.ToolTip="Save Changes" CornerRadius="4">
                 <Button.Content>
                     <FontIcon Glyph="&#xE74E;" />
                 </Button.Content>
             </Button>
-            <Button Click="DiscardChanges" Margin="15 0 0 0" ToolTipService.ToolTip="Discard Changes">
+            <Button Click="DiscardChanges" Margin="15 0 0 0" ToolTipService.ToolTip="Discard Changes" CornerRadius="4">
                 <Button.Content>
                     <FontIcon Glyph="&#xE845;" />
                 </Button.Content>
             </Button>
-            <ComboBox x:Name="SelectedFile" Margin="700 0 0 0" SelectedIndex="0" SelectionChanged="UpdateEditingFile" Width="200">
+            <ComboBox x:Name="SelectedFile" Margin="675 0 0 0" SelectedIndex="0" SelectionChanged="UpdateEditingFile" Width="200" CornerRadius="4">
                 <x:String>PitchData.json</x:String>
                 <x:String>AudioEffects.json</x:String>
             </ComboBox>

@@ -40,13 +40,24 @@ namespace AudioReplacer.Util
             // FFMpeg is used with shell commands here simply because I cannot bother trying to figure out .NET FFMpeg frameworks that are all just command wrappers anyway
             var ffmpegProcess = ShellCommandManager.CreateProcess("ffmpeg", $"-i \"{file}\" -af \"rubberband=pitch={truePitchChange}, volume=1.25\" -y \"{outFile}\"");
             ffmpegProcess.Start();
-
             await ffmpegProcess.WaitForExitAsync();
             if (ffmpegProcess.ExitCode != 0) throw new Exception();
 
             // Delete unedited file and move the processed file to the unedited location after deletion
             File.Delete(file);
             File.Move(outFile, file);
+
+            // Repeat the last few lines but for adding audio effects (changing pitch should come before extra audio effects always) IF any effects are selected
+            if (effectCommand != "")
+            {
+                var ffmpegEffectProcess = ShellCommandManager.CreateProcess("ffmpeg", $"-i \"{file}\" {effectCommand} -y \"{outFile}\"");
+                ffmpegEffectProcess.Start();
+                await ffmpegEffectProcess.WaitForExitAsync();
+                if (ffmpegProcess.ExitCode != 0) throw new Exception();
+
+                File.Delete(file);
+                File.Move(outFile, file);
+            }
         }
 
         public async Task CancelRecording(string path)
