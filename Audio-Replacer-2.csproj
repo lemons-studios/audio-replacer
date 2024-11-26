@@ -11,7 +11,7 @@
     <PublishProfile>win-$(Platform).pubxml</PublishProfile>
     <UseWinUI>true</UseWinUI>
     <EnableMsixTooling>true</EnableMsixTooling>
-    <PackageCertificateKeyFile>Audio-Replacer-2_TemporaryKey.pfx</PackageCertificateKeyFile>
+    <PackageCertificateKeyFile>C:\Users\andre\Desktop\stuff I don%27t want deleted\Audio-Replacer-2_TemporaryKey.pfx</PackageCertificateKeyFile>
     <AppxPackageSigningEnabled>True</AppxPackageSigningEnabled>
     <GenerateAppInstallerFile>False</GenerateAppInstallerFile>
     <AppxPackageSigningTimestampDigestAlgorithm>SHA256</AppxPackageSigningTimestampDigestAlgorithm>
@@ -21,7 +21,7 @@
     <AppxBundle>Always</AppxBundle>
     <HoursBetweenUpdateChecks>0</HoursBetweenUpdateChecks>
     <AppxBundlePlatforms>x64</AppxBundlePlatforms>
-    <AppxPackageDir>C:\Users\Shob3r\Desktop\</AppxPackageDir>
+    <AppxPackageDir>C:\Users\andre\Desktop\AudioReplacerBuilds\3.1.0\</AppxPackageDir>
     <SupportedOSPlatformVersion>10.0.20348.0</SupportedOSPlatformVersion>
     <Company>Lemon Studios</Company>
     <Authors>Shob3r</Authors>

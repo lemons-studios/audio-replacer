@@ -15,8 +15,8 @@ namespace AudioReplacer2.Util
         public readonly WebRequest webRequest;
 
         private readonly InfoBar[] windowInfoBars;
-        private readonly List<string> pitchMenuTitles = [];
-        private readonly List<float> pitchValues = [];
+        private List<string> pitchMenuTitles = [];
+        private List<float> pitchValues = [];
         private readonly string webVersion;
 
         public RecordPageFunctionality(InfoBar[] windowInfoBars)
@@ -80,18 +80,13 @@ namespace AudioReplacer2.Util
 
         private void UpdatePitchData()
         {
+            pitchMenuTitles = [];
+            pitchValues = [];
+
             foreach (string[] data in GlobalData.DeserializedPitchData)
             {
                 pitchValues.Add(ParseFloat(data[0])); // Position 0 of each array in the 2d array should have the pitch data, as mentioned in GlobalData.cs
                 pitchMenuTitles.Add(data[1]); // Position 1 of each array in the 2d array should have the name of the character, as mentioned in GlobalData.cs
-            }
-        }
-
-        private void DisableActiveInfoBars()
-        {
-            foreach (var infoBar in windowInfoBars)
-            {
-                if (infoBar.IsOpen) infoBar.IsOpen = false;
             }
         }
 
@@ -107,51 +102,22 @@ namespace AudioReplacer2.Util
             return pitchMenuTitles;
         }
 
-        public string GetWebVersion()
-        {
-            return webVersion != string.Empty ? webVersion : GlobalData.GetAppVersion(); // App version used as fallback when no internet is available
-        }
-
-        public string GetFormattedCurrentFile(string input)
-        {
-            return input.Replace(@"\", "/");
-        }
-
-        public bool IsUpdateAvailable()
-        {
-            try { return webVersion != GlobalData.GetAppVersion(true); } catch { return false; }
-        }
-
-        private float ParseFloat(string value)
-        {
-            try { return float.Parse(value); } catch { return 1; }
-        }
-
-        public bool ToBool(int value)
-        {
-            return value != 0;
-        }
-
-        public string BoolToYesNo(bool value)
-        {
-            return value ? "Yes" : "No";
-        }
-
-        private Visibility ToVisibility(bool x)
-        {
-            return x ? Visibility.Visible : Visibility.Collapsed;
-        }
-
-        public MediaSource MediaSourceFromUri(string path)
-        {
-            return MediaSource.CreateFromUri(new Uri(path));
-        }
-
         private async Task WaitHideInfoBar(InfoBar infoBar)
         {
             await Task.Delay(GlobalData.NotificationTimeout);
             // This try-catch is needed in the case that the TryEnqueue is running while the window is closing
             try { infoBar.DispatcherQueue.TryEnqueue(() => { infoBar.IsOpen = false; }); }catch { /* ignored */ }
         }
+
+        /// Yummy code minification..... I love making my code harder to read..... (on the other hand this reduced my line count by about 20-30 lines)
+        private Visibility ToVisibility(bool x) { return x ? Visibility.Visible : Visibility.Collapsed; }
+        public MediaSource MediaSourceFromUri(string path) { return MediaSource.CreateFromUri(new Uri(path)); }
+        private void DisableActiveInfoBars() { foreach (var infoBar in windowInfoBars) { if (infoBar.IsOpen) infoBar.IsOpen = false; } }
+        public string GetWebVersion() { return webVersion != string.Empty ? webVersion : GlobalData.GetAppVersion(); /* App version used as fallback when no internet is available*/ }
+        public string GetFormattedCurrentFile(string input) { return input.Replace(@"\", "/"); }
+        public bool IsUpdateAvailable() { try { return webVersion != GlobalData.GetAppVersion(true); } catch { return false; } }
+        private float ParseFloat(string value) { try { return float.Parse(value); } catch { return 1; } }
+        public bool ToBool(int value) { return value != 0; }
+        public string BoolToYesNo(bool value) { return value ? "Yes" : "No"; }
     }
 }

@@ -39,14 +39,10 @@ namespace AudioReplacer2.Pages
         private void ToggleTransparencyMode(object sender, SelectionChangedEventArgs e)
         {
             if (firstOpening) return;
-
             switch (TransparencyDropdown.SelectedIndex)
             {
                 case 0: // Mica Backdrop
-                    if (MicaController.IsSupported())
-                    {
-                        App.MainWindow.SystemBackdrop = new MicaBackdrop();
-                    }
+                    if (MicaController.IsSupported()) App.MainWindow.SystemBackdrop = new MicaBackdrop();
                     else
                     {
                         App.MainWindow.SystemBackdrop = new DesktopAcrylicBackdrop();
@@ -58,7 +54,6 @@ namespace AudioReplacer2.Pages
                     break;
                 case 2: // No Transparency
                     App.MainWindow.SystemBackdrop = null;
-
                     App.MainWindow.SetTitleBarBackgroundColors(Application.Current.RequestedTheme == ApplicationTheme.Light ? Colors.White : Colors.Black);
                     break;
             }
@@ -103,16 +98,6 @@ namespace AudioReplacer2.Pages
             if (confirmResult == ContentDialogResult.Primary) Microsoft.Windows.AppLifecycle.AppInstance.Restart("");
         }
 
-        private void OpenPitchValuesFile(object sender, RoutedEventArgs e)
-        {
-            try { Process.Start(new ProcessStartInfo($"{Environment.GetFolderPath(Environment.SpecialFolder.UserProfile)}\\AudioReplacer2-Config\\defaultPitchData.json") { UseShellExecute = true }); } catch { return; }
-        }
-
-        private int BoolToInt(bool value)
-        {
-            return value == false ? 0 : 1;
-        }
-
         private void OpenOutputFolder(object sender, RoutedEventArgs e)
         {
             string outFolder = $"{Environment.GetFolderPath(Environment.SpecialFolder.UserProfile)}\\AudioReplacer2-Out";
@@ -152,5 +137,8 @@ namespace AudioReplacer2.Pages
             File.Delete($"{configFolder}\\AudioReplacer2-Config.json");
             Microsoft.Windows.AppLifecycle.AppInstance.Restart("");
         }
+
+        private void OpenPitchValuesFile(object sender, RoutedEventArgs e) { try { Process.Start(new ProcessStartInfo($"{Environment.GetFolderPath(Environment.SpecialFolder.UserProfile)}\\AudioReplacer2-Config\\PitchData.json") { UseShellExecute = true }); } catch { return; } }
+        private int BoolToInt(bool value) { return value == false ? 0 : 1; }
     }
 }

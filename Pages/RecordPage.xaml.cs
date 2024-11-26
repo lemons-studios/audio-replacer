@@ -24,6 +24,7 @@ namespace AudioReplacer2.Pages
             InitializeComponent();
             windowBackend = new RecordPageFunctionality([ToastNotification, ProgressToast, UpdateToast]);
             VoiceTuneMenu.ItemsSource = windowBackend.GetPitchTitles();
+
             RequiresEffectsPrompt.ItemsSource = new List<string> { "Yes", "No" }; // Prevents clutter on the .xaml file (1 line added here is 3 lines removed from the xaml file)
 
             // Looping needs to be on to work around a bug in which the audio gets cut off for a split second after the first play.
