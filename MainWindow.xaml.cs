@@ -35,7 +35,6 @@ namespace AudioReplacer2
 
             // Set everything that can be set by the settings.
             if (Content is FrameworkElement rootElement) rootElement.RequestedTheme = (ElementTheme) App.AppSettings.AppThemeSetting;
-            
             switch (App.AppSettings.AppTransparencySetting)
             {
                 case 0:
@@ -62,8 +61,9 @@ namespace AudioReplacer2
                     break;
             }
 
-            // Finally, open the recording page
-            ContentFrame.Navigate(typeof(RecordPage));
+            // Finally, open the recording page (Stole this from the method below)
+            if (!pageCache.TryGetValue(typeof(RecordPage), out var page)) { page = (Page) Activator.CreateInstance(typeof(RecordPage)); pageCache[typeof(RecordPage)] = page; }
+            ContentFrame.Content = page;
         }
 
         private AppWindow GetAppWindowForCurrentWindow(object window) // Thanks StackOverflow man!

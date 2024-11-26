@@ -8,7 +8,6 @@ namespace AudioReplacer2.Pages
     public sealed partial class PitchDataEditor
     {
         private readonly string pitchDataFile = $@"{Environment.GetFolderPath(Environment.SpecialFolder.UserProfile)}\AudioReplacer2-Config\PitchData.json";
-        
         public PitchDataEditor()
         {
             InitializeComponent();
@@ -20,7 +19,7 @@ namespace AudioReplacer2.Pages
             var confirmSave = new ContentDialog { Title = "Save Pitch Data?", Content = "App will restart", PrimaryButtonText = "Save", CloseButtonText = "Cancel", XamlRoot = Content.XamlRoot };
             var result = await confirmSave.ShowAsync();
             if (result != ContentDialogResult.Primary) return;
-            
+
             long textLength = PitchEditor.Editor.TextLength;
             await File.WriteAllTextAsync(pitchDataFile, PitchEditor.Editor.GetText(textLength));
             Microsoft.Windows.AppLifecycle.AppInstance.Restart("");

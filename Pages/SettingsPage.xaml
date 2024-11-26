@@ -2,7 +2,7 @@
     x:Class="AudioReplacer2.Pages.SettingsPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:controls="using:CommunityToolkit.WinUI.Controls"
+    xmlns:WinCommunityTk="using:CommunityToolkit.WinUI.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
@@ -14,113 +14,113 @@
                   VerticalScrollMode="Enabled" VerticalScrollBarVisibility="Auto" Padding="15">
         <ScrollViewer.Content>
             <StackPanel>
-                <controls:SettingsCard Header="App Theme" Margin="0 0 0 7.5">
-                    <controls:SettingsCard.HeaderIcon>
+                <WinCommunityTk:SettingsCard Header="App Theme" Margin="0 0 0 7.5">
+                    <WinCommunityTk:SettingsCard.HeaderIcon>
                         <FontIcon Glyph="&#xE790;" />
-                    </controls:SettingsCard.HeaderIcon>
+                    </WinCommunityTk:SettingsCard.HeaderIcon>
                     <ComboBox x:Name="ThemeDropdown" SelectedIndex="0" SelectionChanged="UpdateAppTheme">
                         <ComboBoxItem>System Theme</ComboBoxItem>
                         <ComboBoxItem>Light</ComboBoxItem>
                         <ComboBoxItem>Dark</ComboBoxItem>
                     </ComboBox>
-                </controls:SettingsCard>
+                </WinCommunityTk:SettingsCard>
 
-                <controls:SettingsCard Header="Transparency Effects" Description="These changes will only take effect if you have enabled transparency effects in the system settings" Margin="0 0 0 7.5">
-                    <controls:SettingsCard.HeaderIcon>
+                <WinCommunityTk:SettingsCard Header="Transparency Effects" Description="These changes will only take effect if you have enabled transparency effects in the system settings" Margin="0 0 0 7.5">
+                    <WinCommunityTk:SettingsCard.HeaderIcon>
                         <FontIcon Glyph="&#xF4A5;" />
-                    </controls:SettingsCard.HeaderIcon>
+                    </WinCommunityTk:SettingsCard.HeaderIcon>
                     <ComboBox x:Name="TransparencyDropdown" SelectedIndex="0" SelectionChanged="ToggleTransparencyMode">
                         <ComboBoxItem>Mica (Windows 11 Only)</ComboBoxItem>
                         <ComboBoxItem>Acrylic</ComboBoxItem>
                     </ComboBox>
-                </controls:SettingsCard>
+                </WinCommunityTk:SettingsCard>
 
-                <controls:SettingsCard Header="Enable Update Checks" Description="Check is performed each launch by checking GitHub for new releases" Margin="0 0 0 7.5">
-                    <controls:SettingsCard.HeaderIcon>
+                <WinCommunityTk:SettingsCard Header="Enable Update Checks" Description="Check is performed each launch by checking GitHub for new releases" Margin="0 0 0 7.5">
+                    <WinCommunityTk:SettingsCard.HeaderIcon>
                         <FontIcon Glyph="&#xECC5;" />
-                    </controls:SettingsCard.HeaderIcon>
+                    </WinCommunityTk:SettingsCard.HeaderIcon>
                     <ToggleSwitch x:Name="UpdateCheckSwitch" IsOn="True" Toggled="ToggleUpdateChecks"/>
-                </controls:SettingsCard>
+                </WinCommunityTk:SettingsCard>
 
-                <controls:SettingsCard Header="Notification Stay Time" Description="Measured in milliseconds" Margin="0 0 0 7.5">
-                    <controls:SettingsCard.HeaderIcon>
+                <WinCommunityTk:SettingsCard Header="Notification Stay Time" Description="Measured in milliseconds" Margin="0 0 0 7.5">
+                    <WinCommunityTk:SettingsCard.HeaderIcon>
                         <FontIcon Glyph="&#xE8BD;" />
-                    </controls:SettingsCard.HeaderIcon>
+                    </WinCommunityTk:SettingsCard.HeaderIcon>
                     <NumberBox x:Name="ToastDelayBox" SpinButtonPlacementMode="Inline" SmallChange="10" LargeChange="50" Value="1500" Minimum="500" Maximum="5500" ValueChanged="UpdateToastStayTime"/>
-                </controls:SettingsCard>
+                </WinCommunityTk:SettingsCard>
 
-                <controls:SettingsCard Header="Record Stop Delay" Description="Changes the amount of time it takes for recording to stop after clicking the stop recording button. Measured in milliseconds" Margin="0 0 0 7.5">
-                    <controls:SettingsCard.HeaderIcon>
+                <WinCommunityTk:SettingsCard Header="Record Stop Delay" Description="Changes the amount of time it takes for recording to stop after clicking the stop recording button. Measured in milliseconds" Margin="0 0 0 7.5">
+                    <WinCommunityTk:SettingsCard.HeaderIcon>
                         <FontIcon Glyph="&#xF781;" />
-                    </controls:SettingsCard.HeaderIcon>
+                    </WinCommunityTk:SettingsCard.HeaderIcon>
                     <NumberBox x:Name="RecordDelayBox" Minimum="25" SpinButtonPlacementMode="Inline" SmallChange="10" LargeChange="50" Value="75" Maximum="5000" ValueChanged="UpdateRecordDelay"/>
-                </controls:SettingsCard>
+                </WinCommunityTk:SettingsCard>
 
-                <controls:SettingsCard Header="Open Output Directory" Description="Opens an explorer window into the output directory of the app" IsClickEnabled="True" Margin="0 0 0 7.5" Click="OpenOutputFolder">
-                    <controls:SettingsCard.ActionIcon>
+                <WinCommunityTk:SettingsCard Header="Open Output Directory" Description="Opens an explorer window into the output directory of the app" IsClickEnabled="True" Margin="0 0 0 7.5" Click="OpenOutputFolder">
+                    <WinCommunityTk:SettingsCard.ActionIcon>
                         <FontIcon Glyph="&#xE8A7;" />
-                    </controls:SettingsCard.ActionIcon>
-                    <controls:SettingsCard.HeaderIcon>
+                    </WinCommunityTk:SettingsCard.ActionIcon>
+                    <WinCommunityTk:SettingsCard.HeaderIcon>
                         <FontIcon Glyph="&#xE8DA;" />
-                    </controls:SettingsCard.HeaderIcon>
-                </controls:SettingsCard>
+                    </WinCommunityTk:SettingsCard.HeaderIcon>
+                </WinCommunityTk:SettingsCard>
 
-                <controls:SettingsCard Header="Edit Pitch Values" Description="Opens your preferred text editor to edit the pitch data, if you do not want to use the built-in text editor" IsClickEnabled="True" Margin="0 0 0 7.5" Click="OpenPitchValuesFile">
-                    <controls:SettingsCard.ActionIcon>
+                <WinCommunityTk:SettingsCard Header="Edit Pitch Values" Description="Opens your preferred text editor to edit the pitch data, if you do not want to use the built-in text editor" IsClickEnabled="True" Margin="0 0 0 7.5" Click="OpenPitchValuesFile">
+                    <WinCommunityTk:SettingsCard.ActionIcon>
                         <FontIcon Glyph="&#xE8A7;" />
-                    </controls:SettingsCard.ActionIcon>
-                    <controls:SettingsCard.HeaderIcon>
+                    </WinCommunityTk:SettingsCard.ActionIcon>
+                    <WinCommunityTk:SettingsCard.HeaderIcon>
                         <FontIcon Glyph="&#xE792;" />
-                    </controls:SettingsCard.HeaderIcon>
-                </controls:SettingsCard>
+                    </WinCommunityTk:SettingsCard.HeaderIcon>
+                </WinCommunityTk:SettingsCard>
 
-                <controls:SettingsCard Header="Refresh Pitch Values" Description="Did you finish changing pitch values? Click here for them to update!" IsClickEnabled="True" Margin="0 0 0 7.5" Click="RefreshPitchData">
-                    <controls:SettingsCard.ActionIcon>
+                <WinCommunityTk:SettingsCard Header="Refresh Pitch Values" Description="Did you finish changing pitch values? Click here for them to update!" IsClickEnabled="True" Margin="0 0 0 7.5" Click="RefreshPitchData">
+                    <WinCommunityTk:SettingsCard.ActionIcon>
                         <FontIcon Glyph="&#xE76C;" />
-                    </controls:SettingsCard.ActionIcon>
-                    <controls:SettingsCard.HeaderIcon>
+                    </WinCommunityTk:SettingsCard.ActionIcon>
+                    <WinCommunityTk:SettingsCard.HeaderIcon>
                         <FontIcon Glyph="&#xE72C;" />
-                    </controls:SettingsCard.HeaderIcon>
-                </controls:SettingsCard>
+                    </WinCommunityTk:SettingsCard.HeaderIcon>
+                </WinCommunityTk:SettingsCard>
 
-                <controls:SettingsExpander Header="Reset Data" Description="App will restart if anything is reset" Margin="0 0 0 7.5">
-                    <controls:SettingsExpander.HeaderIcon>
+                <WinCommunityTk:SettingsExpander Header="Reset Data" Description="App will restart if anything is reset" Margin="0 0 0 7.5">
+                    <WinCommunityTk:SettingsExpander.HeaderIcon>
                         <FontIcon Glyph="&#xE74D;" />
-                    </controls:SettingsExpander.HeaderIcon>
-                    <controls:SettingsExpander.Items>
-                        <controls:SettingsCard Header="Reset Settings" Margin="0 0 0 2.5" IsClickEnabled="True" Click="ResetSettings">
-                            <controls:SettingsCard.ActionIcon>
+                    </WinCommunityTk:SettingsExpander.HeaderIcon>
+                    <WinCommunityTk:SettingsExpander.Items>
+                        <WinCommunityTk:SettingsCard Header="Reset Settings" Margin="0 0 0 2.5" IsClickEnabled="True" Click="ResetSettings">
+                            <WinCommunityTk:SettingsCard.ActionIcon>
                                 <FontIcon Glyph="&#xE76C;" />
-                            </controls:SettingsCard.ActionIcon>
-                            <controls:SettingsCard.HeaderIcon>
+                            </WinCommunityTk:SettingsCard.ActionIcon>
+                            <WinCommunityTk:SettingsCard.HeaderIcon>
                                 <FontIcon Glyph="&#xE713;" />
-                            </controls:SettingsCard.HeaderIcon>
-                        </controls:SettingsCard>
-                        <controls:SettingsCard Header="Reset Pitch Data" Margin="0 0 0 2.5" IsClickEnabled="True" Click="ResetPitchData">
-                            <controls:SettingsCard.ActionIcon>
+                            </WinCommunityTk:SettingsCard.HeaderIcon>
+                        </WinCommunityTk:SettingsCard>
+                        <WinCommunityTk:SettingsCard Header="Reset Pitch Data" Margin="0 0 0 2.5" IsClickEnabled="True" Click="ResetPitchData">
+                            <WinCommunityTk:SettingsCard.ActionIcon>
                                 <FontIcon Glyph="&#xE76C;" />
-                            </controls:SettingsCard.ActionIcon>
-                            <controls:SettingsCard.HeaderIcon>
+                            </WinCommunityTk:SettingsCard.ActionIcon>
+                            <WinCommunityTk:SettingsCard.HeaderIcon>
                                 <FontIcon Glyph="&#xEC56;" />
-                            </controls:SettingsCard.HeaderIcon>
-                        </controls:SettingsCard>
-                        <controls:SettingsCard Header="Reset All" Margin="0 0 0 2.5" IsClickEnabled="True" Click="ResetAll">
-                            <controls:SettingsCard.ActionIcon>
+                            </WinCommunityTk:SettingsCard.HeaderIcon>
+                        </WinCommunityTk:SettingsCard>
+                        <WinCommunityTk:SettingsCard Header="Reset All" Margin="0 0 0 2.5" IsClickEnabled="True" Click="ResetAll">
+                            <WinCommunityTk:SettingsCard.ActionIcon>
                                 <FontIcon Glyph="&#xE76C;" />
-                            </controls:SettingsCard.ActionIcon>
-                            <controls:SettingsCard.HeaderIcon>
+                            </WinCommunityTk:SettingsCard.ActionIcon>
+                            <WinCommunityTk:SettingsCard.HeaderIcon>
                                 <FontIcon Glyph="&#xE7BA;" />
-                            </controls:SettingsCard.HeaderIcon>
-                        </controls:SettingsCard>
-                    </controls:SettingsExpander.Items>
-                </controls:SettingsExpander>
+                            </WinCommunityTk:SettingsCard.HeaderIcon>
+                        </WinCommunityTk:SettingsCard>
+                    </WinCommunityTk:SettingsExpander.Items>
+                </WinCommunityTk:SettingsExpander>
 
-                <controls:SettingsExpander Description="© 2024 Shob3r/Lemon Studios" Header="About Audio Replacer 2">
-                    <controls:SettingsExpander.HeaderIcon>
+                <WinCommunityTk:SettingsExpander Description="© 2024 Shob3r/Lemon Studios" Header="About Audio Replacer 2">
+                    <WinCommunityTk:SettingsExpander.HeaderIcon>
                         <FontIcon Glyph="&#xEC71;" />
-                    </controls:SettingsExpander.HeaderIcon>
-                    <controls:SettingsExpander.Items>
-                        <controls:SettingsCard HorizontalContentAlignment="Left" ContentAlignment="Vertical">
+                    </WinCommunityTk:SettingsExpander.HeaderIcon>
+                    <WinCommunityTk:SettingsExpander.Items>
+                        <WinCommunityTk:SettingsCard HorizontalContentAlignment="Left" ContentAlignment="Vertical">
                             <StackPanel>
                                 <TextBlock Text="App Dependencies:" FontWeight="SemiBold" Margin="0,0,0,5" TextAlignment="Left" HorizontalAlignment="Left" Padding="0 0 0 0"/>
                                 <HyperlinkButton Content="Windows App SDK" NavigateUri="https://github.com/microsoft/WindowsAppSDK"/>
@@ -134,9 +134,9 @@
                                 <HyperlinkButton Content="Creator (Shob3r)" NavigateUri="https://github.com/Shob3r"/>
                                 <HyperlinkButton Content="Project License" NavigateUri="https://github.com/lemons-studios/audio-replacer-2/blob/main/LICENSE"/>
                             </StackPanel>
-                        </controls:SettingsCard>
-                    </controls:SettingsExpander.Items>
-                </controls:SettingsExpander>
+                        </WinCommunityTk:SettingsCard>
+                    </WinCommunityTk:SettingsExpander.Items>
+                </WinCommunityTk:SettingsExpander>
             </StackPanel>
         </ScrollViewer.Content>
     </ScrollViewer>
