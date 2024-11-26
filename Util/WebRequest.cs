@@ -9,10 +9,7 @@ namespace AudioReplacer2.Util
 {
     public class WebRequest
     {
-        private readonly HttpClient client = new()
-        {
-            DefaultRequestHeaders = { { "User-Agent", "Audio Replacer 2" } }
-        };
+        private readonly HttpClient client = new() { DefaultRequestHeaders = { { "User-Agent", "Audio Replacer 2" } } };
 
         public async Task<string> GetWebVersion(string url)
         {
@@ -29,14 +26,8 @@ namespace AudioReplacer2.Util
                 if (string.IsNullOrEmpty(name)) throw new Exception("The 'name' property is missing or empty in the first tag.");
                 return name;
             }
-            catch (JsonException ex)
-            {
-                throw new Exception($"Failed to parse JSON: {ex}");
-            }
-            catch (Exception ex)
-            {
-                throw new Exception($"An error occurred during the web request: {ex.Message}");
-            }
+            catch (JsonException ex) { throw new Exception($"Failed to parse JSON: {ex}"); }
+            catch (Exception ex) { throw new Exception($"An error occurred during the web request: {ex.Message}"); }
         }
 
         public async Task<string> GetWebData(string url) // I sure do love stealing my own code!!
@@ -48,11 +39,7 @@ namespace AudioReplacer2.Util
                 response.EnsureSuccessStatusCode();
                 return await response.Content.ReadAsStringAsync();
             }
-            catch (HttpRequestException e)
-            {
-                Console.WriteLine(e);
-                return string.Empty;
-            }
+            catch (HttpRequestException) { return string.Empty; }
         }
 
         public void DownloadFile(string url, string outPath, string outName)

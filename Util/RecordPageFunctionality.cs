@@ -137,7 +137,7 @@ namespace AudioReplacer2.Util
             return value ? "Yes" : "No";
         }
 
-        public Visibility ToVisibility(bool x)
+        private Visibility ToVisibility(bool x)
         {
             return x ? Visibility.Visible : Visibility.Collapsed;
         }
@@ -150,19 +150,8 @@ namespace AudioReplacer2.Util
         private async Task WaitHideInfoBar(InfoBar infoBar)
         {
             await Task.Delay(GlobalData.NotificationTimeout);
-
             // This try-catch is needed in the case that the TryEnqueue is running while the window is closing
-            try
-            {
-                infoBar.DispatcherQueue.TryEnqueue(() =>
-                {
-                    infoBar.IsOpen = false;
-                });
-            }
-            catch
-            {
-                // ignored
-            }
+            try { infoBar.DispatcherQueue.TryEnqueue(() => { infoBar.IsOpen = false; }); }catch { /* ignored */ }
         }
     }
 }

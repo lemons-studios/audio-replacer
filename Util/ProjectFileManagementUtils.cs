@@ -36,7 +36,7 @@ namespace AudioReplacer2.Util
         private void CreateInitialData()
         {
             string[] inFolderStructure = GetPathSubdirectories(projectPath);
-            if (!DoesDirectoryExist(outputFolderPath)) GetFilesInFolder(outputFolderPath);
+            if (!DoesDirectoryExist(outputFolderPath)) CreateDirectory(outputFolderPath);
             if (inFolderStructure == GetPathSubdirectories(outputFolderPath) || File.Exists(setupIgnore)) return;
             
             string[] subdirectoryNames = TruncateSubdirectories(inFolderStructure);
@@ -77,7 +77,6 @@ namespace AudioReplacer2.Util
         {
             string[] pathSubfiles = Directory.GetFiles(path, "*.*", SearchOption.AllDirectories);
             foreach (string projectFile in pathSubfiles) { if (IsAudioFile(projectFile)) return projectFile; }
-            
             return ""; // If no audio files are found, then return a blank path
         }
 
@@ -85,7 +84,7 @@ namespace AudioReplacer2.Util
         {
             float inputFolderCount = GetFileCount(projectPath);
             float outputFolderCount = GetFileCount(outputFolderPath);
-            return float.Round((outputFolderCount / (outputFolderCount + inputFolderCount)) * 100, 2);
+            return float.Round(outputFolderCount / (outputFolderCount + inputFolderCount) * 100, 2);
         }
 
         public void SkipAudioTrack()
@@ -125,12 +124,12 @@ namespace AudioReplacer2.Util
             return currentFileName;
         }
 
-        public void CreateDirectory(string dir)
+        private void CreateDirectory(string dir)
         {
             Directory.CreateDirectory(dir);
         }
 
-        public string[] GetFilesInFolder(string dir)
+        private string[] GetFilesInFolder(string dir)
         {
             return Directory.GetFiles(dir);
         }

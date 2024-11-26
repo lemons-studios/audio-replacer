@@ -31,31 +31,36 @@ namespace AudioReplacer2
 
             ExtendsContentIntoTitleBar = true;
             SetTitleBar(AppTitleBar);
-            AppVersion.Text = GlobalData.GetAppVersion();
+            AppTitleText.Text = $"Audio Replacer {GlobalData.GetAppVersion()}";
 
             // Set everything that can be set by the settings.
             if (Content is FrameworkElement rootElement) rootElement.RequestedTheme = (ElementTheme) App.AppSettings.AppThemeSetting;
             
-            if (App.AppSettings.AppTransparencySetting == 0)
+            switch (App.AppSettings.AppTransparencySetting)
             {
-                switch (MicaController.IsSupported())
+                case 0:
+                    switch (MicaController.IsSupported())
+                    {
+                        case true:
+                            var micaBackdrop = new MicaBackdrop();
+                            SystemBackdrop = micaBackdrop;
+                            break;
+                        case false:
+                            var acrylicBackdrop = new DesktopAcrylicBackdrop();
+                            SystemBackdrop = acrylicBackdrop;
+                            break;
+                    }
+                    break;
+                case 1:
                 {
-                    case true:
-                        var micaBackdrop = new MicaBackdrop();
-                        SystemBackdrop = micaBackdrop;
-                        break;
-                    case false:
-                        var acrylicBackdrop = new DesktopAcrylicBackdrop();
-                        SystemBackdrop = acrylicBackdrop;
-                        break;
+                    var acrylicBackdrop = new DesktopAcrylicBackdrop();
+                    SystemBackdrop = acrylicBackdrop;
+                    break;
                 }
+                default:
+                    SystemBackdrop = null;
+                    break;
             }
-            else if (App.AppSettings.AppTransparencySetting == 1)
-            {
-                var acrylicBackdrop = new DesktopAcrylicBackdrop();
-                SystemBackdrop = acrylicBackdrop;
-            }
-            else SystemBackdrop = null;
 
             // Finally, open the recording page
             ContentFrame.Navigate(typeof(RecordPage));
@@ -63,7 +68,7 @@ namespace AudioReplacer2
 
         private AppWindow GetAppWindowForCurrentWindow(object window) // Thanks StackOverflow man!
         {
-            var hWnd = WindowNative.GetWindowHandle(window);
+            IntPtr hWnd = WindowNative.GetWindowHandle(window);
             var currentWndId = Win32Interop.GetWindowIdFromWindow(hWnd);
             return AppWindow.GetFromWindowId(currentWndId);
         }

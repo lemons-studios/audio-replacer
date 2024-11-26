@@ -10,7 +10,7 @@ namespace AudioReplacer2.Util
         public static int NotificationTimeout, RecordStopDelay;
 
         public static string[][] DeserializedPitchData;
-        // Values here are the starting values and can be edited through the app's pich config json file
+        // Values here are the starting values and can be edited through the app's pitch config json file
         public static readonly string[][] pitchData =
         [
             ["1.0075", "Ai Ebihara"], ["1.025", "Ayane Matsunaga"], ["0.555", "Ameno-Sagiri"], ["1.015", "Chie Satonaka"],
