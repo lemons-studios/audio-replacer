@@ -33,7 +33,7 @@
                         <TextBlock Text="Pitch Editor" FontWeight="Light"/>
                     </NavigationViewItem.Content>
                     <NavigationViewItem.Icon>
-                        <FontIcon Glyph="&#xE7C3;" />
+                        <FontIcon Glyph="&#xE70F;" />
                     </NavigationViewItem.Icon>
                 </NavigationViewItem>
                 <NavigationViewItem x:Name="SettingsItem" Tag="Settings">

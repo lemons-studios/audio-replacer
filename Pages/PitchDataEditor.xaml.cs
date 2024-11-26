@@ -1,24 +1,39 @@
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Windows.Foundation;
-using AudioReplacer2.Util;
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Navigation;
-using WinUIEditor;
 
-
-namespace AudioReplacer2.Resources
+namespace AudioReplacer2.Pages
 {
     public sealed partial class PitchDataEditor : Page
     {
+        private readonly string pitchDataFile = $"{Environment.GetFolderPath(Environment.SpecialFolder.UserProfile)}\\AudioReplacer2-Config\\PitchData.json";
+        
         public PitchDataEditor()
         {
-            this.InitializeComponent();
-            PitchEditor.HighlightingLanguage = "json";
-            PitchEditor.Editor.SetText(File.ReadAllText($"{Environment.GetFolderPath(Environment.SpecialFolder.UserProfile)}\\AudioReplacer2-Config\\PitchData.json"));
+            InitializeComponent();
+            PitchEditor.Editor.SetText(File.ReadAllText(pitchDataFile));
+        }
+
+        private async void SaveFile(object sender, RoutedEventArgs e)
+        {
+            var confirmSave = new ContentDialog { Title = "Save Pitch Data?", Content = "App will restart", PrimaryButtonText = "Save", CloseButtonText = "Cancel", XamlRoot = Content.XamlRoot };
+            var result = await confirmSave.ShowAsync();
+
+            if (result == ContentDialogResult.Primary)
+            {
+                var textLength = PitchEditor.Editor.TextLength;
+                await File.WriteAllTextAsync(pitchDataFile, PitchEditor.Editor.GetText(textLength));
+                Microsoft.Windows.AppLifecycle.AppInstance.Restart("");
+            }
+        }
+
+        private async void DiscardChanges(object sender, RoutedEventArgs e)
+        {
+            var confirmDiscard = new ContentDialog { Title = "Discard Changes?", Content = "File will reset to last save", PrimaryButtonText = "Discard", CloseButtonText = "Cancel", XamlRoot = Content.XamlRoot };
+            var result = await confirmDiscard.ShowAsync();
+
+            if(result == ContentDialogResult.Primary) PitchEditor.Editor.SetText(await File.ReadAllTextAsync(pitchDataFile));
         }
     }
 }

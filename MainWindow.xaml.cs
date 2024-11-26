@@ -11,8 +11,6 @@ using Microsoft.UI;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
 using System.Collections.Generic;
-using Windows.UI;
-using AudioReplacer2.Resources;
 using Microsoft.UI.Xaml;
 
 namespace AudioReplacer2

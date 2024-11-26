@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Page
-    x:Class="AudioReplacer2.Resources.PitchDataEditor"
+    x:Class="AudioReplacer2.Pages.PitchDataEditor"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:AudioReplacer2.Resources"
+    xmlns:local="using:AudioReplacer2.Pages"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
@@ -11,6 +11,18 @@
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     <StackPanel>
-        <editor:CodeEditorControl x:Name="PitchEditor" HighlightingLanguage="Json" MinHeight="400"/>
+        <StackPanel Orientation="Horizontal">
+            <Button Click="SaveFile" Margin="15 0 0 0">
+                <Button.Content>
+                    <FontIcon Glyph="&#xE74E;" />
+                </Button.Content>
+            </Button>
+            <Button Click="DiscardChanges" Margin="15 0 0 0">
+                <Button.Content>
+                    <FontIcon Glyph="&#xED61;" />
+                </Button.Content>
+            </Button>
+        </StackPanel>
+        <editor:CodeEditorControl x:Name="PitchEditor" HighlightingLanguage="json" MinHeight="400"  ManipulationCompleted="SaveFile"/>
     </StackPanel>
 </Page>
