@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics;
 
-namespace AudioReplacer2.Util
+namespace AudioReplacer.Util
 {
     public static class ShellCommandManager
     {

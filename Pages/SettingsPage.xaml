@@ -1,5 +1,5 @@
 ﻿<Page
-    x:Class="AudioReplacer2.Pages.SettingsPage"
+    x:Class="AudioReplacer.Pages.SettingsPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:WinCommunityTk="using:CommunityToolkit.WinUI.Controls"

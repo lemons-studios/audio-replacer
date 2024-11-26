@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
-using AudioReplacer2.Util;
+using AudioReplacer.Util;
 using Microsoft.UI;
 using Microsoft.UI.Composition.SystemBackdrops;
 using Microsoft.UI.Xaml;
@@ -9,7 +9,7 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
 using WinUIEx;
 
-namespace AudioReplacer2.Pages
+namespace AudioReplacer.Pages
 {
     public sealed partial class SettingsPage
     {
@@ -72,9 +72,7 @@ namespace AudioReplacer2.Pages
         private void UpdateRecordDelay(NumberBox sender, NumberBoxValueChangedEventArgs args)
         {
             if (firstOpening) return;
-            int newDelayTime = (int) RecordDelayBox.Value;
-            if (newDelayTime <= 0) newDelayTime = 75;
-
+            int newDelayTime = (int) MathF.Max((float) RecordDelayBox.Value, 1);
             GlobalData.RecordStopDelay = newDelayTime;
             App.AppSettings.RecordEndWaitTime = newDelayTime;
         }
@@ -82,8 +80,7 @@ namespace AudioReplacer2.Pages
         private void UpdateToastStayTime(NumberBox sender, NumberBoxValueChangedEventArgs args)
         {
             if (firstOpening) return;
-            int newStayTime = (int) ToastDelayBox.Value;
-            if (newStayTime <= 0) newStayTime = 1750;
+            int newStayTime = (int) MathF.Max((float) ToastDelayBox.Value, 500);
 
             GlobalData.NotificationTimeout = newStayTime;
             App.AppSettings.NotificationTimeout = newStayTime;
@@ -94,7 +91,6 @@ namespace AudioReplacer2.Pages
             // Actually, it just restarts the application.
             var confirmRefresh = new ContentDialog { Title = "Refresh Pitch Values?", Content = "Please save any unsaved work before refreshing", PrimaryButtonText = "Refresh", CloseButtonText = "Cancel", XamlRoot = base.Content.XamlRoot };
             var confirmResult = await confirmRefresh.ShowAsync();
-
             if (confirmResult == ContentDialogResult.Primary) Microsoft.Windows.AppLifecycle.AppInstance.Restart("");
         }
 
@@ -112,7 +108,6 @@ namespace AudioReplacer2.Pages
             var confirmRefresh = new ContentDialog { Title = "Reset Settings?", Content = "Only your settings will be reverted to default values. App will restart", PrimaryButtonText = "Reset", CloseButtonText = "Cancel", XamlRoot = base.Content.XamlRoot };
             var result = await confirmRefresh.ShowAsync();
             if (result != ContentDialogResult.Primary) return;
-            
             File.Delete($"{configFolder}\\AudioReplacer2-Config.json");
             Microsoft.Windows.AppLifecycle.AppInstance.Restart("");
         }
@@ -137,7 +132,6 @@ namespace AudioReplacer2.Pages
             File.Delete($"{configFolder}\\AudioReplacer2-Config.json");
             Microsoft.Windows.AppLifecycle.AppInstance.Restart("");
         }
-
         private void OpenPitchValuesFile(object sender, RoutedEventArgs e) { try { Process.Start(new ProcessStartInfo($"{Environment.GetFolderPath(Environment.SpecialFolder.UserProfile)}\\AudioReplacer2-Config\\PitchData.json") { UseShellExecute = true }); } catch { return; } }
         private int BoolToInt(bool value) { return value == false ? 0 : 1; }
     }

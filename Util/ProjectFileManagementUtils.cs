@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Windows.Storage;
 
-namespace AudioReplacer2.Util
+namespace AudioReplacer.Util
 {
     public class ProjectFileManagementUtils
     {

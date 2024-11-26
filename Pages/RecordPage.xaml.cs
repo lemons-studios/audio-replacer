@@ -1,5 +1,4 @@
-﻿using AudioReplacer2.Util;
-using Microsoft.UI.Xaml;
+﻿using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using System;
 using System.Collections.Generic;
@@ -8,9 +7,10 @@ using System.IO;
 using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.Storage.Pickers;
+using AudioReplacer.Util;
 using WinRT.Interop;
 
-namespace AudioReplacer2.Pages
+namespace AudioReplacer.Pages
 {
     public sealed partial class RecordPage
     {

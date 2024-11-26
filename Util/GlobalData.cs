@@ -1,7 +1,7 @@
 ﻿using Windows.ApplicationModel;
 using Microsoft.UI.Windowing;
 
-namespace AudioReplacer2.Util
+namespace AudioReplacer.Util
 {
     public static class GlobalData
     {

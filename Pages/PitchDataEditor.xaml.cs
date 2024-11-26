@@ -3,7 +3,7 @@ using System.IO;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 
-namespace AudioReplacer2.Pages
+namespace AudioReplacer.Pages
 {
     public sealed partial class PitchDataEditor
     {

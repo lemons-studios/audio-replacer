@@ -15,7 +15,7 @@
   <mp:PhoneIdentity PhoneProductId="5c3ef8c0-0434-491c-8dc3-220953453a32" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 
   <Properties>
-    <DisplayName>AudioReplacer2</DisplayName>
+    <DisplayName>Audio Replacer</DisplayName>
     <PublisherDisplayName>Lemon Studios</PublisherDisplayName>
     <Logo>Assets\Icon\StoreLogo.png</Logo>
   </Properties>
@@ -34,8 +34,8 @@
       Executable="$targetnametoken$.exe"
       EntryPoint="$targetentrypoint$">
       <uap:VisualElements
-        DisplayName="Audio Replacer 2"
-        Description="Audio Replacer 2"
+        DisplayName="Audio Replacer"
+        Description="Audio Replacement Tool"
         BackgroundColor="transparent"
         Square150x150Logo="Assets\Icon\Square150x150Logo.png"
         Square44x44Logo="Assets\Icon\Square44x44Logo.png">

@@ -1,5 +1,5 @@
 ﻿using Config.Net;
-namespace AudioReplacer2.Util
+namespace AudioReplacer.Util
 {
     public interface IAppSettings
     {

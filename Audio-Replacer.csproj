@@ -3,7 +3,7 @@
     <OutputType>WinExe</OutputType>
     <TargetFramework>net8.0-windows10.0.22621</TargetFramework>
     <TargetPlatformMinVersion>10.0.17763.0</TargetPlatformMinVersion>
-    <RootNamespace>AudioReplacer2</RootNamespace>
+    <RootNamespace>AudioReplacer</RootNamespace>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <Platforms>x86;x64;ARM64</Platforms>
     <RuntimeIdentifiers Condition="$([MSBuild]::GetTargetFrameworkVersion('$(TargetFramework)')) &gt;= 8">win-x86;win-x64;win-arm64</RuntimeIdentifiers>
@@ -28,12 +28,12 @@
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
     <WindowsPackageType>MSIX</WindowsPackageType>
-    <StartupObject>AudioReplacer2.Program</StartupObject>
+    <StartupObject>AudioReplacer.Program</StartupObject>
     <ApplicationIcon>Assets\Icon\Titlebar.ico</ApplicationIcon>
     <PublishTrimmed>False</PublishTrimmed>
 	<TrimMode>link</TrimMode>
-	<TrimmerRootAssembly>AudioReplacer2</TrimmerRootAssembly>
-	<TrimmerRootAssumedType>AudioReplacer2.Util.IAppSettings</TrimmerRootAssumedType>
+	<TrimmerRootAssembly>AudioReplacer</TrimmerRootAssembly>
+	<TrimmerRootAssumedType>AudioReplacer.Util.IAppSettings</TrimmerRootAssumedType>
   </PropertyGroup>
 	
   <ItemGroup>

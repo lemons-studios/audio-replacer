@@ -1,11 +1,11 @@
 ﻿using System;
 using System.IO;
 using System.Text.Json;
-using AudioReplacer2.Util;
+using AudioReplacer.Util;
 using Config.Net;
 using Microsoft.UI.Xaml;
 
-namespace AudioReplacer2
+namespace AudioReplacer
 {
     public partial class App
     {

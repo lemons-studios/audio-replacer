@@ -8,7 +8,7 @@ using System.IO;
 using System.Linq;
 using SevenZipExtractor;
 
-namespace AudioReplacer2.Util
+namespace AudioReplacer.Util
 {
     public class RecordPageFunctionality
     {

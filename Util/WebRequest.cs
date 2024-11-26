@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-namespace AudioReplacer2.Util
+namespace AudioReplacer.Util
 {
     public class WebRequest
     {

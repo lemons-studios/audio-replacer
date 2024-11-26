@@ -5,7 +5,7 @@ using Windows.Media.Capture;
 using Windows.Media.MediaProperties;
 using Windows.Storage;
 
-namespace AudioReplacer2.Util
+namespace AudioReplacer.Util
 {
     public class AudioRecordingUtils
     {

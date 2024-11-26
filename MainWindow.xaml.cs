@@ -1,7 +1,5 @@
 using System.IO;
 using System;
-using AudioReplacer2.Util;
-using AudioReplacer2.Pages;
 using Microsoft.UI.Composition.SystemBackdrops;
 using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml.Media;
@@ -9,9 +7,11 @@ using WinRT.Interop;
 using Microsoft.UI;
 using Microsoft.UI.Xaml.Controls;
 using System.Collections.Generic;
+using AudioReplacer.Pages;
+using AudioReplacer.Util;
 using Microsoft.UI.Xaml;
 
-namespace AudioReplacer2
+namespace AudioReplacer
 {
     public sealed partial class MainWindow
     {
