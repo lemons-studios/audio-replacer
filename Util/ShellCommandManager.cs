@@ -2,7 +2,7 @@
 
 namespace AudioReplacer2.Util
 {
-    public class ShellCommandManager
+    public static class ShellCommandManager
     {
         public static Process CreateProcess(string command, string arguments, bool shellExecute = false, bool redirectOutput = true, bool redirectError = true, bool createWindow = false)
         {

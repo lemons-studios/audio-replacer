@@ -5,13 +5,13 @@ namespace AudioReplacer2.Util
 {
     public static class GlobalData
     {
-        public static AppWindow appWindow;
-        public static bool updateChecksAllowed = true;
-        public static int notificationTimeout, recordStopDelay;
+        public static AppWindow AppWindow;
+        public static bool UpdateChecksAllowed = true;
+        public static int NotificationTimeout, RecordStopDelay;
 
-        public static string[][] deserializedPitchData;
+        public static string[][] DeserializedPitchData;
         // Values here are the starting values and can be edited through the app's pich config json file
-        public static string[][] pitchData =
+        public static readonly string[][] pitchData =
         [
             ["1.0075", "Ai Ebihara"], ["1.025", "Ayane Matsunaga"], ["0.555", "Ameno-Sagiri"], ["1.015", "Chie Satonaka"],
             ["1.012", "Chihiro Fushimi"], ["0.9925", "Daisuke Nagase"], ["1.0195", "Eri Minami"], ["1.0065", "Hanako Ohtani"],

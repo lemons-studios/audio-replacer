@@ -6,6 +6,7 @@
 # 3. Visual Studio Settings folder (.vs)
 # 4. JetBrains ide configuration folder (.idea)
 # 5. Code signing certificate (A .pfx file)
+# 6. Resharper DotSettings.user file
 # Whoever made that previous GitIgnore has it out for me I swear
 
 [Bb]in/
@@ -13,3 +14,4 @@
 .vs/
 .idea/
 *.pfx
+*[Dd]otSettings.user

@@ -6,21 +6,23 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:WinUiEx="using:WinUIEx"
-    xmlns:audioReplacer2="using:AudioReplacer2"
     mc:Ignorable="d"
     MinHeight="460" MaxHeight="460"
     MinWidth="1024" MaxWidth="1024">
     <StackPanel>
-        <Border x:Name="AppTitleBar" VerticalAlignment="Top" Height="40" Padding="5" Background="Transparent">
+        <Border x:Name="AppTitleBar" VerticalAlignment="Top" Height="40" Padding="5" BorderThickness="5">
             <Grid ColumnDefinitions="Auto, *">
                 <FontIcon Glyph="&#xEC71;" Style="{StaticResource TitleBarIcon}"/>
-                <TextBlock x:Name="AppTitle" Style="{StaticResource TitleBarText}" Text="Temp" Grid.Column="1"/>
+                <StackPanel Orientation="Horizontal" Grid.Column="1">
+                    <TextBlock Style="{StaticResource TitleBarText}" Text="Audio Replacer" />
+                    <TextBlock x:Name="AppVersion" Style="{StaticResource TitleBarText}" Foreground="LightGray" />
+                </StackPanel>
             </Grid>
         </Border>
 
-        <NavigationView x:Name="AppNavigation" Style="{StaticResource PageNavigation}" ItemInvoked="SwitchPageContent">
+        <NavigationView Style="{StaticResource PageNavigation}" ItemInvoked="SwitchPageContent">
             <NavigationView.MenuItems>
-                <NavigationViewItem x:Name="RecordItem" Tag="Record">
+                <NavigationViewItem Tag="Record">
                     <NavigationViewItem.Content>
                         <TextBlock Text="Record" FontWeight="Light"/>
                     </NavigationViewItem.Content>
@@ -28,7 +30,7 @@
                         <FontIcon Glyph="&#xE720;" />
                     </NavigationViewItem.Icon>
                 </NavigationViewItem>
-                <NavigationViewItem x:Name="PitchEditorItem" Tag="Pitch Editor">
+                <NavigationViewItem Tag="Pitch Editor">
                     <NavigationViewItem.Content>
                         <TextBlock Text="Pitch Editor" FontWeight="Light"/>
                     </NavigationViewItem.Content>
@@ -36,7 +38,7 @@
                         <FontIcon Glyph="&#xE70F;" />
                     </NavigationViewItem.Icon>
                 </NavigationViewItem>
-                <NavigationViewItem x:Name="SettingsItem" Tag="Settings">
+                <NavigationViewItem Tag="Settings">
                     <NavigationViewItem.Content>
                         <TextBlock Text="Settings" FontWeight="Light"/>
                     </NavigationViewItem.Content>

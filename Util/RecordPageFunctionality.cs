@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Windows.Media.Core;
 using Microsoft.UI.Xaml.Controls;
 using System.IO;
+using System.Linq;
 using SevenZipExtractor;
 
 namespace AudioReplacer2.Util
@@ -18,7 +19,7 @@ namespace AudioReplacer2.Util
         private readonly List<float> pitchValues = [];
         private readonly string webVersion;
 
-        public RecordPageFunctionality(ComboBox pitchComboBox, InfoBar[] windowInfoBars)
+        public RecordPageFunctionality(InfoBar[] windowInfoBars)
         {
             webRequest = new WebRequest();
             this.windowInfoBars = windowInfoBars;
@@ -38,11 +39,11 @@ namespace AudioReplacer2.Util
 
         public void DownloadDependencies()
         {
-            var latestFfMpegVersion = Task.Run(() => webRequest.GetWebData("https://www.gyan.dev/ffmpeg/builds/release-version")).Result;
-            var ffMpegUrl = $"https://www.gyan.dev/ffmpeg/builds/packages/ffmpeg-{latestFfMpegVersion}-full_build.7z";
-            var outPath = $"{Environment.GetFolderPath(Environment.SpecialFolder.UserProfile)}\\AudioReplacer2-Config";
-            var fullOutPath = $"{outPath}\\ffmpeg";
-            var currentSystemPath = Environment.GetEnvironmentVariable("PATH", EnvironmentVariableTarget.User);
+            string latestFfMpegVersion = Task.Run(() => webRequest.GetWebData("https://www.gyan.dev/ffmpeg/builds/release-version")).Result;
+            string ffMpegUrl = $"https://www.gyan.dev/ffmpeg/builds/packages/ffmpeg-{latestFfMpegVersion}-full_build.7z";
+            string outPath = $"{Environment.GetFolderPath(Environment.SpecialFolder.UserProfile)}\\AudioReplacer2-Config";
+            string fullOutPath = $"{outPath}\\ffmpeg";
+            string currentSystemPath = Environment.GetEnvironmentVariable("PATH", EnvironmentVariableTarget.User);
 
             webRequest.DownloadFile(ffMpegUrl, outPath, "ffmpeg.7z");
             using (ArchiveFile ffmpegArchive = new ArchiveFile($"{fullOutPath}.7z")) { ffmpegArchive.Extract($"{fullOutPath}"); }
@@ -61,17 +62,10 @@ namespace AudioReplacer2.Util
             // This also allows for installs that don't come from winget (such as ffmpeg installed from Chocolatey or a manually installed copy of ffmpeg)
             try
             {
-                var pathEnv = Environment.GetEnvironmentVariable("PATH", EnvironmentVariableTarget.User);
+                string pathEnv = Environment.GetEnvironmentVariable("PATH", EnvironmentVariableTarget.User);
                 if (string.IsNullOrEmpty(pathEnv)) return false;
-                
-                var paths = pathEnv.Split(Path.PathSeparator);
-
-                foreach (var path in paths)
-                {
-                    var ffmpegPath = Path.Combine(path, "ffmpeg.exe");
-                    if (File.Exists(ffmpegPath)) return true;
-                }
-                return false;
+                string[] paths = pathEnv.Split(Path.PathSeparator);
+                return paths.Select(path => Path.Combine(path, "ffmpeg.exe")).Any(File.Exists);
             }
             catch { return false; }
         }
@@ -84,9 +78,9 @@ namespace AudioReplacer2.Util
             button.Visibility = toggleVisibility;
         }
 
-        public void UpdatePitchData()
+        private void UpdatePitchData()
         {
-            foreach (var data in GlobalData.deserializedPitchData)
+            foreach (string[] data in GlobalData.DeserializedPitchData)
             {
                 pitchValues.Add(ParseFloat(data[0])); // Position 0 of each array in the 2d array should have the pitch data, as mentioned in GlobalData.cs
                 pitchMenuTitles.Add(data[1]); // Position 1 of each array in the 2d array should have the name of the character, as mentioned in GlobalData.cs
@@ -155,7 +149,7 @@ namespace AudioReplacer2.Util
 
         private async Task WaitHideInfoBar(InfoBar infoBar)
         {
-            await Task.Delay(GlobalData.notificationTimeout);
+            await Task.Delay(GlobalData.NotificationTimeout);
 
             // This try-catch is needed in the case that the TryEnqueue is running while the window is closing
             try
@@ -165,7 +159,10 @@ namespace AudioReplacer2.Util
                     infoBar.IsOpen = false;
                 });
             }
-            catch { return; }
+            catch
+            {
+                // ignored
+            }
         }
     }
 }

@@ -9,7 +9,7 @@ namespace AudioReplacer2.Util
 {
     public class WebRequest
     {
-        private readonly HttpClient client = new HttpClient
+        private readonly HttpClient client = new()
         {
             DefaultRequestHeaders = { { "User-Agent", "Audio Replacer 2" } }
         };
@@ -20,12 +20,12 @@ namespace AudioReplacer2.Util
             {
                 var apiResponse = await client.GetAsync(url);
                 if (!apiResponse.IsSuccessStatusCode) throw new Exception($"API responded with status code {apiResponse.StatusCode}");
-                var responseData = await apiResponse.Content.ReadAsStringAsync();
+                string responseData = await apiResponse.Content.ReadAsStringAsync();
                 
                 var jsonTags = JArray.Parse(responseData);
                 if (jsonTags.Count == 0) throw new Exception("No valid tags found in response data");
 
-                var name = jsonTags[0]["name"]?.ToString();
+                string name = jsonTags[0]["name"]?.ToString();
                 if (string.IsNullOrEmpty(name)) throw new Exception("The 'name' property is missing or empty in the first tag.");
                 return name;
             }

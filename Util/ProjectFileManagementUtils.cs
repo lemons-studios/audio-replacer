@@ -25,10 +25,6 @@ namespace AudioReplacer2.Util
         private void SetCurrentFile()
         {
             FindDeleteEmptyDirs();
-
-            // Refresh subdirectories after potential deletion
-            string[] subdirectories = GetPathSubdirectories(projectPath);
-
             currentFile = GetFirstAudioFile(projectPath);
             truncatedCurrentFile = currentFile == "" ? "YOU ARE DONE!!!" : TruncateDirectory(currentFile, 2);
 
@@ -40,20 +36,12 @@ namespace AudioReplacer2.Util
         private void CreateInitialData()
         {
             string[] inFolderStructure = GetPathSubdirectories(projectPath);
-            if (!DoesDirectoryExist(outputFolderPath))
-            {
-                GetFilesInFolder(outputFolderPath);
-            }
-
-            if (inFolderStructure != GetPathSubdirectories(outputFolderPath) && !File.Exists(setupIgnore)) 
-            {
-                string[] subdirectoryNames = TruncateSubdirectories(inFolderStructure);
-                for (int i = 0; i < inFolderStructure.Length; i++)
-                {
-                    CreateDirectory($"{outputFolderPath}\\{subdirectoryNames[i]}");
-                }
-                File.Create(setupIgnore);
-            }
+            if (!DoesDirectoryExist(outputFolderPath)) GetFilesInFolder(outputFolderPath);
+            if (inFolderStructure == GetPathSubdirectories(outputFolderPath) || File.Exists(setupIgnore)) return;
+            
+            string[] subdirectoryNames = TruncateSubdirectories(inFolderStructure);
+            for (int i = 0; i < inFolderStructure.Length; i++) { CreateDirectory($"{outputFolderPath}\\{subdirectoryNames[i]}"); }
+            File.Create(setupIgnore);
         }
 
         private string TruncateDirectory(string inputPath, int dirLevels, string delimiter = "\\")
@@ -76,31 +64,20 @@ namespace AudioReplacer2.Util
 
         public int GetFileCount(string path)
         {
-            int x = 0;
             string[] directories = GetPathSubdirectories(path);
-
-            foreach (string dir in directories)
-            {
-                x += Directory.GetFiles(dir, "*", SearchOption.AllDirectories).Length;
-            }
-            return x;
+            return directories.Sum(dir => Directory.GetFiles(dir, "*", SearchOption.AllDirectories).Length);
         }
 
-        public void FindDeleteEmptyDirs()
+        private void FindDeleteEmptyDirs()
         {
-            foreach (var directory in Directory.GetDirectories(projectPath))
-            {
-                if (Directory.GetFiles(directory).Length == 0) Directory.Delete(directory);
-            }
+            foreach (string directory in Directory.GetDirectories(projectPath)) { if (Directory.GetFiles(directory).Length == 0) Directory.Delete(directory); }
         }
 
         private string GetFirstAudioFile(string path)
         {
             string[] pathSubfiles = Directory.GetFiles(path, "*.*", SearchOption.AllDirectories);
-            foreach (string projectFile in Directory.GetFiles(path, "*.*", SearchOption.AllDirectories))
-            {
-                if (IsAudioFile(projectFile)) return projectFile;
-            }
+            foreach (string projectFile in pathSubfiles) { if (IsAudioFile(projectFile)) return projectFile; }
+            
             return ""; // If no audio files are found, then return a blank path
         }
 
@@ -158,7 +135,7 @@ namespace AudioReplacer2.Util
             return Directory.GetFiles(dir);
         }
 
-        public bool DoesDirectoryExist(string dir)
+        private bool DoesDirectoryExist(string dir)
         {
             return Directory.Exists(dir);
         }

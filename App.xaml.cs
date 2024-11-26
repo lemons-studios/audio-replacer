@@ -7,7 +7,7 @@ using Microsoft.UI.Xaml;
 
 namespace AudioReplacer2
 {
-    public partial class App : Application
+    public partial class App
     {
         public static IAppSettings AppSettings { get; private set; }
         public static MainWindow MainWindow { get; private set; }
@@ -25,35 +25,34 @@ namespace AudioReplacer2
                 .UseJsonFile(settingsFilePath)
                 .Build();
 
-            GlobalData.updateChecksAllowed = AppSettings.AppUpdateCheck == 1;
-            GlobalData.notificationTimeout = AppSettings.NotificationTimeout;
-            GlobalData.recordStopDelay = AppSettings.RecordEndWaitTime;
+            GlobalData.UpdateChecksAllowed = AppSettings.AppUpdateCheck == 1;
+            GlobalData.NotificationTimeout = AppSettings.NotificationTimeout;
+            GlobalData.RecordStopDelay = AppSettings.RecordEndWaitTime;
             InitializeComponent();
         }
 
         private void CreateSettingsData()
         {
-            if (!Directory.Exists(directoryPath)) Directory.CreateDirectory(directoryPath); 
-            if (!File.Exists(settingsFilePath))
+            if (!Directory.Exists(directoryPath)) Directory.CreateDirectory(directoryPath);
+            if (File.Exists(settingsFilePath)) return;
+            
+            var defaultConfig = new
             {
-                var defaultConfig = new
-                {
-                    Theme = 0,
-                    TransparencyEffect = 0,
-                    EnableUpdateChecks = 1,
-                    RecordEndWaitTime = 75,
-                    NotificationTimeout = 1750
-                };
+                Theme = 0,
+                TransparencyEffect = 0,
+                EnableUpdateChecks = 1,
+                RecordEndWaitTime = 75,
+                NotificationTimeout = 1750
+            };
 
-                var defaultJson = JsonSerializer.Serialize(defaultConfig, new JsonSerializerOptions { WriteIndented = true });
-                File.WriteAllText(settingsFilePath, defaultJson); // File gets created automatically by File.WriteAllText() before it writes to anything
-            }
+            string defaultJson = JsonSerializer.Serialize(defaultConfig, new JsonSerializerOptions { WriteIndented = true });
+            File.WriteAllText(settingsFilePath, defaultJson); // File gets created automatically by File.WriteAllText() before it writes to anything
         }
 
         private void CreatePitchData()
         {
             if (!File.Exists(pitchDataPath)) { File.WriteAllText(pitchDataPath, JsonSerializer.Serialize(GlobalData.pitchData, new JsonSerializerOptions { WriteIndented = true })); }
-            GlobalData.deserializedPitchData = JsonSerializer.Deserialize<string[][]>(File.ReadAllText(pitchDataPath));
+            GlobalData.DeserializedPitchData = JsonSerializer.Deserialize<string[][]>(File.ReadAllText(pitchDataPath));
         }
 
         protected override void OnLaunched(LaunchActivatedEventArgs args)

@@ -34,10 +34,10 @@ namespace AudioReplacer2.Util
 
         public async Task StopRecordingAudio(string file)
         {
-            await Task.Delay(GlobalData.recordStopDelay); 
+            await Task.Delay(GlobalData.RecordStopDelay); 
 
             await recordingCapture.StopRecordAsync();
-            var outFile = $"{file}0.wav"; // Temporary name, gets renamed back to actual file name at the end
+            string outFile = $"{file}0.wav"; // Temporary name, gets renamed back to actual file name at the end
 
             // FFMpeg is used with shell commands here simply because I cannot bother trying to figure out .NET FFMpeg frameworks that are all just command wrappers anyway
             var ffmpegProcess = ShellCommandManager.CreateProcess("ffmpeg", $"-i \"{file}\" -af \"rubberband=pitch={pitchChange}, volume=1.25\" -y \"{outFile}\"");

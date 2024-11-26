@@ -12,7 +12,7 @@ using WinRT.Interop;
 
 namespace AudioReplacer2.Pages
 {
-    public sealed partial class RecordPage : Page
+    public sealed partial class RecordPage
     {
         private readonly AudioRecordingUtils audioRecordingUtils;
         private ProjectFileManagementUtils projectFileManagementUtils;
@@ -22,7 +22,7 @@ namespace AudioReplacer2.Pages
         public RecordPage()
         {
             InitializeComponent();
-            windowBackend = new RecordPageFunctionality(VoiceTuneMenu, [ToastNotification, ProgressToast, UpdateToast]);
+            windowBackend = new RecordPageFunctionality([ToastNotification, ProgressToast, UpdateToast]);
             VoiceTuneMenu.ItemsSource = windowBackend.GetPitchTitles();
             RequiresEffectsPrompt.ItemsSource = new List<string> { "Yes", "No" }; // Prevents clutter on the .xaml file (1 line added here is 3 lines removed from the xaml file)
 
@@ -33,13 +33,12 @@ namespace AudioReplacer2.Pages
             switch (windowBackend.IsFfMpegAvailable())
             {
                 case true: // Check For Updates
-                    if (!GlobalData.updateChecksAllowed) break;
-                    var updatesAvailable = windowBackend.IsUpdateAvailable();
+                    if (!GlobalData.UpdateChecksAllowed) break;
+                    bool updatesAvailable = windowBackend.IsUpdateAvailable();
                     if (!updatesAvailable) break;
                     UpdateToast.Message = $"Latest Version: {windowBackend.GetWebVersion()}";
                     UpdateToast.IsOpen = true;
                     break;
-
                 case false: // Show popup for dependency install requirement
                     windowBackend.ToggleButton(FolderSelector, false);
                     VoiceTuneMenu.IsEnabled = false;
@@ -68,7 +67,7 @@ namespace AudioReplacer2.Pages
             folderPicker.FileTypeFilter.Add("*");
 
             // For Win10 Compat
-            var hWnd = WindowNative.GetWindowHandle(App.MainWindow);
+            IntPtr hWnd = WindowNative.GetWindowHandle(App.MainWindow);
             InitializeWithWindow.Initialize(folderPicker, hWnd);
             var folder = await folderPicker.PickSingleFolderAsync();
 
@@ -100,7 +99,7 @@ namespace AudioReplacer2.Pages
 
         private async void StartRecordingAudio(object sender, RoutedEventArgs e)
         {
-            MainWindow.isRecording = true;
+            MainWindow.IsRecording = true;
             AudioPreview.MediaPlayer.Pause();
             windowBackend.UpdateInfoBar(ProgressToast, "Recording In Progress...", "", 0, autoClose: false);
 
@@ -114,7 +113,7 @@ namespace AudioReplacer2.Pages
 
         private async void StopRecordingAudio(object sender, RoutedEventArgs e)
         {
-            MainWindow.isRecording = false; MainWindow.isProcessing = true;
+            MainWindow.IsRecording = false; MainWindow.IsProcessing = true;
             windowBackend.UpdateInfoBar(ProgressToast, "Saving File....", "", 0);
 
             if (projectFileManagementUtils == null) return;
@@ -129,19 +128,19 @@ namespace AudioReplacer2.Pages
 
         private void UpdateFileElements()
         {
-            var progressPercentage = projectFileManagementUtils.CalculatePercentageComplete();
-            var projectPath = projectFileManagementUtils.GetProjectPath();
+            float progressPercentage = projectFileManagementUtils.CalculatePercentageComplete();
+            string projectPath = projectFileManagementUtils.GetProjectPath();
 
             CurrentFile.Text = windowBackend.GetFormattedCurrentFile(projectFileManagementUtils.GetCurrentFile());
             RemainingFiles.Text = $"Files Remaining: {projectFileManagementUtils.GetFileCount(projectPath):N0} ({progressPercentage}%)";
             RemainingFilesProgress.Value = progressPercentage;
             AudioPreview.Source = windowBackend.MediaSourceFromUri(projectFileManagementUtils.GetCurrentFile(false));
-            MainWindow.currentFile = projectFileManagementUtils.GetOutFilePath();
+            MainWindow.CurrentFile = projectFileManagementUtils.GetOutFilePath();
         }
 
         private async void CancelCurrentRecording(object sender, RoutedEventArgs e)
         {
-            MainWindow.isRecording = false;
+            MainWindow.IsRecording = false;
             await audioRecordingUtils.CancelRecording(projectFileManagementUtils.GetOutFilePath());
             ToggleButtonStates(false);
             windowBackend.UpdateInfoBar(ToastNotification, "Recording Cancelled", "", InfoBarSeverity.Informational);
@@ -149,28 +148,27 @@ namespace AudioReplacer2.Pages
 
         private void UpdateAudioStatus(object sender, RoutedEventArgs e)
         {
-            if (sender is Button button)
+            if (sender is not Button button) return;
+            MainWindow.IsProcessing = false;
+            bool isSubmitButton = button.Name == "SubmitRecordingButton";
+            
+            switch (isSubmitButton)
             {
-                MainWindow.isProcessing = false;
-                var isSubmitButton = button.Name == "SubmitRecordingButton";
-                switch (isSubmitButton)
-                {
-                    case true:
-                        // Submission Accepted
-                        projectFileManagementUtils.DeleteCurrentFile(/* This method essentially acts as a way to confirm the submission*/);
-                        windowBackend.UpdateInfoBar(ToastNotification, "Submission Accepted!!", "Moving to next file...", InfoBarSeverity.Success);
-                        break;
-                    case false:
-                        // Submission Rejected
-                        File.Delete(projectFileManagementUtils.GetOutFilePath());
-                        windowBackend.UpdateInfoBar(ToastNotification, "Submission Rejected", "Returning to record phase...", InfoBarSeverity.Informational);
-                        break;
-                }
-
-                ToggleFinalReviewButtons(false);
-                ToggleButtonStates(false);
-                UpdateFileElements();
+                case true:
+                    // Submission Accepted
+                    projectFileManagementUtils.DeleteCurrentFile(/* This method essentially acts as a way to confirm the submission*/);
+                    windowBackend.UpdateInfoBar(ToastNotification, "Submission Accepted!!", "Moving to next file...", InfoBarSeverity.Success);
+                    break;
+                case false:
+                    // Submission Rejected
+                    File.Delete(projectFileManagementUtils.GetOutFilePath());
+                    windowBackend.UpdateInfoBar(ToastNotification, "Submission Rejected", "Returning to record phase...", InfoBarSeverity.Informational);
+                    break;
             }
+
+            ToggleFinalReviewButtons(false);
+            ToggleButtonStates(false);
+            UpdateFileElements();
         }
 
         private void ProjectSetup(string path)
@@ -184,7 +182,7 @@ namespace AudioReplacer2.Pages
             AudioPreviewControls.IsEnabled = true;
 
             projectFileManagementUtils = new ProjectFileManagementUtils(path);
-            MainWindow.projectInitialized = true;
+            MainWindow.ProjectInitialized = true;
 
             UpdateFileElements();
             windowBackend.UpdateInfoBar(ToastNotification, "Success!", "Project loaded!", InfoBarSeverity.Success);
@@ -204,7 +202,7 @@ namespace AudioReplacer2.Pages
         private void ToggleFinalReviewButtons(bool toggled)
         {
             Button[] buttons = [EndRecordingButton, CancelRecordingButton, DiscardRecordingButton, SubmitRecordingButton];
-            for (int i = 0; i < buttons.Length; i++) { windowBackend.ToggleButton(buttons[i], i > 1 && toggled); } // Making my code slightly unreadable in exchange for less lines 🔥🔥🔥
+            for (int i = 0; i < buttons.Length; i++) { windowBackend.ToggleButton(buttons[i], i > 1 && toggled); } // Making my code slightly unreadable in exchange for fewer lines 🔥🔥🔥
         }
 
         private async void DownloadRuntimeDependencies(object sender, RoutedEventArgs e)
@@ -219,7 +217,7 @@ namespace AudioReplacer2.Pages
 
         private void OpenGithubReleases(object sender, RoutedEventArgs e)
         {
-            string url = "https://github.com/lemons-studios/audio-replacer-2/releases/latest";
+            const string url = "https://github.com/lemons-studios/audio-replacer-2/releases/latest";
             Process openReleasesProcess = ShellCommandManager.CreateProcess("cmd", $"/c start {url}");
             openReleasesProcess.Start();
         }
