@@ -18,13 +18,11 @@ namespace AudioReplacer
             directoryPath = $"{Environment.GetFolderPath(Environment.SpecialFolder.UserProfile)}\\AudioReplacer2-Config";
             settingsFilePath = $"{directoryPath}\\AudioReplacer2-Config.json";
             pitchDataPath = $"{directoryPath}\\PitchData.json";
-            effectDataPath = $"{directoryPath}\\EffectData.json";
+            effectDataPath = $"{directoryPath}\\EffectsData.json";
 
             CreateSettingsData();
             CreateJsonData();
-            AppSettings = new ConfigurationBuilder<IAppSettings>()
-                .UseJsonFile(settingsFilePath)
-                .Build();
+            AppSettings = new ConfigurationBuilder<IAppSettings>().UseJsonFile(settingsFilePath).Build();
             GlobalData.UpdateChecksAllowed = AppSettings.AppUpdateCheck == 1;
             GlobalData.NotificationTimeout = AppSettings.NotificationTimeout;
             GlobalData.RecordStopDelay = AppSettings.RecordEndWaitTime;
@@ -55,10 +53,6 @@ namespace AudioReplacer
             GlobalData.DeserializedEffectData = JsonSerializer.Deserialize<string[][]>(File.ReadAllText(effectDataPath));
         }
 
-        protected override void OnLaunched(LaunchActivatedEventArgs args)
-        {
-            MainWindow = new MainWindow();
-            MainWindow.Activate();
-        }
+        protected override void OnLaunched(LaunchActivatedEventArgs args) { MainWindow = new MainWindow(); MainWindow.Activate(); }
     }
 }

@@ -10,6 +10,7 @@ namespace AudioReplacer.Util
     public class AudioRecordingUtils
     {
         public float pitchChange = 1;
+        public string effectCommand = "";
         public bool requiresExtraEdits = false;
         private MediaCapture recordingCapture;
 

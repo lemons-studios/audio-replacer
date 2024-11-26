@@ -16,34 +16,34 @@ namespace AudioReplacer.Pages
     {
         private readonly AudioRecordingUtils audioRecordingUtils;
         private ProjectFileManagementUtils projectFileManagementUtils;
-        private readonly RecordPageFunctionality windowBackend;
+        private readonly RecordPageFunctionality recordPageBackend;
         private string previousPitchSelection = "None Selected";
+        private string previousEffectSelection = "None";
 
         public RecordPage()
         {
             InitializeComponent();
-            windowBackend = new RecordPageFunctionality([ToastNotification, ProgressToast, UpdateToast]);
-            VoiceTuneMenu.ItemsSource = windowBackend.GetPitchTitles();
-
-            RequiresEffectsPrompt.ItemsSource = new List<string> { "Yes", "No" }; // Prevents clutter on the .xaml file (1 line added here is 3 lines removed from the xaml file)
+            recordPageBackend = new RecordPageFunctionality([ToastNotification, ProgressToast, UpdateToast]);
+            VoiceTuneMenu.ItemsSource = recordPageBackend.GetPitchTitles();
+            EffectsMenu.ItemsSource = recordPageBackend.GetEffectTitles();
 
             // Looping needs to be on to work around a bug in which the audio gets cut off for a split second after the first play.
             AudioPreview.MediaPlayer.IsLoopingEnabled = true;
             audioRecordingUtils = new AudioRecordingUtils();
 
-            switch (windowBackend.IsFfMpegAvailable())
+            switch (recordPageBackend.IsFfMpegAvailable())
             {
                 case true: // Check For Updates
                     if (!GlobalData.UpdateChecksAllowed) break;
-                    bool updatesAvailable = windowBackend.IsUpdateAvailable();
+                    bool updatesAvailable = recordPageBackend.IsUpdateAvailable();
                     if (!updatesAvailable) break;
-                    UpdateToast.Message = $"Latest Version: {windowBackend.GetWebVersion()}";
+                    UpdateToast.Message = $"Latest Version: {recordPageBackend.GetWebVersion()}";
                     UpdateToast.IsOpen = true;
                     break;
                 case false: // Show popup for dependency install requirement
-                    windowBackend.ToggleButton(FolderSelector, false);
+                    recordPageBackend.ToggleButton(FolderSelector, false);
                     VoiceTuneMenu.IsEnabled = false;
-                    RequiresEffectsPrompt.IsEnabled = false;
+                    EffectsMenu.IsEnabled = false;
                     DependencyToast.IsOpen = true;
                     break;
             }
@@ -54,12 +54,15 @@ namespace AudioReplacer.Pages
             if (audioRecordingUtils == null) return;
             if (VoiceTuneMenu.SelectedItem != null)
             {
-                audioRecordingUtils.pitchChange = windowBackend.GetPitchModifier(VoiceTuneMenu.SelectedIndex);
+                audioRecordingUtils.pitchChange = recordPageBackend.GetPitchModifier(VoiceTuneMenu.SelectedIndex);
                 previousPitchSelection = VoiceTuneMenu.SelectedItem.ToString();
             }
-
-            if (RequiresEffectsPrompt.SelectedItem != null) audioRecordingUtils.requiresExtraEdits = !windowBackend.ToBool(RequiresEffectsPrompt.SelectedIndex); // Inverse because "Yes" is the first option in the ComboBox
-            PitchSettingsFeedback.Text = $"Pitch Modifier: {audioRecordingUtils.pitchChange} ({previousPitchSelection})\nDoes file require extra edits? {windowBackend.BoolToYesNo(audioRecordingUtils.requiresExtraEdits)}";
+            if (EffectsMenu.SelectedItem != null)
+            {
+                audioRecordingUtils.effectCommand = recordPageBackend.GetEffectValues(EffectsMenu.SelectedIndex);
+                previousEffectSelection = EffectsMenu.SelectedItem.ToString();
+            }
+            PitchSettingsFeedback.Text = $"Pitch Modifier: {audioRecordingUtils.pitchChange} ({previousPitchSelection})\nEffect Selected: {previousEffectSelection}";
         }
 
         private async void SelectProjectFolder(object sender, RoutedEventArgs e)
@@ -89,11 +92,11 @@ namespace AudioReplacer.Pages
                 case true:
                     projectFileManagementUtils.SkipAudioTrack();
                     UpdateFileElements();
-                    windowBackend.UpdateInfoBar(ToastNotification, "Success!", "File skipped!", InfoBarSeverity.Success);
+                    recordPageBackend.UpdateInfoBar(ToastNotification, "Success!", "File skipped!", InfoBarSeverity.Success);
                     break;
                 case false:
                     AudioPreview.MediaPlayer.Play();
-                    windowBackend.UpdateInfoBar(ToastNotification, "Cancelled", "File skip cancelled", InfoBarSeverity.Informational);
+                    recordPageBackend.UpdateInfoBar(ToastNotification, "Cancelled", "File skip cancelled", InfoBarSeverity.Informational);
                     break;
             }
         }
@@ -102,7 +105,7 @@ namespace AudioReplacer.Pages
         {
             MainWindow.IsRecording = true;
             AudioPreview.MediaPlayer.Pause();
-            windowBackend.UpdateInfoBar(ProgressToast, "Recording In Progress...", "", 0, autoClose: false);
+            recordPageBackend.UpdateInfoBar(ProgressToast, "Recording In Progress...", "", 0, autoClose: false);
 
             if (projectFileManagementUtils != null)
             {
@@ -115,16 +118,16 @@ namespace AudioReplacer.Pages
         private async void StopRecordingAudio(object sender, RoutedEventArgs e)
         {
             MainWindow.IsRecording = false; MainWindow.IsProcessing = true;
-            windowBackend.UpdateInfoBar(ProgressToast, "Saving File....", "", 0);
+            recordPageBackend.UpdateInfoBar(ProgressToast, "Saving File....", "", 0);
 
             if (projectFileManagementUtils == null) return;
             await audioRecordingUtils.StopRecordingAudio(projectFileManagementUtils.GetOutFilePath());
             ToggleFinalReviewButtons(true);
-            windowBackend.UpdateInfoBar(ToastNotification, "Save Completed!", "Entering review phase...", InfoBarSeverity.Success);
+            recordPageBackend.UpdateInfoBar(ToastNotification, "Save Completed!", "Entering review phase...", InfoBarSeverity.Success);
 
             // Update source of audio player and the title manually
             CurrentFile.Text = "Review your recording...";
-            AudioPreview.Source = windowBackend.MediaSourceFromUri(projectFileManagementUtils.GetOutFilePath());
+            AudioPreview.Source = recordPageBackend.MediaSourceFromUri(projectFileManagementUtils.GetOutFilePath());
         }
 
         private void UpdateFileElements()
@@ -132,10 +135,10 @@ namespace AudioReplacer.Pages
             float progressPercentage = projectFileManagementUtils.CalculatePercentageComplete();
             string projectPath = projectFileManagementUtils.GetProjectPath();
 
-            CurrentFile.Text = windowBackend.GetFormattedCurrentFile(projectFileManagementUtils.GetCurrentFile());
+            CurrentFile.Text = recordPageBackend.GetFormattedCurrentFile(projectFileManagementUtils.GetCurrentFile());
             RemainingFiles.Text = $"Files Remaining: {projectFileManagementUtils.GetFileCount(projectPath):N0} ({progressPercentage}%)";
             RemainingFilesProgress.Value = progressPercentage;
-            AudioPreview.Source = windowBackend.MediaSourceFromUri(projectFileManagementUtils.GetCurrentFile(false));
+            AudioPreview.Source = recordPageBackend.MediaSourceFromUri(projectFileManagementUtils.GetCurrentFile(false));
             MainWindow.CurrentFile = projectFileManagementUtils.GetOutFilePath();
         }
 
@@ -144,7 +147,7 @@ namespace AudioReplacer.Pages
             MainWindow.IsRecording = false;
             await audioRecordingUtils.CancelRecording(projectFileManagementUtils.GetOutFilePath());
             ToggleButtonStates(false);
-            windowBackend.UpdateInfoBar(ToastNotification, "Recording Cancelled", "", InfoBarSeverity.Informational);
+            recordPageBackend.UpdateInfoBar(ToastNotification, "Recording Cancelled", "", InfoBarSeverity.Informational);
         }
 
         private void UpdateAudioStatus(object sender, RoutedEventArgs e)
@@ -158,12 +161,12 @@ namespace AudioReplacer.Pages
                 case true:
                     // Submission Accepted
                     projectFileManagementUtils.DeleteCurrentFile(/* This method essentially acts as a way to confirm the submission*/);
-                    windowBackend.UpdateInfoBar(ToastNotification, "Submission Accepted!!", "Moving to next file...", InfoBarSeverity.Success);
+                    recordPageBackend.UpdateInfoBar(ToastNotification, "Submission Accepted!!", "Moving to next file...", InfoBarSeverity.Success);
                     break;
                 case false:
                     // Submission Rejected
                     File.Delete(projectFileManagementUtils.GetOutFilePath());
-                    windowBackend.UpdateInfoBar(ToastNotification, "Submission Rejected", "Returning to record phase...", InfoBarSeverity.Informational);
+                    recordPageBackend.UpdateInfoBar(ToastNotification, "Submission Rejected", "Returning to record phase...", InfoBarSeverity.Informational);
                     break;
             }
 
@@ -174,10 +177,10 @@ namespace AudioReplacer.Pages
 
         private void ProjectSetup(string path)
         {
-            windowBackend.UpdateInfoBar(ProgressToast, "Setting up project...", "", InfoBarSeverity.Informational, autoClose: false);
+            recordPageBackend.UpdateInfoBar(ProgressToast, "Setting up project...", "", InfoBarSeverity.Informational, autoClose: false);
             FileProgressPanel.Visibility = Visibility.Visible;
-            windowBackend.ToggleButton(SkipAudioButton, true);
-            windowBackend.ToggleButton(StartRecordingButton, true);
+            recordPageBackend.ToggleButton(SkipAudioButton, true);
+            recordPageBackend.ToggleButton(StartRecordingButton, true);
 
             FolderSelector.Visibility = Visibility.Collapsed;
             AudioPreviewControls.IsEnabled = true;
@@ -186,7 +189,7 @@ namespace AudioReplacer.Pages
             MainWindow.ProjectInitialized = true;
 
             UpdateFileElements();
-            windowBackend.UpdateInfoBar(ToastNotification, "Success!", "Project loaded!", InfoBarSeverity.Success);
+            recordPageBackend.UpdateInfoBar(ToastNotification, "Success!", "Project loaded!", InfoBarSeverity.Success);
         }
 
         private void ToggleButtonStates(bool recording)
@@ -195,22 +198,22 @@ namespace AudioReplacer.Pages
             Button[] buttonsNotRecording = [StartRecordingButton, SkipAudioButton];
             for (int i = 0; i < buttonsRecording.Length; i++)
             {
-                windowBackend.ToggleButton(buttonsRecording[i], recording); // Any buttons that appear during recording get toggled by the recording bool
-                windowBackend.ToggleButton(buttonsNotRecording[i], !recording); // Any buttons that appear before recording get toggled by the inverse of the recording bool
+                recordPageBackend.ToggleButton(buttonsRecording[i], recording); // Any buttons that appear during recording get toggled by the recording bool
+                recordPageBackend.ToggleButton(buttonsNotRecording[i], !recording); // Any buttons that appear before recording get toggled by the inverse of the recording bool
             }
         }
 
         private void ToggleFinalReviewButtons(bool toggled)
         {
             Button[] buttons = [EndRecordingButton, CancelRecordingButton, DiscardRecordingButton, SubmitRecordingButton];
-            for (int i = 0; i < buttons.Length; i++) { windowBackend.ToggleButton(buttons[i], i > 1 && toggled); } // Making my code slightly unreadable in exchange for fewer lines 🔥🔥🔥
+            for (int i = 0; i < buttons.Length; i++) { recordPageBackend.ToggleButton(buttons[i], i > 1 && toggled); } // Making my code slightly unreadable in exchange for fewer lines 🔥🔥🔥
         }
 
         private async void DownloadRuntimeDependencies(object sender, RoutedEventArgs e)
         {
             DependencyToast.IsOpen = false;
-            windowBackend.UpdateInfoBar(ProgressToast, "Installing Dependencies", "App will restart after finishing. Please stay connected to the internet", InfoBarSeverity.Informational, autoClose: false);
-            await Task.Run(windowBackend.DownloadDependencies); // Prevents window from freezing when installing dependencies
+            recordPageBackend.UpdateInfoBar(ProgressToast, "Installing Dependencies", "App will restart after finishing. Please stay connected to the internet", InfoBarSeverity.Informational, autoClose: false);
+            await Task.Run(recordPageBackend.DownloadDependencies); // Prevents window from freezing when installing dependencies
 
             // Restart app
             Microsoft.Windows.AppLifecycle.AppInstance.Restart("");
@@ -222,5 +225,8 @@ namespace AudioReplacer.Pages
             Process openReleasesProcess = ShellCommandManager.CreateProcess("cmd", $"/c start {url}");
             openReleasesProcess.Start();
         }
+
+        private void FlagFurtherEdits(object sender, RoutedEventArgs e) { audioRecordingUtils.requiresExtraEdits = true; }
+        private void UnflagFurtherEdits(object sender, RoutedEventArgs e) { audioRecordingUtils.requiresExtraEdits = false; }
     }
 }

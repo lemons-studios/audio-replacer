@@ -29,7 +29,7 @@
                                 <MediaTransportControls x:Name="AudioPreviewControls" IsCompact="True" VerticalAlignment="Center" IsSeekBarVisible="True" ShowAndHideAutomatically="False" IsEnabled="False"/>
                             </MediaPlayerElement.TransportControls>
                         </MediaPlayerElement>
-                        <TextBlock x:Name="PitchSettingsFeedback" FontWeight="Normal" HorizontalAlignment="Center" FontSize="13.5" TextAlignment="Center" Text="Set pitch values in the right-hand panel">
+                        <TextBlock x:Name="PitchSettingsFeedback" FontWeight="Normal" HorizontalAlignment="Center" FontSize="13.5" TextAlignment="Center" Text="Choose effects in the right-hand panel">
                             <TextBlock.Transitions>
                                 <ContentThemeTransition/>
                             </TextBlock.Transitions>
@@ -49,10 +49,11 @@
 
                 <Border Style="{StaticResource PanelCard}" Grid.Column="1" Width="375"/>
                 <StackPanel Grid.Column="1" Padding="5" VerticalAlignment="Center">
-                    <TextBlock Text="Audio Tuning" Style="{StaticResource TitleText}"/>
+                    <TextBlock Text="Pitch Tuning:" Style="{StaticResource TitleText}"/>
                     <ComboBox x:Name="VoiceTuneMenu" Style="{StaticResource DropdownMenu}" SelectionChanged="UpdateRecordingValues" PlaceholderText="Pick Character" Margin="0 35" />
-                    <TextBlock Text="Does Audio Require Extra Audio Effects?" Style="{StaticResource TitleText}" TextWrapping="WrapWholeWords" FontSize="21" Margin="0 15" Width="275" />
-                    <ComboBox x:Name="RequiresEffectsPrompt" Style="{StaticResource DropdownMenu}" SelectionChanged="UpdateRecordingValues" PlaceholderText="Yes/No?" Margin="0 10" SelectedIndex="1" />
+                    <TextBlock Text="Extra Effects:" Style="{StaticResource TitleText}" TextWrapping="WrapWholeWords" Margin="0 15" Width="275" />
+                    <ComboBox x:Name="EffectsMenu" Style="{StaticResource DropdownMenu}" SelectionChanged="UpdateRecordingValues" PlaceholderText="Select Effect" Margin="0 10" />
+                    <CheckBox x:Name="FurtherEditsCheckbox" Content="Further Edits Required?" Checked="FlagFurtherEdits" Unchecked="UnflagFurtherEdits" HorizontalAlignment="Center"/>
                 </StackPanel>
             </Grid>
         </StackPanel>

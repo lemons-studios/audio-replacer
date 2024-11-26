@@ -15,7 +15,7 @@ namespace AudioReplacer.Util
         public readonly WebRequest webRequest;
 
         private readonly InfoBar[] windowInfoBars;
-        private List<string> pitchMenuTitles = [];
+        private List<string> pitchMenuTitles, effectMenuTitles, effectMenuValues = [];
         private List<float> pitchValues = [];
         private readonly string webVersion;
 
@@ -82,11 +82,19 @@ namespace AudioReplacer.Util
         {
             pitchMenuTitles = [];
             pitchValues = [];
+            effectMenuValues = [];
+            effectMenuTitles = [];
 
             foreach (string[] data in GlobalData.DeserializedPitchData)
             {
                 pitchValues.Add(ParseFloat(data[0])); // Position 0 of each array in the 2d array should have the pitch data, as mentioned in GlobalData.cs
                 pitchMenuTitles.Add(data[1]); // Position 1 of each array in the 2d array should have the name of the character, as mentioned in GlobalData.cs
+            }
+
+            foreach (string[] effects in GlobalData.DeserializedEffectData)
+            {
+                effectMenuTitles.Add(effects[1]);
+                effectMenuValues.Add(effects[0]);
             }
         }
 
@@ -96,10 +104,20 @@ namespace AudioReplacer.Util
             try { return pitchValues[index]; } catch { return 1; }
         }
 
+        public string GetEffectValues(int index)
+        {
+            return effectMenuValues[index];
+        }
+
         public List<string> GetPitchTitles()
         {
             UpdatePitchData();
             return pitchMenuTitles;
+        }
+
+        public List<string> GetEffectTitles()
+        {
+            return effectMenuTitles;
         }
 
         private async Task WaitHideInfoBar(InfoBar infoBar)

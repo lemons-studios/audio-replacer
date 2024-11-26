@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Page
-    x:Class="AudioReplacer.Pages.PitchDataEditor"
+    x:Class="AudioReplacer.Pages.DataEditor"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -20,7 +20,11 @@
                     <FontIcon Glyph="&#xE845;" />
                 </Button.Content>
             </Button>
+            <ComboBox x:Name="SelectedFile" Margin="700 0 0 0" SelectedIndex="0" SelectionChanged="UpdateEditingFile" Width="200">
+                <x:String>PitchData.json</x:String>
+                <x:String>AudioEffects.json</x:String>
+            </ComboBox>
         </StackPanel>
-        <Editor:CodeEditorControl x:Name="PitchEditor" HighlightingLanguage="json" MinHeight="400" />
+        <Editor:CodeEditorControl x:Name="CustomDataEditor" HighlightingLanguage="json" MinHeight="400" />
     </StackPanel>
 </Page>
