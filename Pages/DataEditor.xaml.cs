@@ -9,7 +9,8 @@ namespace AudioReplacer.Pages
     {
         private readonly string configFolder = @$"{Environment.GetFolderPath(Environment.SpecialFolder.UserProfile)}\AudioReplacer2-Config";
         private readonly string pitchDataFile, effectsDataFile;
-        private bool starting = true;
+        private string modifiedPitchDataContents = "", modifiedEffectsContents = "";
+        private readonly bool isStarting = true;
 
         public DataEditor()
         {
@@ -18,19 +19,26 @@ namespace AudioReplacer.Pages
             effectsDataFile = $@"{configFolder}\EffectsData.json";
 
             CustomDataEditor.Editor.SetText(File.ReadAllText(pitchDataFile));
-            starting = false;
+            isStarting = false;
         }
 
-        private async void SaveFile(object sender, RoutedEventArgs e)
+        private async void SaveData(object sender, RoutedEventArgs e)
         {
+            string editorContent = GetEditorText();
             var confirmSave = new ContentDialog { Title = "Save Data?", Content = "App will restart", PrimaryButtonText = "Save", CloseButtonText = "Cancel", XamlRoot = Content.XamlRoot };
             var result = await confirmSave.ShowAsync();
             if (result != ContentDialogResult.Primary) return;
-
-            long textLength = CustomDataEditor.Editor.TextLength;
-            var fileSave = SelectedFile.SelectedIndex == 0 ? pitchDataFile : effectsDataFile;
-
-            await File.WriteAllTextAsync(fileSave, CustomDataEditor.Editor.GetText(textLength));
+            switch (SelectedFile.SelectedIndex)
+            {
+                case 0:
+                    await File.WriteAllTextAsync(pitchDataFile, editorContent);
+                    if (modifiedEffectsContents != string.Empty) await File.WriteAllTextAsync(effectsDataFile, modifiedEffectsContents);
+                    break;
+                case 1:
+                    await File.WriteAllTextAsync(effectsDataFile, editorContent);
+                    if (modifiedPitchDataContents != string.Empty) await File.WriteAllTextAsync(pitchDataFile, modifiedPitchDataContents);
+                    break;
+            }
             Microsoft.Windows.AppLifecycle.AppInstance.Restart("");
         }
 
@@ -43,16 +51,21 @@ namespace AudioReplacer.Pages
 
         private void UpdateEditingFile(object sender, SelectionChangedEventArgs e)
         {
-            if (starting) return;
+            if (isStarting) return;
             switch (SelectedFile.SelectedIndex)
             {
                 case 0:
-                    CustomDataEditor.Editor.SetText(File.ReadAllText(pitchDataFile));
+                    // Navigating from effects file to pitch file
+                    modifiedEffectsContents = GetEditorText();
+                    CustomDataEditor.Editor.SetText(modifiedPitchDataContents == string.Empty ? File.ReadAllText(pitchDataFile) : modifiedPitchDataContents);
                     break;
                 case 1:
-                    CustomDataEditor.Editor.SetText(File.ReadAllText(effectsDataFile));
+                    // Navigating from pitch file to effects file
+                    modifiedPitchDataContents = GetEditorText();
+                    CustomDataEditor.Editor.SetText(modifiedEffectsContents == string.Empty ? File.ReadAllText(effectsDataFile) : modifiedEffectsContents);
                     break;
             }
         }
+        private string GetEditorText() { return CustomDataEditor.Editor.GetText(CustomDataEditor.Editor.TextLength); }
     }
 }

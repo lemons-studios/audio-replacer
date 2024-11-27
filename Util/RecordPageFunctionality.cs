@@ -15,8 +15,8 @@ namespace AudioReplacer.Util
         public readonly WebRequest webRequest;
 
         private readonly InfoBar[] windowInfoBars;
-        private List<string> pitchMenuTitles, effectMenuTitles, effectMenuValues = [];
-        private List<float> pitchValues = [];
+        private List<string> pitchMenuTitles, effectMenuTitles, effectMenuValues;
+        private List<float> pitchValues;
         private readonly string webVersion;
 
         public RecordPageFunctionality(InfoBar[] windowInfoBars)
@@ -93,14 +93,13 @@ namespace AudioReplacer.Util
 
             foreach (string[] effects in GlobalData.DeserializedEffectData)
             {
-                effectMenuTitles.Add(effects[1]);
                 effectMenuValues.Add(effects[0]);
+                effectMenuTitles.Add(effects[1]);
             }
         }
 
         public float GetPitchModifier(int index)
         {
-            UpdatePitchData();
             try { return pitchValues[index]; } catch { return 1; }
         }
 
@@ -111,7 +110,6 @@ namespace AudioReplacer.Util
 
         public List<string> GetPitchTitles()
         {
-            UpdatePitchData();
             return pitchMenuTitles;
         }
 

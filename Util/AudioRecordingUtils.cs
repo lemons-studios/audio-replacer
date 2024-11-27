@@ -48,7 +48,7 @@ namespace AudioReplacer.Util
             File.Move(outFile, file);
 
             // Repeat the last few lines but for adding audio effects (changing pitch should come before extra audio effects always) IF any effects are selected
-            if (effectCommand != "")
+            if (!string.IsNullOrEmpty(effectCommand))
             {
                 var ffmpegEffectProcess = ShellCommandManager.CreateProcess("ffmpeg", $"-i \"{file}\" {effectCommand} -y \"{outFile}\"");
                 ffmpegEffectProcess.Start();

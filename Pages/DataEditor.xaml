@@ -10,7 +10,7 @@
 
     <StackPanel Padding="5.5">
         <StackPanel Orientation="Horizontal" Margin="0 5.5 0 5" VerticalAlignment="Center">
-            <Button Click="SaveFile" Margin="15 0 0 0" ToolTipService.ToolTip="Save Changes" CornerRadius="4">
+            <Button Click="SaveData" Margin="15 0 0 0" ToolTipService.ToolTip="Save Changes" CornerRadius="4">
                 <Button.Content>
                     <FontIcon Glyph="&#xE74E;" />
                 </Button.Content>

@@ -61,7 +61,7 @@ namespace AudioReplacer.Pages
                 audioRecordingUtils.effectCommand = recordPageBackend.GetEffectValues(EffectsMenu.SelectedIndex);
                 previousEffectSelection = EffectsMenu.SelectedItem.ToString();
             }
-            PitchSettingsFeedback.Text = $"Pitch Modifier: {audioRecordingUtils.pitchChange} ({previousPitchSelection})\nEffect Selected: {previousEffectSelection}";
+            PitchSettingsFeedback.Text = $"Pitch Modifier: {audioRecordingUtils.pitchChange} ({previousPitchSelection})\nEffect Selected: {previousEffectSelection}\nEffect Value: {audioRecordingUtils.effectCommand}";
         }
 
         private async void SelectProjectFolder(object sender, RoutedEventArgs e)
