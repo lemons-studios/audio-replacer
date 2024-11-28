@@ -33,10 +33,10 @@ namespace AudioReplacer.Util
         // Again, these values are only the starting values. They can be edited through their own effect config file, which also allows you to add/remove/modify these effects too; although you will need some knowledge of ffmpeg audio filters
         public static string[][] DefaultEffectData =
         [
-            ["\"aecho=0.8:0.35:175\"", "Flashback"], 
-            ["\"asplit=2[orig][low];[low]rubberband=pitch=0.8,volume=1.0,afftdn,acompressor[aud1];[orig][aud1]amix=inputs=2\"", "Shadow Self"], 
-            ["\"highpass=f=300, lowpass=f=3000, acrusher=level_in=1:bits=8:mode=log:level_out=0.8, acompressor=threshold=0.2:ratio=4:attack=50:release=300\"", "TV"],
-            ["\"aecho=0.6:0.7:60:0.6, aecho=0.5:0.7:200:0.5, lowpass=f=500, bass=g=12, asetrate=44100*0.9, atempo=1.1, volume=1.25\"", "Godlike"],
+            ["aecho=0.8:0.35:17", "Flashback"], 
+            ["asplit=2[orig][low];[low]rubberband=pitch=0.8,volume=1.0,afftdn,acompressor[aud1];[orig][aud1]amix=inputs=", "Shadow Self"], 
+            ["highpass=f=300, lowpass=f=3000, acrusher=level_in=1:bits=8:mode=log:level_out=0.8, acompressor=threshold=0.2:ratio=4:attack=50:release=30", "TV"],
+            ["aecho=0.6:0.7:60:0.6, aecho=0.5:0.7:200:0.5, lowpass=f=500, bass=g=12, asetrate=44100*0.9, atempo=1.1, volume=1.2", "Godlike"],
             ["", "None"]
         ];
 
