@@ -66,6 +66,7 @@ namespace AudioReplacer.Pages
                     break;
             }
         }
+
         private string GetEditorText() { return CustomDataEditor.Editor.GetText(CustomDataEditor.Editor.TextLength); }
     }
 }

@@ -7,14 +7,15 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:WinUiEx="using:WinUIEx"
     mc:Ignorable="d"
-    MinHeight="460" MaxHeight="460"
+    MinHeight="480" MaxHeight="480"
     MinWidth="1024" MaxWidth="1024">
     <StackPanel>
-        <Border x:Name="AppTitleBar" VerticalAlignment="Top" Height="40" Padding="5" BorderThickness="5">
+        <Border x:Name="AppTitleBar" VerticalAlignment="Top" Height="55" Padding="5" BorderThickness="5">
             <Grid ColumnDefinitions="Auto, *">
                 <FontIcon Glyph="&#xEC71;" Style="{StaticResource TitleBarIcon}"/>
                 <StackPanel Orientation="Horizontal" Grid.Column="1">
                     <TextBlock x:Name="AppTitleText" Style="{StaticResource TitleBarText}" Text="Audio Replacer" />
+                    <Button x:Name="ProjectFolderButton" Style="{StaticResource AccentButtonStyle}" Content="Change Project Folder" Width="155" Height="35" Click="ChangeProjectFolder" Margin="35 0 0 0" FontSize="13" CornerRadius="4"/>
                 </StackPanel>
             </Grid>
         </Border>

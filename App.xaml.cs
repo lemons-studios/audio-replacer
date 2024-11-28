@@ -39,7 +39,9 @@ namespace AudioReplacer
                 TransparencyEffect = 0,
                 EnableUpdateChecks = 1,
                 RecordEndWaitTime = 25,
-                NotificationTimeout = 1750
+                NotificationTimeout = 1750,
+                RememberSelectedFolder = 1,
+                LastSelectedFolder = ""
             };
             string defaultJson = JsonSerializer.Serialize(defaultConfig, new JsonSerializerOptions { WriteIndented = true });
             File.WriteAllText(settingsFilePath, defaultJson); // File gets created automatically by File.WriteAllText() before it writes to anything

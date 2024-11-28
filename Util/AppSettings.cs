@@ -13,5 +13,9 @@ namespace AudioReplacer.Util
         int RecordEndWaitTime { get; set; }
         [Option(Alias = "NotificationTimeout", DefaultValue = 1750)]
         int NotificationTimeout { get; set; }
+        [Option(Alias = "RememberSelectedFolder", DefaultValue = 1)]
+        int RememberSelectedFolder { get; set; }
+        [Option(Alias = "LastSelectedFolder", DefaultValue = "")]
+        string LastSelectedFolder { get; set; }
     }
 }

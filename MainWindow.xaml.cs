@@ -85,10 +85,29 @@ namespace AudioReplacer
                     "Pitch Editor" => typeof(DataEditor),
                     _ => pageSwitchType
                 };
+                
             }
+            ProjectFolderButton.Visibility = args.InvokedItemContainer.Tag.Equals("Record")
+                ? Visibility.Visible
+                : Visibility.Collapsed;
+
             if (!pageCache.TryGetValue(pageSwitchType, out var page)) { page = (Page) Activator.CreateInstance(pageSwitchType); pageCache[pageSwitchType] = page; }
             ContentFrame.Content = page;
         }
         private void OnWindowClose(object sender, AppWindowClosingEventArgs args) { if (MainWindow.ProjectInitialized && (MainWindow.IsProcessing || MainWindow.IsRecording)) File.Delete(MainWindow.CurrentFile); }
+
+        public Button GetProjectButton()
+        {
+            return ProjectFolderButton;
+        }
+
+        private void ChangeProjectFolder(object sender, RoutedEventArgs e)
+        {
+            var currentPage = ContentFrame.Content as RecordPage;
+            if (currentPage != null)
+            {
+                currentPage.SelectProjectFolder(sender, e);
+            }
+        }
     }
 }

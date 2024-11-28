@@ -133,7 +133,32 @@ namespace AudioReplacer.Util
         public string GetFormattedCurrentFile(string input) { return input.Replace(@"\", "/"); }
         public bool IsUpdateAvailable() { try { return webVersion != GlobalData.GetAppVersion(true); } catch { return false; } }
         private float ParseFloat(string value) { try { return float.Parse(value); } catch { return 1; } }
-        public bool ToBool(int value) { return value != 0; }
-        public string BoolToYesNo(bool value) { return value ? "Yes" : "No"; }
+        public bool FolderMemoryAllowed() { return App.AppSettings.RememberSelectedFolder == 1 && Path.Exists(App.AppSettings.LastSelectedFolder); }
+
+        public string BoolToString(bool value, bool humanizeOutput = true)
+        {
+            switch (humanizeOutput)
+            {
+                case true:
+                    return value ? "Yes" : "No";
+                case false:
+                    return value.ToString();
+            }
+        }
+
+        public string BoolToString(bool? value, bool humanizeOutput = true)
+        {
+            try
+            {
+                switch (humanizeOutput)
+                {
+                    case true:
+                        return (bool) value ? "Yes" : "No";
+                    case false:
+                        return value.ToString();
+                }
+            }
+            catch (InvalidOperationException e) { return "No"; }
+        }
     }
 }

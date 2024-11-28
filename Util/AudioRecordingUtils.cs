@@ -50,7 +50,7 @@ namespace AudioReplacer.Util
             // Repeat the last few lines but for adding audio effects (changing pitch should come before extra audio effects always) IF any effects are selected
             if (!string.IsNullOrEmpty(effectCommand))
             {
-                var ffmpegEffectProcess = ShellCommandManager.CreateProcess("ffmpeg", $"-i \"{file}\" {effectCommand} -y \"{outFile}\"");
+                var ffmpegEffectProcess = ShellCommandManager.CreateProcess("ffmpeg", $"-i \"{file}\" -af {effectCommand} -y \"{outFile}\"");
                 ffmpegEffectProcess.Start();
                 await ffmpegEffectProcess.WaitForExitAsync();
                 if (ffmpegProcess.ExitCode != 0) throw new Exception();

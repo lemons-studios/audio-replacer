@@ -18,6 +18,7 @@ namespace AudioReplacer.Pages
         private readonly RecordPageFunctionality recordPageBackend;
         private string previousPitchSelection = "None Selected";
         private string previousEffectSelection = "None";
+        private bool projectNotSelected = true;
 
         public RecordPage()
         {
@@ -40,15 +41,18 @@ namespace AudioReplacer.Pages
                     UpdateToast.IsOpen = true;
                     break;
                 case false: // Show popup for dependency install requirement
-                    recordPageBackend.ToggleButton(FolderSelector, false);
+                    recordPageBackend.ToggleButton(App.MainWindow.GetProjectButton(), false);
                     VoiceTuneMenu.IsEnabled = false;
                     EffectsMenu.IsEnabled = false;
                     DependencyToast.IsOpen = true;
                     break;
             }
+
+            // Check if folder memory is enabled and if the remembered path exists
+            if (recordPageBackend.FolderMemoryAllowed()) { ProjectSetup(App.AppSettings.LastSelectedFolder); }
         }
 
-        private void UpdateRecordingValues(object sender, SelectionChangedEventArgs e)
+        private void UpdateRecordingValues()
         {
             if (audioRecordingUtils == null) return;
             if (VoiceTuneMenu.SelectedItem != null)
@@ -61,21 +65,20 @@ namespace AudioReplacer.Pages
                 audioRecordingUtils.effectCommand = recordPageBackend.GetEffectValues(EffectsMenu.SelectedIndex);
                 previousEffectSelection = EffectsMenu.SelectedItem.ToString();
             }
-            PitchSettingsFeedback.Text = $"Pitch Modifier: {audioRecordingUtils.pitchChange} ({previousPitchSelection})\nEffect Selected: {previousEffectSelection}\nEffect Value: {audioRecordingUtils.effectCommand}";
+            PitchSettingsFeedback.Text = $"Pitch Modifier: {audioRecordingUtils.pitchChange} ({previousPitchSelection})\nEffect Selected: {previousEffectSelection}\nExtra Edits Required? {recordPageBackend.BoolToString(FurtherEditsCheckBox.IsChecked)}";
         }
 
-        private async void SelectProjectFolder(object sender, RoutedEventArgs e)
+        public async void SelectProjectFolder(object sender, RoutedEventArgs e)
         {
             var folderPicker = new FolderPicker { SuggestedStartLocation = PickerLocationId.ComputerFolder };
             folderPicker.FileTypeFilter.Add("*");
-
-            // For Win10 Compat
             IntPtr hWnd = WindowNative.GetWindowHandle(App.MainWindow);
             InitializeWithWindow.Initialize(folderPicker, hWnd);
             var folder = await folderPicker.PickSingleFolderAsync();
 
             if (folder == null) return;
             Windows.Storage.AccessCache.StorageApplicationPermissions.FutureAccessList.AddOrReplace("PickedFolderToken", folder);
+            App.AppSettings.LastSelectedFolder = folder.Path;
             ProjectSetup(folder.Path);
         }
 
@@ -176,17 +179,23 @@ namespace AudioReplacer.Pages
 
         private void ProjectSetup(string path)
         {
-            recordPageBackend.UpdateInfoBar(ProgressToast, "Setting up project...", "", InfoBarSeverity.Informational, autoClose: false);
-            FileProgressPanel.Visibility = Visibility.Visible;
-            recordPageBackend.ToggleButton(SkipAudioButton, true);
-            recordPageBackend.ToggleButton(StartRecordingButton, true);
-
-            FolderSelector.Visibility = Visibility.Collapsed;
-            AudioPreviewControls.IsEnabled = true;
-
-            projectFileManagementUtils = new ProjectFileManagementUtils(path);
-            MainWindow.ProjectInitialized = true;
-
+            Task.Run(() => recordPageBackend.UpdateInfoBar(ProgressToast, "Setting up project...", "", InfoBarSeverity.Informational, autoClose: false));
+            switch (projectNotSelected)
+            {
+                case true:
+                    AudioPreviewControls.IsEnabled = true;
+                    projectFileManagementUtils = new ProjectFileManagementUtils(path);
+                    recordPageBackend.ToggleButton(SkipAudioButton, true);
+                    recordPageBackend.ToggleButton(StartRecordingButton, true);
+                    FileProgressPanel.Visibility = Visibility.Visible;
+                    MainWindow.ProjectInitialized = true;
+                    projectNotSelected = false;
+                    break;
+                case false:
+                    projectFileManagementUtils = null;
+                    projectFileManagementUtils = new ProjectFileManagementUtils(path);
+                    break;
+            }
             UpdateFileElements();
             recordPageBackend.UpdateInfoBar(ToastNotification, "Success!", "Project loaded!", InfoBarSeverity.Success);
         }
@@ -227,5 +236,9 @@ namespace AudioReplacer.Pages
 
         private void FlagFurtherEdits(object sender, RoutedEventArgs e) { audioRecordingUtils.requiresExtraEdits = true; }
         private void UnflagFurtherEdits(object sender, RoutedEventArgs e) { audioRecordingUtils.requiresExtraEdits = false; }
+
+        // Awesome boilerplate here
+        private void ComboBoxRecordValuesUpdate(object sender, SelectionChangedEventArgs e) { UpdateRecordingValues(); }
+        private void FurtherEditsValuesUpdate(object sender, RoutedEventArgs e) { UpdateRecordingValues(); }
     }
 }

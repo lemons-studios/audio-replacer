@@ -38,6 +38,13 @@
                     <ToggleSwitch x:Name="UpdateCheckSwitch" IsOn="True" Toggled="ToggleUpdateChecks"/>
                 </WinCommunityTk:SettingsCard>
 
+                <WinCommunityTk:SettingsCard Header="Remember Selected Folder" Description="Automatically loads last selected folder from previous launch">
+                    <WinCommunityTk:SettingsCard.HeaderIcon>
+                        <FontIcon Glyph="&#xE9F5;" />
+                    </WinCommunityTk:SettingsCard.HeaderIcon>
+                    <ToggleSwitch x:Name="ProjectMemorySwitch" IsOn="True" Toggled="ToggleFolderMemory"/>
+                </WinCommunityTk:SettingsCard>
+
                 <WinCommunityTk:SettingsCard Header="Notification Stay Time" Description="Measured in milliseconds" Margin="0 0 0 7.5">
                     <WinCommunityTk:SettingsCard.HeaderIcon>
                         <FontIcon Glyph="&#xE8BD;" />
@@ -97,7 +104,15 @@
                                 <FontIcon Glyph="&#xE76C;" />
                             </WinCommunityTk:SettingsCard.ActionIcon>
                             <WinCommunityTk:SettingsCard.HeaderIcon>
-                                <FontIcon Glyph="&#xEC56;" />
+                                <FontIcon Glyph="&#xE9E9;" />
+                            </WinCommunityTk:SettingsCard.HeaderIcon>
+                        </WinCommunityTk:SettingsCard>
+                        <WinCommunityTk:SettingsCard Header="Reset Effects Data" Margin="0 0 0 4.5" IsClickEnabled="True" Click="ResetEffectsData">
+                            <WinCommunityTk:SettingsCard.ActionIcon>
+                                <FontIcon Glyph="&#xE76C;" />
+                            </WinCommunityTk:SettingsCard.ActionIcon>
+                            <WinCommunityTk:SettingsCard.HeaderIcon>
+                                <FontIcon Glyph="&#xF4A5;" />
                             </WinCommunityTk:SettingsCard.HeaderIcon>
                         </WinCommunityTk:SettingsCard>
                         <WinCommunityTk:SettingsCard Header="Reset All" IsClickEnabled="True" Click="ResetAll">
