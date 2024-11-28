@@ -1,10 +1,10 @@
 <h1 align="center">Audio Replacer 2</h1>
 <p align="center">
-  <img src="https://img.shields.io/badge/c%23-%23239120.svg?style=for-the-badge&logo=csharp&logoColor=white">
-  <img src="https://img.shields.io/badge/.NET-5C2D91?style=for-the-badge&logo=.net&logoColor=white">
+  <img src="https://img.shields.io/badge/c%23-%23239120.svg?style=for-the-badge&logo=csharp&logoColor=white" alt="C# Badge">
+  <img src="https://img.shields.io/badge/.NET-5C2D91?style=for-the-badge&logo=.net&logoColor=white" alt=".NET Badge">
 </p>
 
-This tool was made for the purpose of being a useful tool for a Persona 4 Golden mod I am working on; where one of my friends dubs the entire game over. However, Not only have I made it publically available, I have turned it into a batch audio replacement processor that works with any input folder structure!
+This tool was made for the purpose of being a useful tool for a Persona 4 Golden mod I am working on; where one of my friends dubs the entire game over. However, Not only have I made it publicly available, I have turned it into a batch audio replacement processor that works with any input folder structure!
 
 **This tool WILL work on Windows 10 Version 22H2**, although this app was designed with Windows 11 in mind
 

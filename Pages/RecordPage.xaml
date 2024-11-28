@@ -50,7 +50,7 @@
                         <ComboBox x:Name="VoiceTuneMenu" Style="{StaticResource DropdownMenu}" SelectionChanged="ComboBoxRecordValuesUpdate" PlaceholderText="Pick Character" Margin="0 35" />
                         <TextBlock Text="Extra Effects:" Style="{StaticResource TitleText}" TextWrapping="WrapWholeWords" Margin="0 15" Width="275" />
                         <ComboBox x:Name="EffectsMenu" Style="{StaticResource DropdownMenu}" SelectionChanged="ComboBoxRecordValuesUpdate" PlaceholderText="Select Effect" Margin="0 10" />
-                        <CheckBox x:Name="FurtherEditsCheckBox" Content="Further Edits Required?" Checked="FlagFurtherEdits" Unchecked="UnflagFurtherEdits" HorizontalAlignment="Center" Click="FurtherEditsValuesUpdate"/>
+                        <CheckBox x:Name="FurtherEditsCheckBox" Content="Further Edits Required?" Checked="FlagFurtherEdits" Unchecked="UnFlagFurtherEdits" HorizontalAlignment="Center" Click="FurtherEditsValuesUpdate"/>
                     </StackPanel>
                 </Border>
             </Grid>

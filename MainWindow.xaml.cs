@@ -87,7 +87,7 @@ namespace AudioReplacer
                 };
                 
             }
-            ProjectFolderButton.Visibility = args.InvokedItemContainer.Tag.Equals("Record")
+            ProjectFolderButton.Visibility = args.InvokedItemContainer!.Tag.Equals("Record")
                 ? Visibility.Visible
                 : Visibility.Collapsed;
 

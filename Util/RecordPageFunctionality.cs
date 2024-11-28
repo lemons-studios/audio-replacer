@@ -12,7 +12,7 @@ namespace AudioReplacer.Util
 {
     public class RecordPageFunctionality
     {
-        public readonly WebRequest webRequest;
+        private readonly WebRequest webRequest;
 
         private readonly InfoBar[] windowInfoBars;
         private List<string> pitchMenuTitles, effectMenuTitles, effectMenuValues;
@@ -59,7 +59,6 @@ namespace AudioReplacer.Util
         public bool IsFfMpegAvailable()
         {
             // Get path variable from system and loop through all of it to check if the path contains ffmpeg.exe
-            // This also allows for installs that don't come from winget (such as ffmpeg installed from Chocolatey or a manually installed copy of ffmpeg)
             try
             {
                 string pathEnv = Environment.GetEnvironmentVariable("PATH", EnvironmentVariableTarget.User);
@@ -137,28 +136,20 @@ namespace AudioReplacer.Util
 
         public string BoolToString(bool value, bool humanizeOutput = true)
         {
-            switch (humanizeOutput)
+            return humanizeOutput switch
             {
-                case true:
-                    return value ? "Yes" : "No";
-                case false:
-                    return value.ToString();
-            }
+                true => value ? "Yes" : "No",
+                false => value.ToString()
+            };
         }
 
         public string BoolToString(bool? value, bool humanizeOutput = true)
         {
-            try
+            return humanizeOutput switch
             {
-                switch (humanizeOutput)
-                {
-                    case true:
-                        return (bool) value ? "Yes" : "No";
-                    case false:
-                        return value.ToString();
-                }
-            }
-            catch (InvalidOperationException e) { return "No"; }
+                true => value != null && (bool) value ? "Yes" : "No",
+                false => value.ToString()
+            };
         }
     }
 }

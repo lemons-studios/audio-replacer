@@ -2,12 +2,11 @@
 using System.Diagnostics;
 using System.IO;
 using AudioReplacer.Util;
-using Microsoft.UI;
+using CommunityToolkit.WinUI.Controls;
 using Microsoft.UI.Composition.SystemBackdrops;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
-using WinUIEx;
 
 namespace AudioReplacer.Pages
 {
@@ -25,7 +24,6 @@ namespace AudioReplacer.Pages
             UpdateCheckSwitch.IsOn = GlobalData.UpdateChecksAllowed;
             ToastDelayBox.Value = GlobalData.NotificationTimeout;
             RecordDelayBox.Value = GlobalData.RecordStopDelay;
-
             firstOpening = false;
         }
 
@@ -51,10 +49,6 @@ namespace AudioReplacer.Pages
                     break;
                 case 1: // Desktop Acrylic Backdrop
                     App.MainWindow.SystemBackdrop = new DesktopAcrylicBackdrop();
-                    break;
-                case 2: // No Transparency
-                    App.MainWindow.SystemBackdrop = null;
-                    App.MainWindow.SetTitleBarBackgroundColors(Application.Current.RequestedTheme == ApplicationTheme.Light ? Colors.White : Colors.Black);
                     break;
             }
             App.AppSettings.AppTransparencySetting = TransparencyDropdown.SelectedIndex;
@@ -89,7 +83,7 @@ namespace AudioReplacer.Pages
         private async void RefreshPitchData(object sender, RoutedEventArgs e)
         {
             // Actually, it just restarts the application.
-            var confirmRefresh = new ContentDialog { Title = "Refresh Pitch Values?", Content = "Please save any unsaved work before refreshing", PrimaryButtonText = "Refresh", CloseButtonText = "Cancel", XamlRoot = base.Content.XamlRoot };
+            var confirmRefresh = new ContentDialog { Title = "Refresh Pitch Values?", Content = "Please save any unsaved work before refreshing", PrimaryButtonText = "Refresh", CloseButtonText = "Cancel", XamlRoot = Content.XamlRoot };
             var confirmResult = await confirmRefresh.ShowAsync();
             if (confirmResult == ContentDialogResult.Primary) Microsoft.Windows.AppLifecycle.AppInstance.Restart("");
         }
@@ -105,51 +99,39 @@ namespace AudioReplacer.Pages
         // Got lazy for the rest of this file. It works though
         private async void ResetSettings(object sender, RoutedEventArgs e)
         {
-            var confirmRefresh = new ContentDialog { Title = "Reset Settings?", Content = "Only your settings will be reverted to default values. App will restart", PrimaryButtonText = "Reset", CloseButtonText = "Cancel", XamlRoot = base.Content.XamlRoot };
+            var confirmRefresh = new ContentDialog { Title = "Reset Settings?", Content = "Only your settings will be reverted to default values. App will restart", PrimaryButtonText = "Reset", CloseButtonText = "Cancel", XamlRoot = Content.XamlRoot };
             var result = await confirmRefresh.ShowAsync();
             if (result != ContentDialogResult.Primary) return;
             File.Delete($"{configFolder}\\AudioReplacer2-Config.json");
             Microsoft.Windows.AppLifecycle.AppInstance.Restart("");
         }
 
-        private async void ResetPitchData(object sender, RoutedEventArgs e)
+        private async void ResetCustomData(object sender, RoutedEventArgs e)
         {
-            var confirmRefresh = new ContentDialog { Title = "Reset Pitch Data?", Content = "Your custom pitch data will be reverted to default values. App will restart", PrimaryButtonText = "Reset", CloseButtonText = "Cancel", XamlRoot = base.Content.XamlRoot };
-            var result = await confirmRefresh.ShowAsync();
-            if (result != ContentDialogResult.Primary) return;
-            
-            File.Delete($"{configFolder}\\PitchData.json");
+            if ((SettingsCard) sender == AllDataOption)
+            {
+                var confirmRefresh = new ContentDialog { Title = "Reset Everything?", Content = "App will restart", PrimaryButtonText = "Reset Data", SecondaryButtonText = "Reset Everything", CloseButtonText = "Cancel", XamlRoot = Content.XamlRoot, Width = 500 };
+                var result = await confirmRefresh.ShowAsync();
+
+                File.Delete($"{configFolder}\\PitchData.json");
+                File.Delete($"{configFolder}\\EffectsData.json");
+                if (result == ContentDialogResult.Secondary) File.Delete($"{configFolder}\\AudioReplacer2-Config.json");
+            }
+            else
+            {
+                string source = (SettingsCard) sender == PitchData ? "pitch" : "effect";
+                var confirmReset = new ContentDialog { Title = $"Reset {source} Data?", Content = $"Your custom {source} data will be reverted to default values. App will restart", PrimaryButtonText = "Reset", CloseButtonText = "Cancel", XamlRoot = Content.XamlRoot };
+                var result = await confirmReset.ShowAsync();
+                if (result != ContentDialogResult.Primary) return;
+
+                string file = source.Equals("pitch") ? "PitchData.json" : "EffectData.json";
+                File.Delete(Path.Combine(configFolder, file));
+            }
             Microsoft.Windows.AppLifecycle.AppInstance.Restart("");
         }
 
-        private async void ResetEffectsData(object sender, RoutedEventArgs e)
-        {
-            var confirmRefresh = new ContentDialog { Title = "Reset Effect Data?", Content = "Your custom audio filter data will be reverted to default values. App will restart", PrimaryButtonText = "Reset", CloseButtonText = "Cancel", XamlRoot = base.Content.XamlRoot };
-            var result = await confirmRefresh.ShowAsync();
-            if (result != ContentDialogResult.Primary) return;
-
-            File.Delete($"{configFolder}\\EffectsData.json");
-            Microsoft.Windows.AppLifecycle.AppInstance.Restart("");
-        }
-
-        private async void ResetAll(object sender, RoutedEventArgs e)
-        {
-            var confirmRefresh = new ContentDialog { Title = "Reset Everything?", Content = "App will restart", PrimaryButtonText = "Reset Data", SecondaryButtonText = "Reset Everything", CloseButtonText = "Cancel", XamlRoot = base.Content.XamlRoot, Width = 500};
-            var result = await confirmRefresh.ShowAsync();
-            if (result != ContentDialogResult.Primary || result != ContentDialogResult.Secondary) return;
-            
-            File.Delete($"{configFolder}\\PitchData.json");
-            File.Delete($"{configFolder}\\EffectsData.json");
-            if(result == ContentDialogResult.Secondary) File.Delete($"{configFolder}\\AudioReplacer2-Config.json");
-            Microsoft.Windows.AppLifecycle.AppInstance.Restart("");
-        }
-
-        private void ToggleFolderMemory(object sender, RoutedEventArgs e)
-        {
-            App.AppSettings.RememberSelectedFolder = 0;
-        }
-
-        private void OpenPitchValuesFile(object sender, RoutedEventArgs e) { try { Process.Start(new ProcessStartInfo($"{Environment.GetFolderPath(Environment.SpecialFolder.UserProfile)}\\AudioReplacer2-Config\\PitchData.json") { UseShellExecute = true }); } catch { return; } }
+        private void ToggleFolderMemory(object sender, RoutedEventArgs e) { App.AppSettings.RememberSelectedFolder = 0; }
+        private void OpenPitchValuesFile(object sender, RoutedEventArgs e) { try { Process.Start(new ProcessStartInfo($@"{Environment.GetFolderPath(Environment.SpecialFolder.UserProfile)}\AudioReplacer2-Config\PitchData.json") { UseShellExecute = true }); } catch { return; } }
         private int BoolToInt(bool value) { return value == false ? 0 : 1; }
     }
 }
