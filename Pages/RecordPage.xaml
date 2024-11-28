@@ -8,7 +8,7 @@
     <Grid>
         <StackPanel Height="450">
             <Border Background="Transparent" Height="12" VerticalAlignment="Top"/>
-            <Grid ColumnDefinitions="60*, 40*" Padding="2.5">
+            <Grid ColumnDefinitions="60*, 40*" Padding="7.5 8">
                 <Border Style="{StaticResource PanelCard}" Grid.Column="0" Width="575">
                     <StackPanel Padding="5" VerticalAlignment="Center">
                         <TextBlock x:Name="CurrentFile" Text="Select a folder to begin." Style="{StaticResource TitleText}" Margin="0 7.5">

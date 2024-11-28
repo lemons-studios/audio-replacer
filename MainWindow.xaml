@@ -7,7 +7,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:WinUiEx="using:WinUIEx"
     mc:Ignorable="d"
-    MinHeight="480" MaxHeight="480"
+    MinHeight="485" MaxHeight="485"
     MinWidth="1024" MaxWidth="1024">
     <StackPanel>
         <Border x:Name="AppTitleBar" VerticalAlignment="Top" Height="55" Padding="5" BorderThickness="5">
