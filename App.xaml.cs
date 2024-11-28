@@ -38,7 +38,7 @@ namespace AudioReplacer
                 Theme = 0,
                 TransparencyEffect = 0,
                 EnableUpdateChecks = 1,
-                RecordEndWaitTime = 25,
+                RecordEndWaitTime = 0,
                 NotificationTimeout = 1750,
                 RememberSelectedFolder = 1,
                 LastSelectedFolder = ""

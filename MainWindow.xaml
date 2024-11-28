@@ -15,7 +15,7 @@
                 <FontIcon Glyph="&#xEC71;" Style="{StaticResource TitleBarIcon}"/>
                 <StackPanel Orientation="Horizontal" Grid.Column="1">
                     <TextBlock x:Name="AppTitleText" Style="{StaticResource TitleBarText}" Text="Audio Replacer" />
-                    <Button x:Name="ProjectFolderButton" Style="{StaticResource AccentButtonStyle}" Content="Change Project Folder" Width="155" Height="35" Click="ChangeProjectFolder" Margin="35 0 0 0" FontSize="13" CornerRadius="4"/>
+                    <Button x:Name="ProjectFolderButton" Content="Change Project Folder" Width="155" Height="35" Click="ChangeProjectFolder" Margin="35 0 0 0" FontSize="13" CornerRadius="4"/>
                 </StackPanel>
             </Grid>
         </Border>

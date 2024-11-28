@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.IO;
 using AudioReplacer.Util;
+using Castle.Core.Smtp;
 using CommunityToolkit.WinUI.Controls;
 using Microsoft.UI.Composition.SystemBackdrops;
 using Microsoft.UI.Xaml;
@@ -63,21 +64,22 @@ namespace AudioReplacer.Pages
             App.AppSettings.AppThemeSetting = ThemeDropdown.SelectedIndex;
         }
 
-        private void UpdateRecordDelay(NumberBox sender, NumberBoxValueChangedEventArgs args)
+        private void UpdateDelayTimes(NumberBox sender, NumberBoxValueChangedEventArgs args)
         {
             if (firstOpening) return;
-            int newDelayTime = (int) MathF.Max((float) RecordDelayBox.Value, 1);
-            GlobalData.RecordStopDelay = newDelayTime;
-            App.AppSettings.RecordEndWaitTime = newDelayTime;
-        }
-
-        private void UpdateToastStayTime(NumberBox sender, NumberBoxValueChangedEventArgs args)
-        {
-            if (firstOpening) return;
-            int newStayTime = (int) MathF.Max((float) ToastDelayBox.Value, 500);
-
-            GlobalData.NotificationTimeout = newStayTime;
-            App.AppSettings.NotificationTimeout = newStayTime;
+            switch (sender == RecordDelayBox)
+            {
+                case true:
+                    int newDelayTime = (int) MathF.Max((float) RecordDelayBox.Value, 0);
+                    GlobalData.RecordStopDelay = newDelayTime;
+                    App.AppSettings.RecordEndWaitTime = newDelayTime;
+                    break;
+                case false:
+                    int newStayTime = (int) MathF.Max((float) ToastDelayBox.Value, 500);
+                    GlobalData.NotificationTimeout = newStayTime;
+                    App.AppSettings.NotificationTimeout = newStayTime;
+                    break;
+            }
         }
 
         private async void RefreshPitchData(object sender, RoutedEventArgs e)
@@ -96,16 +98,6 @@ namespace AudioReplacer.Pages
             outFolderOpenProcess.Start();
         }
 
-        // Got lazy for the rest of this file. It works though
-        private async void ResetSettings(object sender, RoutedEventArgs e)
-        {
-            var confirmRefresh = new ContentDialog { Title = "Reset Settings?", Content = "Only your settings will be reverted to default values. App will restart", PrimaryButtonText = "Reset", CloseButtonText = "Cancel", XamlRoot = Content.XamlRoot };
-            var result = await confirmRefresh.ShowAsync();
-            if (result != ContentDialogResult.Primary) return;
-            File.Delete($"{configFolder}\\AudioReplacer2-Config.json");
-            Microsoft.Windows.AppLifecycle.AppInstance.Restart("");
-        }
-
         private async void ResetCustomData(object sender, RoutedEventArgs e)
         {
             if ((SettingsCard) sender == AllDataOption)
@@ -116,6 +108,13 @@ namespace AudioReplacer.Pages
                 File.Delete($"{configFolder}\\PitchData.json");
                 File.Delete($"{configFolder}\\EffectsData.json");
                 if (result == ContentDialogResult.Secondary) File.Delete($"{configFolder}\\AudioReplacer2-Config.json");
+            }
+            else if ((SettingsCard) sender == SettingsOption)
+            {
+                var confirmRefresh = new ContentDialog { Title = "Reset Settings?", Content = "Only your settings will be reverted to default values. App will restart", PrimaryButtonText = "Reset", CloseButtonText = "Cancel", XamlRoot = Content.XamlRoot };
+                var result = await confirmRefresh.ShowAsync();
+                if (result != ContentDialogResult.Primary) return;
+                File.Delete($"{configFolder}\\AudioReplacer2-Config.json");
             }
             else
             {

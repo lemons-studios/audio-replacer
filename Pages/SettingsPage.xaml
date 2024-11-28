@@ -49,14 +49,14 @@
                     <WinCommunityTk:SettingsCard.HeaderIcon>
                         <FontIcon Glyph="&#xE8BD;" />
                     </WinCommunityTk:SettingsCard.HeaderIcon>
-                    <NumberBox x:Name="ToastDelayBox" SpinButtonPlacementMode="Inline" SmallChange="10" LargeChange="50" Value="1500" Minimum="500" Maximum="5500" ValueChanged="UpdateToastStayTime"/>
+                    <NumberBox x:Name="ToastDelayBox" SpinButtonPlacementMode="Inline" SmallChange="25" LargeChange="100" Value="1500" Minimum="500" Maximum="5500" ValueChanged="UpdateDelayTimes"/>
                 </WinCommunityTk:SettingsCard>
 
                 <WinCommunityTk:SettingsCard Header="Record Stop Delay" Description="Changes the amount of time it takes for recording to stop after clicking the stop recording button. Measured in milliseconds" Margin="0 0 0 7.5">
                     <WinCommunityTk:SettingsCard.HeaderIcon>
                         <FontIcon Glyph="&#xF781;" />
                     </WinCommunityTk:SettingsCard.HeaderIcon>
-                    <NumberBox x:Name="RecordDelayBox" Minimum="25" SpinButtonPlacementMode="Inline" SmallChange="10" LargeChange="50" Value="75" Maximum="5000" ValueChanged="UpdateRecordDelay"/>
+                    <NumberBox x:Name="RecordDelayBox" Minimum="0" SpinButtonPlacementMode="Inline" SmallChange="5" LargeChange="50" Value="25" Maximum="5000" ValueChanged="UpdateDelayTimes"/>
                 </WinCommunityTk:SettingsCard>
 
                 <WinCommunityTk:SettingsCard Header="Open Output Directory" Description="Opens an explorer window into the output directory of the app" IsClickEnabled="True" Margin="0 0 0 7.5" Click="OpenOutputFolder">
@@ -91,7 +91,7 @@
                         <FontIcon Glyph="&#xE74D;" />
                     </WinCommunityTk:SettingsExpander.HeaderIcon>
                     <WinCommunityTk:SettingsExpander.Items>
-                        <WinCommunityTk:SettingsCard Header="Reset Settings" Margin="0 5 0 4.5" IsClickEnabled="True" Click="ResetSettings">
+                        <WinCommunityTk:SettingsCard x:Name="SettingsOption" Header="Reset Settings" Margin="0 5 0 4.5" IsClickEnabled="True" Click="ResetCustomData">
                             <WinCommunityTk:SettingsCard.ActionIcon>
                                 <FontIcon Glyph="&#xE76C;" />
                             </WinCommunityTk:SettingsCard.ActionIcon>
