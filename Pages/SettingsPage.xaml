@@ -68,7 +68,7 @@
                     </WinCommunityTk:SettingsCard.HeaderIcon>
                 </WinCommunityTk:SettingsCard>
 
-                <WinCommunityTk:SettingsCard Header="Edit Pitch Values" Description="Opens your preferred text editor to edit the pitch data, if you do not want to use the built-in text editor" IsClickEnabled="True" Margin="0 0 0 7.5" Click="OpenPitchValuesFile">
+                <WinCommunityTk:SettingsCard Header="Edit Custom Data" Description="Opens your preferred text editor to the chosen custom data file" IsClickEnabled="True" Margin="0 0 0 7.5" Click="OpenCustomDataFile">
                     <WinCommunityTk:SettingsCard.ActionIcon>
                         <FontIcon Glyph="&#xE8A7;" />
                     </WinCommunityTk:SettingsCard.ActionIcon>
@@ -77,7 +77,7 @@
                     </WinCommunityTk:SettingsCard.HeaderIcon>
                 </WinCommunityTk:SettingsCard>
 
-                <WinCommunityTk:SettingsCard Header="Refresh Pitch Values" Description="Did you finish changing pitch values? Click here for them to update!" IsClickEnabled="True" Margin="0 0 0 7.5" Click="RefreshPitchData">
+                <WinCommunityTk:SettingsCard Header="Refresh Custom Data" Description="Did you finish changing pitch values? Click here for them to update!" IsClickEnabled="True" Margin="0 0 0 7.5" Click="RefreshPitchData">
                     <WinCommunityTk:SettingsCard.ActionIcon>
                         <FontIcon Glyph="&#xE76C;" />
                     </WinCommunityTk:SettingsCard.ActionIcon>

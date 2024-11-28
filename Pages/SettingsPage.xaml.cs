@@ -2,7 +2,6 @@
 using System.Diagnostics;
 using System.IO;
 using AudioReplacer.Util;
-using Castle.Core.Smtp;
 using CommunityToolkit.WinUI.Controls;
 using Microsoft.UI.Composition.SystemBackdrops;
 using Microsoft.UI.Xaml;
@@ -129,8 +128,25 @@ namespace AudioReplacer.Pages
             Microsoft.Windows.AppLifecycle.AppInstance.Restart("");
         }
 
+        private async void OpenCustomDataFile(object sender, RoutedEventArgs e)
+        {
+            var fileOption = new ContentDialog { Title = "Pick File", Content = "Which custom data file would you like to open?", PrimaryButtonText = "Pitch Data", SecondaryButtonText = "Effects Data", CloseButtonText = "Cancel" ,XamlRoot = Content.XamlRoot };
+            var result = await fileOption.ShowAsync();
+            if (result != ContentDialogResult.Secondary || result != ContentDialogResult.Primary) return;
+            try
+            {
+                string userProfile = $@"{Environment.GetFolderPath(Environment.SpecialFolder.UserProfile)}\AudioReplacer2-Config";
+                string file = result == ContentDialogResult.Secondary
+                    ? Path.Combine(userProfile, "EffectsData.json")
+                    : Path.Combine(userProfile, "PitchData.json");
+
+                var fileOpenProcess = ShellCommandManager.CreateProcess("cmd", $"/c start {file}", true, false, false, true);
+                fileOpenProcess.Start();
+            }
+            catch { return; }
+        }
+
         private void ToggleFolderMemory(object sender, RoutedEventArgs e) { App.AppSettings.RememberSelectedFolder = 0; }
-        private void OpenPitchValuesFile(object sender, RoutedEventArgs e) { try { Process.Start(new ProcessStartInfo($@"{Environment.GetFolderPath(Environment.SpecialFolder.UserProfile)}\AudioReplacer2-Config\PitchData.json") { UseShellExecute = true }); } catch { return; } }
         private int BoolToInt(bool value) { return value == false ? 0 : 1; }
     }
 }
