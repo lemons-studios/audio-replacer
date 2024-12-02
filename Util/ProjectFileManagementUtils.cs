@@ -45,13 +45,12 @@ namespace AudioReplacer.Util
         private string TruncateDirectory(string inputPath, int dirLevels, string delimiter = "\\")
         {
             if (string.IsNullOrEmpty(inputPath) || string.IsNullOrEmpty(delimiter) || dirLevels <= 0) return inputPath;
-            StringBuilder truncatedDir = new StringBuilder();
-            string[] splitDir = inputPath.Split(delimiter);
-            Array.Reverse(splitDir);
-            dirLevels = Math.Min(dirLevels, splitDir.Length);
 
-            for (int i = dirLevels - 1; i >= 0; i--) { truncatedDir.Append(splitDir[i]); if (i != 0) truncatedDir.Append('\\'); }
-            return truncatedDir.ToString();
+            string[] splitDir = inputPath.Split(delimiter);
+            if (dirLevels > splitDir.Length) dirLevels = splitDir.Length;
+
+            var truncatedDir = splitDir[^dirLevels..];
+            return string.Join(delimiter, truncatedDir);
         }
 
         public int GetFileCount(string path)
@@ -60,11 +59,10 @@ namespace AudioReplacer.Util
             return directories.Sum(dir => Directory.GetFiles(dir, "*", SearchOption.AllDirectories).Length);
         }
 
-
         private string GetFirstAudioFile(string path)
         {
-            string[] pathSubfiles = Directory.GetFiles(path, "*.*", SearchOption.AllDirectories);
-            foreach (string projectFile in pathSubfiles) { if (IsAudioFile(projectFile)) return projectFile; }
+            string[] pathFiles = Directory.GetFiles(path, "*.*", SearchOption.AllDirectories);
+            foreach (string projectFile in pathFiles) { if (IsAudioFile(projectFile)) return projectFile; }
             return ""; // If no audio files are found, then return a blank path
         }
 
@@ -89,7 +87,7 @@ namespace AudioReplacer.Util
 
         private bool IsAudioFile(string path)
         {
-            string[] supportedFileTypes = [".mp3", ".wav", ".wma", ".aac", ".m4a", ".flac", ".ogg", ".amr", ".aiff", ".3gp", ".asf", ".pcm"];
+            string[] supportedFileTypes = [".mp3", ".wav", ".wma", ".aac", ".m4a", ".flac", ".ogg", ".amr", ".aiff", ".3gp", ".asf", ".pcm"]; // This should be a good enough list. Most people will have either wav or mp3 anyway (maybe flac or ogg but that's really it)
             return supportedFileTypes.Any(fileType => path.EndsWith(fileType, StringComparison.OrdinalIgnoreCase));
         }
 
