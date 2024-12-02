@@ -7,10 +7,10 @@ namespace AudioReplacer.Pages
 {
     public sealed partial class DataEditor
     {
-        private readonly string configFolder = @$"{Environment.GetFolderPath(Environment.SpecialFolder.UserProfile)}\AudioReplacer2-Config";
+        private readonly string configFolder = @$"{Environment.GetFolderPath(Environment.SpecialFolder.UserProfile)}\audio-replacer\config";
         private readonly string pitchDataFile, effectsDataFile;
         private string modifiedPitchDataContents = "", modifiedEffectsContents = "";
-        private readonly bool isStarting = true;
+        private readonly bool isStarting = true; // Do NOT remove the true from here, it is needed for the app to work properly. Resharper thinks it's a good idea for some reaosn
 
         public DataEditor()
         {

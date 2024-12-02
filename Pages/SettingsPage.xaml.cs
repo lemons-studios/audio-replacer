@@ -13,7 +13,7 @@ namespace AudioReplacer.Pages
     public sealed partial class SettingsPage
     {
         private readonly bool firstOpening;
-        private readonly string configFolder = $"{Environment.GetFolderPath(Environment.SpecialFolder.UserProfile)}\\AudioReplacer2-Config";
+        private readonly string configFolder = @$"{Environment.GetFolderPath(Environment.SpecialFolder.UserProfile)}\audio-replacer\config";
 
         public SettingsPage()
         {
@@ -91,7 +91,7 @@ namespace AudioReplacer.Pages
 
         private void OpenOutputFolder(object sender, RoutedEventArgs e)
         {
-            string outFolder = $"{Environment.GetFolderPath(Environment.SpecialFolder.UserProfile)}\\AudioReplacer2-Out";
+            string outFolder = @$"{Environment.GetFolderPath(Environment.SpecialFolder.UserProfile)}\audio-replacer\out";
             if (!Directory.Exists(outFolder)) Directory.CreateDirectory(outFolder); // The output folder could not exist if the user hasn't initialized a project for the first time
             Process outFolderOpenProcess = ShellCommandManager.CreateProcess("explorer", outFolder);
             outFolderOpenProcess.Start();
@@ -104,16 +104,16 @@ namespace AudioReplacer.Pages
                 var confirmRefresh = new ContentDialog { Title = "Reset Everything?", Content = "App will restart", PrimaryButtonText = "Reset Data", SecondaryButtonText = "Reset Everything", CloseButtonText = "Cancel", XamlRoot = Content.XamlRoot, Width = 500 };
                 var result = await confirmRefresh.ShowAsync();
 
-                File.Delete($"{configFolder}\\PitchData.json");
-                File.Delete($"{configFolder}\\EffectsData.json");
-                if (result == ContentDialogResult.Secondary) File.Delete($"{configFolder}\\AudioReplacer2-Config.json");
+                File.Delete($@"{configFolder}\PitchData.json");
+                File.Delete($@"{configFolder}\EffectsData.json");
+                if (result == ContentDialogResult.Secondary) File.Delete($@"{configFolder}\AppSettings.json");
             }
             else if ((SettingsCard) sender == SettingsOption)
             {
                 var confirmRefresh = new ContentDialog { Title = "Reset Settings?", Content = "Only your settings will be reverted to default values. App will restart", PrimaryButtonText = "Reset", CloseButtonText = "Cancel", XamlRoot = Content.XamlRoot };
                 var result = await confirmRefresh.ShowAsync();
                 if (result != ContentDialogResult.Primary) return;
-                File.Delete($"{configFolder}\\AudioReplacer2-Config.json");
+                File.Delete($@"{configFolder}\AppSettings.json");
             }
             else
             {
@@ -135,10 +135,9 @@ namespace AudioReplacer.Pages
             if (result != ContentDialogResult.Secondary || result != ContentDialogResult.Primary) return;
             try
             {
-                string userProfile = $@"{Environment.GetFolderPath(Environment.SpecialFolder.UserProfile)}\AudioReplacer2-Config";
                 string file = result == ContentDialogResult.Secondary
-                    ? Path.Combine(userProfile, "EffectsData.json")
-                    : Path.Combine(userProfile, "PitchData.json");
+                    ? Path.Combine(configFolder, "EffectsData.json")
+                    : Path.Combine(configFolder, "PitchData.json");
 
                 var fileOpenProcess = ShellCommandManager.CreateProcess("cmd", $"/c start {file}", true, false, false, true);
                 fileOpenProcess.Start();
