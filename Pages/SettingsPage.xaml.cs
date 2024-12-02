@@ -1,4 +1,4 @@
-﻿  using System;
+﻿using System;
 using System.Diagnostics;
 using System.IO;
 using AudioReplacer.Util;
@@ -132,24 +132,17 @@ namespace AudioReplacer.Pages
         {
             var fileOption = new ContentDialog { Title = "Pick File", Content = "Which custom data file would you like to open?", PrimaryButtonText = "Pitch Data", SecondaryButtonText = "Effects Data", CloseButtonText = "Cancel" ,XamlRoot = Content.XamlRoot };
             var result = await fileOption.ShowAsync();
-            if (result != ContentDialogResult.Secondary || result != ContentDialogResult.Primary) return;
+            if (result == ContentDialogResult.None) return;
             try
             {
-                string file = result == ContentDialogResult.Secondary
-                    ? Path.Combine(configFolder, "EffectsData.json")
-                    : Path.Combine(configFolder, "PitchData.json");
-
+                string file = result == ContentDialogResult.Secondary ? Path.Combine(configFolder, "EffectsData.json") : Path.Combine(configFolder, "PitchData.json");
                 var fileOpenProcess = ShellCommandManager.CreateProcess("cmd", $"/c start {file}", true, false, false, true);
                 fileOpenProcess.Start();
             }
             catch { return; }
         }
 
-        private void ToggleFolderMemory(object sender, RoutedEventArgs e)
-        {
-            App.AppSettings.RememberSelectedFolder = App.AppSettings.RememberSelectedFolder == 0 ? 1 : 0;
-        }
-
+        private void ToggleFolderMemory(object sender, RoutedEventArgs e) { App.AppSettings.RememberSelectedFolder = App.AppSettings.RememberSelectedFolder == 0 ? 1 : 0; }
         private int BoolToInt(bool value) { return value == false ? 0 : 1; }
     }
 }
