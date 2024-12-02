@@ -14,8 +14,8 @@ namespace AudioReplacer.Util
 
         public ProjectFileManagementUtils(string path)
         {
-            outputFolderPath = $"{Environment.GetFolderPath(Environment.SpecialFolder.UserProfile)}\\AudioReplacer2-Out";
             projectPath = path;
+            outputFolderPath = @$"{Environment.GetFolderPath(Environment.SpecialFolder.UserProfile)}\audio-replacer\out\{TruncateDirectory(path, 1)}";
             CreateInitialData();
             SetCurrentFile();
         }

@@ -52,7 +52,7 @@
                     <NumberBox x:Name="ToastDelayBox" SpinButtonPlacementMode="Inline" SmallChange="25" LargeChange="100" Value="1500" Minimum="500" Maximum="5500" ValueChanged="UpdateDelayTimes"/>
                 </WinCommunityTk:SettingsCard>
 
-                <WinCommunityTk:SettingsCard Header="Record Stop Delay" Description="Changes the amount of time it takes for recording to stop after clicking the stop recording button. Measured in milliseconds" Margin="0 0 0 7.5">
+                <WinCommunityTk:SettingsCard Header="Record Stop Delay" Description="Measured in milliseconds" Margin="0 0 0 7.5">
                     <WinCommunityTk:SettingsCard.HeaderIcon>
                         <FontIcon Glyph="&#xF781;" />
                     </WinCommunityTk:SettingsCard.HeaderIcon>

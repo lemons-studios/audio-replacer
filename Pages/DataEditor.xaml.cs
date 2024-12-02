@@ -96,5 +96,10 @@ namespace AudioReplacer.Pages
         }
 
         private string GetEditorText() { return CustomDataEditor.Editor.GetText(CustomDataEditor.Editor.TextLength); }
+
+        private void GetHelp(object sender, RoutedEventArgs e)
+        {
+            // To be implemented when I have written a guide later; this shouldn't really be needed unless the user doesn't know how to operate with json
+        }
     }
 }

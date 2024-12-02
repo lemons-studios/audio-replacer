@@ -15,8 +15,8 @@ namespace AudioReplacer
 
         public App()
         {
-            directoryPath = $"{Environment.GetFolderPath(Environment.SpecialFolder.UserProfile)}\\AudioReplacer2-Config";
-            settingsFilePath = $"{directoryPath}\\AudioReplacer2-Config.json";
+            directoryPath = $@"{Environment.GetFolderPath(Environment.SpecialFolder.UserProfile)}\audio-replacer\config";
+            settingsFilePath = $"{directoryPath}\\AppSettings.json";
             pitchDataPath = $"{directoryPath}\\PitchData.json";
             effectDataPath = $"{directoryPath}\\EffectsData.json";
 
@@ -49,8 +49,8 @@ namespace AudioReplacer
 
         private void CreateJsonData()
         {
-            // Users will have to import their own data files for this app to work, but create an empty file with the start of a json array
-            // For functionality purposes
+            // Users will have to import their own data files for this app to work,
+            // but create an empty file with the start of a json array (for functionality purposes)
             if (!File.Exists(pitchDataPath)) { File.WriteAllText(pitchDataPath, "[\n\n]"); } 
             if (!File.Exists(effectDataPath)) { File.WriteAllText(effectDataPath, "[\n\n]"); }
 
