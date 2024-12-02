@@ -6,6 +6,7 @@ using Windows.Media.Core;
 using Microsoft.UI.Xaml.Controls;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using SevenZipExtractor;
 
 namespace AudioReplacer.Util
@@ -30,11 +31,17 @@ namespace AudioReplacer.Util
         public void UpdateInfoBar(InfoBar infoBar, string title, string message, InfoBarSeverity severity, bool show = true, bool autoClose = true)
         {
             DisableActiveInfoBars(); // Disable any active InfoBar before showing a new one
-            infoBar.Title = title;
-            infoBar.Message = message;
-            infoBar.IsOpen = show;
-
-            if (autoClose) Task.Run(() => WaitHideInfoBar(infoBar));
+            try
+            {
+                infoBar.Title = title;
+                infoBar.Message = message;
+                infoBar.IsOpen = show;
+                if (autoClose) Task.Run(() => WaitHideInfoBar(infoBar));
+            }
+            catch (COMException e)
+            {
+                return;
+            }
         }
 
         public void DownloadDependencies()
@@ -127,7 +134,20 @@ namespace AudioReplacer.Util
         /// Yummy code minification..... I love making my code harder to read..... (on the other hand this reduced my line count by about 20-30 lines)
         private Visibility ToVisibility(bool x) { return x ? Visibility.Visible : Visibility.Collapsed; }
         public MediaSource MediaSourceFromUri(string path) { return MediaSource.CreateFromUri(new Uri(path)); }
-        private void DisableActiveInfoBars() { foreach (var infoBar in windowInfoBars) { if (infoBar.IsOpen) infoBar.IsOpen = false; } }
+        private void DisableActiveInfoBars()
+        {
+            try
+            {
+                foreach (var infoBar in windowInfoBars)
+                {
+                    if (infoBar.IsOpen) infoBar.IsOpen = false;
+                }
+            }
+            catch (COMException e)
+            {
+                return;
+            }
+        }
         public string GetWebVersion() { return webVersion != string.Empty ? webVersion : GlobalData.GetAppVersion(); /* App version used as fallback when no internet is available*/ }
         public string GetFormattedCurrentFile(string input) { return input.Replace(@"\", "/"); }
         public bool IsUpdateAvailable() { try { return webVersion != GlobalData.GetAppVersion(true); } catch { return false; } }

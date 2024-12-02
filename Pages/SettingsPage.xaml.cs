@@ -1,4 +1,4 @@
-﻿using System;
+﻿  using System;
 using System.Diagnostics;
 using System.IO;
 using AudioReplacer.Util;
@@ -146,7 +146,11 @@ namespace AudioReplacer.Pages
             catch { return; }
         }
 
-        private void ToggleFolderMemory(object sender, RoutedEventArgs e) { App.AppSettings.RememberSelectedFolder = 0; }
+        private void ToggleFolderMemory(object sender, RoutedEventArgs e)
+        {
+            App.AppSettings.RememberSelectedFolder = App.AppSettings.RememberSelectedFolder == 0 ? 1 : 0;
+        }
+
         private int BoolToInt(bool value) { return value == false ? 0 : 1; }
     }
 }
