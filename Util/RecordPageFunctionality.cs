@@ -96,32 +96,11 @@ namespace AudioReplacer.Util
                 pitchValues.Add(ParseFloat(data[0])); // Position 0 of each array in the 2d array should have the pitch data, as mentioned in GlobalData.cs
                 pitchMenuTitles.Add(data[1]); // Position 1 of each array in the 2d array should have the name of the character, as mentioned in GlobalData.cs
             }
-
             foreach (string[] effects in GlobalData.DeserializedEffectData)
             {
                 effectMenuValues.Add(effects[0]);
                 effectMenuTitles.Add(effects[1]);
             }
-        }
-
-        public float GetPitchModifier(int index)
-        {
-            try { return pitchValues[index]; } catch { return 1; }
-        }
-
-        public string GetEffectValues(int index)
-        {
-            return effectMenuValues[index];
-        }
-
-        public List<string> GetPitchTitles()
-        {
-            return pitchMenuTitles;
-        }
-
-        public List<string> GetEffectTitles()
-        {
-            return effectMenuTitles;
         }
 
         private async Task WaitHideInfoBar(InfoBar infoBar)
@@ -148,20 +127,6 @@ namespace AudioReplacer.Util
                 return;
             }
         }
-        public string GetWebVersion() { return webVersion != string.Empty ? webVersion : GlobalData.GetAppVersion(); /* App version used as fallback when no internet is available*/ }
-        public string GetFormattedCurrentFile(string input) { return input.Replace(@"\", "/"); }
-        public bool IsUpdateAvailable() { try { return webVersion != GlobalData.GetAppVersion(true); } catch { return false; } }
-        private float ParseFloat(string value) { try { return float.Parse(value); } catch { return 1; } }
-        public bool FolderMemoryAllowed() { return App.AppSettings.RememberSelectedFolder == 1 && Path.Exists(App.AppSettings.LastSelectedFolder); }
-
-        public string BoolToString(bool value, bool humanizeOutput = true)
-        {
-            return humanizeOutput switch
-            {
-                true => value ? "Yes" : "No",
-                false => value.ToString()
-            };
-        }
 
         public string BoolToString(bool? value, bool humanizeOutput = true)
         {
@@ -171,5 +136,15 @@ namespace AudioReplacer.Util
                 false => value.ToString()
             };
         }
+
+        public string GetWebVersion() { return webVersion != string.Empty ? webVersion : GlobalData.GetAppVersion(); /* App version used as fallback when no internet is available*/ }
+        public string GetFormattedCurrentFile(string input) { return input.Replace(@"\", "/"); }
+        public bool IsUpdateAvailable() { try { return webVersion != GlobalData.GetAppVersion(true); } catch { return false; } }
+        private float ParseFloat(string value) { try { return float.Parse(value); } catch { return 1; } }
+        public bool FolderMemoryAllowed() { return App.AppSettings.RememberSelectedFolder == 1 && Path.Exists(App.AppSettings.LastSelectedFolder); }
+        public float GetPitchModifier(int index) { try { return pitchValues[index]; } catch { return 1; } }
+        public string GetEffectValues(int index) { return effectMenuValues[index]; }
+        public List<string> GetPitchTitles() { return pitchMenuTitles; }
+        public List<string> GetEffectTitles() { return effectMenuTitles; }
     }
 }

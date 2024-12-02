@@ -6,8 +6,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
-    xmlns:Editor="using:WinUIEditor">
-
+    xmlns:editor="using:WinUIEditor">
     <StackPanel Padding="5.5">
         <StackPanel Orientation="Horizontal" Margin="0 5.5 0 5" VerticalAlignment="Center">
             <Button Click="SaveData" Margin="15 0 0 0" ToolTipService.ToolTip="Save Changes" CornerRadius="4">
@@ -20,11 +19,16 @@
                     <FontIcon Glyph="&#xE845;" />
                 </Button.Content>
             </Button>
-            <ComboBox x:Name="SelectedFile" Margin="675 0 0 0" SelectedIndex="0" SelectionChanged="UpdateEditingFile" Width="200" CornerRadius="4">
+            <Button Click="ImportFile" Margin="15 0 0 0" ToolTipService.ToolTip="Import data from file" CornerRadius="4">
+                <Button.Content>
+                    <FontIcon Glyph="&#xE8E5;" />
+                </Button.Content>
+            </Button>
+            <ComboBox x:Name="SelectedFile" Margin="615 0 0 0" SelectedIndex="0" SelectionChanged="UpdateEditingFile" Width="200" CornerRadius="4">
                 <x:String>PitchData.json</x:String>
-                <x:String>AudioEffects.json</x:String>
+                <x:String>EffectsData.json</x:String>
             </ComboBox>
         </StackPanel>
-        <Editor:CodeEditorControl x:Name="CustomDataEditor" HighlightingLanguage="json" MinHeight="400" />
+        <editor:CodeEditorControl x:Name="CustomDataEditor" HighlightingLanguage="json" MinHeight="400" />
     </StackPanel>
 </Page>

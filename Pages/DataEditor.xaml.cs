@@ -67,6 +67,34 @@ namespace AudioReplacer.Pages
             }
         }
         
+        private async void ImportFile(object sender, RoutedEventArgs e)
+        {
+            var importType = new ContentDialog { Title = "Choose Import File", Content = "What data is the imported data meant for? App will restart after import", PrimaryButtonText = "Pitch Data", SecondaryButtonText = "Effect Data", CloseButtonText = "Cancel", XamlRoot = Content.XamlRoot, Width = 500};
+            var result = await importType.ShowAsync();
+            if (result == ContentDialogResult.None) return;
+
+            var openPicker = new Windows.Storage.Pickers.FileOpenPicker();
+            var window = App.MainWindow;
+            var hWnd = WinRT.Interop.WindowNative.GetWindowHandle(window);
+            WinRT.Interop.InitializeWithWindow.Initialize(openPicker, hWnd);
+            openPicker.FileTypeFilter.Add(".json");
+            var file = await openPicker.PickSingleFileAsync();
+            if (file != null)
+            {
+                string fileContents = await File.ReadAllTextAsync(file.Path);
+                switch (result == ContentDialogResult.Primary)
+                {
+                    case true:
+                        await File.WriteAllTextAsync(pitchDataFile, fileContents);
+                        break;
+                    case false:
+                        await File.WriteAllTextAsync(effectsDataFile, fileContents);
+                        break;
+                }
+                Microsoft.Windows.AppLifecycle.AppInstance.Restart("");
+            }
+        }
+
         private string GetEditorText() { return CustomDataEditor.Editor.GetText(CustomDataEditor.Editor.TextLength); }
     }
 }

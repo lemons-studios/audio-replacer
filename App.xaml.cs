@@ -49,12 +49,14 @@ namespace AudioReplacer
 
         private void CreateJsonData()
         {
-            if (!File.Exists(pitchDataPath)) { File.WriteAllText(pitchDataPath, JsonSerializer.Serialize(GlobalData.DefaultPitchData, new JsonSerializerOptions { WriteIndented = true })); }
-            if (!File.Exists(effectDataPath)) { File.WriteAllText(effectDataPath, JsonSerializer.Serialize(GlobalData.DefaultEffectData, new JsonSerializerOptions { WriteIndented = true })); }
+            // Users will have to import their own data files for this app to work, but create an empty file with the start of a json array
+            // For functionality purposes
+            if (!File.Exists(pitchDataPath)) { File.WriteAllText(pitchDataPath, "[\n\n]"); } 
+            if (!File.Exists(effectDataPath)) { File.WriteAllText(effectDataPath, "[\n\n]"); }
+
             GlobalData.DeserializedPitchData = JsonSerializer.Deserialize<string[][]>(File.ReadAllText(pitchDataPath));
             GlobalData.DeserializedEffectData = JsonSerializer.Deserialize<string[][]>(File.ReadAllText(effectDataPath));
         }
-
         protected override void OnLaunched(LaunchActivatedEventArgs args) { MainWindow = new MainWindow(); MainWindow.Activate(); }
     }
 }
