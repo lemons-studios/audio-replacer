@@ -82,7 +82,7 @@ namespace AudioReplacer
                 {
                     "Record" => typeof(RecordPage),
                     "Settings" => typeof(SettingsPage),
-                    "Pitch Editor" => typeof(DataEditor),
+                    "Data Editor" => typeof(DataEditor),
                     _ => pageSwitchType
                 };
                 

@@ -1,5 +1,7 @@
 using System;
+using System.Diagnostics;
 using System.IO;
+using AudioReplacer.Util;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 
@@ -99,7 +101,9 @@ namespace AudioReplacer.Pages
 
         private void GetHelp(object sender, RoutedEventArgs e)
         {
-            // To be implemented when I have written a guide later; this shouldn't really be needed unless the user doesn't know how to operate with json
+            string url = "https://github.com/lemons-studios/audio-replacer/wiki/Custom-Data";
+            Process openHelpPage = ShellCommandManager.CreateProcess("cmd", $"/c start {url}");
+            openHelpPage.Start();
         }
     }
 }

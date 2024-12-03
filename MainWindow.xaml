@@ -30,9 +30,9 @@
                         <FontIcon Glyph="&#xE720;" />
                     </NavigationViewItem.Icon>
                 </NavigationViewItem>
-                <NavigationViewItem Tag="Pitch Editor">
+                <NavigationViewItem Tag="Data Editor">
                     <NavigationViewItem.Content>
-                        <TextBlock Text="Pitch Editor" FontWeight="Light"/>
+                        <TextBlock Text="Data Editor" FontWeight="Light"/>
                     </NavigationViewItem.Content>
                     <NavigationViewItem.Icon>
                         <FontIcon Glyph="&#xE70F;" />

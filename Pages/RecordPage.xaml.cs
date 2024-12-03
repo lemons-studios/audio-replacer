@@ -41,7 +41,6 @@ namespace AudioReplacer.Pages
                     UpdateToast.IsOpen = true;
                     break;
                 case false: // Show popup for dependency install requirement
-                    recordPageBackend.ToggleButton(App.MainWindow.GetProjectButton(), false);
                     VoiceTuneMenu.IsEnabled = false;
                     EffectsMenu.IsEnabled = false;
                     DependencyToast.IsOpen = true;

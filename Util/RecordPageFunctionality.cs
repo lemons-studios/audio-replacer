@@ -48,8 +48,8 @@ namespace AudioReplacer.Util
         {
             string latestFfMpegVersion = Task.Run(() => webRequest.GetWebData("https://www.gyan.dev/ffmpeg/builds/release-version")).Result;
             string ffMpegUrl = $"https://www.gyan.dev/ffmpeg/builds/packages/ffmpeg-{latestFfMpegVersion}-full_build.7z";
-            string outPath = $"{Environment.GetFolderPath(Environment.SpecialFolder.UserProfile)}\\AudioReplacer2-Config";
-            string fullOutPath = $"{outPath}\\ffmpeg";
+            string outPath = @$"{Environment.GetFolderPath(Environment.SpecialFolder.UserProfile)}\audio-replacer\";
+            string fullOutPath = $@"{outPath}\ffmpeg";
             string currentSystemPath = Environment.GetEnvironmentVariable("PATH", EnvironmentVariableTarget.User);
 
             webRequest.DownloadFile(ffMpegUrl, outPath, "ffmpeg.7z");
