@@ -67,7 +67,7 @@ namespace AudioReplacer
 
             // Lastly, Open the last selected folder if that's something that is allowed to be done
             var currentPage = ContentFrame.Content as RecordPage;
-            if (currentPage != null && App.AppSettings.RememberSelectedFolder == 1) currentPage.ProjectSetup(App.AppSettings.LastSelectedFolder);
+            if (currentPage != null && App.AppSettings.RememberSelectedFolder == 1 && App.AppSettings.LastSelectedFolder != string.Empty) currentPage.ProjectSetup(App.AppSettings.LastSelectedFolder);
         }
 
         private AppWindow GetAppWindowForCurrentWindow(object window) // Thanks StackOverflow man!

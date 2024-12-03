@@ -22,6 +22,8 @@ namespace AudioReplacer.Pages
             ThemeDropdown.SelectedIndex = App.AppSettings.AppThemeSetting;
             TransparencyDropdown.SelectedIndex = App.AppSettings.AppTransparencySetting;
             UpdateCheckSwitch.IsOn = GlobalData.UpdateChecksAllowed;
+            ProjectMemorySwitch.IsOn = App.AppSettings.RememberSelectedFolder == 1;
+            RandomizeInputSwitch.IsOn = GlobalData.InputRandomizationEnabled;
             ToastDelayBox.Value = GlobalData.NotificationTimeout;
             RecordDelayBox.Value = GlobalData.RecordStopDelay;
             firstOpening = false;

@@ -24,14 +24,14 @@
                     <FontIcon Glyph="&#xE8E5;" />
                 </Button.Content>
             </Button>
-            <Button Click="GetHelp" Margin="15 0 0 0" ToolTipService.ToolTip="Custom data creation guide (Coming soon)" CornerRadius="4">
+            <Button Click="GetHelp" Margin="15 0 0 0" ToolTipService.ToolTip="Custom data creation guide" CornerRadius="4">
                 <Button.Content>
                     <FontIcon Glyph="&#xE897;" />
                 </Button.Content>
             </Button>
             <ComboBox x:Name="SelectedFile" Margin="550 0 0 0" SelectedIndex="0" SelectionChanged="UpdateEditingFile" Width="200" CornerRadius="4">
-                <x:String>PitchData.json</x:String>
-                <x:String>EffectsData.json</x:String>
+                <x:String>Pitch Data</x:String>
+                <x:String>Effects Data</x:String>
             </ComboBox>
         </StackPanel>
         <editor:CodeEditorControl x:Name="CustomDataEditor" HighlightingLanguage="json" MinHeight="400" />
