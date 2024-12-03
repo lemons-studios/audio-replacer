@@ -228,14 +228,12 @@ namespace AudioReplacer.Pages
 
         private void OpenGithubReleases(object sender, RoutedEventArgs e)
         {
-            const string url = "https://github.com/lemons-studios/audio-replacer-2/releases/latest";
-            Process openReleasesProcess = ShellCommandManager.CreateProcess("cmd", $"/c start {url}");
+            Process openReleasesProcess = ShellCommandManager.CreateProcess("cmd", $"/c start https://github.com/lemons-studios/audio-replacer-2/releases/latest");
             openReleasesProcess.Start();
         }
 
         private void FlagFurtherEdits(object sender, RoutedEventArgs e) { audioRecordingUtils.requiresExtraEdits = true; }
         private void UnFlagFurtherEdits(object sender, RoutedEventArgs e) { audioRecordingUtils.requiresExtraEdits = false; }
-
         // Awesome boilerplate here
         private void ComboBoxRecordValuesUpdate(object sender, SelectionChangedEventArgs e) { UpdateRecordingValues(); }
         private void FurtherEditsValuesUpdate(object sender, RoutedEventArgs e) { UpdateRecordingValues(); }
