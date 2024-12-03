@@ -142,7 +142,17 @@ namespace AudioReplacer.Pages
             catch { return; }
         }
 
-        private void ToggleFolderMemory(object sender, RoutedEventArgs e) { App.AppSettings.RememberSelectedFolder = App.AppSettings.RememberSelectedFolder == 0 ? 1 : 0; }
+        private void ToggleFolderMemory(object sender, RoutedEventArgs e)
+        {
+            App.AppSettings.RememberSelectedFolder = BoolToInt(ProjectMemorySwitch.IsOn);
+        }
+
         private int BoolToInt(bool value) { return value == false ? 0 : 1; }
+
+        private void ToggleFileRandomization(object sender, RoutedEventArgs e)
+        {
+            GlobalData.InputRandomizationEnabled = RandomizeInputSwitch.IsOn;
+            App.AppSettings.InputRandomizationEnabled = BoolToInt(RandomizeInputSwitch.IsOn);
+        }
     }
 }

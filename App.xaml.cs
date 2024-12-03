@@ -24,6 +24,7 @@ namespace AudioReplacer
             CreateJsonData();
             AppSettings = new ConfigurationBuilder<IAppSettings>().UseJsonFile(settingsFilePath).Build();
             GlobalData.UpdateChecksAllowed = AppSettings.AppUpdateCheck == 1;
+            GlobalData.InputRandomizationEnabled = AppSettings.InputRandomizationEnabled == 1;
             GlobalData.NotificationTimeout = AppSettings.NotificationTimeout;
             GlobalData.RecordStopDelay = AppSettings.RecordEndWaitTime;
             InitializeComponent();
@@ -41,7 +42,8 @@ namespace AudioReplacer
                 RecordEndWaitTime = 0,
                 NotificationTimeout = 1750,
                 RememberSelectedFolder = 1,
-                LastSelectedFolder = ""
+                LastSelectedFolder = "",
+                InputRandomizationEnabled = 1
             };
             string defaultJson = JsonSerializer.Serialize(defaultConfig, new JsonSerializerOptions { WriteIndented = true });
             File.WriteAllText(settingsFilePath, defaultJson); // File gets created automatically by File.WriteAllText() before it writes to anything

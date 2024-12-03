@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -23,7 +24,7 @@ namespace AudioReplacer.Util
         private void SetCurrentFile()
         {
             FindDeleteEmptyDirs();
-            currentFile = GetFirstAudioFile(projectPath);
+            currentFile = GetNextAudioFile(projectPath);
             truncatedCurrentFile = currentFile == "" ? "YOU ARE DONE!!!" : TruncateDirectory(currentFile, 2);
 
             currentOutFile = $"{outputFolderPath}\\{truncatedCurrentFile}";
@@ -59,13 +60,25 @@ namespace AudioReplacer.Util
             return directories.Sum(dir => Directory.GetFiles(dir, "*", SearchOption.AllDirectories).Length);
         }
 
-        private string GetFirstAudioFile(string path)
+        private string GetNextAudioFile(string path)
         {
-            string[] pathFiles = Directory.GetFiles(path, "*.*", SearchOption.AllDirectories);
-            foreach (string projectFile in pathFiles) { if (IsAudioFile(projectFile)) return projectFile; }
-            return ""; // If no audio files are found, then return a blank path
-        }
+            var audioFiles = Directory.GetFiles(path, "*.*", SearchOption.AllDirectories).Where(IsAudioFile).ToList();
 
+            // If there are no audio files, return nothing
+            if (!audioFiles.Any()) return string.Empty;
+
+            // Pick a random audio file if input file randomization is enabled
+            if (GlobalData.InputRandomizationEnabled)
+            {
+                var rng = new Random();
+                int randomFileIndex = rng.Next(audioFiles.Count);
+                return audioFiles[randomFileIndex];
+            }
+
+            // Return the first audio file (if input is not randomized)
+            return audioFiles.First();
+        }
+        
         public float CalculatePercentageComplete()
         {
             float inputFolderCount = GetFileCount(projectPath);
