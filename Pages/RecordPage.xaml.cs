@@ -176,7 +176,7 @@ namespace AudioReplacer.Pages
             UpdateFileElements();
         }
 
-        private void ProjectSetup(string path)
+        public void ProjectSetup(string path)
         {
             Task.Run(() => recordPageBackend.UpdateInfoBar(ProgressToast, "Setting up project...", "", InfoBarSeverity.Informational, autoClose: false));
             switch (projectNotSelected)

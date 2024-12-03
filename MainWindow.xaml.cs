@@ -61,9 +61,13 @@ namespace AudioReplacer
                     break;
             }
 
-            // Finally, open the recording page (Stole this from the method below)
+            // Open the recording page (Stole this from the method below)
             if (!pageCache.TryGetValue(typeof(RecordPage), out var page)) { page = (Page) Activator.CreateInstance(typeof(RecordPage)); pageCache[typeof(RecordPage)] = page; }
             ContentFrame.Content = page;
+
+            // Lastly, Open the last selected folder if that's something that is allowed to be done
+            var currentPage = ContentFrame.Content as RecordPage;
+            if (currentPage != null && App.AppSettings.RememberSelectedFolder == 1) currentPage.ProjectSetup(App.AppSettings.LastSelectedFolder);
         }
 
         private AppWindow GetAppWindowForCurrentWindow(object window) // Thanks StackOverflow man!
@@ -95,11 +99,6 @@ namespace AudioReplacer
             ContentFrame.Content = page;
         }
         private void OnWindowClose(object sender, AppWindowClosingEventArgs args) { if (MainWindow.ProjectInitialized && (MainWindow.IsProcessing || MainWindow.IsRecording)) File.Delete(MainWindow.CurrentFile); }
-
-        public Button GetProjectButton()
-        {
-            return ProjectFolderButton;
-        }
 
         private void ChangeProjectFolder(object sender, RoutedEventArgs e)
         {
