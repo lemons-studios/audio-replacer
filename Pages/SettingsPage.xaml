@@ -106,7 +106,7 @@
                                 <FontIcon Glyph="&#xE713;" />
                             </WinCommunityTk:SettingsCard.HeaderIcon>
                         </WinCommunityTk:SettingsCard>
-                        <WinCommunityTk:SettingsCard x:Name="PitchData" Header="Reset Pitch Data" Margin="0 0 0 4.5" IsClickEnabled="True" Click="ResetCustomData">
+                        <WinCommunityTk:SettingsCard x:Name="PitchData" Header="Reset Custom Pitch Data" Margin="0 0 0 4.5" IsClickEnabled="True" Click="ResetCustomData">
                             <WinCommunityTk:SettingsCard.ActionIcon>
                                 <FontIcon Glyph="&#xE76C;" />
                             </WinCommunityTk:SettingsCard.ActionIcon>
@@ -114,12 +114,12 @@
                                 <FontIcon Glyph="&#xE9E9;" />
                             </WinCommunityTk:SettingsCard.HeaderIcon>
                         </WinCommunityTk:SettingsCard>
-                        <WinCommunityTk:SettingsCard x:Name="EffectsData" Header="Reset Effects Data" Margin="0 0 0 4.5" IsClickEnabled="True" Click="ResetCustomData">
+                        <WinCommunityTk:SettingsCard x:Name="EffectsData" Header="Reset Custom Effect Data" Margin="0 0 0 4.5" IsClickEnabled="True" Click="ResetCustomData">
                             <WinCommunityTk:SettingsCard.ActionIcon>
                                 <FontIcon Glyph="&#xE76C;" />
                             </WinCommunityTk:SettingsCard.ActionIcon>
                             <WinCommunityTk:SettingsCard.HeaderIcon>
-                                <FontIcon Glyph="&#xF4A5;" />
+                                <FontIcon Glyph="&#xE8D6;" />
                             </WinCommunityTk:SettingsCard.HeaderIcon>
                         </WinCommunityTk:SettingsCard>
                         <WinCommunityTk:SettingsCard x:Name="AllDataOption" Header="Reset All" IsClickEnabled="True" Click="ResetCustomData">
@@ -149,7 +149,7 @@
                                 <HyperlinkButton Content="Config.Net" NavigateUri="https://github.com/aloneguid/config" Margin=" 0 0 0 15"/>
 
                                 <TextBlock Text="Socials:" FontWeight="SemiBold" Margin="0 0 0 5"/>
-                                <HyperlinkButton Content="Shob3r's GitHub profile" NavigateUri="https://github.com/Shob3r"/>
+                                <HyperlinkButton Content="Shob3r (On GitHub)" NavigateUri="https://github.com/Shob3r"/>
                                 <HyperlinkButton Content="Project Repository" NavigateUri="https://github.com/lemons-studios/audio-replacer-2/"/>
                                 <HyperlinkButton Content="Project License" NavigateUri="https://github.com/lemons-studios/audio-replacer-2/blob/main/LICENSE"/>
                             </StackPanel>
