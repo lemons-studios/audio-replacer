@@ -2,7 +2,7 @@
 <ResourceDictionary
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:WinCommunityTk="using:CommunityToolkit.WinUI.Controls">
+    xmlns:communityToolkit="using:CommunityToolkit.WinUI.Controls">
 
     <Style x:Key="TitleText" TargetType="TextBlock">
         <Setter Property="TextAlignment" Value="Center"/>
@@ -90,7 +90,7 @@
         <Setter Property="Background" Value="Transparent"/>
     </Style>
 
-    <Style x:Key="SettingsCardStyle" TargetType="WinCommunityTk:SettingsCard">
+    <Style x:Key="SettingsCardStyle" TargetType="communityToolkit:SettingsCard">
         <Setter Property="Margin" Value="0 0 0 7.5"/>
     </Style>
 
