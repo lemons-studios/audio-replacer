@@ -40,7 +40,7 @@
 
                 <WinCommunityTk:SettingsCard Header="Randomize Current File" Description="When off, the next file will be first file in an alphabetical list" Margin="0 0 0 7.5">
                     <WinCommunityTk:SettingsCard.HeaderIcon>
-                        <FontIcon Glyph="&#xECC5;" />
+                        <FontIcon Glyph="&#xE8AB;" />
                     </WinCommunityTk:SettingsCard.HeaderIcon>
                     <ToggleSwitch x:Name="RandomizeInputSwitch" IsOn="True" Toggled="ToggleUpdateChecks"/>
                 </WinCommunityTk:SettingsCard>

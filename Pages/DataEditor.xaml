@@ -21,7 +21,7 @@
             </Button>
             <Button Click="ImportFile" Margin="15 0 0 0" ToolTipService.ToolTip="Import data from file" CornerRadius="4">
                 <Button.Content>
-                    <FontIcon Glyph="&#xE8E5;" />
+                    <FontIcon Glyph="&#xEA52;" />
                 </Button.Content>
             </Button>
             <Button Click="GetHelp" Margin="15 0 0 0" ToolTipService.ToolTip="Custom data creation guide" CornerRadius="4">
