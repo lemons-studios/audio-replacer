@@ -23,7 +23,7 @@ namespace AudioReplacer.Pages
             TransparencyDropdown.SelectedIndex = App.AppSettings.AppTransparencySetting;
             UpdateCheckSwitch.IsOn = GlobalData.UpdateChecksAllowed;
             ProjectMemorySwitch.IsOn = App.AppSettings.RememberSelectedFolder == 1;
-            RandomizeInputSwitch.IsOn = GlobalData.InputRandomizationEnabled;
+            RandomizeInputSwitch.IsOn = App.AppSettings.InputRandomizationEnabled == 1;
             ToastDelayBox.Value = GlobalData.NotificationTimeout;
             RecordDelayBox.Value = GlobalData.RecordStopDelay;
             firstOpening = false;
@@ -144,17 +144,17 @@ namespace AudioReplacer.Pages
             catch { return; }
         }
 
+        private void ToggleFileRandomization(object sender, RoutedEventArgs e)
+        {
+            GlobalData.InputRandomizationEnabled = RandomizeInputSwitch.IsOn;
+            App.AppSettings.InputRandomizationEnabled = BoolToInt(RandomizeInputSwitch.IsOn);
+        }
+
         private void ToggleFolderMemory(object sender, RoutedEventArgs e)
         {
             App.AppSettings.RememberSelectedFolder = BoolToInt(ProjectMemorySwitch.IsOn);
         }
 
         private int BoolToInt(bool value) { return value == false ? 0 : 1; }
-
-        private void ToggleFileRandomization(object sender, RoutedEventArgs e)
-        {
-            GlobalData.InputRandomizationEnabled = RandomizeInputSwitch.IsOn;
-            App.AppSettings.InputRandomizationEnabled = BoolToInt(RandomizeInputSwitch.IsOn);
-        }
     }
 }

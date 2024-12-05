@@ -42,14 +42,14 @@
                     <communityToolkit:SettingsCard.HeaderIcon>
                         <FontIcon Glyph="&#xE8AB;" />
                     </communityToolkit:SettingsCard.HeaderIcon>
-                    <ToggleSwitch x:Name="RandomizeInputSwitch" IsOn="True" Toggled="ToggleUpdateChecks"/>
+                    <ToggleSwitch x:Name="RandomizeInputSwitch" IsOn="False" Toggled="ToggleFileRandomization"/>
                 </communityToolkit:SettingsCard>
 
                 <communityToolkit:SettingsCard Header="Remember Selected Folder" Description="Automatically loads last selected folder from previous launch" Margin="0 0 0 7.5">
                     <communityToolkit:SettingsCard.HeaderIcon>
                         <FontIcon Glyph="&#xE8F7;" />
                     </communityToolkit:SettingsCard.HeaderIcon>
-                    <ToggleSwitch x:Name="ProjectMemorySwitch" IsOn="True" Toggled="ToggleFileRandomization"/>
+                    <ToggleSwitch x:Name="ProjectMemorySwitch" IsOn="True" Toggled="ToggleFolderMemory"/>
                 </communityToolkit:SettingsCard>
 
                 <communityToolkit:SettingsCard Header="Notification Stay Time" Description="Measured in milliseconds" Margin="0 0 0 7.5">
