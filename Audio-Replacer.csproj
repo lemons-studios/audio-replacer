@@ -20,7 +20,7 @@
     <AppxBundle>Always</AppxBundle>
     <HoursBetweenUpdateChecks>0</HoursBetweenUpdateChecks>
     <AppxBundlePlatforms>x64</AppxBundlePlatforms>
-	     <SupportedOSPlatformVersion>10.0.20348.0</SupportedOSPlatformVersion>
+	<SupportedOSPlatformVersion>10.0.20348.0</SupportedOSPlatformVersion>
     <Company>Lemon Studios</Company>
     <Authors>Shob3r</Authors>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
@@ -92,6 +92,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="CommunityToolkit.WinUI.Controls.SettingsControls" Version="8.1.240916" />
+    <PackageReference Include="CommunityToolkit.WinUI.Controls.TabbedCommandBar" Version="8.1.240916" />
     <PackageReference Include="Config.Net" Version="5.2.1" />
     <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.26100.1742" />
     <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.6.241114003" />
@@ -139,15 +140,16 @@
     <WebView2WinRTWrapSystemTypes>True</WebView2WinRTWrapSystemTypes>
     <WV2WinRTPlatformReferencesLevel>match</WV2WinRTPlatformReferencesLevel>
     <NeutralLanguage>en-CA</NeutralLanguage>
-    <AssemblyVersion>3.1.5.0</AssemblyVersion>
-    <FileVersion>3.1.5.0</FileVersion>
+    <AssemblyVersion>3.2.0.0</AssemblyVersion>
+    <FileVersion>3.2.0.0</FileVersion>
     <Copyright>Shob3r &amp; Lemon Studios</Copyright>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageIcon>AppIcon.png</PackageIcon>
-    <Version>3.1.5</Version>
+    <Version>3.2.0</Version>
     <WV2WinRTDisallowEmptyAdapter>False</WV2WinRTDisallowEmptyAdapter>
     <PackageCertificateKeyFile>C:\Users\andre\Desktop\stuff I don%27t want deleted\Audio-Replacer-2_TemporaryKey.pfx</PackageCertificateKeyFile>
     <AppxPackageDir>C:\Users\andre\Desktop\AudioReplacerBuilds\</AppxPackageDir>
+    <Title>Audio Replacer</Title>
   </PropertyGroup>
   <PropertyGroup Condition="'$(DisableHasPackageAndPublishMenuAddedByProject)'!='true' and '$(EnableMsixTooling)'=='true'">
     <HasPackageAndPublishMenu>true</HasPackageAndPublishMenu>

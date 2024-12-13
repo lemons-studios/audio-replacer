@@ -6,8 +6,33 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
+    xmlns:controls="using:CommunityToolkit.WinUI.Controls"
+    xmlns:ui="using:CommunityToolkit.WinUI"
     xmlns:editor="using:WinUIEditor">
     <StackPanel Padding="5.5">
+        <controls:TabbedCommandBar>
+            <controls:TabbedCommandBar.PaneFooter>
+                <ComboBox x:Name="SelectedFile" Margin="550 0 0 0" SelectedIndex="0" SelectionChanged="UpdateEditingFile" Width="200" CornerRadius="4">
+                    <x:String>Pitch Data</x:String>
+                    <x:String>Effects Data</x:String>
+                </ComboBox>
+            </controls:TabbedCommandBar.PaneFooter>
+            <controls:TabbedCommandBar.MenuItems>
+                <controls:TabbedCommandBarItem Header="File">
+                    <AppBarButton Label="Save"/>
+                    <AppBarButton Label="Import"/>
+                    <AppBarSeparator/>
+                    <AppBarButton Label="Help"/>
+                </controls:TabbedCommandBarItem>
+                <controls:TabbedCommandBar Header="Edit">
+                    <AppBarButton Label="Undo" Icon="{ui:FontIcon Glyph=&#xE74E;}"/>
+                    <AppBarButton Label="Redo"/>
+                    <AppBarSeparator/>
+                    <AppBarButton Label="Paste"/>
+                    <AppBarButton Label="Revert"/>
+                </controls:TabbedCommandBar>
+            </controls:TabbedCommandBar.MenuItems>
+        </controls:TabbedCommandBar>
         <StackPanel Orientation="Horizontal" Margin="0 5.5 0 5" VerticalAlignment="Center">
             <Button Click="SaveData" Margin="15 0 0 0" ToolTipService.ToolTip="Save Changes" CornerRadius="4">
                 <Button.Content>
@@ -29,10 +54,7 @@
                     <FontIcon Glyph="&#xE897;" />
                 </Button.Content>
             </Button>
-            <ComboBox x:Name="SelectedFile" Margin="550 0 0 0" SelectedIndex="0" SelectionChanged="UpdateEditingFile" Width="200" CornerRadius="4">
-                <x:String>Pitch Data</x:String>
-                <x:String>Effects Data</x:String>
-            </ComboBox>
+
         </StackPanel>
         <editor:CodeEditorControl x:Name="CustomDataEditor" HighlightingLanguage="json" MinHeight="400" />
     </StackPanel>
