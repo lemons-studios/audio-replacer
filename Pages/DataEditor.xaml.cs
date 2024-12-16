@@ -4,6 +4,7 @@ using System.IO;
 using AudioReplacer.Util;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Newtonsoft.Json;
 
 namespace AudioReplacer.Pages
 {
@@ -97,13 +98,22 @@ namespace AudioReplacer.Pages
             }
         }
 
-        private string GetEditorText() { return CustomDataEditor.Editor.GetText(CustomDataEditor.Editor.TextLength); }
-
         private void GetHelp(object sender, RoutedEventArgs e)
         {
             string url = "https://github.com/lemons-studios/audio-replacer/wiki/Custom-Data";
             Process openHelpPage = ShellCommandManager.CreateProcess("cmd", $"/c start {url}");
             openHelpPage.Start();
         }
+
+        private void FormatData(object sender, RoutedEventArgs e)
+        {
+            string currentEditorText = GetEditorText();
+            CustomDataEditor.Editor.SetText(JsonConvert.SerializeObject(JsonConvert.DeserializeObject(currentEditorText), Formatting.Indented));
+        }
+
+        private void PasteText(object sender, RoutedEventArgs e) { CustomDataEditor.Editor.Paste(); }
+        private void Undo(object sender, RoutedEventArgs e) { CustomDataEditor.Editor.Undo(); }
+        private void Redo(object sender, RoutedEventArgs e) { CustomDataEditor.Editor.Redo(); }
+        private string GetEditorText() { return CustomDataEditor.Editor.GetText(CustomDataEditor.Editor.TextLength); }
     }
 }

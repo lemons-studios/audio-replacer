@@ -9,53 +9,31 @@
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     xmlns:ui="using:CommunityToolkit.WinUI"
     xmlns:editor="using:WinUIEditor">
-    <StackPanel Padding="5.5">
+    <StackPanel Padding="5.5 0" Height="500">
         <controls:TabbedCommandBar>
-            <controls:TabbedCommandBar.PaneFooter>
-                <ComboBox x:Name="SelectedFile" Margin="550 0 0 0" SelectedIndex="0" SelectionChanged="UpdateEditingFile" Width="200" CornerRadius="4">
-                    <x:String>Pitch Data</x:String>
-                    <x:String>Effects Data</x:String>
-                </ComboBox>
-            </controls:TabbedCommandBar.PaneFooter>
             <controls:TabbedCommandBar.MenuItems>
                 <controls:TabbedCommandBarItem Header="File">
-                    <AppBarButton Label="Save"/>
-                    <AppBarButton Label="Import"/>
+                    <AppBarButton Label="Save" Icon="{ui:FontIcon Glyph=&#xE74E;}" Click="SaveData" />
+                    <AppBarButton Label="Import" Icon="{ui:FontIcon Glyph=&#xEA52;}" Click="ImportFile" />
                     <AppBarSeparator/>
-                    <AppBarButton Label="Help"/>
+                    <AppBarButton Label="Help" Icon="{ui:FontIcon Glyph=&#xE897;}" Click="GetHelp" />
+                    <AppBarElementContainer>
+                        <ComboBox x:Name="SelectedFile" Margin="5 0 0 0" SelectedIndex="0" SelectionChanged="UpdateEditingFile" MinWidth="200" CornerRadius="4">
+                            <ComboBoxItem Content="Pitch Data"/>
+                            <ComboBoxItem Content="Effects Data"/>
+                        </ComboBox>
+                    </AppBarElementContainer>
                 </controls:TabbedCommandBarItem>
-                <controls:TabbedCommandBar Header="Edit">
-                    <AppBarButton Label="Undo" Icon="{ui:FontIcon Glyph=&#xE74E;}"/>
-                    <AppBarButton Label="Redo"/>
-                    <AppBarSeparator/>
-                    <AppBarButton Label="Paste"/>
-                    <AppBarButton Label="Revert"/>
-                </controls:TabbedCommandBar>
+
+                <controls:TabbedCommandBarItem Header="Edit">
+                    <AppBarButton Label="Undo" Icon="{ui:FontIcon Glyph=&#xE7A7;}" Click="Undo" />
+                    <AppBarButton Label="Redo" Icon="{ui:FontIcon Glyph=&#xE7A6;}" Click="Redo" />
+                    <AppBarButton Label="Revert" Icon="{ui:FontIcon Glyph=&#xE845;}" Click="DiscardChanges" />
+                    <AppBarSeparator />
+                    <AppBarButton Label="Format" Icon="{ui:FontIcon Glyph=&#xE8CB;}" Click="FormatData"/>
+                </controls:TabbedCommandBarItem>
             </controls:TabbedCommandBar.MenuItems>
         </controls:TabbedCommandBar>
-        <StackPanel Orientation="Horizontal" Margin="0 5.5 0 5" VerticalAlignment="Center">
-            <Button Click="SaveData" Margin="15 0 0 0" ToolTipService.ToolTip="Save Changes" CornerRadius="4">
-                <Button.Content>
-                    <FontIcon Glyph="&#xE74E;" />
-                </Button.Content>
-            </Button>
-            <Button Click="DiscardChanges" Margin="15 0 0 0" ToolTipService.ToolTip="Discard Changes" CornerRadius="4">
-                <Button.Content>
-                    <FontIcon Glyph="&#xE845;" />
-                </Button.Content>
-            </Button>
-            <Button Click="ImportFile" Margin="15 0 0 0" ToolTipService.ToolTip="Import data from file" CornerRadius="4">
-                <Button.Content>
-                    <FontIcon Glyph="&#xEA52;" />
-                </Button.Content>
-            </Button>
-            <Button Click="GetHelp" Margin="15 0 0 0" ToolTipService.ToolTip="Custom data creation guide" CornerRadius="4">
-                <Button.Content>
-                    <FontIcon Glyph="&#xE897;" />
-                </Button.Content>
-            </Button>
-
-        </StackPanel>
-        <editor:CodeEditorControl x:Name="CustomDataEditor" HighlightingLanguage="json" MinHeight="400" />
+        <editor:CodeEditorControl x:Name="CustomDataEditor" HighlightingLanguage="json" Height="280"/>
     </StackPanel>
 </Page>
