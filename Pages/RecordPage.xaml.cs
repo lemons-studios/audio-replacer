@@ -19,6 +19,7 @@ namespace AudioReplacer.Pages
         private string previousPitchSelection = "None Selected";
         private string previousEffectSelection = "None";
         private bool projectNotSelected = true;
+        private bool areUpdatesAvailable;
 
         public RecordPage()
         {
@@ -35,8 +36,8 @@ namespace AudioReplacer.Pages
             {
                 case true: // Check For Updates
                     if (!GlobalData.UpdateChecksAllowed) break;
-                    bool updatesAvailable = recordPageBackend.IsUpdateAvailable();
-                    if (!updatesAvailable) break;
+                    areUpdatesAvailable = recordPageBackend.IsUpdateAvailable();
+                    if (!areUpdatesAvailable) break;
                     UpdateToast.Message = $"Latest Version: {recordPageBackend.GetWebVersion()}";
                     UpdateToast.IsOpen = true;
                     break;
@@ -48,7 +49,7 @@ namespace AudioReplacer.Pages
             }
 
             // Check if folder memory is enabled and if the remembered path exists
-            if (recordPageBackend.FolderMemoryAllowed()) { ProjectSetup(App.AppSettings.LastSelectedFolder); }
+            if (recordPageBackend.FolderMemoryAllowed()) { ProjectSetup(App.AppSettings.LastSelectedFolder, true); }
         }
 
         private void UpdateRecordingValues()
@@ -176,9 +177,9 @@ namespace AudioReplacer.Pages
             UpdateFileElements();
         }
 
-        public void ProjectSetup(string path)
+        public void ProjectSetup(string path, bool autoload = false)
         {
-            Task.Run(() => recordPageBackend.UpdateInfoBar(ProgressToast, "Setting up project...", "", InfoBarSeverity.Informational, autoClose: false));
+            if(!autoload && !areUpdatesAvailable) Task.Run(() => recordPageBackend.UpdateInfoBar(ProgressToast, "Setting up project...", "", InfoBarSeverity.Informational, autoClose: false));
             switch (projectNotSelected)
             {
                 case true:
@@ -196,7 +197,7 @@ namespace AudioReplacer.Pages
                     break;
             }
             UpdateFileElements();
-            recordPageBackend.UpdateInfoBar(ToastNotification, "Success!", "Project loaded!", InfoBarSeverity.Success);
+            if(!autoload && areUpdatesAvailable) recordPageBackend.UpdateInfoBar(ToastNotification, "Success!", "Project loaded!", InfoBarSeverity.Success);
         }
 
         private void ToggleButtonStates(bool recording)

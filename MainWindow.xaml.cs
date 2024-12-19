@@ -64,10 +64,6 @@ namespace AudioReplacer
             // Open the recording page (Stole this from the method below)
             if (!pageCache.TryGetValue(typeof(RecordPage), out var page)) { page = (Page) Activator.CreateInstance(typeof(RecordPage)); pageCache[typeof(RecordPage)] = page; }
             ContentFrame.Content = page;
-
-            // Lastly, Open the last selected folder if that's something that is allowed to be done
-            var currentPage = ContentFrame.Content as RecordPage;
-            if (currentPage != null && App.AppSettings.RememberSelectedFolder == 1 && App.AppSettings.LastSelectedFolder != string.Empty) currentPage.ProjectSetup(App.AppSettings.LastSelectedFolder);
         }
 
         private AppWindow GetAppWindowForCurrentWindow(object window) // Thanks StackOverflow man!
