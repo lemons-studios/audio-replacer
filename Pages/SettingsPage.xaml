@@ -38,6 +38,13 @@
                     <ToggleSwitch x:Name="UpdateCheckSwitch" IsOn="True" Toggled="ToggleUpdateChecks"/>
                 </communityToolkit:SettingsCard>
 
+                <communityToolkit:SettingsCard Header="Remember Selected Folder" Description="Automatically loads last selected folder from previous launch" Margin="0 0 0 7.5">
+                    <communityToolkit:SettingsCard.HeaderIcon>
+                        <FontIcon Glyph="&#xE8F7;" />
+                    </communityToolkit:SettingsCard.HeaderIcon>
+                    <ToggleSwitch x:Name="ProjectMemorySwitch" IsOn="True" Toggled="ToggleFolderMemory"/>
+                </communityToolkit:SettingsCard>
+
                 <communityToolkit:SettingsCard Header="Randomize Current File" Description="When off, the next file will be first file in an alphabetical list" Margin="0 0 0 7.5">
                     <communityToolkit:SettingsCard.HeaderIcon>
                         <FontIcon Glyph="&#xE8AB;" />
@@ -45,11 +52,11 @@
                     <ToggleSwitch x:Name="RandomizeInputSwitch" IsOn="False" Toggled="ToggleFileRandomization"/>
                 </communityToolkit:SettingsCard>
 
-                <communityToolkit:SettingsCard Header="Remember Selected Folder" Description="Automatically loads last selected folder from previous launch" Margin="0 0 0 7.5">
+                <communityToolkit:SettingsCard Header="Show effect selection details" Description="Shows your selected pitch/effect under the audio player on the recording page" Margin="0 0 0 7.5">
                     <communityToolkit:SettingsCard.HeaderIcon>
-                        <FontIcon Glyph="&#xE8F7;" />
+                        <FontIcon Glyph="&#xE90B;" />
                     </communityToolkit:SettingsCard.HeaderIcon>
-                    <ToggleSwitch x:Name="ProjectMemorySwitch" IsOn="True" Toggled="ToggleFolderMemory"/>
+                    <ToggleSwitch x:Name="ShowAdditionalDetailsSwitch" IsOn="False" Toggled="ToggleAdditionalDetails"/>
                 </communityToolkit:SettingsCard>
 
                 <communityToolkit:SettingsCard Header="Notification Stay Time" Description="Measured in milliseconds" Margin="0 0 0 7.5">

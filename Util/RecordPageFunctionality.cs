@@ -24,7 +24,14 @@ namespace AudioReplacer.Util
         {
             webRequest = new WebRequest();
             this.windowInfoBars = windowInfoBars;
-            webVersion = Task.Run(() => webRequest.GetWebVersion("https://api.github.com/repos/lemons-studios/audio-replacer-2/tags")).Result;
+            try
+            {
+                webVersion = Task.Run(() => webRequest.GetWebVersion("https://api.github.com/repos/lemons-studios/audio-replacer-2/tags")).Result;
+            }
+            catch (AggregateException e) // Typically occurs when GitHub is queried too much within a specific period of time. should not affect the application aside from update checks
+            {
+                webVersion = GlobalData.GetAppVersion(true);
+            }
             UpdatePitchData();
         }
 

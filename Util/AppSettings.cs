@@ -19,5 +19,7 @@ namespace AudioReplacer.Util
         string LastSelectedFolder { get; set; }
         [Option(Alias = "InputRandomizationEnabled", DefaultValue = 0)]
         int InputRandomizationEnabled { get; set; }
+        [Option(Alias = "ShowEffectSelection", DefaultValue = 0)]
+        int ShowEffectSelection { get; set; }
     }
 }

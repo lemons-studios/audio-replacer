@@ -54,7 +54,8 @@ namespace AudioReplacer.Pages
 
         private void UpdateRecordingValues()
         {
-            if (audioRecordingUtils == null) return;
+            PitchSettingsFeedback.Visibility = GlobalData.ShowAudioEffectDetails ? Visibility.Visible : Visibility.Collapsed;
+            if (audioRecordingUtils == null || PitchSettingsFeedback.Visibility == Visibility.Collapsed) return;
             if (VoiceTuneMenu.SelectedItem != null)
             {
                 audioRecordingUtils.pitchChange = recordPageBackend.GetPitchModifier(VoiceTuneMenu.SelectedIndex);

@@ -155,6 +155,12 @@ namespace AudioReplacer.Pages
             App.AppSettings.RememberSelectedFolder = BoolToInt(ProjectMemorySwitch.IsOn);
         }
 
+        private void ToggleAdditionalDetails(object sender, RoutedEventArgs e)
+        {
+            GlobalData.ShowAudioEffectDetails = ShowAdditionalDetailsSwitch.IsOn;
+            App.AppSettings.ShowEffectSelection = BoolToInt(ShowAdditionalDetailsSwitch.IsOn);
+        }
+
         private int BoolToInt(bool value) { return value == false ? 0 : 1; }
     }
 }

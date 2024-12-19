@@ -42,6 +42,7 @@
         <Setter Property="HorizontalAlignment" Value="Center"/>
         <Setter Property="CornerRadius" Value="4"/>
         <Setter Property="Background" Value="{ThemeResource LayerOnMicaBaseAltFillColorTertiaryBrush}"/>
+        <Setter Property="Margin" Value="0 -15"/>
     </Style>
 
     <Style x:Key="PanelCard" TargetType="Border">

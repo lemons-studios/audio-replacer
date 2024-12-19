@@ -27,6 +27,7 @@ namespace AudioReplacer
             GlobalData.InputRandomizationEnabled = AppSettings.InputRandomizationEnabled == 1;
             GlobalData.NotificationTimeout = AppSettings.NotificationTimeout;
             GlobalData.RecordStopDelay = AppSettings.RecordEndWaitTime;
+            GlobalData.ShowAudioEffectDetails = AppSettings.ShowEffectSelection == 1;
             InitializeComponent();
         }
 
@@ -43,7 +44,8 @@ namespace AudioReplacer
                 NotificationTimeout = 1750,
                 RememberSelectedFolder = 1,
                 LastSelectedFolder = "",
-                InputRandomizationEnabled = 0
+                InputRandomizationEnabled = 0,
+                ShowEffectSelection = 0
             };
             string defaultJson = JsonSerializer.Serialize(defaultConfig, new JsonSerializerOptions { WriteIndented = true });
             File.WriteAllText(settingsFilePath, defaultJson); // File gets created automatically by File.WriteAllText() before it writes to anything
