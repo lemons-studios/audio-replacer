@@ -59,7 +59,7 @@
                     <ToggleSwitch x:Name="ShowAdditionalDetailsSwitch" IsOn="False" Toggled="ToggleAdditionalDetails"/>
                 </communityToolkit:SettingsCard>
 
-                <communityToolkit:SettingsCard Header="Enable Fanfare" Description="Play a silly sound effect when completing a file" Margin="0 0 0 7.5">
+                <communityToolkit:SettingsCard Header="Enable Fanfare" Description="Play a silly sound effect when completing a file (Currently WIP, nothing will happen if enabled)" Margin="0 0 0 7.5">
                     <communityToolkit:SettingsCard.HeaderIcon>
                         <FontIcon Glyph="&#xE7F3;" />
                     </communityToolkit:SettingsCard.HeaderIcon>

@@ -25,6 +25,7 @@ namespace AudioReplacer.Pages
         public RecordPage()
         {
             InitializeComponent();
+            PitchSettingsFeedback.Visibility = GlobalData.ShowAudioEffectDetails ? Visibility.Visible : Visibility.Collapsed; // Needed here to hide UI on app launch
             recordPageBackend = new RecordPageFunctionality([SuccessNotification, ProgressNotification, UpdateNotification]);
             VoiceTuneMenu.ItemsSource = recordPageBackend.GetPitchTitles();
             EffectsMenu.ItemsSource = recordPageBackend.GetEffectTitles();
@@ -176,7 +177,7 @@ namespace AudioReplacer.Pages
 
             ToggleFinalReviewButtons(false);
             ToggleButtonStates(false);
-            if (true)
+            if (GlobalData.EnableFanfare)
             {
                 var fanfareEffectPath = new Uri("ms-appx:///Assets/Fanfare.mp3");
                 var mediaSource = MediaSource.CreateFromUri(fanfareEffectPath);

@@ -97,10 +97,9 @@ namespace AudioReplacer
             ContentFrame.Content = page;
         }
 
-        public async Task PlaySoundEffect(MediaSource source)
+        public void PlaySoundEffect(MediaSource source)
         {
-            SoundEffects.Source = source;
-            SoundEffects.MediaPlayer.Play();
+            
         }
 
         private void OnWindowClose(object sender, AppWindowClosingEventArgs args) { if (MainWindow.ProjectInitialized && (MainWindow.IsProcessing || MainWindow.IsRecording)) File.Delete(MainWindow.CurrentFile); }
