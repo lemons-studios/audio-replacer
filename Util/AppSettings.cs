@@ -21,5 +21,7 @@ namespace AudioReplacer.Util
         int InputRandomizationEnabled { get; set; }
         [Option(Alias = "ShowEffectSelection", DefaultValue = 0)]
         int ShowEffectSelection { get; set; }
+        [Option(Alias = "EnableFanfare", DefaultValue = 0)]
+        int EnableFanfare { get; set; }
     }
 }

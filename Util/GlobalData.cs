@@ -6,7 +6,7 @@ namespace AudioReplacer.Util
     public static class GlobalData
     {
         public static AppWindow AppWindow;
-        public static bool UpdateChecksAllowed, InputRandomizationEnabled, ShowAudioEffectDetails;
+        public static bool UpdateChecksAllowed, InputRandomizationEnabled, ShowAudioEffectDetails, EnableFanfare;
         public static int NotificationTimeout, RecordStopDelay;
         public static string[][] DeserializedPitchData, DeserializedEffectData;
 

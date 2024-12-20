@@ -50,9 +50,17 @@ namespace AudioReplacer.Util
 
         public void DownloadFile(string url, string outPath, string outName)
         {
-            using var webStream = client.GetStreamAsync(url);
-            using var fileStream = new FileStream($"{outPath}\\{outName}", FileMode.OpenOrCreate);
-            webStream.Result.CopyTo(fileStream);
+            // Fix AggregateException
+            try
+            {
+                using var webStream = client.GetStreamAsync(url);
+                using var fileStream = new FileStream($"{outPath}\\{outName}", FileMode.OpenOrCreate);
+                webStream.Result.CopyTo(fileStream);
+            }
+            catch (AggregateException e)
+            {
+                throw new AggregateException(e);
+            }
         }
     }
 }

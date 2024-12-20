@@ -16,6 +16,7 @@
                 <StackPanel Orientation="Horizontal" Grid.Column="1">
                     <TextBlock x:Name="AppTitleText" Style="{StaticResource TitleBarText}" Text="Audio Replacer" />
                     <Button x:Name="ProjectFolderButton" Content="Change Project Folder" Width="155" Height="35" Click="ChangeProjectFolder" Margin="35 0 0 0" FontSize="13" CornerRadius="4"/>
+                    <MediaPlayerElement x:Name="SoundEffects" AutoPlay="True" Width="0" Height="0" Visibility="Visible" AreTransportControlsEnabled="False"/>
                 </StackPanel>
             </Grid>
         </Border>

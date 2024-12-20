@@ -28,9 +28,9 @@ namespace AudioReplacer.Util
             {
                 webVersion = Task.Run(() => webRequest.GetWebVersion("https://api.github.com/repos/lemons-studios/audio-replacer-2/tags")).Result;
             }
-            catch (AggregateException) // Typically occurs when GitHub is queried too much within a specific period of time. should not affect the application aside from update checks
+            catch (AggregateException) // Typically occurs when GitHub is queried too much within a specific period of time from the same ip address. Should not affect the application aside from update checks
             {
-                webVersion = GlobalData.GetAppVersion(true);
+                webVersion = GlobalData.GetAppVersion(true); 
             }
             UpdatePitchData();
         }
@@ -65,7 +65,7 @@ namespace AudioReplacer.Util
 
             // Delete both the downloaded 7z archive and the ffmpeg folder it came in
             File.Delete($"{fullOutPath}.7z");
-            Directory.Delete($"{fullOutPath}", true); // Setting the second parameter to true also deletes all files in the folder, which is needed to occur
+            Directory.Delete($"{fullOutPath}", true);
         }
 
         public bool IsFfMpegAvailable()

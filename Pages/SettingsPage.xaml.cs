@@ -23,7 +23,8 @@ namespace AudioReplacer.Pages
             TransparencyDropdown.SelectedIndex = App.AppSettings.AppTransparencySetting;
             UpdateCheckSwitch.IsOn = GlobalData.UpdateChecksAllowed;
             ProjectMemorySwitch.IsOn = App.AppSettings.RememberSelectedFolder == 1;
-            RandomizeInputSwitch.IsOn = App.AppSettings.InputRandomizationEnabled == 1;
+            RandomizeInputSwitch.IsOn = GlobalData.InputRandomizationEnabled;
+            FanfareToggle.IsOn = GlobalData.EnableFanfare;
             ToastDelayBox.Value = GlobalData.NotificationTimeout;
             RecordDelayBox.Value = GlobalData.RecordStopDelay;
             firstOpening = false;
@@ -159,6 +160,12 @@ namespace AudioReplacer.Pages
         {
             GlobalData.ShowAudioEffectDetails = ShowAdditionalDetailsSwitch.IsOn;
             App.AppSettings.ShowEffectSelection = BoolToInt(ShowAdditionalDetailsSwitch.IsOn);
+        }
+
+        private void ToggleFanfare(object sender, RoutedEventArgs e)
+        {
+            GlobalData.EnableFanfare = FanfareToggle.IsOn;
+            App.AppSettings.EnableFanfare = BoolToInt(FanfareToggle.IsOn);
         }
 
         private int BoolToInt(bool value) { return value == false ? 0 : 1; }

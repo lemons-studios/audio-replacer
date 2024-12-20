@@ -84,6 +84,7 @@
     <Content Remove="Assets\Wide310x150Logo.scale-125.png" />
     <Content Remove="Assets\Wide310x150Logo.scale-150.png" />
     <Content Remove="Assets\Wide310x150Logo.scale-400.png" />
+    <Content Remove="Assets\Fanfare.mp3" />
   </ItemGroup>
   <ItemGroup>
     <None Remove="Pages\SettingsPage.xaml" />

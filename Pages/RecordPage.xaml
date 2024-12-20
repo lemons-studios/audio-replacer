@@ -56,13 +56,19 @@
             </Grid>
         </StackPanel>
 
-        <InfoBar x:Name="ToastNotification" Style="{StaticResource ToastNotification}" Severity="Success">
+        <InfoBar x:Name="SuccessNotification" Style="{StaticResource ToastNotification}" Severity="Success">
             <InfoBar.Transitions>
                 <PopupThemeTransition />
             </InfoBar.Transitions>
         </InfoBar>
 
-        <InfoBar x:Name="UpdateToast" Style="{StaticResource ToastNotification}" Title="Update Available" Severity="Informational" Background="{ThemeResource SystemFillColorCriticalBackgroundBrush}">
+        <InfoBar x:Name="ErrorNotification" Style="{StaticResource ToastNotification}" Severity="Error">
+            <InfoBar.Transitions>
+                <PopupThemeTransition />
+            </InfoBar.Transitions>
+        </InfoBar>
+
+        <InfoBar x:Name="UpdateNotification" Style="{StaticResource ToastNotification}" Title="Update Available" Severity="Informational" Background="{ThemeResource SystemFillColorCriticalBackgroundBrush}">
             <InfoBar.IconSource>
                 <FontIconSource Glyph="&#xECC5;" />
             </InfoBar.IconSource>
@@ -74,7 +80,7 @@
             </InfoBar.Transitions>
         </InfoBar>
 
-        <InfoBar x:Name="DependencyToast" Style="{StaticResource ToastNotification}" Title="Error" Message="Required Dependencies Not Installed" Severity="Error" Background="{ThemeResource SystemFillColorCriticalBackgroundBrush}" IsOpen="False" IsClosable="False">
+        <InfoBar x:Name="DependencyNotification" Style="{StaticResource ToastNotification}" Title="Error" Message="Required Dependencies Not Installed" Severity="Error" Background="{ThemeResource SystemFillColorCriticalBackgroundBrush}" IsOpen="False" IsClosable="False">
             <InfoBar.ActionButton>
                 <Button Content="Download Dependencies" Click="DownloadRuntimeDependencies" CornerRadius="4"/>
             </InfoBar.ActionButton>
@@ -83,7 +89,7 @@
             </InfoBar.Transitions>
         </InfoBar>
 
-        <InfoBar x:Name="ProgressToast" Style="{StaticResource ToastNotification}" Severity="Informational" IsClosable="False" Background="{ThemeResource SystemFillColorSolidAttentionBackgroundBrush}">
+        <InfoBar x:Name="ProgressNotification" Style="{StaticResource ToastNotification}" Severity="Informational" IsClosable="False" Background="{ThemeResource SystemFillColorSolidAttentionBackgroundBrush}">
             <InfoBar.Content>
                 <ProgressBar IsIndeterminate="True" MaxWidth="500" Margin="0 0 0 6"/>
             </InfoBar.Content>

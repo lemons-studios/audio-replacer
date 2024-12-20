@@ -7,6 +7,8 @@ using WinRT.Interop;
 using Microsoft.UI;
 using Microsoft.UI.Xaml.Controls;
 using System.Collections.Generic;
+using System.Threading.Tasks;
+using Windows.Media.Core;
 using AudioReplacer.Pages;
 using AudioReplacer.Util;
 using Microsoft.UI.Xaml;
@@ -94,6 +96,13 @@ namespace AudioReplacer
             if (!pageCache.TryGetValue(pageSwitchType, out var page)) { page = (Page) Activator.CreateInstance(pageSwitchType); pageCache[pageSwitchType] = page; }
             ContentFrame.Content = page;
         }
+
+        public async Task PlaySoundEffect(MediaSource source)
+        {
+            SoundEffects.Source = source;
+            SoundEffects.MediaPlayer.Play();
+        }
+
         private void OnWindowClose(object sender, AppWindowClosingEventArgs args) { if (MainWindow.ProjectInitialized && (MainWindow.IsProcessing || MainWindow.IsRecording)) File.Delete(MainWindow.CurrentFile); }
 
         private void ChangeProjectFolder(object sender, RoutedEventArgs e)

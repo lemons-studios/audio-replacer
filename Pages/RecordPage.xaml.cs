@@ -4,6 +4,7 @@ using System;
 using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
+using Windows.Media.Core;
 using Windows.Storage;
 using Windows.Storage.Pickers;
 using AudioReplacer.Util;
@@ -24,7 +25,7 @@ namespace AudioReplacer.Pages
         public RecordPage()
         {
             InitializeComponent();
-            recordPageBackend = new RecordPageFunctionality([ToastNotification, ProgressToast, UpdateToast]);
+            recordPageBackend = new RecordPageFunctionality([SuccessNotification, ProgressNotification, UpdateNotification]);
             VoiceTuneMenu.ItemsSource = recordPageBackend.GetPitchTitles();
             EffectsMenu.ItemsSource = recordPageBackend.GetEffectTitles();
 
@@ -38,13 +39,13 @@ namespace AudioReplacer.Pages
                     if (!GlobalData.UpdateChecksAllowed) break;
                     areUpdatesAvailable = recordPageBackend.IsUpdateAvailable();
                     if (!areUpdatesAvailable) break;
-                    UpdateToast.Message = $"Latest Version: {recordPageBackend.GetWebVersion()}";
-                    UpdateToast.IsOpen = true;
+                    UpdateNotification.Message = $"Latest Version: {recordPageBackend.GetWebVersion()}";
+                    UpdateNotification.IsOpen = true;
                     break;
                 case false: // Show popup for dependency install requirement
                     VoiceTuneMenu.IsEnabled = false;
                     EffectsMenu.IsEnabled = false;
-                    DependencyToast.IsOpen = true;
+                    DependencyNotification.IsOpen = true;
                     break;
             }
 
@@ -95,11 +96,11 @@ namespace AudioReplacer.Pages
                 case true:
                     projectFileManagementUtils.SkipAudioTrack();
                     UpdateFileElements();
-                    recordPageBackend.UpdateInfoBar(ToastNotification, "Success!", "File skipped!", InfoBarSeverity.Success);
+                    recordPageBackend.UpdateInfoBar(SuccessNotification, "Success!", "File skipped!", InfoBarSeverity.Success);
                     break;
                 case false:
                     AudioPreview.MediaPlayer.Play();
-                    recordPageBackend.UpdateInfoBar(ToastNotification, "Cancelled", "File skip cancelled", InfoBarSeverity.Informational);
+                    recordPageBackend.UpdateInfoBar(SuccessNotification, "Cancelled", "File skip cancelled", InfoBarSeverity.Informational);
                     break;
             }
         }
@@ -108,7 +109,7 @@ namespace AudioReplacer.Pages
         {
             MainWindow.IsRecording = true;
             AudioPreview.MediaPlayer.Pause();
-            recordPageBackend.UpdateInfoBar(ProgressToast, "Recording In Progress...", "", 0, autoClose: false);
+            recordPageBackend.UpdateInfoBar(ProgressNotification, "Recording In Progress...", "", 0, autoClose: false);
 
             if (projectFileManagementUtils != null)
             {
@@ -121,12 +122,12 @@ namespace AudioReplacer.Pages
         private async void StopRecordingAudio(object sender, RoutedEventArgs e)
         {
             MainWindow.IsRecording = false; MainWindow.IsProcessing = true;
-            recordPageBackend.UpdateInfoBar(ProgressToast, "Saving File....", "", 0);
+            recordPageBackend.UpdateInfoBar(ProgressNotification, "Saving File....", "", 0);
 
             if (projectFileManagementUtils == null) return;
             await audioRecordingUtils.StopRecordingAudio(projectFileManagementUtils.GetOutFilePath());
             ToggleFinalReviewButtons(true);
-            recordPageBackend.UpdateInfoBar(ToastNotification, "Save Completed!", "Entering review phase...", InfoBarSeverity.Success);
+            recordPageBackend.UpdateInfoBar(SuccessNotification, "Save Completed!", "Entering review phase...", InfoBarSeverity.Success);
 
             // Update source of audio player and the title manually
             CurrentFile.Text = "Review your recording...";
@@ -150,7 +151,7 @@ namespace AudioReplacer.Pages
             MainWindow.IsRecording = false;
             await audioRecordingUtils.CancelRecording(projectFileManagementUtils.GetOutFilePath());
             ToggleButtonStates(false);
-            recordPageBackend.UpdateInfoBar(ToastNotification, "Recording Cancelled", "", InfoBarSeverity.Informational);
+            recordPageBackend.UpdateInfoBar(SuccessNotification, "Recording Cancelled", "", InfoBarSeverity.Informational);
         }
 
         private void UpdateAudioStatus(object sender, RoutedEventArgs e)
@@ -164,23 +165,29 @@ namespace AudioReplacer.Pages
                 case true:
                     // Submission Accepted
                     projectFileManagementUtils.DeleteCurrentFile(/* This method essentially acts as a way to confirm the submission*/);
-                    recordPageBackend.UpdateInfoBar(ToastNotification, "Submission Accepted!!", "Moving to next file...", InfoBarSeverity.Success);
+                    recordPageBackend.UpdateInfoBar(SuccessNotification, "Submission Accepted!!", "Moving to next file...", InfoBarSeverity.Success);
                     break;
                 case false:
                     // Submission Rejected
                     File.Delete(projectFileManagementUtils.GetOutFilePath());
-                    recordPageBackend.UpdateInfoBar(ToastNotification, "Submission Rejected", "Returning to record phase...", InfoBarSeverity.Informational);
+                    recordPageBackend.UpdateInfoBar(SuccessNotification, "Submission Rejected", "Returning to record phase...", InfoBarSeverity.Informational);
                     break;
             }
 
             ToggleFinalReviewButtons(false);
             ToggleButtonStates(false);
+            if (true)
+            {
+                var fanfareEffectPath = new Uri("ms-appx:///Assets/Fanfare.mp3");
+                var mediaSource = MediaSource.CreateFromUri(fanfareEffectPath);
+                App.MainWindow.PlaySoundEffect(mediaSource);
+            }
             UpdateFileElements();
         }
 
         public void ProjectSetup(string path, bool autoload = false)
         {
-            if(!autoload && !areUpdatesAvailable) Task.Run(() => recordPageBackend.UpdateInfoBar(ProgressToast, "Setting up project...", "", InfoBarSeverity.Informational, autoClose: false));
+            if(!autoload && !areUpdatesAvailable) Task.Run(() => recordPageBackend.UpdateInfoBar(ProgressNotification, "Setting up project...", "", InfoBarSeverity.Informational, autoClose: false));
             switch (projectNotSelected)
             {
                 case true:
@@ -198,7 +205,7 @@ namespace AudioReplacer.Pages
                     break;
             }
             UpdateFileElements();
-            if(!autoload && areUpdatesAvailable) recordPageBackend.UpdateInfoBar(ToastNotification, "Success!", "Project loaded!", InfoBarSeverity.Success);
+            if(!autoload && areUpdatesAvailable) recordPageBackend.UpdateInfoBar(SuccessNotification, "Success!", "Project loaded!", InfoBarSeverity.Success);
         }
 
         private void ToggleButtonStates(bool recording)
@@ -220,12 +227,19 @@ namespace AudioReplacer.Pages
 
         private async void DownloadRuntimeDependencies(object sender, RoutedEventArgs e)
         {
-            DependencyToast.IsOpen = false;
-            recordPageBackend.UpdateInfoBar(ProgressToast, "Installing Dependencies", "App will restart after finishing. Please stay connected to the internet", InfoBarSeverity.Informational, autoClose: false);
-            await Task.Run(recordPageBackend.DownloadDependencies); // Prevents window from freezing when installing dependencies
+            try
+            {
+                DependencyNotification.IsOpen = false;
+                recordPageBackend.UpdateInfoBar(ProgressNotification, "Installing Dependencies", "App will restart after finishing. Please stay connected to the internet", InfoBarSeverity.Informational, autoClose: false);
+                await Task.Run(recordPageBackend.DownloadDependencies); // Prevents window from freezing when installing dependencies
 
-            // Restart app
-            Microsoft.Windows.AppLifecycle.AppInstance.Restart("");
+                // Restart app
+                Microsoft.Windows.AppLifecycle.AppInstance.Restart("");
+            }
+            catch (AggregateException) // Failsafe for if the computer is offline
+            {
+                recordPageBackend.UpdateInfoBar(ErrorNotification, "Error", "System appears to be offline. Application cannot run without dependencies. Try again by relaunching the application at a later time", InfoBarSeverity.Error, autoClose: false);
+            }
         }
 
         private void OpenGithubReleases(object sender, RoutedEventArgs e)
