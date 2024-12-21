@@ -57,7 +57,7 @@ namespace AudioReplacer.Pages
         private void UpdateRecordingValues()
         {
             PitchSettingsFeedback.Visibility = GlobalData.ShowAudioEffectDetails ? Visibility.Visible : Visibility.Collapsed;
-            if (audioRecordingUtils == null || PitchSettingsFeedback.Visibility == Visibility.Collapsed) return;
+            if (audioRecordingUtils == null) return;
             if (VoiceTuneMenu.SelectedItem != null)
             {
                 audioRecordingUtils.pitchChange = recordPageBackend.GetPitchModifier(VoiceTuneMenu.SelectedIndex);
@@ -68,7 +68,7 @@ namespace AudioReplacer.Pages
                 audioRecordingUtils.effectCommand = recordPageBackend.GetEffectValues(EffectsMenu.SelectedIndex);
                 previousEffectSelection = EffectsMenu.SelectedItem.ToString();
             }
-            PitchSettingsFeedback.Text = $"Pitch Modifier: {audioRecordingUtils.pitchChange} ({previousPitchSelection})\nEffect Selected: {previousEffectSelection}\nExtra Edits Required? {recordPageBackend.BoolToString(FurtherEditsCheckBox.IsChecked)}";
+            if(PitchSettingsFeedback.Visibility == Visibility.Visible) PitchSettingsFeedback.Text = $"Pitch Modifier: {audioRecordingUtils.pitchChange} ({previousPitchSelection})\nEffect Selected: {previousEffectSelection}\nExtra Edits Required? {recordPageBackend.BoolToString(FurtherEditsCheckBox.IsChecked)}";
         }
 
         public async void SelectProjectFolder(object sender, RoutedEventArgs e)

@@ -57,15 +57,22 @@ namespace AudioReplacer.Util
             string fullOutPath = $@"{outPath}\ffmpeg";
             string currentSystemPath = Environment.GetEnvironmentVariable("PATH", EnvironmentVariableTarget.User);
 
-            webRequest.DownloadFile(ffMpegUrl, outPath, "ffmpeg.7z");
-            using (ArchiveFile ffmpegArchive = new ArchiveFile($"{fullOutPath}.7z")) { ffmpegArchive.Extract($"{fullOutPath}"); }
+            try
+            {
+                webRequest.DownloadFile(ffMpegUrl, outPath, "ffmpeg.7z");
+                using (ArchiveFile ffmpegArchive = new ArchiveFile($"{fullOutPath}.7z")) { ffmpegArchive.Extract($"{fullOutPath}"); }
 
-            Directory.Move(@$"{fullOutPath}\ffmpeg-{latestFfMpegVersion}-full_build\bin", @$"{outPath}\ffmpeg-bin");
-            Environment.SetEnvironmentVariable("PATH", @$"{currentSystemPath};{outPath}\ffmpeg-bin\", EnvironmentVariableTarget.User);
+                Directory.Move(@$"{fullOutPath}\ffmpeg-{latestFfMpegVersion}-full_build\bin", @$"{outPath}\ffmpeg-bin");
+                Environment.SetEnvironmentVariable("PATH", @$"{currentSystemPath};{outPath}\ffmpeg-bin\", EnvironmentVariableTarget.User);
 
-            // Delete both the downloaded 7z archive and the ffmpeg folder it came in
-            File.Delete($"{fullOutPath}.7z");
-            Directory.Delete($"{fullOutPath}", true);
+                // Delete both the downloaded 7z archive and the ffmpeg folder it came in
+                File.Delete($"{fullOutPath}.7z");
+                Directory.Delete($"{fullOutPath}", true);
+            }
+            catch (Exception e)
+            {
+                throw new Exception();
+            }
         }
 
         public bool IsFfMpegAvailable()
