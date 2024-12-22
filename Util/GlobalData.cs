@@ -7,7 +7,7 @@ namespace AudioReplacer.Util
     {
         public static AppWindow AppWindow;
         public static bool UpdateChecksAllowed, InputRandomizationEnabled, ShowAudioEffectDetails, EnableFanfare;
-        public static int NotificationTimeout, RecordStopDelay;
+        public static int NotificationTimeout, RecordStopDelay, RecordStartDelay;
         public static string[][] DeserializedPitchData, DeserializedEffectData;
 
         public static string GetAppVersion(bool forceBuildNumber = false)

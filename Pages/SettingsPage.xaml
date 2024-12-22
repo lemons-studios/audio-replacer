@@ -77,7 +77,14 @@
                     <communityToolkit:SettingsCard.HeaderIcon>
                         <FontIcon Glyph="&#xF781;" />
                     </communityToolkit:SettingsCard.HeaderIcon>
-                    <NumberBox x:Name="RecordDelayBox" Minimum="0" SpinButtonPlacementMode="Inline" SmallChange="5" LargeChange="50" Value="25" Maximum="5000" ValueChanged="UpdateDelayTimes"/>
+                    <NumberBox x:Name="StopDelayBox" Minimum="0" SpinButtonPlacementMode="Inline" SmallChange="5" LargeChange="50" Value="25" Maximum="5000" ValueChanged="UpdateDelayTimes"/>
+                </communityToolkit:SettingsCard>
+
+                <communityToolkit:SettingsCard Header="Record Start Delay" Description="Measured in milliseconds" Margin="0 0 0 7.5">
+                    <communityToolkit:SettingsCard.HeaderIcon>
+                        <FontIcon Glyph="&#xE916;" />
+                    </communityToolkit:SettingsCard.HeaderIcon>
+                    <NumberBox x:Name="StartDelayBox" Minimum="0" SpinButtonPlacementMode="Inline" SmallChange="5" LargeChange="50" Value="25" Maximum="5000" ValueChanged="UpdateStartDelay"/>
                 </communityToolkit:SettingsCard>
 
                 <communityToolkit:SettingsCard Header="Open Output Directory" Description="Opens an explorer window into the output directory of the app" IsClickEnabled="True" Margin="0 0 0 7.5" Click="OpenOutputFolder">

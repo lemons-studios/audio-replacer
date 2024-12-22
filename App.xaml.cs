@@ -23,12 +23,7 @@ namespace AudioReplacer
             CreateSettingsData();
             CreateJsonData();
             AppSettings = new ConfigurationBuilder<IAppSettings>().UseJsonFile(settingsFilePath).Build();
-            GlobalData.UpdateChecksAllowed = AppSettings.AppUpdateCheck == 1;
-            GlobalData.InputRandomizationEnabled = AppSettings.InputRandomizationEnabled == 1;
-            GlobalData.ShowAudioEffectDetails = AppSettings.ShowEffectSelection == 1;
-            GlobalData.EnableFanfare = AppSettings.EnableFanfare == 1;
-            GlobalData.NotificationTimeout = AppSettings.NotificationTimeout;
-            GlobalData.RecordStopDelay = AppSettings.RecordEndWaitTime;
+            SetGlobalData();
             InitializeComponent();
         }
 
@@ -47,7 +42,8 @@ namespace AudioReplacer
                 LastSelectedFolder = "",
                 InputRandomizationEnabled = 0,
                 ShowEffectSelection = 0,
-                EnableFanfare = 0
+                EnableFanfare = 0,
+                RecordStartWaitTime = 25
             };
             string defaultJson = JsonSerializer.Serialize(defaultConfig, new JsonSerializerOptions { WriteIndented = true });
             File.WriteAllText(settingsFilePath, defaultJson); // File gets created automatically by File.WriteAllText() before it writes to anything
@@ -63,6 +59,18 @@ namespace AudioReplacer
             GlobalData.DeserializedPitchData = JsonSerializer.Deserialize<string[][]>(File.ReadAllText(pitchDataPath));
             GlobalData.DeserializedEffectData = JsonSerializer.Deserialize<string[][]>(File.ReadAllText(effectDataPath));
         }
+
+        private void SetGlobalData()
+        {
+            GlobalData.UpdateChecksAllowed = AppSettings.AppUpdateCheck == 1;
+            GlobalData.InputRandomizationEnabled = AppSettings.InputRandomizationEnabled == 1;
+            GlobalData.ShowAudioEffectDetails = AppSettings.ShowEffectSelection == 1;
+            GlobalData.EnableFanfare = AppSettings.EnableFanfare == 1;
+            GlobalData.NotificationTimeout = AppSettings.NotificationTimeout;
+            GlobalData.RecordStopDelay = AppSettings.RecordEndWaitTime;
+            GlobalData.RecordStartDelay = AppSettings.RecordStartWaitTime;
+        }
+
         protected override void OnLaunched(LaunchActivatedEventArgs args) { MainWindow = new MainWindow(); MainWindow.Activate(); }
     }
 }

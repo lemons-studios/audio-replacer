@@ -23,5 +23,7 @@ namespace AudioReplacer.Util
         int ShowEffectSelection { get; set; }
         [Option(Alias = "EnableFanfare", DefaultValue = 0)]
         int EnableFanfare { get; set; }
+        [Option(Alias = "RecordStartWaitTime", DefaultValue = 25)]
+        int RecordStartWaitTime { get; set; }
     }
 }

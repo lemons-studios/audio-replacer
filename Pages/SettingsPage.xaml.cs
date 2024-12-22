@@ -26,7 +26,7 @@ namespace AudioReplacer.Pages
             RandomizeInputSwitch.IsOn = GlobalData.InputRandomizationEnabled;
             FanfareToggle.IsOn = GlobalData.EnableFanfare;
             ToastDelayBox.Value = GlobalData.NotificationTimeout;
-            RecordDelayBox.Value = GlobalData.RecordStopDelay;
+            StopDelayBox.Value = GlobalData.RecordStopDelay;
             firstOpening = false;
         }
 
@@ -69,10 +69,10 @@ namespace AudioReplacer.Pages
         private void UpdateDelayTimes(NumberBox sender, NumberBoxValueChangedEventArgs args)
         {
             if (firstOpening) return;
-            switch (sender == RecordDelayBox)
+            switch (sender == StopDelayBox)
             {
                 case true:
-                    int newDelayTime = (int) MathF.Max((float) RecordDelayBox.Value, 0);
+                    int newDelayTime = (int) MathF.Max((float) StopDelayBox.Value, 0);
                     GlobalData.RecordStopDelay = newDelayTime;
                     App.AppSettings.RecordEndWaitTime = newDelayTime;
                     break;
@@ -169,5 +169,12 @@ namespace AudioReplacer.Pages
         }
 
         private int BoolToInt(bool value) { return value == false ? 0 : 1; }
+
+        private void UpdateStartDelay(NumberBox sender, NumberBoxValueChangedEventArgs args)
+        {
+            int newDelayTime = (int) MathF.Max((float) StartDelayBox.Value, 0);
+            GlobalData.RecordStartDelay = newDelayTime;
+            App.AppSettings.RecordStartWaitTime = newDelayTime;
+        }
     }
 }

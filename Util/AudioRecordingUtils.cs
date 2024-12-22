@@ -25,6 +25,7 @@ namespace AudioReplacer.Util
 
         public async Task StartRecordingAudio(StorageFolder saveFolder, string fileName)
         {
+            await Task.Delay(GlobalData.RecordStartDelay);
             var fileSaveLocation = await saveFolder.CreateFileAsync(FormatFileName(fileName), CreationCollisionOption.ReplaceExisting);
             var encodingProfile = MediaEncodingProfile.CreateWav(AudioEncodingQuality.High);
             await recordingCapture.StartRecordToStorageFileAsync(encodingProfile, fileSaveLocation);
