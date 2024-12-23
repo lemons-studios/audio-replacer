@@ -46,10 +46,10 @@
 
                 <Border Style="{StaticResource PanelCard}" Grid.Column="1" Width="375">
                     <StackPanel Padding="5" VerticalAlignment="Center">
-                        <TextBlock Text="Pitch Tuning:" Style="{StaticResource TitleText}"/>
-                        <ComboBox x:Name="VoiceTuneMenu" Style="{StaticResource DropdownMenu}" SelectionChanged="ComboBoxRecordValuesUpdate" PlaceholderText="Pick Character" Margin="0 35" />
-                        <TextBlock Text="Extra Effects:" Style="{StaticResource TitleText}" TextWrapping="WrapWholeWords" Margin="0 15" Width="275" />
-                        <ComboBox x:Name="EffectsMenu" Style="{StaticResource DropdownMenu}" SelectionChanged="ComboBoxRecordValuesUpdate" PlaceholderText="Select Effect" Margin="0 10" />
+                        <TextBlock Text="Pitch Tuning:" Style="{StaticResource TitleText}" Margin="0 0 0 15"/>
+                        <ComboBox x:Name="VoiceTuneMenu" Style="{StaticResource DropdownMenu}" SelectionChanged="ComboBoxRecordValuesUpdate" PlaceholderText="Pick Character" Margin="0 0 0 50" />
+                        <TextBlock Text="Extra Effects:" Style="{StaticResource TitleText}" TextWrapping="WrapWholeWords" Margin="0 0 0 15" Width="275" />
+                        <ComboBox x:Name="EffectsMenu" Style="{StaticResource DropdownMenu}" SelectionChanged="ComboBoxRecordValuesUpdate" PlaceholderText="Select Effect" Margin="0 0 0 10" />
                         <CheckBox x:Name="FurtherEditsCheckBox" Content="Further Edits Required?" Checked="FlagFurtherEdits" Unchecked="UnFlagFurtherEdits" HorizontalAlignment="Center" Click="FurtherEditsValuesUpdate"/>
                     </StackPanel>
                 </Border>

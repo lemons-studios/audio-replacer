@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Threading.Tasks;
+using Windows.Media;
 using Windows.Media.Capture;
 using Windows.Media.MediaProperties;
 using Windows.Storage;
@@ -19,7 +20,7 @@ namespace AudioReplacer.Util
         private async Task InitializeMediaCapture()
         {
             recordingCapture = new MediaCapture();
-            var captureSettings = new MediaCaptureInitializationSettings { StreamingCaptureMode = StreamingCaptureMode.Audio, MediaCategory = MediaCategory.Speech}; // MediaCategory.Speech applies additional audio effects like noise and speech cancellation
+            var captureSettings = new MediaCaptureInitializationSettings { StreamingCaptureMode = StreamingCaptureMode.Audio, AudioProcessing = AudioProcessing.Raw}; // MediaCategory.Speech applies additional audio effects like noise and speech cancellation
             await recordingCapture.InitializeAsync(captureSettings);
         }
 
@@ -35,11 +36,11 @@ namespace AudioReplacer.Util
         {
             await Task.Delay(GlobalData.RecordStopDelay); 
             await recordingCapture.StopRecordAsync();
-            string outFile = $"{file}0.wav"; // Temporary name, gets renamed back to actual file name at the end
-            float truePitchChange = MathF.Max(pitchChange, 0.001f); // Rubberband does not support pitch values <= 0
+            string outFile = $"{file}0.wav"; // Temporary name
+            float validatedPitchChange = MathF.Max(pitchChange, 0.001f); // The Rubberband library does not support pitch values at or below 0
 
             // FFMpeg is used with shell commands here simply because I cannot bother trying to figure out .NET FFMpeg frameworks that are all just command wrappers anyway
-            var ffmpegProcess = ShellCommandManager.CreateProcess("ffmpeg", $"-i \"{file}\" -af \"rubberband=pitch={truePitchChange}, volume=1.25\" -y \"{outFile}\"");
+            var ffmpegProcess = ShellCommandManager.CreateProcess("ffmpeg", $"-i \"{file}\" -af \"rubberband=pitch={validatedPitchChange}\" -y \"{outFile}\"");
             ffmpegProcess.Start();
             await ffmpegProcess.WaitForExitAsync();
             if (ffmpegProcess.ExitCode != 0) throw new Exception();
