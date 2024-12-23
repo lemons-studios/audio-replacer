@@ -36,7 +36,6 @@
                             <Button x:Name="SkipAudioButton" Click="SkipCurrentAudioFile" Style="{StaticResource OperationButton}" IsEnabled="False" Content="Skip" />
                             <Button x:Name="CancelRecordingButton" Click="CancelCurrentRecording" Style="{StaticResource OperationButton}" Content="Cancel" IsEnabled="False" Visibility="Collapsed" />
                             <Button x:Name="DiscardRecordingButton" Click="UpdateAudioStatus" Style="{StaticResource OperationButton}" Content="Reject" IsEnabled="False" Visibility="Collapsed" />
-
                             <Button x:Name="StartRecordingButton" Click="StartRecordingAudio" Style="{StaticResource OperationButton}" IsEnabled="False" Content="Record"/>
                             <Button x:Name="EndRecordingButton" Click="StopRecordingAudio" Style="{StaticResource OperationButton}" Content="End Recording" IsEnabled="False" Visibility="Collapsed" />
                             <Button x:Name="SubmitRecordingButton" Click="UpdateAudioStatus" Style="{StaticResource OperationButton}" Content="Submit" IsEnabled="False" Visibility="Collapsed" />

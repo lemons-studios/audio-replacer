@@ -5,18 +5,21 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Windows.Storage;
+using Windows.System.Display;
 
 namespace AudioReplacer.Util
 {
-    public class ProjectFileManagementUtils
+    public class FileManagement
     {
         private string currentFile, truncatedCurrentFile, currentOutFile, currentFileName, directoryName;
         private readonly string outputFolderPath, projectPath;
 
-        public ProjectFileManagementUtils(string path)
+        private readonly string rootDataDirectoryPath = @$"{Environment.GetFolderPath(Environment.SpecialFolder.UserProfile)}";
+
+        public FileManagement(string path)
         {
             projectPath = path;
-            outputFolderPath = @$"{Environment.GetFolderPath(Environment.SpecialFolder.UserProfile)}\audio-replacer\out\{TruncateDirectory(path, 1)}";
+            outputFolderPath = @$"{rootDataDirectoryPath}\audio-replacer\out\{TruncateDirectory(path, 1)}";
             CreateInitialData();
             SetCurrentFile();
         }
@@ -109,6 +112,7 @@ namespace AudioReplacer.Util
         private string[] TruncateSubdirectories(string[] notTruncatedDirectories) { return notTruncatedDirectories.Select(dir => dir.Split(Path.DirectorySeparatorChar).Last()).ToArray(); }
         public string GetCurrentFile(bool truncated = true) { return truncated ? truncatedCurrentFile : currentFile; }
         public async Task<StorageFolder> GetDirectoryAsStorageFolder() { return await StorageFolder.GetFolderFromPathAsync($"{outputFolderPath}\\{directoryName}"); }
+        public string GetRootFolderPath() { return rootDataDirectoryPath; }
         public string GetOutFilePath() { return currentOutFile; }
         public string GetProjectPath() { return projectPath; }
         public string GetCurrentFileName() { return currentFileName; }

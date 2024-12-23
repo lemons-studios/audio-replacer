@@ -15,7 +15,7 @@ namespace AudioReplacer.Pages
     public sealed partial class RecordPage
     {
         private readonly AudioRecordingUtils audioRecordingUtils;
-        private ProjectFileManagementUtils projectFileManagementUtils;
+        private FileManagement fileManagement;
         private readonly RecordPageFunctionality recordPageBackend;
         private string previousPitchSelection = "None Selected";
         private string previousEffectSelection = "None";
@@ -87,7 +87,7 @@ namespace AudioReplacer.Pages
 
         private async void SkipCurrentAudioFile(object sender, RoutedEventArgs e)
         {
-            if (projectFileManagementUtils == null) return;
+            if (fileManagement == null) return;
             AudioPreview.MediaPlayer.Pause();
             var confirmSkip = new ContentDialog { Title = "Skip this file?", Content = "Are you sure you want to skip this file?", PrimaryButtonText = "Skip", CloseButtonText = "Don't Skip", XamlRoot = Content.XamlRoot };
             var confirmResult = await confirmSkip.ShowAsync();
@@ -95,7 +95,7 @@ namespace AudioReplacer.Pages
             switch (confirmResult == ContentDialogResult.Primary)
             {
                 case true:
-                    projectFileManagementUtils.SkipAudioTrack();
+                    fileManagement.SkipAudioTrack();
                     UpdateFileElements();
                     recordPageBackend.UpdateInfoBar(SuccessNotification, "Success!", "File skipped!", InfoBarSeverity.Success);
                     break;
@@ -112,10 +112,10 @@ namespace AudioReplacer.Pages
             AudioPreview.MediaPlayer.Pause();
             recordPageBackend.UpdateInfoBar(ProgressNotification, "Recording In Progress...", "", 0, autoClose: false);
 
-            if (projectFileManagementUtils != null)
+            if (fileManagement != null)
             {
-                StorageFolder currentOutFolder = await projectFileManagementUtils.GetDirectoryAsStorageFolder();
-                await audioRecordingUtils.StartRecordingAudio(currentOutFolder, projectFileManagementUtils.GetCurrentFileName());
+                StorageFolder currentOutFolder = await fileManagement.GetDirectoryAsStorageFolder();
+                await audioRecordingUtils.StartRecordingAudio(currentOutFolder, fileManagement.GetCurrentFileName());
             }
             ToggleButtonStates(true);
         }
@@ -125,32 +125,32 @@ namespace AudioReplacer.Pages
             MainWindow.IsRecording = false; MainWindow.IsProcessing = true;
             recordPageBackend.UpdateInfoBar(ProgressNotification, "Saving File....", "", 0);
 
-            if (projectFileManagementUtils == null) return;
-            await audioRecordingUtils.StopRecordingAudio(projectFileManagementUtils.GetOutFilePath());
+            if (fileManagement == null) return;
+            await audioRecordingUtils.StopRecordingAudio(fileManagement.GetOutFilePath());
             ToggleFinalReviewButtons(true);
             recordPageBackend.UpdateInfoBar(SuccessNotification, "Save Completed!", "Entering review phase...", InfoBarSeverity.Success);
 
             // Update source of audio player and the title manually
             CurrentFile.Text = "Review your recording...";
-            AudioPreview.Source = recordPageBackend.MediaSourceFromUri(projectFileManagementUtils.GetOutFilePath());
+            AudioPreview.Source = recordPageBackend.MediaSourceFromUri(fileManagement.GetOutFilePath());
         }
 
         private void UpdateFileElements()
         {
-            float progressPercentage = projectFileManagementUtils.CalculatePercentageComplete();
-            string projectPath = projectFileManagementUtils.GetProjectPath();
+            float progressPercentage = fileManagement.CalculatePercentageComplete();
+            string projectPath = fileManagement.GetProjectPath();
 
-            CurrentFile.Text = recordPageBackend.GetFormattedCurrentFile(projectFileManagementUtils.GetCurrentFile());
-            RemainingFiles.Text = $"Files Remaining: {projectFileManagementUtils.GetFileCount(projectPath):N0} ({progressPercentage}%)";
+            CurrentFile.Text = recordPageBackend.GetFormattedCurrentFile(fileManagement.GetCurrentFile());
+            RemainingFiles.Text = $"Files Remaining: {fileManagement.GetFileCount(projectPath):N0} ({progressPercentage}%)";
             RemainingFilesProgress.Value = progressPercentage;
-            AudioPreview.Source = recordPageBackend.MediaSourceFromUri(projectFileManagementUtils.GetCurrentFile(false));
-            MainWindow.CurrentFile = projectFileManagementUtils.GetOutFilePath();
+            AudioPreview.Source = recordPageBackend.MediaSourceFromUri(fileManagement.GetCurrentFile(false));
+            MainWindow.CurrentFile = fileManagement.GetOutFilePath();
         }
 
         private async void CancelCurrentRecording(object sender, RoutedEventArgs e)
         {
             MainWindow.IsRecording = false;
-            await audioRecordingUtils.CancelRecording(projectFileManagementUtils.GetOutFilePath());
+            await audioRecordingUtils.CancelRecording(fileManagement.GetOutFilePath());
             ToggleButtonStates(false);
             recordPageBackend.UpdateInfoBar(SuccessNotification, "Recording Cancelled", "", InfoBarSeverity.Informational);
         }
@@ -165,12 +165,12 @@ namespace AudioReplacer.Pages
             {
                 case true:
                     // Submission Accepted
-                    projectFileManagementUtils.DeleteCurrentFile(/* This method essentially acts as a way to confirm the submission*/);
+                    fileManagement.DeleteCurrentFile(/* This method essentially acts as a way to confirm the submission*/);
                     recordPageBackend.UpdateInfoBar(SuccessNotification, "Submission Accepted!!", "Moving to next file...", InfoBarSeverity.Success);
                     break;
                 case false:
                     // Submission Rejected
-                    File.Delete(projectFileManagementUtils.GetOutFilePath());
+                    File.Delete(fileManagement.GetOutFilePath());
                     recordPageBackend.UpdateInfoBar(SuccessNotification, "Submission Rejected", "Returning to record phase...", InfoBarSeverity.Informational);
                     break;
             }
@@ -193,7 +193,7 @@ namespace AudioReplacer.Pages
             {
                 case true:
                     AudioPreviewControls.IsEnabled = true;
-                    projectFileManagementUtils = new ProjectFileManagementUtils(path);
+                    fileManagement = new FileManagement(path);
                     recordPageBackend.ToggleButton(SkipAudioButton, true);
                     recordPageBackend.ToggleButton(StartRecordingButton, true);
                     FileProgressPanel.Visibility = Visibility.Visible;
@@ -201,12 +201,16 @@ namespace AudioReplacer.Pages
                     projectNotSelected = false;
                     break;
                 case false:
-                    projectFileManagementUtils = null;
-                    projectFileManagementUtils = new ProjectFileManagementUtils(path);
+                    fileManagement = null;
+                    fileManagement = new FileManagement(path);
                     break;
             }
             UpdateFileElements();
             if(!autoload && areUpdatesAvailable) recordPageBackend.UpdateInfoBar(SuccessNotification, "Success!", "Project loaded!", InfoBarSeverity.Success);
+
+            // Delete any msix update packages after loading project
+            Process projectFolderCleanup = ShellCommandManager.CreateProcess("cmd", @$"/c del /s /q {fileManagement.GetRootFolderPath()}\audio-replacer\*.msix");
+            projectFolderCleanup.Start();
         }
 
         private void ToggleButtonStates(bool recording)

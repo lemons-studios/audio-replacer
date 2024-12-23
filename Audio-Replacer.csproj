@@ -142,12 +142,12 @@
     <WebView2WinRTWrapSystemTypes>True</WebView2WinRTWrapSystemTypes>
     <WV2WinRTPlatformReferencesLevel>match</WV2WinRTPlatformReferencesLevel>
     <NeutralLanguage>en-CA</NeutralLanguage>
-    <AssemblyVersion>3.2.2.0</AssemblyVersion>
-    <FileVersion>3.2.2.0</FileVersion>
+    <AssemblyVersion>3.3.0.0</AssemblyVersion>
+    <FileVersion>3.3.0.0</FileVersion>
     <Copyright>Shob3r &amp; Lemon Studios</Copyright>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageIcon>AppIcon.png</PackageIcon>
-    <Version>3.2.2</Version>
+    <Version>3.3.0</Version>
     <WV2WinRTDisallowEmptyAdapter>False</WV2WinRTDisallowEmptyAdapter>
     <PackageCertificateKeyFile>C:\Users\andre\Desktop\stuff I don%27t want deleted\Audio-Replacer-2_TemporaryKey.pfx</PackageCertificateKeyFile>
     <AppxPackageDir>C:\Users\andre\Desktop\AudioReplacerBuilds\</AppxPackageDir>
