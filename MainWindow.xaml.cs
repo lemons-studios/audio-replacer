@@ -75,6 +75,11 @@ namespace AudioReplacer
             return AppWindow.GetFromWindowId(currentWndId);
         }
 
+        public void DisableFolderChanger()
+        {
+            ProjectFolderButton.IsEnabled = false;
+        }
+
         private void SwitchPageContent(NavigationView sender, NavigationViewItemInvokedEventArgs args)
         {
             var pageSwitchType = typeof(RecordPage); // Default page of project

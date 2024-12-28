@@ -72,7 +72,7 @@
                 <FontIconSource Glyph="&#xECC5;" />
             </InfoBar.IconSource>
             <InfoBar.ActionButton>
-                <Button Content="Download Update" Click="OpenGithubReleases" CornerRadius="4"/>
+                <Button Content="View Update Details" Click="OpenGithubReleases" CornerRadius="4"/>
             </InfoBar.ActionButton>
             <InfoBar.Transitions>
                 <PopupThemeTransition />
@@ -96,5 +96,9 @@
                 <PopupThemeTransition />
             </InfoBar.Transitions>
         </InfoBar>
+
+        <ContentDialog x:Name="UpdateNotesContentDialog">
+            <TextBlock Text="Test"/>
+        </ContentDialog>
     </Grid>
 </Page>
