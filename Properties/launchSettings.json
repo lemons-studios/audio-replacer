@@ -1,7 +1,10 @@
 {
   "profiles": {
-    "Audio Replacer": {
+    "Audio Replacer (Packaged)": {
       "commandName": "MsixPackage"
+    },
+    "Audio Replacer (Unpackaged)": {
+      "commandName": "Project"
     }
   }
 }

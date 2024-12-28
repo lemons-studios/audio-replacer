@@ -100,6 +100,8 @@
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="NWaves" Version="0.9.6" />
     <PackageReference Include="SevenZipExtractor" Version="1.0.19" />
+    <PackageReference Include="System.Memory" Version="4.6.0" />
+    <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="6.1.0" />
     <PackageReference Include="WinUIEdit" Version="0.0.3-prerelease" />
     <PackageReference Include="WinUIEx" Version="2.5.0" />
     <Manifest Include="$(ApplicationManifest)" />
