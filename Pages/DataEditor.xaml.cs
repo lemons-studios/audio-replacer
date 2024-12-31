@@ -1,6 +1,7 @@
 using System;
 using System.Diagnostics;
 using System.IO;
+using System.Threading.Tasks;
 using AudioReplacer.Util;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -42,6 +43,8 @@ namespace AudioReplacer.Pages
                     if (modifiedPitchDataContents != string.Empty) await File.WriteAllTextAsync(pitchDataFile, modifiedPitchDataContents);
                     break;
             }
+            // Ensure all resources are released before restarting
+            await Task.Delay(100);
             Microsoft.Windows.AppLifecycle.AppInstance.Restart("");
         }
 

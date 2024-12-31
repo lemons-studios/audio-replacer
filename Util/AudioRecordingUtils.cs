@@ -20,7 +20,11 @@ namespace AudioReplacer.Util
         private async Task InitializeMediaCapture()
         {
             recordingCapture = new MediaCapture();
-            var captureSettings = new MediaCaptureInitializationSettings { StreamingCaptureMode = StreamingCaptureMode.Audio, AudioProcessing = AudioProcessing.Raw}; // MediaCategory.Speech applies additional audio effects like noise and speech cancellation
+            var captureSettings = new MediaCaptureInitializationSettings
+            {
+                StreamingCaptureMode = StreamingCaptureMode.Audio,
+                AudioProcessing = AudioProcessing.Raw
+            };
             await recordingCapture.InitializeAsync(captureSettings);
         }
 

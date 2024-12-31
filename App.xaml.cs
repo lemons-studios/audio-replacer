@@ -4,10 +4,11 @@ using System.Text.Json;
 using AudioReplacer.Util;
 using Config.Net;
 using Microsoft.UI.Xaml;
+using Microsoft.Windows.ApplicationModel.DynamicDependency;
 
 namespace AudioReplacer
 {
-    public partial class App
+    public partial class App : Application
     {
         public static IAppSettings AppSettings { get; private set; }
         public static MainWindow MainWindow { get; private set; }
@@ -53,7 +54,7 @@ namespace AudioReplacer
         {
             // Users will have to import their own data files for this app to work,
             // but create an empty file with the start of a json array (for functionality purposes)
-            if (!File.Exists(pitchDataPath)) { File.WriteAllText(pitchDataPath, "[\n\n]"); } 
+            if (!File.Exists(pitchDataPath)) { File.WriteAllText(pitchDataPath, "[\n\n]"); }
             if (!File.Exists(effectDataPath)) { File.WriteAllText(effectDataPath, "[\n\n]"); }
 
             GlobalData.DeserializedPitchData = JsonSerializer.Deserialize<string[][]>(File.ReadAllText(pitchDataPath));
@@ -71,6 +72,19 @@ namespace AudioReplacer
             GlobalData.RecordStartDelay = AppSettings.RecordStartWaitTime;
         }
 
-        protected override void OnLaunched(LaunchActivatedEventArgs args) { MainWindow = new MainWindow(); MainWindow.Activate(); }
+        protected override void OnLaunched(LaunchActivatedEventArgs args)
+        {
+            const uint bootstrapVersion = 0x00010006; // Ver 1.6
+            PackageVersion minVersion = new PackageVersion(1, 6, 0, 0);
+            Bootstrap.Initialize(bootstrapVersion, null, minVersion);
+
+            MainWindow = new MainWindow();
+            MainWindow.Activate();
+        }
+
+        ~App()
+        {
+            Bootstrap.Shutdown();
+        }
     }
 }

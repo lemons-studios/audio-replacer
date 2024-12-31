@@ -1,6 +1,7 @@
 ﻿using Microsoft.UI.Xaml;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Threading.Tasks;
 using Windows.Media.Core;
 using Microsoft.UI.Xaml.Controls;
@@ -45,8 +46,11 @@ namespace AudioReplacer.Util
                 infoBar.IsOpen = show;
                 if (autoClose) Task.Run(() => WaitHideInfoBar(infoBar));
             }
-            catch (COMException)
-            { /*This just happens for some reason, no errors arise from it though. This catch exception is here to prevent the app from crashing for no reason*/ }
+            catch (COMException ex)
+            {
+                // Log the exception or handle it appropriately
+                Debug.WriteLine($"COMException: {ex.Message}");
+            }
         }
 
         public void DownloadDependencies()

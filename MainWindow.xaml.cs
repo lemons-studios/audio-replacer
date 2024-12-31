@@ -36,35 +36,10 @@ namespace AudioReplacer
             AppTitleText.Text = $"Audio Replacer {GlobalData.GetAppVersion()}";
 
             // Set everything that can be set by the settings.
-            if (Content is FrameworkElement rootElement) rootElement.RequestedTheme = (ElementTheme) App.AppSettings.AppThemeSetting;
-            switch (App.AppSettings.AppTransparencySetting)
-            {
-                case 0:
-                    switch (MicaController.IsSupported())
-                    {
-                        case true:
-                            var micaBackdrop = new MicaBackdrop();
-                            SystemBackdrop = micaBackdrop;
-                            break;
-                        case false:
-                            var acrylicBackdrop = new DesktopAcrylicBackdrop();
-                            SystemBackdrop = acrylicBackdrop;
-                            break;
-                    }
-                    break;
-                case 1:
-                {
-                    var acrylicBackdrop = new DesktopAcrylicBackdrop();
-                    SystemBackdrop = acrylicBackdrop;
-                    break;
-                }
-                default:
-                    SystemBackdrop = null;
-                    break;
-            }
+            if (Content is FrameworkElement rootElement) rootElement.RequestedTheme = (ElementTheme)App.AppSettings.AppThemeSetting;
 
             // Open the recording page (Stole this from the method below)
-            if (!pageCache.TryGetValue(typeof(RecordPage), out var page)) { page = (Page) Activator.CreateInstance(typeof(RecordPage)); pageCache[typeof(RecordPage)] = page; }
+            if (!pageCache.TryGetValue(typeof(RecordPage), out var page)) { page = (Page)Activator.CreateInstance(typeof(RecordPage)); pageCache[typeof(RecordPage)] = page; }
             ContentFrame.Content = page;
         }
 
