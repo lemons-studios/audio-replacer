@@ -1,17 +1,16 @@
-using System.IO;
-using System;
-using Microsoft.UI.Composition.SystemBackdrops;
-using Microsoft.UI.Windowing;
-using Microsoft.UI.Xaml.Media;
-using WinRT.Interop;
-using Microsoft.UI;
-using Microsoft.UI.Xaml.Controls;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using Windows.Media.Core;
 using AudioReplacer.Pages;
 using AudioReplacer.Util;
+using Microsoft.UI;
+using Microsoft.UI.Composition.SystemBackdrops;
+using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Media;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using AudioReplacer.Generic;
+using WinRT.Interop;
 
 namespace AudioReplacer
 {
@@ -23,17 +22,17 @@ namespace AudioReplacer
         public static bool IsProcessing;
         public static bool IsRecording;
         public static bool ProjectInitialized;
-        public static string CurrentFile;
+        public static string CurrentFile; 
 
         public MainWindow()
         {
             InitializeComponent();
-            GlobalData.AppWindow = GetAppWindowForCurrentWindow(this);
-            GlobalData.AppWindow.Closing += OnWindowClose;
+            AppGeneric.AppWindow = GetAppWindowForCurrentWindow(this);
+            AppGeneric.AppWindow.Closing += OnWindowClose;
 
             ExtendsContentIntoTitleBar = true;
             SetTitleBar(AppTitleBar);
-            AppTitleText.Text = $"Audio Replacer {GlobalData.GetAppVersion()}";
+            AppTitleText.Text = $"Audio Replacer {AppGeneric.GetAppVersion()}";
 
             // Set everything that can be set by the settings.
             if (Content is FrameworkElement rootElement) rootElement.RequestedTheme = (ElementTheme) App.AppSettings.AppThemeSetting;
@@ -64,8 +63,15 @@ namespace AudioReplacer
             }
 
             // Open the recording page (Stole this from the method below)
-            if (!pageCache.TryGetValue(typeof(RecordPage), out var page)) { page = (Page) Activator.CreateInstance(typeof(RecordPage)); pageCache[typeof(RecordPage)] = page; }
+            if (!pageCache.TryGetValue(typeof(RecordPage), out var page))
+            {
+                page = (Page) Activator.CreateInstance(typeof(RecordPage)); 
+                pageCache[typeof(RecordPage)] = page;
+            }
+
             ContentFrame.Content = page;
+
+            // Initialize discord rich presence
         }
 
         private AppWindow GetAppWindowForCurrentWindow(object window) // Thanks StackOverflow man!
@@ -92,30 +98,30 @@ namespace AudioReplacer
                     "Data Editor" => typeof(DataEditor),
                     _ => pageSwitchType
                 };
-                
             }
+
             ProjectFolderButton.Visibility = args.InvokedItemContainer!.Tag.Equals("Record")
                 ? Visibility.Visible
                 : Visibility.Collapsed;
 
-            if (!pageCache.TryGetValue(pageSwitchType, out var page)) { page = (Page) Activator.CreateInstance(pageSwitchType); pageCache[pageSwitchType] = page; }
+            if (!pageCache.TryGetValue(pageSwitchType, out var page))
+            {
+                page = (Page) Activator.CreateInstance(pageSwitchType); 
+                pageCache[pageSwitchType] = page;
+            }
             ContentFrame.Content = page;
         }
 
-        public void PlaySoundEffect(MediaSource source)
-        {
-            
+        private void OnWindowClose(object sender, AppWindowClosingEventArgs args) 
+        { 
+            if (ProjectInitialized && (IsProcessing || IsRecording)) 
+                File.Delete(CurrentFile); 
         }
-
-        private void OnWindowClose(object sender, AppWindowClosingEventArgs args) { if (MainWindow.ProjectInitialized && (MainWindow.IsProcessing || MainWindow.IsRecording)) File.Delete(MainWindow.CurrentFile); }
 
         private void ChangeProjectFolder(object sender, RoutedEventArgs e)
         {
             var currentPage = ContentFrame.Content as RecordPage;
-            if (currentPage != null)
-            {
-                currentPage.SelectProjectFolder(sender, e);
-            }
+            if (currentPage != null) currentPage.SelectProjectFolder(sender, e);
         }
     }
 }

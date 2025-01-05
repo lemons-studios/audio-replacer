@@ -1,22 +1,23 @@
-﻿using Microsoft.UI.Xaml;
+﻿using AudioReplacer.Generic;
+using AudioReplacer.Util;
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using System;
 using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
-using Windows.Media.Core;
 using Windows.Storage;
 using Windows.Storage.Pickers;
-using AudioReplacer.Util;
+using Microsoft.UI.Xaml.Navigation;
 using WinRT.Interop;
 
 namespace AudioReplacer.Pages
 {
     public sealed partial class RecordPage
     {
-        private readonly AudioRecordingUtils audioRecordingUtils;
+        private AudioRecordingUtils audioRecordingUtils;
         private FileManagement fileManagement;
-        private readonly RecordPageFunctionality recordPageBackend;
+        private RecordPageFunctionality recordPageBackend;
         private string previousPitchSelection = "None Selected";
         private string previousEffectSelection = "None";
         private bool projectNotSelected = true;
@@ -25,7 +26,12 @@ namespace AudioReplacer.Pages
         public RecordPage()
         {
             InitializeComponent();
-            PitchSettingsFeedback.Visibility = GlobalData.ShowAudioEffectDetails ? Visibility.Visible : Visibility.Collapsed; // Needed here to hide UI on app launch
+            Loaded += OnLoaded;
+        }
+
+        private void OnLoaded(object sender, RoutedEventArgs e)
+        {
+            PitchSettingsFeedback.Visibility = AppGeneric.ShowAudioEffectDetails ? Visibility.Visible : Visibility.Collapsed; // Needed here to hide UI on app launch
             recordPageBackend = new RecordPageFunctionality([SuccessNotification, ProgressNotification, UpdateNotification]);
             VoiceTuneMenu.ItemsSource = recordPageBackend.GetPitchTitles();
             EffectsMenu.ItemsSource = recordPageBackend.GetEffectTitles();
@@ -37,7 +43,7 @@ namespace AudioReplacer.Pages
             switch (recordPageBackend.IsFfMpegAvailable())
             {
                 case true: // Check For Updates
-                    if (!GlobalData.UpdateChecksAllowed) break;
+                    if (!AppGeneric.UpdateChecksAllowed) break;
                     areUpdatesAvailable = recordPageBackend.IsUpdateAvailable();
                     if (!areUpdatesAvailable) break;
                     UpdateNotification.Message = $"Latest Version: {recordPageBackend.GetWebVersion()}";
@@ -47,16 +53,18 @@ namespace AudioReplacer.Pages
                     VoiceTuneMenu.IsEnabled = false;
                     EffectsMenu.IsEnabled = false;
                     DependencyNotification.IsOpen = true;
+                    App.MainWindow.DisableFolderChanger();
                     break;
             }
 
             // Check if folder memory is enabled and if the remembered path exists
-            if (recordPageBackend.FolderMemoryAllowed()) { ProjectSetup(App.AppSettings.LastSelectedFolder, true); }
+            if (recordPageBackend.FolderMemoryAllowed())
+                ProjectSetup(App.AppSettings.LastSelectedFolder, true);
         }
 
         private void UpdateRecordingValues()
         {
-            PitchSettingsFeedback.Visibility = GlobalData.ShowAudioEffectDetails ? Visibility.Visible : Visibility.Collapsed;
+            PitchSettingsFeedback.Visibility = AppGeneric.ShowAudioEffectDetails ? Visibility.Visible : Visibility.Collapsed;
             if (audioRecordingUtils == null) return;
             if (VoiceTuneMenu.SelectedItem != null)
             {
@@ -117,6 +125,8 @@ namespace AudioReplacer.Pages
                 StorageFolder currentOutFolder = await fileManagement.GetDirectoryAsStorageFolder();
                 await audioRecordingUtils.StartRecordingAudio(currentOutFolder, fileManagement.GetCurrentFileName());
             }
+            App.DiscordController.SetSmallImage("recording");
+            App.DiscordController.SetSmallImageText("Recording Audio");
             ToggleButtonStates(true);
         }
 
@@ -132,6 +142,8 @@ namespace AudioReplacer.Pages
 
             // Update source of audio player and the title manually
             CurrentFile.Text = "Review your recording...";
+            App.DiscordController.SetSmallImage("reviewing");
+            App.DiscordController.SetSmallImageText("In review phase");
             AudioPreview.Source = recordPageBackend.MediaSourceFromUri(fileManagement.GetOutFilePath());
         }
 
@@ -177,12 +189,6 @@ namespace AudioReplacer.Pages
 
             ToggleFinalReviewButtons(false);
             ToggleButtonStates(false);
-            if (GlobalData.EnableFanfare)
-            {
-                var fanfareEffectPath = new Uri("ms-appx:///Assets/Fanfare.mp3");
-                var mediaSource = MediaSource.CreateFromUri(fanfareEffectPath);
-                App.MainWindow.PlaySoundEffect(mediaSource);
-            }
             UpdateFileElements();
         }
 
@@ -253,10 +259,34 @@ namespace AudioReplacer.Pages
             openReleasesProcess.Start();
         }
 
-        private void FlagFurtherEdits(object sender, RoutedEventArgs e) { audioRecordingUtils.requiresExtraEdits = true; }
-        private void UnFlagFurtherEdits(object sender, RoutedEventArgs e) { audioRecordingUtils.requiresExtraEdits = false; }
+        private void FlagFurtherEdits(object sender, RoutedEventArgs e)
+        {
+            audioRecordingUtils.requiresExtraEdits = true;
+        }
+
+        private void UnFlagFurtherEdits(object sender, RoutedEventArgs e)
+        {
+            audioRecordingUtils.requiresExtraEdits = false;
+        }
         // Awesome boilerplate here
-        private void ComboBoxRecordValuesUpdate(object sender, SelectionChangedEventArgs e) { UpdateRecordingValues(); }
-        private void FurtherEditsValuesUpdate(object sender, RoutedEventArgs e) { UpdateRecordingValues(); }
+        private void ComboBoxRecordValuesUpdate(object sender, SelectionChangedEventArgs e)
+        {
+            UpdateRecordingValues();
+        }
+
+        private void FurtherEditsValuesUpdate(object sender, RoutedEventArgs e)
+        {
+            UpdateRecordingValues();
+        }
+
+        protected override void OnNavigatedFrom(NavigationEventArgs e)
+        {
+            AudioPreview.MediaPlayer.Pause();
+        }
+
+        protected override void OnNavigatedTo(NavigationEventArgs e)
+        {
+            App.DiscordController.SetDetails("On Record Page");
+        }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
+using AudioReplacer.Generic;
 using AudioReplacer.Util;
 using CommunityToolkit.WinUI.Controls;
 using Microsoft.UI.Composition.SystemBackdrops;
@@ -12,34 +13,34 @@ namespace AudioReplacer.Pages
 {
     public sealed partial class SettingsPage
     {
-        private readonly bool firstOpening;
         private readonly string configFolder = @$"{Environment.GetFolderPath(Environment.SpecialFolder.UserProfile)}\audio-replacer\config";
 
         public SettingsPage()
         {
             InitializeComponent();
-            // Initialize all the data
+            Loaded += OnLoaded;
+        }
+
+        private void OnLoaded(object sender, RoutedEventArgs e)
+        {
             ThemeDropdown.SelectedIndex = App.AppSettings.AppThemeSetting;
             TransparencyDropdown.SelectedIndex = App.AppSettings.AppTransparencySetting;
-            UpdateCheckSwitch.IsOn = GlobalData.UpdateChecksAllowed;
+            UpdateCheckSwitch.IsOn = AppGeneric.UpdateChecksAllowed;
             ProjectMemorySwitch.IsOn = App.AppSettings.RememberSelectedFolder == 1;
-            RandomizeInputSwitch.IsOn = GlobalData.InputRandomizationEnabled;
-            FanfareToggle.IsOn = GlobalData.EnableFanfare;
-            ToastDelayBox.Value = GlobalData.NotificationTimeout;
-            StopDelayBox.Value = GlobalData.RecordStopDelay;
-            firstOpening = false;
+            RandomizeInputSwitch.IsOn = AppGeneric.InputRandomizationEnabled;
+            FanfareToggle.IsOn = AppGeneric.EnableFanfare;
+            ToastDelayBox.Value = AppGeneric.NotificationTimeout;
+            StopDelayBox.Value = AppGeneric.RecordStopDelay;
         }
 
         private void ToggleUpdateChecks(object sender, RoutedEventArgs e)
         {
-            if (firstOpening) return;
-            GlobalData.UpdateChecksAllowed = UpdateCheckSwitch.IsOn;
+            AppGeneric.UpdateChecksAllowed = UpdateCheckSwitch.IsOn;
             App.AppSettings.AppUpdateCheck = BoolToInt(UpdateCheckSwitch.IsOn);
         }
 
         private void ToggleTransparencyMode(object sender, SelectionChangedEventArgs e)
         {
-            if (firstOpening) return;
             switch (TransparencyDropdown.SelectedIndex)
             {
                 case 0: // Mica Backdrop
@@ -59,26 +60,23 @@ namespace AudioReplacer.Pages
 
         private void UpdateAppTheme(object sender, SelectionChangedEventArgs e)
         {
-            if (firstOpening) return;
             if (App.MainWindow.Content is not FrameworkElement rootElement) return;
-            
             rootElement.RequestedTheme = (ElementTheme) ThemeDropdown.SelectedIndex;
             App.AppSettings.AppThemeSetting = ThemeDropdown.SelectedIndex;
         }
 
         private void UpdateDelayTimes(NumberBox sender, NumberBoxValueChangedEventArgs args)
         {
-            if (firstOpening) return;
             switch (sender == StopDelayBox)
             {
                 case true:
                     int newDelayTime = (int) MathF.Max((float) StopDelayBox.Value, 0);
-                    GlobalData.RecordStopDelay = newDelayTime;
+                    AppGeneric.RecordStopDelay = newDelayTime;
                     App.AppSettings.RecordEndWaitTime = newDelayTime;
                     break;
                 case false:
                     int newStayTime = (int) MathF.Max((float) ToastDelayBox.Value, 500);
-                    GlobalData.NotificationTimeout = newStayTime;
+                    AppGeneric.NotificationTimeout = newStayTime;
                     App.AppSettings.NotificationTimeout = newStayTime;
                     break;
             }
@@ -147,7 +145,7 @@ namespace AudioReplacer.Pages
 
         private void ToggleFileRandomization(object sender, RoutedEventArgs e)
         {
-            GlobalData.InputRandomizationEnabled = RandomizeInputSwitch.IsOn;
+            AppGeneric.InputRandomizationEnabled = RandomizeInputSwitch.IsOn;
             App.AppSettings.InputRandomizationEnabled = BoolToInt(RandomizeInputSwitch.IsOn);
         }
 
@@ -158,13 +156,13 @@ namespace AudioReplacer.Pages
 
         private void ToggleAdditionalDetails(object sender, RoutedEventArgs e)
         {
-            GlobalData.ShowAudioEffectDetails = ShowAdditionalDetailsSwitch.IsOn;
+            AppGeneric.ShowAudioEffectDetails = ShowAdditionalDetailsSwitch.IsOn;
             App.AppSettings.ShowEffectSelection = BoolToInt(ShowAdditionalDetailsSwitch.IsOn);
         }
 
         private void ToggleFanfare(object sender, RoutedEventArgs e)
         {
-            GlobalData.EnableFanfare = FanfareToggle.IsOn;
+            AppGeneric.EnableFanfare = FanfareToggle.IsOn;
             App.AppSettings.EnableFanfare = BoolToInt(FanfareToggle.IsOn);
         }
 
@@ -173,7 +171,7 @@ namespace AudioReplacer.Pages
         private void UpdateStartDelay(NumberBox sender, NumberBoxValueChangedEventArgs args)
         {
             int newDelayTime = (int) MathF.Max((float) StartDelayBox.Value, 0);
-            GlobalData.RecordStartDelay = newDelayTime;
+            AppGeneric.RecordStartDelay = newDelayTime;
             App.AppSettings.RecordStartWaitTime = newDelayTime;
         }
     }

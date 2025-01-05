@@ -8,6 +8,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using SevenZipExtractor;
+using AudioReplacer.Generic;
 
 namespace AudioReplacer.Util
 {
@@ -30,7 +31,7 @@ namespace AudioReplacer.Util
             }
             catch (AggregateException) // Typically occurs when GitHub is queried too much within a specific period of time from the same ip address. Should not affect the application aside from update checks
             {
-                webVersion = GlobalData.GetAppVersion(true); 
+                webVersion = AppGeneric.GetAppVersion(true); 
             }
             UpdatePitchData();
         }
@@ -79,7 +80,10 @@ namespace AudioReplacer.Util
                 string[] paths = pathEnv.Split(Path.PathSeparator);
                 return paths.Select(path => Path.Combine(path, "ffmpeg.exe")).Any(File.Exists);
             }
-            catch { return false; }
+            catch
+            {
+                return false;
+            }
         }
 
         public void ToggleButton(Button button, bool toggle)
@@ -97,12 +101,12 @@ namespace AudioReplacer.Util
             effectMenuValues = [];
             effectMenuTitles = [];
 
-            foreach (string[] data in GlobalData.DeserializedPitchData)
+            foreach (string[] data in AppGeneric.PitchData)
             {
                 pitchValues.Add(ParseFloat(data[0])); // Position 0 of each array in the 2d array should have the pitch data, as mentioned in GlobalData.cs
                 pitchMenuTitles.Add(data[1]); // Position 1 of each array in the 2d array should have the name of the character, as mentioned in GlobalData.cs
             }
-            foreach (string[] effects in GlobalData.DeserializedEffectData)
+            foreach (string[] effects in AppGeneric.EffectData)
             {
                 effectMenuValues.Add(effects[0]);
                 effectMenuTitles.Add(effects[1]);
@@ -111,14 +115,21 @@ namespace AudioReplacer.Util
 
         private async Task WaitHideInfoBar(InfoBar infoBar)
         {
-            await Task.Delay(GlobalData.NotificationTimeout);
+            await Task.Delay(AppGeneric.NotificationTimeout);
             // This try-catch is needed in the case that the TryEnqueue is running while the window is closing
             try { infoBar.DispatcherQueue.TryEnqueue(() => { infoBar.IsOpen = false; }); }catch { /* ignored */ }
         }
 
-        /// Yummy code minification..... I love making my code harder to read..... (on the other hand this reduced my line count by about 20-30 lines)
-        private Visibility ToVisibility(bool x) { return x ? Visibility.Visible : Visibility.Collapsed; }
-        public MediaSource MediaSourceFromUri(string path) { return MediaSource.CreateFromUri(new Uri(path)); }
+        private Visibility ToVisibility(bool x)
+        {
+            return x ? Visibility.Visible : Visibility.Collapsed;
+        }
+
+        public MediaSource MediaSourceFromUri(string path)
+        {
+            return MediaSource.CreateFromUri(new Uri(path));
+        }
+
         private void DisableActiveInfoBars()
         {
             try
@@ -141,14 +152,70 @@ namespace AudioReplacer.Util
             };
         }
 
-        public string GetWebVersion() { return webVersion != string.Empty ? webVersion : GlobalData.GetAppVersion(); /* App version used as fallback when no internet is available*/ }
-        public string GetFormattedCurrentFile(string input) { return input.Replace(@"\", "/"); }
-        public bool IsUpdateAvailable() { try { return webVersion != GlobalData.GetAppVersion(true); } catch { return false; } }
-        private float ParseFloat(string value) { try { return float.Parse(value); } catch { return 1; } }
-        public bool FolderMemoryAllowed() { return App.AppSettings.RememberSelectedFolder == 1 && Path.Exists(App.AppSettings.LastSelectedFolder); }
-        public float GetPitchModifier(int index) { try { return pitchValues[index]; } catch { return 1; } }
-        public string GetEffectValues(int index) { return effectMenuValues[index]; }
-        public List<string> GetPitchTitles() { return pitchMenuTitles; }
-        public List<string> GetEffectTitles() { return effectMenuTitles; }
+        public string GetWebVersion()
+        {
+            return webVersion != string.Empty ? webVersion : AppGeneric.GetAppVersion(); /* App version used as fallback when no internet is available*/
+        }
+
+        public string GetFormattedCurrentFile(string input)
+        {
+            return input.Replace(@"\", "/");
+        }
+
+        public bool IsUpdateAvailable()
+        {
+            try
+            {
+                return webVersion != AppGeneric.GetAppVersion(true);
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        private float ParseFloat(string value)
+        {
+            try
+            {
+                return float.Parse(value);
+            }
+            catch
+            {
+                return 1;
+            }
+        }
+
+        public bool FolderMemoryAllowed()
+        {
+            return App.AppSettings.RememberSelectedFolder == 1 && Path.Exists(App.AppSettings.LastSelectedFolder);
+        }
+
+        public float GetPitchModifier(int index)
+        {
+            try
+            {
+                return pitchValues[index];
+            }
+            catch
+            {
+                return 1;
+            }
+        }
+
+        public string GetEffectValues(int index)
+        {
+            return effectMenuValues[index];
+        }
+
+        public List<string> GetPitchTitles()
+        {
+            return pitchMenuTitles;
+        }
+
+        public List<string> GetEffectTitles()
+        {
+            return effectMenuTitles;
+        }
     }
 }

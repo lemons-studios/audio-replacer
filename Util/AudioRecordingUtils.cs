@@ -5,6 +5,7 @@ using Windows.Media;
 using Windows.Media.Capture;
 using Windows.Media.MediaProperties;
 using Windows.Storage;
+using AudioReplacer.Generic;
 
 namespace AudioReplacer.Util
 {
@@ -26,7 +27,7 @@ namespace AudioReplacer.Util
 
         public async Task StartRecordingAudio(StorageFolder saveFolder, string fileName)
         {
-            await Task.Delay(GlobalData.RecordStartDelay);
+            await Task.Delay(AppGeneric.RecordStartDelay);
             var fileSaveLocation = await saveFolder.CreateFileAsync(FormatFileName(fileName), CreationCollisionOption.ReplaceExisting);
             var encodingProfile = MediaEncodingProfile.CreateWav(AudioEncodingQuality.High);
             await recordingCapture.StartRecordToStorageFileAsync(encodingProfile, fileSaveLocation);
@@ -34,7 +35,7 @@ namespace AudioReplacer.Util
 
         public async Task StopRecordingAudio(string file)
         {
-            await Task.Delay(GlobalData.RecordStopDelay); 
+            await Task.Delay(AppGeneric.RecordStopDelay); 
             await recordingCapture.StopRecordAsync();
             string outFile = $"{file}0.wav"; // Temporary name
             float validatedPitchChange = MathF.Max(pitchChange, 0.001f); // The Rubberband library does not support pitch values at or below 0

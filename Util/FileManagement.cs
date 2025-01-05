@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AudioReplacer.Generic;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -71,7 +72,7 @@ namespace AudioReplacer.Util
             if (!audioFiles.Any()) return string.Empty;
 
             // Pick a random audio file if input file randomization is enabled
-            if (GlobalData.InputRandomizationEnabled)
+            if (AppGeneric.InputRandomizationEnabled)
             {
                 var rng = new Random();
                 int randomFileIndex = rng.Next(audioFiles.Count);

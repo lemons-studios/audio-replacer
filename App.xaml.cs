@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Text.Json;
+using AudioReplacer.Generic;
 using AudioReplacer.Util;
 using Config.Net;
 using Microsoft.UI.Xaml;
@@ -11,19 +12,24 @@ namespace AudioReplacer
     {
         public static IAppSettings AppSettings { get; private set; }
         public static MainWindow MainWindow { get; private set; }
+        public static RichPresenceController DiscordController;
+
         private readonly string directoryPath, settingsFilePath, pitchDataPath, effectDataPath;
+
 
         public App()
         {
             directoryPath = $@"{Environment.GetFolderPath(Environment.SpecialFolder.UserProfile)}\audio-replacer\config";
-            settingsFilePath = $"{directoryPath}\\AppSettings.json";
-            pitchDataPath = $"{directoryPath}\\PitchData.json";
-            effectDataPath = $"{directoryPath}\\EffectsData.json";
+            settingsFilePath = $@"{directoryPath}\AppSettings.json";
+            pitchDataPath = $@"{directoryPath}\PitchData.json";
+            effectDataPath = $@"{directoryPath}\EffectsData.json";
 
             CreateSettingsData();
             CreateJsonData();
             AppSettings = new ConfigurationBuilder<IAppSettings>().UseJsonFile(settingsFilePath).Build();
+
             SetGlobalData();
+            DiscordController = new RichPresenceController("On Record Page", "idle", "idle");
             InitializeComponent();
         }
 
@@ -31,6 +37,7 @@ namespace AudioReplacer
         {
             if (!Directory.Exists(directoryPath)) Directory.CreateDirectory(directoryPath);
             if (File.Exists(settingsFilePath)) return;
+
             var defaultConfig = new
             {
                 Theme = 0,
@@ -53,24 +60,31 @@ namespace AudioReplacer
         {
             // Users will have to import their own data files for this app to work,
             // but create an empty file with the start of a json array (for functionality purposes)
-            if (!File.Exists(pitchDataPath)) { File.WriteAllText(pitchDataPath, "[\n\n]"); } 
-            if (!File.Exists(effectDataPath)) { File.WriteAllText(effectDataPath, "[\n\n]"); }
-
-            GlobalData.DeserializedPitchData = JsonSerializer.Deserialize<string[][]>(File.ReadAllText(pitchDataPath));
-            GlobalData.DeserializedEffectData = JsonSerializer.Deserialize<string[][]>(File.ReadAllText(effectDataPath));
+            if (!File.Exists(pitchDataPath))
+                File.WriteAllText(pitchDataPath, "[\n\n]");
+            
+            if (!File.Exists(effectDataPath))
+                File.WriteAllText(effectDataPath, "[\n\n]");
+            
+            AppGeneric.PitchData = JsonSerializer.Deserialize<string[][]>(File.ReadAllText(pitchDataPath));
+            AppGeneric.EffectData = JsonSerializer.Deserialize<string[][]>(File.ReadAllText(effectDataPath));
         }
 
         private void SetGlobalData()
         {
-            GlobalData.UpdateChecksAllowed = AppSettings.AppUpdateCheck == 1;
-            GlobalData.InputRandomizationEnabled = AppSettings.InputRandomizationEnabled == 1;
-            GlobalData.ShowAudioEffectDetails = AppSettings.ShowEffectSelection == 1;
-            GlobalData.EnableFanfare = AppSettings.EnableFanfare == 1;
-            GlobalData.NotificationTimeout = AppSettings.NotificationTimeout;
-            GlobalData.RecordStopDelay = AppSettings.RecordEndWaitTime;
-            GlobalData.RecordStartDelay = AppSettings.RecordStartWaitTime;
+            AppGeneric.UpdateChecksAllowed = AppSettings.AppUpdateCheck == 1;
+            AppGeneric.InputRandomizationEnabled = AppSettings.InputRandomizationEnabled == 1;
+            AppGeneric.ShowAudioEffectDetails = AppSettings.ShowEffectSelection == 1;
+            AppGeneric.EnableFanfare = AppSettings.EnableFanfare == 1;
+            AppGeneric.NotificationTimeout = AppSettings.NotificationTimeout;
+            AppGeneric.RecordStopDelay = AppSettings.RecordEndWaitTime;
+            AppGeneric.RecordStartDelay = AppSettings.RecordStartWaitTime;
         }
 
-        protected override void OnLaunched(LaunchActivatedEventArgs args) { MainWindow = new MainWindow(); MainWindow.Activate(); }
+        protected override void OnLaunched(LaunchActivatedEventArgs args)
+        {
+            MainWindow = new MainWindow(); 
+            MainWindow.Activate();
+        }
     }
 }

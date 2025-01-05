@@ -11,13 +11,18 @@ namespace AudioReplacer.Pages
     public sealed partial class DataEditor
     {
         private readonly string configFolder = @$"{Environment.GetFolderPath(Environment.SpecialFolder.UserProfile)}\audio-replacer\config";
-        private readonly string pitchDataFile, effectsDataFile;
+        private string pitchDataFile, effectsDataFile;
         private string modifiedPitchDataContents = "", modifiedEffectsContents = "";
-        private readonly bool isStarting = true; // Do NOT remove the true from here, it is needed for the app to work properly. Resharper thinks it's a good idea for some reaosn
+        private bool isStarting = true; // Do NOT remove the true from here, it is needed for the app to work properly. Resharper thinks it's a good idea for some reaosn
 
         public DataEditor()
         {
             InitializeComponent();
+            Loaded += OnLoaded;
+        }
+
+        private void OnLoaded(object sender, RoutedEventArgs e)
+        {
             pitchDataFile = $@"{configFolder}\PitchData.json";
             effectsDataFile = $@"{configFolder}\EffectsData.json";
 
@@ -111,9 +116,24 @@ namespace AudioReplacer.Pages
             CustomDataEditor.Editor.SetText(JsonConvert.SerializeObject(JsonConvert.DeserializeObject(currentEditorText), Formatting.Indented));
         }
 
-        private void PasteText(object sender, RoutedEventArgs e) { CustomDataEditor.Editor.Paste(); }
-        private void Undo(object sender, RoutedEventArgs e) { CustomDataEditor.Editor.Undo(); }
-        private void Redo(object sender, RoutedEventArgs e) { CustomDataEditor.Editor.Redo(); }
-        private string GetEditorText() { return CustomDataEditor.Editor.GetText(CustomDataEditor.Editor.TextLength); }
+        private void PasteText(object sender, RoutedEventArgs e)
+        {
+            CustomDataEditor.Editor.Paste();
+        }
+
+        private void Undo(object sender, RoutedEventArgs e)
+        {
+            CustomDataEditor.Editor.Undo();
+        }
+
+        private void Redo(object sender, RoutedEventArgs e)
+        {
+            CustomDataEditor.Editor.Redo();
+        }
+
+        private string GetEditorText()
+        {
+            return CustomDataEditor.Editor.GetText(CustomDataEditor.Editor.TextLength);
+        }
     }
 }
