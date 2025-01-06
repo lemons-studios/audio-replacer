@@ -1,10 +1,10 @@
-﻿using System;
-using System.IO;
-using System.Text.Json;
-using AudioReplacer.Generic;
+﻿using AudioReplacer.Generic;
 using AudioReplacer.Util;
 using Config.Net;
 using Microsoft.UI.Xaml;
+using System;
+using System.IO;
+using System.Text.Json;
 
 namespace AudioReplacer
 {
@@ -15,7 +15,6 @@ namespace AudioReplacer
         public static RichPresenceController DiscordController;
 
         private readonly string directoryPath, settingsFilePath, pitchDataPath, effectDataPath;
-
 
         public App()
         {
@@ -29,7 +28,7 @@ namespace AudioReplacer
             AppSettings = new ConfigurationBuilder<IAppSettings>().UseJsonFile(settingsFilePath).Build();
 
             SetGlobalData();
-            DiscordController = new RichPresenceController("On Record Page", "idle", "idle");
+            DiscordController = new RichPresenceController(1325340097234866297, "On Record Page", "No Project Loaded", "idle", "idle");
             InitializeComponent();
         }
 
@@ -62,10 +61,10 @@ namespace AudioReplacer
             // but create an empty file with the start of a json array (for functionality purposes)
             if (!File.Exists(pitchDataPath))
                 File.WriteAllText(pitchDataPath, "[\n\n]");
-            
+
             if (!File.Exists(effectDataPath))
                 File.WriteAllText(effectDataPath, "[\n\n]");
-            
+
             AppGeneric.PitchData = JsonSerializer.Deserialize<string[][]>(File.ReadAllText(pitchDataPath));
             AppGeneric.EffectData = JsonSerializer.Deserialize<string[][]>(File.ReadAllText(effectDataPath));
         }
@@ -83,7 +82,7 @@ namespace AudioReplacer
 
         protected override void OnLaunched(LaunchActivatedEventArgs args)
         {
-            MainWindow = new MainWindow(); 
+            MainWindow = new MainWindow();
             MainWindow.Activate();
         }
     }

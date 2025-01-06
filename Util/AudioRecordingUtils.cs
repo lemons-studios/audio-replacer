@@ -1,11 +1,11 @@
-﻿using System;
+﻿using AudioReplacer.Generic;
+using System;
 using System.IO;
 using System.Threading.Tasks;
 using Windows.Media;
 using Windows.Media.Capture;
 using Windows.Media.MediaProperties;
 using Windows.Storage;
-using AudioReplacer.Generic;
 
 namespace AudioReplacer.Util
 {
@@ -16,63 +16,57 @@ namespace AudioReplacer.Util
         public bool requiresExtraEdits = false;
         private MediaCapture recordingCapture;
 
-        public AudioRecordingUtils() { Task.Run(InitializeMediaCapture); }
+        public AudioRecordingUtils()
+        {
+            Task.Run(InitializeMediaCapture);
+        }
 
         private async Task InitializeMediaCapture()
         {
             recordingCapture = new MediaCapture();
-            var captureSettings = new MediaCaptureInitializationSettings { StreamingCaptureMode = StreamingCaptureMode.Audio, AudioProcessing = AudioProcessing.Raw}; // MediaCategory.Speech applies additional audio effects like noise and speech cancellation
+            var captureSettings = new MediaCaptureInitializationSettings { StreamingCaptureMode = StreamingCaptureMode.Audio, AudioProcessing = AudioProcessing.Raw }; // MediaCategory.Speech applies additional audio effects like noise and speech cancellation
             await recordingCapture.InitializeAsync(captureSettings);
         }
 
-        public async Task StartRecordingAudio(StorageFolder saveFolder, string fileName)
+        public async Task StartRecordingAudio(string saveLocation, string fileName)
         {
-            await Task.Delay(AppGeneric.RecordStartDelay);
-            var fileSaveLocation = await saveFolder.CreateFileAsync(FormatFileName(fileName), CreationCollisionOption.ReplaceExisting);
+            var formattedFileName = requiresExtraEdits ? $"ExtraEditsRequired-{fileName}" : fileName;
+            var outputFolder = await StorageFolder.GetFolderFromPathAsync(saveLocation);
+            var fileSaveLocation = await outputFolder.CreateFileAsync(formattedFileName, CreationCollisionOption.ReplaceExisting);
             var encodingProfile = MediaEncodingProfile.CreateWav(AudioEncodingQuality.High);
+
+            await Task.Delay(AppGeneric.RecordStartDelay);
             await recordingCapture.StartRecordToStorageFileAsync(encodingProfile, fileSaveLocation);
         }
 
-        public async Task StopRecordingAudio(string file)
+        public async Task StopRecordingAudio(string file, bool discarding = false)
         {
-            await Task.Delay(AppGeneric.RecordStopDelay); 
-            await recordingCapture.StopRecordAsync();
-            string outFile = $"{file}0.wav"; // Temporary name
-            float validatedPitchChange = MathF.Max(pitchChange, 0.001f); // The Rubberband library does not support pitch values at or below 0
-
-            // FFMpeg is used with shell commands here simply because I cannot bother trying to figure out .NET FFMpeg frameworks that are all just command wrappers anyway
-            var ffmpegProcess = ShellCommandManager.CreateProcess("ffmpeg", $"-i \"{file}\" -af \"rubberband=pitch={validatedPitchChange}\" -y \"{outFile}\"");
-            ffmpegProcess.Start();
-            await ffmpegProcess.WaitForExitAsync();
-            if (ffmpegProcess.ExitCode != 0) throw new Exception();
-
-            // Delete unedited file and move the processed file to the unedited location after deletion
-            File.Delete(file);
-            File.Move(outFile, file);
-
-            // Repeat the last few lines but for adding audio effects (changing pitch should come before extra audio effects always) IF any effects are selected
-            if (!string.IsNullOrEmpty(effectCommand))
+            switch (discarding)
             {
-                var ffmpegEffectProcess = ShellCommandManager.CreateProcess("ffmpeg", $"-i \"{file}\" -af \"{effectCommand}\" -y \"{outFile}\"");
-                ffmpegEffectProcess.Start();
-                await ffmpegEffectProcess.WaitForExitAsync();
-                if (ffmpegProcess.ExitCode != 0) throw new Exception();
-
-                File.Delete(file);
-                File.Move(outFile, file);
+                case true:
+                    await recordingCapture.StopRecordAsync();
+                    File.Delete(file);
+                    return;
+                case false:
+                    await Task.Delay(AppGeneric.RecordStopDelay);
+                    await recordingCapture.StopRecordAsync();
+                    await ApplyFilters(file);
+                    return;
             }
         }
 
-        public async Task CancelRecording(string path)
+        private async Task ApplyFilters(string file)
         {
-            // No need to delay here since the recording is getting discarded
-            await recordingCapture.StopRecordAsync();
-            File.Delete(path);
-        }
+            var outFile = $"{file}0.wav"; // Temporary name. FFmpeg doesn't like it when the user tries to set the output as the input since
+            var validatedPitchChange = MathF.Max(pitchChange, 0.001f); // Pitch values below zero do not work
+            var command = string.IsNullOrEmpty(effectCommand)
+                ? $"rubberband=pitch={validatedPitchChange}"
+                : $"rubberband=pitch{validatedPitchChange},{effectCommand}";
+            await AppGeneric.SpawnProcess("ffmpeg", $"-i \"{file}\" -af \"{command}\" -y \"{outFile}\"");
 
-        private string FormatFileName(string fileName)
-        {
-            return requiresExtraEdits ? $"ExtraEditsRequired-{fileName}" : fileName;
+            // Move the ffmpeg-modified audio file to the intended location after deleting the unedited output file
+            File.Delete(file);
+            File.Move(outFile, file);
         }
     }
 }

@@ -1,5 +1,5 @@
+using AudioReplacer.Generic;
 using AudioReplacer.Pages;
-using AudioReplacer.Util;
 using Microsoft.UI;
 using Microsoft.UI.Composition.SystemBackdrops;
 using Microsoft.UI.Windowing;
@@ -9,7 +9,6 @@ using Microsoft.UI.Xaml.Media;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using AudioReplacer.Generic;
 using WinRT.Interop;
 
 namespace AudioReplacer
@@ -22,7 +21,7 @@ namespace AudioReplacer
         public static bool IsProcessing;
         public static bool IsRecording;
         public static bool ProjectInitialized;
-        public static string CurrentFile; 
+        public static string CurrentFile;
 
         public MainWindow()
         {
@@ -52,11 +51,11 @@ namespace AudioReplacer
                     }
                     break;
                 case 1:
-                {
-                    var acrylicBackdrop = new DesktopAcrylicBackdrop();
-                    SystemBackdrop = acrylicBackdrop;
-                    break;
-                }
+                    {
+                        var acrylicBackdrop = new DesktopAcrylicBackdrop();
+                        SystemBackdrop = acrylicBackdrop;
+                        break;
+                    }
                 default:
                     SystemBackdrop = null;
                     break;
@@ -65,13 +64,14 @@ namespace AudioReplacer
             // Open the recording page (Stole this from the method below)
             if (!pageCache.TryGetValue(typeof(RecordPage), out var page))
             {
-                page = (Page) Activator.CreateInstance(typeof(RecordPage)); 
+                page = (Page) Activator.CreateInstance(typeof(RecordPage));
                 pageCache[typeof(RecordPage)] = page;
             }
 
             ContentFrame.Content = page;
 
             // Initialize discord rich presence
+            
         }
 
         private AppWindow GetAppWindowForCurrentWindow(object window) // Thanks StackOverflow man!
@@ -106,16 +106,16 @@ namespace AudioReplacer
 
             if (!pageCache.TryGetValue(pageSwitchType, out var page))
             {
-                page = (Page) Activator.CreateInstance(pageSwitchType); 
+                page = (Page) Activator.CreateInstance(pageSwitchType);
                 pageCache[pageSwitchType] = page;
             }
             ContentFrame.Content = page;
         }
 
-        private void OnWindowClose(object sender, AppWindowClosingEventArgs args) 
-        { 
-            if (ProjectInitialized && (IsProcessing || IsRecording)) 
-                File.Delete(CurrentFile); 
+        private void OnWindowClose(object sender, AppWindowClosingEventArgs args)
+        {
+            if (ProjectInitialized && (IsProcessing || IsRecording))
+                File.Delete(CurrentFile);
         }
 
         private void ChangeProjectFolder(object sender, RoutedEventArgs e)

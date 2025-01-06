@@ -15,7 +15,7 @@ namespace AudioReplacer.Util
                     UseShellExecute = shellExecute,
                     RedirectStandardOutput = redirectOutput,
                     RedirectStandardError = redirectError,
-                    CreateNoWindow = !createWindow 
+                    CreateNoWindow = !createWindow
                 }
             };
         }

@@ -1,11 +1,9 @@
 ﻿using Microsoft.UI.Windowing;
-using Microsoft.UI.Xaml;
 using System;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using Windows.ApplicationModel;
 using Windows.Storage.Pickers;
-using WinRT.Interop;
 using AppInstance = Microsoft.Windows.AppLifecycle.AppInstance;
 
 namespace AudioReplacer.Generic
@@ -16,8 +14,6 @@ namespace AudioReplacer.Generic
         public static bool UpdateChecksAllowed, InputRandomizationEnabled, ShowAudioEffectDetails, EnableFanfare;
         public static int NotificationTimeout, RecordStopDelay, RecordStartDelay;
         public static string[][] PitchData, EffectData;
-        public static long richPresenceClientId = 1325340097234866297;
-
 
         public static string GetAppVersion(bool forceBuildNumber = false)
         {
@@ -37,27 +33,6 @@ namespace AudioReplacer.Generic
             picker.SuggestedStartLocation = PickerLocationId.Desktop;
             picker.FileTypeFilter.Add(fileTypeFiler);
             return picker as T;
-        }
-
-        // From my research, the best way to do path selection is to use overload methods, even though it uses more lines when it really shouldn't
-        public static async Task<string> PickDataPath(FolderPicker picker)
-        {
-            var pickerWindow = new Window();
-            nint hwnd = WindowNative.GetWindowHandle(pickerWindow);
-
-            InitializeWithWindow.Initialize(picker, hwnd);
-            var result = await picker.PickSingleFolderAsync();
-            return result.Path;
-        }
-
-        public static async Task<string> PickDataPath(FileOpenPicker picker)
-        {
-            var pickerWindow = new Window();
-            nint hwnd = WindowNative.GetWindowHandle(pickerWindow);
-
-            InitializeWithWindow.Initialize(picker, hwnd);
-            var result = await picker.PickSingleFileAsync();
-            return result.Path;
         }
 
         public static bool IntToBool(int x)
@@ -81,7 +56,7 @@ namespace AudioReplacer.Generic
             };
         }
 
-        public static void CreateProcess(string command, string args, bool autoStart = true)
+        public static async Task SpawnProcess(string command, string args, bool autoStart = true)
         {
             var shellProcess = new Process
             {
@@ -96,12 +71,16 @@ namespace AudioReplacer.Generic
                     CreateNoWindow = true
                 }
             };
-            shellProcess.Start();
+            if (autoStart)
+            {
+                shellProcess.Start();
+                await shellProcess.WaitForExitAsync();
+            }
         }
 
-        public static void OpenURL(string url)
+        public static void OpenUrl(string url)
         {
-            CreateProcess("cmd", $"/c start {url}");
+           Task.Run(() => SpawnProcess("cmd", $"/c start {url}"));
         }
 
         public static void RestartApp()

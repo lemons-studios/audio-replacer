@@ -2,13 +2,13 @@
 using AudioReplacer.Util;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Navigation;
 using System;
 using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.Storage.Pickers;
-using Microsoft.UI.Xaml.Navigation;
 using WinRT.Interop;
 
 namespace AudioReplacer.Pages
@@ -31,7 +31,7 @@ namespace AudioReplacer.Pages
 
         private void OnLoaded(object sender, RoutedEventArgs e)
         {
-            PitchSettingsFeedback.Visibility = AppGeneric.ShowAudioEffectDetails ? Visibility.Visible : Visibility.Collapsed; // Needed here to hide UI on app launch
+            PitchSettingsFeedback.Visibility = AppGeneric.ShowAudioEffectDetails ? Visibility.Visible : Visibility.Collapsed; // Hide UI of the verbose pitch value text on launch (if disabled)
             recordPageBackend = new RecordPageFunctionality([SuccessNotification, ProgressNotification, UpdateNotification]);
             VoiceTuneMenu.ItemsSource = recordPageBackend.GetPitchTitles();
             EffectsMenu.ItemsSource = recordPageBackend.GetEffectTitles();
@@ -45,7 +45,10 @@ namespace AudioReplacer.Pages
                 case true: // Check For Updates
                     if (!AppGeneric.UpdateChecksAllowed) break;
                     areUpdatesAvailable = recordPageBackend.IsUpdateAvailable();
-                    if (!areUpdatesAvailable) break;
+
+                    // Debugger.IsAttached is checked here to prevent annoying popups when developing new versions
+                    if (!areUpdatesAvailable ||  Debugger.IsAttached ) break;
+
                     UpdateNotification.Message = $"Latest Version: {recordPageBackend.GetWebVersion()}";
                     UpdateNotification.IsOpen = true;
                     break;
@@ -59,7 +62,10 @@ namespace AudioReplacer.Pages
 
             // Check if folder memory is enabled and if the remembered path exists
             if (recordPageBackend.FolderMemoryAllowed())
+            {
                 ProjectSetup(App.AppSettings.LastSelectedFolder, true);
+                PauseMediaPlayer();
+            }
         }
 
         private void UpdateRecordingValues()
@@ -76,13 +82,22 @@ namespace AudioReplacer.Pages
                 audioRecordingUtils.effectCommand = recordPageBackend.GetEffectValues(EffectsMenu.SelectedIndex);
                 previousEffectSelection = EffectsMenu.SelectedItem.ToString();
             }
-            if(PitchSettingsFeedback.Visibility == Visibility.Visible) PitchSettingsFeedback.Text = $"Pitch Modifier: {audioRecordingUtils.pitchChange} ({previousPitchSelection})\nEffect Selected: {previousEffectSelection}\nExtra Edits Required? {recordPageBackend.BoolToString(FurtherEditsCheckBox.IsChecked)}";
+            if (App.AppSettings.ShowEffectSelection != 1) return;
+            
+            PitchSettingsFeedback.Text = 
+                $"Pitch Modifier: {audioRecordingUtils.pitchChange} " +
+                $"({previousPitchSelection})\nEffect Selected: {previousEffectSelection}\nExtra Edits Required? " +
+                $"{recordPageBackend.BoolToString(FurtherEditsCheckBox.IsChecked)}";
         }
 
         public async void SelectProjectFolder(object sender, RoutedEventArgs e)
         {
-            var folderPicker = new FolderPicker { SuggestedStartLocation = PickerLocationId.ComputerFolder };
-            folderPicker.FileTypeFilter.Add("*");
+            var folderPicker = new FolderPicker
+            {
+                SuggestedStartLocation = PickerLocationId.ComputerFolder,
+                FileTypeFilter = { "*" }
+            };
+
             IntPtr hWnd = WindowNative.GetWindowHandle(App.MainWindow);
             InitializeWithWindow.Initialize(folderPicker, hWnd);
             var folder = await folderPicker.PickSingleFolderAsync();
@@ -123,11 +138,12 @@ namespace AudioReplacer.Pages
             if (fileManagement != null)
             {
                 StorageFolder currentOutFolder = await fileManagement.GetDirectoryAsStorageFolder();
-                await audioRecordingUtils.StartRecordingAudio(currentOutFolder, fileManagement.GetCurrentFileName());
+                await audioRecordingUtils.StartRecordingAudio(fileManagement.GetOutFolderStructure(), fileManagement.GetCurrentFileName());
             }
+
             App.DiscordController.SetSmallImage("recording");
             App.DiscordController.SetSmallImageText("Recording Audio");
-            ToggleButtonStates(true);
+            SetButtonStates(true);
         }
 
         private async void StopRecordingAudio(object sender, RoutedEventArgs e)
@@ -149,8 +165,8 @@ namespace AudioReplacer.Pages
 
         private void UpdateFileElements()
         {
-            float progressPercentage = fileManagement.CalculatePercentageComplete();
-            string projectPath = fileManagement.GetProjectPath();
+            var progressPercentage = fileManagement.CalculatePercentageComplete();
+            var projectPath = fileManagement.GetProjectPath();
 
             CurrentFile.Text = recordPageBackend.GetFormattedCurrentFile(fileManagement.GetCurrentFile());
             RemainingFiles.Text = $"Files Remaining: {fileManagement.GetFileCount(projectPath):N0} ({progressPercentage}%)";
@@ -162,8 +178,8 @@ namespace AudioReplacer.Pages
         private async void CancelCurrentRecording(object sender, RoutedEventArgs e)
         {
             MainWindow.IsRecording = false;
-            await audioRecordingUtils.CancelRecording(fileManagement.GetOutFilePath());
-            ToggleButtonStates(false);
+            await audioRecordingUtils.StopRecordingAudio(fileManagement.GetOutFilePath(), true);
+            SetButtonStates(false);
             recordPageBackend.UpdateInfoBar(SuccessNotification, "Recording Cancelled", "", InfoBarSeverity.Informational);
         }
 
@@ -172,7 +188,7 @@ namespace AudioReplacer.Pages
             if (sender is not Button button) return;
             MainWindow.IsProcessing = false;
             bool isSubmitButton = button.Name == "SubmitRecordingButton";
-            
+
             switch (isSubmitButton)
             {
                 case true:
@@ -188,13 +204,14 @@ namespace AudioReplacer.Pages
             }
 
             ToggleFinalReviewButtons(false);
-            ToggleButtonStates(false);
+            SetButtonStates(false);
             UpdateFileElements();
         }
 
         public void ProjectSetup(string path, bool autoload = false)
         {
-            if(!autoload && !areUpdatesAvailable) Task.Run(() => recordPageBackend.UpdateInfoBar(ProgressNotification, "Setting up project...", "", InfoBarSeverity.Informational, autoClose: false));
+            // Not adding awaits or async to this call here continues execution
+            if (!autoload && !areUpdatesAvailable) Task.Run(() => recordPageBackend.UpdateInfoBar(ProgressNotification, "Setting up project...", "", InfoBarSeverity.Informational, autoClose: false));
             switch (projectNotSelected)
             {
                 case true:
@@ -212,14 +229,13 @@ namespace AudioReplacer.Pages
                     break;
             }
             UpdateFileElements();
-            if(!autoload && areUpdatesAvailable) recordPageBackend.UpdateInfoBar(SuccessNotification, "Success!", "Project loaded!", InfoBarSeverity.Success);
+            if (!autoload && areUpdatesAvailable) recordPageBackend.UpdateInfoBar(SuccessNotification, "Success!", "Project loaded!", InfoBarSeverity.Success);
 
             // Delete any msix update packages after loading project
-            Process projectFolderCleanup = ShellCommandManager.CreateProcess("cmd", @$"/c del /s /q {fileManagement.GetRootFolderPath()}\audio-replacer\*.msix");
-            projectFolderCleanup.Start();
+            Task.Run(async () => await AppGeneric.SpawnProcess("cmd", @$"/c del /s /q {fileManagement.GetRootFolderPath()}\audio-replacer\*.msix"));
         }
 
-        private void ToggleButtonStates(bool recording)
+        private void SetButtonStates(bool recording)
         {
             Button[] buttonsRecording = [EndRecordingButton, CancelRecordingButton];
             Button[] buttonsNotRecording = [StartRecordingButton, SkipAudioButton];
@@ -236,7 +252,7 @@ namespace AudioReplacer.Pages
             for (int i = 0; i < buttons.Length; i++) { recordPageBackend.ToggleButton(buttons[i], i > 1 && toggled); } // Making my code slightly unreadable in exchange for fewer lines 🔥🔥🔥
         }
 
-        private async void DownloadRuntimeDependencies(object sender, RoutedEventArgs e)
+        private async void DownloadDependencies(object sender, RoutedEventArgs e)
         {
             try
             {
@@ -245,7 +261,7 @@ namespace AudioReplacer.Pages
                 await Task.Run(recordPageBackend.DownloadDependencies); // Prevents window from freezing when installing dependencies
 
                 // Restart app
-                Microsoft.Windows.AppLifecycle.AppInstance.Restart("");
+                AppGeneric.RestartApp();
             }
             catch (AggregateException) // Failsafe for if the computer is offline
             {
@@ -253,40 +269,37 @@ namespace AudioReplacer.Pages
             }
         }
 
-        private void OpenGithubReleases(object sender, RoutedEventArgs e)
+        private void OpenReleases(object sender, RoutedEventArgs e)
         {
-            Process openReleasesProcess = ShellCommandManager.CreateProcess("cmd", $"/c start https://github.com/lemons-studios/audio-replacer-2/releases/latest");
-            openReleasesProcess.Start();
+            AppGeneric.OpenUrl("https://github.com/lemons-studios/audio-replacer-2/releases/latest");
         }
 
         private void FlagFurtherEdits(object sender, RoutedEventArgs e)
         {
-            audioRecordingUtils.requiresExtraEdits = true;
+            audioRecordingUtils.requiresExtraEdits = !audioRecordingUtils.requiresExtraEdits;
+            UpdateRecordingValues();
         }
 
-        private void UnFlagFurtherEdits(object sender, RoutedEventArgs e)
-        {
-            audioRecordingUtils.requiresExtraEdits = false;
-        }
         // Awesome boilerplate here
-        private void ComboBoxRecordValuesUpdate(object sender, SelectionChangedEventArgs e)
+        private void EffectsValueUpdate(object sender, SelectionChangedEventArgs e)
         {
             UpdateRecordingValues();
         }
 
-        private void FurtherEditsValuesUpdate(object sender, RoutedEventArgs e)
-        {
-            UpdateRecordingValues();
-        }
-
-        protected override void OnNavigatedFrom(NavigationEventArgs e)
+        private void PauseMediaPlayer()
         {
             AudioPreview.MediaPlayer.Pause();
         }
 
+        protected override void OnNavigatedFrom(NavigationEventArgs e)
+        {
+            // Prevent audio from playing on other pages if the media player is left playing
+            PauseMediaPlayer();
+        }
+
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
-            App.DiscordController.SetDetails("On Record Page");
+            App.DiscordController.SetState("On Record Page");
         }
     }
 }

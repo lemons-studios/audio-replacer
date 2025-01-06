@@ -1,10 +1,10 @@
-using System;
-using System.Diagnostics;
-using System.IO;
 using AudioReplacer.Util;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Newtonsoft.Json;
+using System;
+using System.Diagnostics;
+using System.IO;
 
 namespace AudioReplacer.Pages
 {
@@ -54,7 +54,7 @@ namespace AudioReplacer.Pages
         {
             var confirmDiscard = new ContentDialog { Title = "Discard Changes?", Content = "File will reset to last save", PrimaryButtonText = "Discard", CloseButtonText = "Cancel", XamlRoot = Content.XamlRoot };
             var result = await confirmDiscard.ShowAsync();
-            if(result == ContentDialogResult.Primary) CustomDataEditor.Editor.SetText(await File.ReadAllTextAsync(pitchDataFile));
+            if (result == ContentDialogResult.Primary) CustomDataEditor.Editor.SetText(await File.ReadAllTextAsync(pitchDataFile));
         }
 
         private void UpdateEditingFile(object sender, SelectionChangedEventArgs e)
@@ -74,10 +74,10 @@ namespace AudioReplacer.Pages
                     break;
             }
         }
-        
+
         private async void ImportFile(object sender, RoutedEventArgs e)
         {
-            var importType = new ContentDialog { Title = "Choose Import File", Content = "What data is the imported data meant for? App will restart after import", PrimaryButtonText = "Pitch Data", SecondaryButtonText = "Effect Data", CloseButtonText = "Cancel", XamlRoot = Content.XamlRoot, Width = 500};
+            var importType = new ContentDialog { Title = "Choose Import File", Content = "What data is the imported data meant for? App will restart after import", PrimaryButtonText = "Pitch Data", SecondaryButtonText = "Effect Data", CloseButtonText = "Cancel", XamlRoot = Content.XamlRoot, Width = 500 };
             var result = await importType.ShowAsync();
             if (result == ContentDialogResult.None) return;
 

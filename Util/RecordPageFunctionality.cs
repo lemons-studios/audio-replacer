@@ -1,14 +1,14 @@
-﻿using Microsoft.UI.Xaml;
+﻿using AudioReplacer.Generic;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
+using SevenZipExtractor;
 using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
-using Windows.Media.Core;
-using Microsoft.UI.Xaml.Controls;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
-using SevenZipExtractor;
-using AudioReplacer.Generic;
+using System.Threading.Tasks;
+using Windows.Media.Core;
 
 namespace AudioReplacer.Util
 {
@@ -31,7 +31,7 @@ namespace AudioReplacer.Util
             }
             catch (AggregateException) // Typically occurs when GitHub is queried too much within a specific period of time from the same ip address. Should not affect the application aside from update checks
             {
-                webVersion = AppGeneric.GetAppVersion(true); 
+                webVersion = AppGeneric.GetAppVersion(true);
             }
             UpdatePitchData();
         }
@@ -117,7 +117,7 @@ namespace AudioReplacer.Util
         {
             await Task.Delay(AppGeneric.NotificationTimeout);
             // This try-catch is needed in the case that the TryEnqueue is running while the window is closing
-            try { infoBar.DispatcherQueue.TryEnqueue(() => { infoBar.IsOpen = false; }); }catch { /* ignored */ }
+            try { infoBar.DispatcherQueue.TryEnqueue(() => { infoBar.IsOpen = false; }); } catch { /* ignored */ }
         }
 
         private Visibility ToVisibility(bool x)

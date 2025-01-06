@@ -1,12 +1,9 @@
 ﻿using AudioReplacer.Generic;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Windows.Storage;
-using Windows.System.Display;
 
 namespace AudioReplacer.Util
 {
@@ -41,7 +38,7 @@ namespace AudioReplacer.Util
             string[] inFolderStructure = GetPathSubdirectories(projectPath);
             if (!DoesDirectoryExist(outputFolderPath)) CreateDirectory(outputFolderPath);
             if (inFolderStructure == GetPathSubdirectories(outputFolderPath) || File.Exists($"{outputFolderPath}\\.setupIgnore")) return;
-            
+
             string[] subdirectoryNames = TruncateSubdirectories(inFolderStructure);
             for (int i = 0; i < inFolderStructure.Length; i++) { CreateDirectory($"{outputFolderPath}\\{subdirectoryNames[i]}"); }
             File.WriteAllText($"{outputFolderPath}\\.setupIgnore", "This file is here to tell AudioReplacer2 to ignore this folder when launching.\nDo not delete this unless starting a new project");
@@ -82,7 +79,7 @@ namespace AudioReplacer.Util
             // Return the first audio file (if input is not randomized)
             return audioFiles.First();
         }
-        
+
         public float CalculatePercentageComplete()
         {
             float inputFolderCount = GetFileCount(projectPath);
@@ -109,16 +106,68 @@ namespace AudioReplacer.Util
         }
 
         // Another go at my yummy code minification
-        private string[] GetPathSubdirectories(string path) { return Directory.GetDirectories(path, "*", SearchOption.TopDirectoryOnly); }
-        private string[] TruncateSubdirectories(string[] notTruncatedDirectories) { return notTruncatedDirectories.Select(dir => dir.Split(Path.DirectorySeparatorChar).Last()).ToArray(); }
-        public string GetCurrentFile(bool truncated = true) { return truncated ? truncatedCurrentFile : currentFile; }
-        public async Task<StorageFolder> GetDirectoryAsStorageFolder() { return await StorageFolder.GetFolderFromPathAsync($"{outputFolderPath}\\{directoryName}"); }
-        public string GetRootFolderPath() { return rootDataDirectoryPath; }
-        public string GetOutFilePath() { return currentOutFile; }
-        public string GetProjectPath() { return projectPath; }
-        public string GetCurrentFileName() { return currentFileName; }
-        private void CreateDirectory(string dir) { Directory.CreateDirectory(dir); }
-        private bool DoesDirectoryExist(string dir) { return Directory.Exists(dir); }
-        private void FindDeleteEmptyDirs() { foreach (string directory in Directory.GetDirectories(projectPath)) { if (Directory.GetFiles(directory).Length == 0) Directory.Delete(directory); } }
+        private string[] GetPathSubdirectories(string path)
+        {
+            return Directory.GetDirectories(path, "*", SearchOption.TopDirectoryOnly);
+        }
+
+        private string[] TruncateSubdirectories(string[] notTruncatedDirectories)
+        {
+            return notTruncatedDirectories.Select(dir => dir.Split(Path.DirectorySeparatorChar).Last()).ToArray();
+        }
+
+        public string GetCurrentFile(bool truncated = true)
+        {
+            return truncated ? truncatedCurrentFile : currentFile;
+        }
+
+        public async Task<StorageFolder> GetDirectoryAsStorageFolder()
+        {
+            return await StorageFolder.GetFolderFromPathAsync($"{outputFolderPath}\\{directoryName}");
+        }
+
+        public string GetOutFolderStructure()
+        {
+            return @$"{outputFolderPath}\{directoryName}";
+        }
+
+        public string GetRootFolderPath()
+        {
+            return rootDataDirectoryPath;
+        }
+
+        public string GetOutFilePath()
+        {
+            return currentOutFile;
+        }
+
+        public string GetProjectPath()
+        {
+            return projectPath;
+        }
+
+        public string GetCurrentFileName()
+        {
+            return currentFileName;
+        }
+
+        private void CreateDirectory(string dir)
+        {
+            Directory.CreateDirectory(dir);
+        }
+
+        private bool DoesDirectoryExist(string dir)
+        {
+            return Directory.Exists(dir);
+        }
+
+        private void FindDeleteEmptyDirs()
+        {
+            foreach (string directory in Directory.GetDirectories(projectPath))
+            {
+                if (Directory.GetFiles(directory).Length == 0) 
+                    Directory.Delete(directory);
+            }
+        }
     }
 }

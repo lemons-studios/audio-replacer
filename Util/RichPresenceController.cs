@@ -1,72 +1,56 @@
 ﻿using AudioReplacer.Generic;
-using DiscordGameSDKWrapper;
-using Microsoft.UI.Xaml.Controls;
-using System;
-using System.Collections.Specialized;
+using DiscordRPC;
 using System.Threading.Tasks;
 
 namespace AudioReplacer.Util;
 
 public class RichPresenceController
 {
-    public string details, smallImage, smallImageText;
-    private Discord discordRpc;
-    private ActivityManager activityManager;
-    private long startTime;
+    public string details, smallImage, smallImageText, state;
+    private readonly DiscordRpcClient client;
+    private readonly Timestamps startTimestamp;
 
-    public RichPresenceController(string initialDetails, string initialSmallImage, string initialSmallImageText)
+    public RichPresenceController(long clientId, string initialDetails, string initialState, string initialSmallImage, string initialSmallImageText)
     {
-        discordRpc = new Discord(AppGeneric.richPresenceClientId, (UInt64)CreateFlags.NoRequireDiscord);
-        activityManager = discordRpc.GetActivityManager();
-        startTime = DateTimeOffset.Now.ToUnixTimeMilliseconds();
-
+        startTimestamp = Timestamps.Now;
+        state = initialState;
         details = initialDetails;
         smallImage = initialSmallImage;
         smallImageText = initialSmallImageText;
 
-        Task.Run(() => SetRPCStatus());
+        client = new DiscordRpcClient(clientId.ToString());
+        client.Initialize();
+
+        Task.Run(async () =>
+        {
+            while (true)
+            {
+                UpdateRPCStatus();
+                await Task.Delay(1000);
+            }
+        });
     }
 
-    private async Task SetRPCStatus()
+    private void UpdateRPCStatus()
     {
-        while(true)
+        client.SetPresence(new RichPresence()
         {
-            if (App.AppSettings.EnableRichPresence == 1)
+            State = state,
+            Details = details,
+            Timestamps = startTimestamp,
+            Assets = new Assets()
             {
-                try
-                {
-                    var activity = new Activity
-                    {
-                        State = "Using Audio Replacer",
-                        Details = details,
-                        Assets =
-                        {
-                            LargeImage = "appIcon",
-                            SmallImage = smallImage,
-                            LargeText = $"Version {AppGeneric.GetAppVersion(true)}",
-                            SmallText = smallImageText
-                        },
-                        Timestamps =
-                        {
-                            Start = startTime
-                        }
-                    };
-
-                    activityManager.UpdateActivity(activity, (res) =>
-                    {
-                        if (res == Result.Ok)
-                        {
-
-                        }
-                    });
-                }
-                catch
-                {
-                    // Loop back again lol
-                }
+                LargeImageKey = "appicon",
+                LargeImageText = $"Version {AppGeneric.GetAppVersion(true)}",
+                SmallImageKey = smallImage,
+                SmallImageText = smallImageText
             }
-            await Task.Delay(1);
-        }
+        });
+    }
+
+    public void SetState(string x)
+    {
+        state = x;
     }
 
     public void SetDetails(string x)
@@ -86,6 +70,6 @@ public class RichPresenceController
 
     public void DisposeRPC()
     {
-        discordRpc.Dispose();
+        client.Dispose();
     }
 }

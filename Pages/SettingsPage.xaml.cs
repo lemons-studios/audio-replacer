@@ -1,13 +1,13 @@
-﻿using System;
-using System.Diagnostics;
-using System.IO;
-using AudioReplacer.Generic;
+﻿using AudioReplacer.Generic;
 using AudioReplacer.Util;
 using CommunityToolkit.WinUI.Controls;
 using Microsoft.UI.Composition.SystemBackdrops;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
+using System;
+using System.Diagnostics;
+using System.IO;
 
 namespace AudioReplacer.Pages
 {
@@ -131,7 +131,7 @@ namespace AudioReplacer.Pages
 
         private async void OpenCustomDataFile(object sender, RoutedEventArgs e)
         {
-            var fileOption = new ContentDialog { Title = "Pick File", Content = "Which custom data file would you like to open?", PrimaryButtonText = "Pitch Data", SecondaryButtonText = "Effects Data", CloseButtonText = "Cancel" ,XamlRoot = Content.XamlRoot };
+            var fileOption = new ContentDialog { Title = "Pick File", Content = "Which custom data file would you like to open?", PrimaryButtonText = "Pitch Data", SecondaryButtonText = "Effects Data", CloseButtonText = "Cancel", XamlRoot = Content.XamlRoot };
             var result = await fileOption.ShowAsync();
             if (result == ContentDialogResult.None) return;
             try
