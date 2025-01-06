@@ -5,6 +5,8 @@ using Newtonsoft.Json;
 using System;
 using System.Diagnostics;
 using System.IO;
+using AudioReplacer.Generic;
+using Microsoft.UI.Xaml.Navigation;
 
 namespace AudioReplacer.Pages
 {
@@ -28,6 +30,7 @@ namespace AudioReplacer.Pages
 
             CustomDataEditor.Editor.SetText(File.ReadAllText(pitchDataFile));
             isStarting = false;
+            App.DiscordController.SetDetails("In the data editor");
         }
 
         private async void SaveData(object sender, RoutedEventArgs e)
@@ -47,7 +50,7 @@ namespace AudioReplacer.Pages
                     if (modifiedPitchDataContents != string.Empty) await File.WriteAllTextAsync(pitchDataFile, modifiedPitchDataContents);
                     break;
             }
-            Microsoft.Windows.AppLifecycle.AppInstance.Restart("");
+            AppGeneric.RestartApp();
         }
 
         private async void DiscardChanges(object sender, RoutedEventArgs e)
@@ -99,15 +102,13 @@ namespace AudioReplacer.Pages
                         await File.WriteAllTextAsync(effectsDataFile, fileContents);
                         break;
                 }
-                Microsoft.Windows.AppLifecycle.AppInstance.Restart("");
+                AppGeneric.RestartApp();
             }
         }
 
         private void GetHelp(object sender, RoutedEventArgs e)
         {
-            string url = "https://github.com/lemons-studios/audio-replacer/wiki/Custom-Data";
-            Process openHelpPage = ShellCommandManager.CreateProcess("cmd", $"/c start {url}");
-            openHelpPage.Start();
+            AppGeneric.OpenUrl("https://github.com/lemons-studios/audio-replacer/wiki/Custom-Data");
         }
 
         private void FormatData(object sender, RoutedEventArgs e)
@@ -134,6 +135,11 @@ namespace AudioReplacer.Pages
         private string GetEditorText()
         {
             return CustomDataEditor.Editor.GetText(CustomDataEditor.Editor.TextLength);
+        }
+
+        protected override void OnNavigatedTo(NavigationEventArgs e)
+        {
+            App.DiscordController.SetState("In the data editor");
         }
     }
 }

@@ -66,6 +66,9 @@ namespace AudioReplacer.Pages
                 ProjectSetup(App.AppSettings.LastSelectedFolder, true);
                 PauseMediaPlayer();
             }
+            App.DiscordController.SetDetails("On Record Page");
+            if(fileManagement != null)
+                App.DiscordController.SetState($"{fileManagement.CalculatePercentageComplete()}% Complete");
         }
 
         private void UpdateRecordingValues()
@@ -87,7 +90,7 @@ namespace AudioReplacer.Pages
             PitchSettingsFeedback.Text = 
                 $"Pitch Modifier: {audioRecordingUtils.pitchChange} " +
                 $"({previousPitchSelection})\nEffect Selected: {previousEffectSelection}\nExtra Edits Required? " +
-                $"{recordPageBackend.BoolToString(FurtherEditsCheckBox.IsChecked)}";
+                $"{AppGeneric.BoolToString((bool) FurtherEditsCheckBox.IsChecked!)}";
         }
 
         public async void SelectProjectFolder(object sender, RoutedEventArgs e)
@@ -140,9 +143,7 @@ namespace AudioReplacer.Pages
                 StorageFolder currentOutFolder = await fileManagement.GetDirectoryAsStorageFolder();
                 await audioRecordingUtils.StartRecordingAudio(fileManagement.GetOutFolderStructure(), fileManagement.GetCurrentFileName());
             }
-
-            App.DiscordController.SetSmallImage("recording");
-            App.DiscordController.SetSmallImageText("Recording Audio");
+            App.DiscordController.SetSmallAsset("recording", "Recording Audio");
             SetButtonStates(true);
         }
 
@@ -158,8 +159,7 @@ namespace AudioReplacer.Pages
 
             // Update source of audio player and the title manually
             CurrentFile.Text = "Review your recording...";
-            App.DiscordController.SetSmallImage("reviewing");
-            App.DiscordController.SetSmallImageText("In review phase");
+            App.DiscordController.SetSmallAsset("reviewing", "In review phase");
             AudioPreview.Source = recordPageBackend.MediaSourceFromUri(fileManagement.GetOutFilePath());
         }
 
@@ -173,6 +173,10 @@ namespace AudioReplacer.Pages
             RemainingFilesProgress.Value = progressPercentage;
             AudioPreview.Source = recordPageBackend.MediaSourceFromUri(fileManagement.GetCurrentFile(false));
             MainWindow.CurrentFile = fileManagement.GetOutFilePath();
+
+            App.DiscordController.SetState($"{progressPercentage}% Complete");
+            App.DiscordController.SetSmallAsset("idle", "Idle");
+            App.DiscordController.SetLargeAsset("appicon", $"Current File: {fileManagement.GetCurrentFileName()}");
         }
 
         private async void CancelCurrentRecording(object sender, RoutedEventArgs e)
@@ -194,7 +198,7 @@ namespace AudioReplacer.Pages
                 case true:
                     // Submission Accepted
                     fileManagement.DeleteCurrentFile(/* This method essentially acts as a way to confirm the submission*/);
-                    recordPageBackend.UpdateInfoBar(SuccessNotification, "Submission Accepted!!", "Moving to next file...", InfoBarSeverity.Success);
+                    recordPageBackend.UpdateInfoBar(SuccessNotification, "Submission Accepted!", "Moving to next file...", InfoBarSeverity.Success);
                     break;
                 case false:
                     // Submission Rejected
@@ -229,7 +233,8 @@ namespace AudioReplacer.Pages
                     break;
             }
             UpdateFileElements();
-            if (!autoload && areUpdatesAvailable) recordPageBackend.UpdateInfoBar(SuccessNotification, "Success!", "Project loaded!", InfoBarSeverity.Success);
+            if (!autoload && areUpdatesAvailable) 
+                recordPageBackend.UpdateInfoBar(SuccessNotification, "Success!", "Project loaded!", InfoBarSeverity.Success);
 
             // Delete any msix update packages after loading project
             Task.Run(async () => await AppGeneric.SpawnProcess("cmd", @$"/c del /s /q {fileManagement.GetRootFolderPath()}\audio-replacer\*.msix"));
@@ -249,7 +254,10 @@ namespace AudioReplacer.Pages
         private void ToggleFinalReviewButtons(bool toggled)
         {
             Button[] buttons = [EndRecordingButton, CancelRecordingButton, DiscardRecordingButton, SubmitRecordingButton];
-            for (int i = 0; i < buttons.Length; i++) { recordPageBackend.ToggleButton(buttons[i], i > 1 && toggled); } // Making my code slightly unreadable in exchange for fewer lines 🔥🔥🔥
+            for (int i = 0; i < buttons.Length; i++)
+            {
+                recordPageBackend.ToggleButton(buttons[i], i > 1 && toggled);
+            }
         }
 
         private async void DownloadDependencies(object sender, RoutedEventArgs e)
@@ -295,11 +303,6 @@ namespace AudioReplacer.Pages
         {
             // Prevent audio from playing on other pages if the media player is left playing
             PauseMediaPlayer();
-        }
-
-        protected override void OnNavigatedTo(NavigationEventArgs e)
-        {
-            App.DiscordController.SetState("On Record Page");
         }
     }
 }

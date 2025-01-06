@@ -143,15 +143,6 @@ namespace AudioReplacer.Util
             { /*Another instance of an InfoBar crashing the app for no reason whatsoever*/ }
         }
 
-        public string BoolToString(bool? value, bool humanizeOutput = true)
-        {
-            return humanizeOutput switch
-            {
-                true => value != null && (bool) value ? "Yes" : "No",
-                false => value.ToString()
-            };
-        }
-
         public string GetWebVersion()
         {
             return webVersion != string.Empty ? webVersion : AppGeneric.GetAppVersion(); /* App version used as fallback when no internet is available*/

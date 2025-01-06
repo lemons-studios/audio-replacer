@@ -1,6 +1,5 @@
 ﻿using AudioReplacer.Generic;
 using DiscordRPC;
-using System.Threading.Tasks;
 
 namespace AudioReplacer.Util;
 
@@ -19,26 +18,18 @@ public class RichPresenceController
         smallImageText = initialSmallImageText;
 
         client = new DiscordRpcClient(clientId.ToString());
-        client.Initialize();
-
-        Task.Run(async () =>
-        {
-            while (true)
-            {
-                UpdateRPCStatus();
-                await Task.Delay(1000);
-            }
-        });
+        CreateRichPresence();
     }
 
-    private void UpdateRPCStatus()
+    private void CreateRichPresence()
     {
-        client.SetPresence(new RichPresence()
+        client.Initialize();
+        client.SetPresence(new RichPresence
         {
             State = state,
             Details = details,
             Timestamps = startTimestamp,
-            Assets = new Assets()
+            Assets = new Assets
             {
                 LargeImageKey = "appicon",
                 LargeImageText = $"Version {AppGeneric.GetAppVersion(true)}",
@@ -50,26 +41,53 @@ public class RichPresenceController
 
     public void SetState(string x)
     {
-        state = x;
+        client.UpdateState(x);
     }
 
     public void SetDetails(string x)
     {
-        details = x;
+        client.UpdateDetails(x);
     }
 
     public void SetSmallImage(string x)
     {
-        smallImage = x;
+        client.UpdateSmallAsset(key: x);
     }
 
     public void SetSmallImageText(string x)
     {
-        smallImageText = x;
+        client.UpdateSmallAsset(tooltip: x);
     }
 
-    public void DisposeRPC()
+    public void SetLargeImage(string x)
+    {
+        client.UpdateLargeAsset(key: x);
+    }
+
+    public void SetLargeImageText(string x)
+    {
+        client.UpdateLargeAsset(tooltip: x);
+    }
+
+    public void SetLargeAsset(string key, string tooltip)
+    {
+        SetLargeImage(key);
+        SetLargeImageText(tooltip);
+    }
+
+    public void SetSmallAsset(string key, string tooltip)
+    {
+        SetSmallImage(key);
+        SetSmallImageText(tooltip);
+    }
+
+    public void DisposeRpc()
     {
         client.Dispose();
+    }
+
+    public DiscordRpcClient GetRpcClient()
+    {
+        return client;
     }
 }

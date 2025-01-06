@@ -8,6 +8,8 @@ using Microsoft.UI.Xaml.Media;
 using System;
 using System.Diagnostics;
 using System.IO;
+using System.Threading.Tasks;
+using Microsoft.UI.Xaml.Navigation;
 
 namespace AudioReplacer.Pages
 {
@@ -28,32 +30,29 @@ namespace AudioReplacer.Pages
             UpdateCheckSwitch.IsOn = AppGeneric.UpdateChecksAllowed;
             ProjectMemorySwitch.IsOn = App.AppSettings.RememberSelectedFolder == 1;
             RandomizeInputSwitch.IsOn = AppGeneric.InputRandomizationEnabled;
-            FanfareToggle.IsOn = AppGeneric.EnableFanfare;
             ToastDelayBox.Value = AppGeneric.NotificationTimeout;
             StopDelayBox.Value = AppGeneric.RecordStopDelay;
+
+            App.DiscordController.SetDetails("Changing Settings");
         }
 
         private void ToggleUpdateChecks(object sender, RoutedEventArgs e)
         {
             AppGeneric.UpdateChecksAllowed = UpdateCheckSwitch.IsOn;
-            App.AppSettings.AppUpdateCheck = BoolToInt(UpdateCheckSwitch.IsOn);
+            App.AppSettings.AppUpdateCheck = AppGeneric.BoolToInt(UpdateCheckSwitch.IsOn);
         }
 
         private void ToggleTransparencyMode(object sender, SelectionChangedEventArgs e)
         {
-            switch (TransparencyDropdown.SelectedIndex)
+            if (TransparencyDropdown.SelectedIndex == 0 && MicaController.IsSupported())
             {
-                case 0: // Mica Backdrop
-                    if (MicaController.IsSupported()) App.MainWindow.SystemBackdrop = new MicaBackdrop();
-                    else
-                    {
-                        App.MainWindow.SystemBackdrop = new DesktopAcrylicBackdrop();
-                        TransparencyDropdown.SelectedIndex = 1; // If mica isn't supported, switch to acrylic
-                    }
-                    break;
-                case 1: // Desktop Acrylic Backdrop
-                    App.MainWindow.SystemBackdrop = new DesktopAcrylicBackdrop();
-                    break;
+                App.MainWindow.SystemBackdrop = new MicaBackdrop();
+            }
+            else
+            {
+                // If Mica isn't supported, switch to Acrylic
+                App.MainWindow.SystemBackdrop = new DesktopAcrylicBackdrop();
+                TransparencyDropdown.SelectedIndex = 1; 
             }
             App.AppSettings.AppTransparencySetting = TransparencyDropdown.SelectedIndex;
         }
@@ -65,37 +64,44 @@ namespace AudioReplacer.Pages
             App.AppSettings.AppThemeSetting = ThemeDropdown.SelectedIndex;
         }
 
-        private void UpdateDelayTimes(NumberBox sender, NumberBoxValueChangedEventArgs args)
+        private void UpdateRecordStopDelay(NumberBox sender, NumberBoxValueChangedEventArgs args)
         {
-            switch (sender == StopDelayBox)
-            {
-                case true:
-                    int newDelayTime = (int) MathF.Max((float) StopDelayBox.Value, 0);
-                    AppGeneric.RecordStopDelay = newDelayTime;
-                    App.AppSettings.RecordEndWaitTime = newDelayTime;
-                    break;
-                case false:
-                    int newStayTime = (int) MathF.Max((float) ToastDelayBox.Value, 500);
-                    AppGeneric.NotificationTimeout = newStayTime;
-                    App.AppSettings.NotificationTimeout = newStayTime;
-                    break;
-            }
+            var newDelayTime = (int) Math.Max(StopDelayBox.Value, 0);
+            AppGeneric.RecordStopDelay = newDelayTime;
+            App.AppSettings.RecordEndWaitTime = newDelayTime;
+        }
+
+        private void UpdateStartDelay(NumberBox sender, NumberBoxValueChangedEventArgs args)
+        {
+            var newDelayTime = (int) Math.Max(StartDelayBox.Value, 0);
+            AppGeneric.RecordStartDelay = newDelayTime;
+            App.AppSettings.RecordStartWaitTime = newDelayTime;
+        }
+
+        private void UpdateNotificationDelay(NumberBox sender, NumberBoxValueChangedEventArgs args)
+        {
+            var newTime = (int) Math.Max(ToastDelayBox.Value, 500);
+            AppGeneric.NotificationTimeout = newTime;
+            App.AppSettings.NotificationTimeout = newTime;
         }
 
         private async void RefreshPitchData(object sender, RoutedEventArgs e)
         {
             // Actually, it just restarts the application.
             var confirmRefresh = new ContentDialog { Title = "Refresh Pitch Values?", Content = "Please save any unsaved work before refreshing", PrimaryButtonText = "Refresh", CloseButtonText = "Cancel", XamlRoot = Content.XamlRoot };
-            var confirmResult = await confirmRefresh.ShowAsync();
-            if (confirmResult == ContentDialogResult.Primary) Microsoft.Windows.AppLifecycle.AppInstance.Restart("");
+            var result = await confirmRefresh.ShowAsync();
+
+            if (result == ContentDialogResult.Primary) 
+                AppGeneric.RestartApp();
         }
 
         private void OpenOutputFolder(object sender, RoutedEventArgs e)
         {
-            string outFolder = @$"{Environment.GetFolderPath(Environment.SpecialFolder.UserProfile)}\audio-replacer\out";
-            if (!Directory.Exists(outFolder)) Directory.CreateDirectory(outFolder); // The output folder could not exist if the user hasn't initialized a project for the first time
-            Process outFolderOpenProcess = ShellCommandManager.CreateProcess("explorer", outFolder);
-            outFolderOpenProcess.Start();
+            var outFolder = @$"{Environment.GetFolderPath(Environment.SpecialFolder.UserProfile)}\audio-replacer\out";
+            if (!Directory.Exists(outFolder)) 
+                Directory.CreateDirectory(outFolder); // The output folder may not exist if the user hasn't initialized a project for the first time
+
+            Task.Run(() => AppGeneric.SpawnProcess("explorer", outFolder));
         }
 
         private async void ResetCustomData(object sender, RoutedEventArgs e)
@@ -126,7 +132,7 @@ namespace AudioReplacer.Pages
                 string file = source.Equals("pitch") ? "PitchData.json" : "EffectData.json";
                 File.Delete(Path.Combine(configFolder, file));
             }
-            Microsoft.Windows.AppLifecycle.AppInstance.Restart("");
+            AppGeneric.RestartApp();
         }
 
         private async void OpenCustomDataFile(object sender, RoutedEventArgs e)
@@ -136,43 +142,33 @@ namespace AudioReplacer.Pages
             if (result == ContentDialogResult.None) return;
             try
             {
-                string file = result == ContentDialogResult.Secondary ? Path.Combine(configFolder, "EffectsData.json") : Path.Combine(configFolder, "PitchData.json");
-                var fileOpenProcess = ShellCommandManager.CreateProcess("cmd", $"/c start {file}", true, false, false, true);
-                fileOpenProcess.Start();
+                var file = result == ContentDialogResult.Secondary
+                    ? Path.Combine(configFolder, "EffectsData.json")
+                    : Path.Combine(configFolder, "PitchData.json");
+
+                await AppGeneric.SpawnProcess("cmd", $"/c start {file}");
             }
-            catch { return; }
+            catch
+            {
+                // No need to handle exception
+            }
         }
 
         private void ToggleFileRandomization(object sender, RoutedEventArgs e)
         {
             AppGeneric.InputRandomizationEnabled = RandomizeInputSwitch.IsOn;
-            App.AppSettings.InputRandomizationEnabled = BoolToInt(RandomizeInputSwitch.IsOn);
+            App.AppSettings.InputRandomizationEnabled = AppGeneric.BoolToInt(RandomizeInputSwitch.IsOn);
         }
 
         private void ToggleFolderMemory(object sender, RoutedEventArgs e)
         {
-            App.AppSettings.RememberSelectedFolder = BoolToInt(ProjectMemorySwitch.IsOn);
+            App.AppSettings.RememberSelectedFolder = AppGeneric.BoolToInt(ProjectMemorySwitch.IsOn);
         }
 
         private void ToggleAdditionalDetails(object sender, RoutedEventArgs e)
         {
             AppGeneric.ShowAudioEffectDetails = ShowAdditionalDetailsSwitch.IsOn;
-            App.AppSettings.ShowEffectSelection = BoolToInt(ShowAdditionalDetailsSwitch.IsOn);
-        }
-
-        private void ToggleFanfare(object sender, RoutedEventArgs e)
-        {
-            AppGeneric.EnableFanfare = FanfareToggle.IsOn;
-            App.AppSettings.EnableFanfare = BoolToInt(FanfareToggle.IsOn);
-        }
-
-        private int BoolToInt(bool value) { return value == false ? 0 : 1; }
-
-        private void UpdateStartDelay(NumberBox sender, NumberBoxValueChangedEventArgs args)
-        {
-            int newDelayTime = (int) MathF.Max((float) StartDelayBox.Value, 0);
-            AppGeneric.RecordStartDelay = newDelayTime;
-            App.AppSettings.RecordStartWaitTime = newDelayTime;
+            App.AppSettings.ShowEffectSelection = AppGeneric.BoolToInt(ShowAdditionalDetailsSwitch.IsOn);
         }
     }
 }

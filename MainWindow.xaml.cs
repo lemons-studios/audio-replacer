@@ -69,9 +69,6 @@ namespace AudioReplacer
             }
 
             ContentFrame.Content = page;
-
-            // Initialize discord rich presence
-            
         }
 
         private AppWindow GetAppWindowForCurrentWindow(object window) // Thanks StackOverflow man!
@@ -114,8 +111,8 @@ namespace AudioReplacer
 
         private void OnWindowClose(object sender, AppWindowClosingEventArgs args)
         {
-            if (ProjectInitialized && (IsProcessing || IsRecording))
-                File.Delete(CurrentFile);
+            if (ProjectInitialized && (IsProcessing || IsRecording)) File.Delete(CurrentFile);
+            App.DiscordController.DisposeRpc();
         }
 
         private void ChangeProjectFolder(object sender, RoutedEventArgs e)

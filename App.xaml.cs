@@ -3,6 +3,7 @@ using AudioReplacer.Util;
 using Config.Net;
 using Microsoft.UI.Xaml;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Text.Json;
 
@@ -28,16 +29,47 @@ namespace AudioReplacer
             AppSettings = new ConfigurationBuilder<IAppSettings>().UseJsonFile(settingsFilePath).Build();
 
             SetGlobalData();
-            DiscordController = new RichPresenceController(1325340097234866297, "On Record Page", "No Project Loaded", "idle", "idle");
+            DiscordController = new RichPresenceController(1325340097234866297, "On Record Page", "No Project Loaded", "idle", "Idle");
             InitializeComponent();
         }
 
         private void CreateSettingsData()
         {
             if (!Directory.Exists(directoryPath)) Directory.CreateDirectory(directoryPath);
-            if (File.Exists(settingsFilePath)) return;
+            if (File.Exists(settingsFilePath))
+            {
+                // Load existing settings
+                var existingConfig = JsonSerializer.Deserialize<Dictionary<string, object>>(File.ReadAllText(settingsFilePath));
+                var defaultConfig = new Dictionary<string, object>
+                {
+                    { "Theme", 0 },
+                    { "TransparencyEffect", 0 },
+                    { "EnableUpdateChecks", 1 },
+                    { "RecordEndWaitTime", 0 },
+                    { "NotificationTimeout", 1750 },
+                    { "RememberSelectedFolder", 1 },
+                    { "LastSelectedFolder", "" },
+                    { "InputRandomizationEnabled", 0 },
+                    { "ShowEffectSelection", 0 },
+                    { "EnableFanfare", 0 },
+                    { "RecordStartWaitTime", 25 }
+                };
 
-            var defaultConfig = new
+                // Merge existing settings with default settings
+                foreach (var key in defaultConfig.Keys)
+                {
+                    if (!existingConfig.ContainsKey(key))
+                    {
+                        existingConfig[key] = defaultConfig[key];
+                    }
+                }
+
+                string updatedJson = JsonSerializer.Serialize(existingConfig, new JsonSerializerOptions { WriteIndented = true });
+                File.WriteAllText(settingsFilePath, updatedJson);
+                return;
+            }
+
+            var newConfig = new
             {
                 Theme = 0,
                 TransparencyEffect = 0,
@@ -51,8 +83,8 @@ namespace AudioReplacer
                 EnableFanfare = 0,
                 RecordStartWaitTime = 25
             };
-            string defaultJson = JsonSerializer.Serialize(defaultConfig, new JsonSerializerOptions { WriteIndented = true });
-            File.WriteAllText(settingsFilePath, defaultJson); // File gets created automatically by File.WriteAllText() before it writes to anything
+            string defaultJson = JsonSerializer.Serialize(newConfig, new JsonSerializerOptions { WriteIndented = true });
+            File.WriteAllText(settingsFilePath, defaultJson);
         }
 
         private void CreateJsonData()
@@ -74,7 +106,6 @@ namespace AudioReplacer
             AppGeneric.UpdateChecksAllowed = AppSettings.AppUpdateCheck == 1;
             AppGeneric.InputRandomizationEnabled = AppSettings.InputRandomizationEnabled == 1;
             AppGeneric.ShowAudioEffectDetails = AppSettings.ShowEffectSelection == 1;
-            AppGeneric.EnableFanfare = AppSettings.EnableFanfare == 1;
             AppGeneric.NotificationTimeout = AppSettings.NotificationTimeout;
             AppGeneric.RecordStopDelay = AppSettings.RecordEndWaitTime;
             AppGeneric.RecordStartDelay = AppSettings.RecordStartWaitTime;

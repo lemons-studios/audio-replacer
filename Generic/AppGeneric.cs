@@ -1,4 +1,5 @@
 ﻿using Microsoft.UI.Windowing;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Diagnostics;
 using System.Threading.Tasks;
@@ -22,19 +23,6 @@ namespace AudioReplacer.Generic
             return forceBuildNumber || appVersion.Build != 0 ? $"{version}.{appVersion.Build}" : version;
         }
 
-        // Microsoft genuinely amazes me. Folder pickers and File Open/Save pickers are all separate classes that inherit from object. No base "Picker" class or anything. Are they stupid or something?
-        // My programming skills look like genuine genius when compared with the multi-trillion dollar company sometimes and that SAYS SOMETHING
-        public static T CreateFolderPicker<T>(PickerLocationId startLoc, string fileTypeFiler) where T : class, new()
-        {
-            if (typeof(T) != typeof(FolderPicker) || typeof(T) != typeof(FileOpenPicker))
-                throw new InvalidOperationException("This method only supports FolderPicker and FileOpenPicker");
-
-            dynamic picker = new T();
-            picker.SuggestedStartLocation = PickerLocationId.Desktop;
-            picker.FileTypeFilter.Add(fileTypeFiler);
-            return picker as T;
-        }
-
         public static bool IntToBool(int x)
         {
             // Any value aside from 1 is treated as false. This is intentional
@@ -51,7 +39,7 @@ namespace AudioReplacer.Generic
         {
             return naturalLanguageOutput switch
             {
-                true => x ? "yes" : "no",
+                true => x ? "Yes" : "No",
                 false => x.ToString()
             };
         }
@@ -85,7 +73,7 @@ namespace AudioReplacer.Generic
 
         public static void RestartApp()
         {
-            AppInstance.Restart("Forced Restart");
+            AppInstance.Restart("");
         }
     }
 }
