@@ -1,31 +1,57 @@
-<?xml version="1.0" encoding="utf-8"?>
-<ex:WindowEx
+<?xml version="1.0" encoding="utf-8" ?>
+
+<WinUiEx:WindowEx
     x:Class="AudioReplacer.MainWindow"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:Models="using:AudioReplacer.ViewModels"
+    xmlns:WinUiEx="using:WinUIEx"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:ex="using:WinUIEx"
-    mc:Ignorable="d"
-    MinHeight="485" MaxHeight="485"
-    MinWidth="1024" MaxWidth="1024">
+    Title="Audio Replacer"
+    Width="1024"
+    Height="485"
+    MinWidth="1024"
+    MinHeight="485"
+    mc:Ignorable="d">
+
     <StackPanel>
-        <Border x:Name="AppTitleBar" VerticalAlignment="Top" Height="55" Padding="5" BorderThickness="5">
+        <StackPanel.DataContext>
+            <Models:MainWindowViewModel />
+        </StackPanel.DataContext>
+        <Border
+            x:Name="AppTitleBar"
+            Height="55"
+            Padding="5"
+            VerticalAlignment="Top"
+            BorderThickness="5">
             <Grid ColumnDefinitions="Auto, *">
-                <FontIcon Glyph="&#xEC71;" Style="{StaticResource TitleBarIcon}"/>
-                <StackPanel Orientation="Horizontal" Grid.Column="1">
-                    <TextBlock x:Name="AppTitleText" Style="{StaticResource TitleBarText}" Text="Audio Replacer" />
-                    <Button x:Name="ProjectFolderButton" Content="Change Project Folder" Width="155" Height="35" Click="ChangeProjectFolder" Margin="35 0 0 0" FontSize="13" CornerRadius="4"/>
-                    <MediaPlayerElement x:Name="SoundEffects" AutoPlay="True" Width="0" Height="0" Visibility="Visible" AreTransportControlsEnabled="False"/>
+                <FontIcon Glyph="&#xEC71;" Style="{StaticResource TitleBarIcon}" />
+                <StackPanel Grid.Column="1" Orientation="Horizontal">
+                    <TextBlock Style="{StaticResource TitleBarText}" Text="{Binding AppTitle}" />
+                    <AppBarButton
+                        x:Name="FolderChanger"
+                        Width="145"
+                        Height="45"
+                        Margin="35,0,0,0"
+                        VerticalAlignment="Center"
+                        HorizontalContentAlignment="Center"
+                        VerticalContentAlignment="Center"
+                        Background="{ThemeResource ControlFillColorSecondaryBrush}"
+                        Command="{Binding ChangeProjectFolderCommand}"
+                        Content="{Binding TempButtonTesting}"
+                        CornerRadius="4"
+                        FontSize="17"
+                        FontWeight="Medium" />
                 </StackPanel>
             </Grid>
         </Border>
 
-        <NavigationView Style="{StaticResource PageNavigation}" ItemInvoked="SwitchPageContent">
+        <NavigationView ItemInvoked="Navigate" Style="{StaticResource PageNavigation}">
             <NavigationView.MenuItems>
                 <NavigationViewItem Tag="Record">
                     <NavigationViewItem.Content>
-                        <TextBlock Text="Record" FontWeight="Light"/>
+                        <TextBlock FontWeight="Light" Text="Record" />
                     </NavigationViewItem.Content>
                     <NavigationViewItem.Icon>
                         <FontIcon Glyph="&#xE720;" />
@@ -33,28 +59,102 @@
                 </NavigationViewItem>
                 <NavigationViewItem Tag="Data Editor">
                     <NavigationViewItem.Content>
-                        <TextBlock Text="Data Editor" FontWeight="Light"/>
+                        <TextBlock FontWeight="Light" Text="Data Editor" />
                     </NavigationViewItem.Content>
                     <NavigationViewItem.Icon>
                         <FontIcon Glyph="&#xE70F;" />
                     </NavigationViewItem.Icon>
                 </NavigationViewItem>
+                <NavigationViewItem Tag="Update Logs">
+                    <NavigationViewItem.Content>
+                        <TextBlock FontWeight="Light" Text="Update Logs" />
+                    </NavigationViewItem.Content>
+                    <NavigationViewItem.Icon>
+                        <FontIcon Glyph="&#xEB41;" />
+                    </NavigationViewItem.Icon>
+                </NavigationViewItem>
                 <NavigationViewItem Tag="Settings">
                     <NavigationViewItem.Content>
-                        <TextBlock Text="Settings" FontWeight="Light"/>
+                        <TextBlock FontWeight="Light" Text="Settings" />
                     </NavigationViewItem.Content>
                     <NavigationViewItem.Icon>
                         <FontIcon Glyph="&#xE713;" />
                     </NavigationViewItem.Icon>
                 </NavigationViewItem>
             </NavigationView.MenuItems>
-            <Frame x:Name="ContentFrame">
+            <Frame x:Name="MainFrame">
                 <Frame.ContentTransitions>
                     <TransitionCollection>
-                        <EntranceThemeTransition/>
+                        <EntranceThemeTransition />
                     </TransitionCollection>
                 </Frame.ContentTransitions>
             </Frame>
         </NavigationView>
+
+        <InfoBar Severity="Success" Style="{StaticResource ToastNotification}">
+            <InfoBar.Transitions>
+                <PopupThemeTransition />
+            </InfoBar.Transitions>
+        </InfoBar>
+
+        <InfoBar Severity="Error" Style="{StaticResource ToastNotification}">
+            <InfoBar.Transitions>
+                <PopupThemeTransition />
+            </InfoBar.Transitions>
+        </InfoBar>
+
+        <InfoBar
+            Title="Update Available"
+            Background="{ThemeResource SystemFillColorCriticalBackgroundBrush}"
+            Severity="Informational"
+            Style="{StaticResource ToastNotification}">
+            <InfoBar.IconSource>
+                <FontIconSource Glyph="&#xECC5;" />
+            </InfoBar.IconSource>
+            <InfoBar.ActionButton>
+                <Button
+                    Command="{Binding OpenGitHubCommand}"
+                    Content="View Update Details"
+                    CornerRadius="4" />
+            </InfoBar.ActionButton>
+            <InfoBar.Transitions>
+                <PopupThemeTransition />
+            </InfoBar.Transitions>
+        </InfoBar>
+
+        <InfoBar
+            Title="Error"
+            Background="{ThemeResource SystemFillColorCriticalBackgroundBrush}"
+            IsClosable="False"
+            IsOpen="False"
+            Message="Required Dependencies Not Installed"
+            Severity="Error"
+            Style="{StaticResource ToastNotification}">
+            <InfoBar.ActionButton>
+                <Button
+                    Command="{Binding DownloadDependenciesCommand}"
+                    Content="Download Dependencies"
+                    CornerRadius="4" />
+            </InfoBar.ActionButton>
+            <InfoBar.Transitions>
+                <PopupThemeTransition />
+            </InfoBar.Transitions>
+        </InfoBar>
+
+        <InfoBar
+            Background="{ThemeResource SystemFillColorSolidAttentionBackgroundBrush}"
+            IsClosable="False"
+            Severity="Informational"
+            Style="{StaticResource ToastNotification}">
+            <InfoBar.Content>
+                <ProgressBar
+                    MaxWidth="500"
+                    Margin="0,0,0,6"
+                    IsIndeterminate="True" />
+            </InfoBar.Content>
+            <InfoBar.Transitions>
+                <PopupThemeTransition />
+            </InfoBar.Transitions>
+        </InfoBar>
     </StackPanel>
-</ex:WindowEx>
+</WinUiEx:WindowEx>

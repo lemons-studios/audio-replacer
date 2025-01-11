@@ -9,7 +9,15 @@ namespace AudioReplacer.Util
 {
     public class WebRequest
     {
-        private readonly HttpClient client = new() { DefaultRequestHeaders = { { "User-Agent", "Audio Replacer 2" } } };
+        private readonly HttpClient client = new() 
+        { 
+            DefaultRequestHeaders =
+        {
+            {
+                "User-Agent", "Audio Replacer"
+            }
+        }
+        };
 
         public async Task<string> GetWebVersion(string url)
         {
@@ -50,7 +58,6 @@ namespace AudioReplacer.Util
 
         public void DownloadFile(string url, string outPath, string outName)
         {
-            // Fix AggregateException
             try
             {
                 using var webStream = client.GetStreamAsync(url);

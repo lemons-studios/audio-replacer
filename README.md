@@ -27,12 +27,17 @@ To add the certificate properly, perform the following steps:
 
 ## How to Develop:
 If you want to develop for this application, you'll need a few things:
-- FFMpeg installed on your system
-- [Visual Studio 2022](https://visualstudio.microsoft.com/vs/) with the Windows Application Development and the .NET desktop development workloads with the Windows App SDK C# Templates optional component (Roughly 1-2GB required to install everything)
+- [FFMpeg](https://ffmpeg.org) installed on your system
+- [Visual Studio 2022](https://visualstudio.microsoft.com/vs/) with the following components/workloads
+     - Windows Application Development workload
+     - .NET desktop development workload
+     - Windows App SDK C# Templates component
+     - Windows 11 SDK (10.0.22621.0) component
+- [.NET SDK 9.0](https://dotnet.microsoft.com/en-us/download)
 
 Once the software needed for development are both installed, you can clone the repository:
 ```sh
-git clone https://github.com/lemons-studios/audio-replacer-2.git
+git clone https://github.com/lemons-studios/audio-replacer.git
 ```
 If you plan on contributing back to the project, replace the above clone command with whatever the address is for the fork you created!
 

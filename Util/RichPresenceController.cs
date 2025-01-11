@@ -1,5 +1,4 @@
-﻿using AudioReplacer.Generic;
-using DiscordRPC;
+﻿using DiscordRPC;
 
 namespace AudioReplacer.Util;
 
@@ -32,7 +31,7 @@ public class RichPresenceController
             Assets = new Assets
             {
                 LargeImageKey = "appicon",
-                LargeImageText = $"Version {AppGeneric.GetAppVersion(true)}",
+                LargeImageText = "Version 4.0",
                 SmallImageKey = smallImage,
                 SmallImageText = smallImageText
             }

@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Page
+    x:Class="AudioReplacer.Views.DataEditor"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:DataEditor="using:WinUIEditor"
+    xmlns:Models="using:AudioReplacer.ViewModels"
+    xmlns:ToolkitControls="using:CommunityToolkit.WinUI.Controls"
+    xmlns:ToolkitUi="using:CommunityToolkit.WinUI"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+    <Page.DataContext>
+        <Models:DataEditorViewModel />
+    </Page.DataContext>
+    <StackPanel Height="500" Padding="5.5,0">
+        <ToolkitControls:TabbedCommandBar>
+            <ToolkitControls:TabbedCommandBar.MenuItems>
+                <ToolkitControls:TabbedCommandBarItem Header="File">
+                    <AppBarButton
+                        Click="ReloadChanges"
+                        Icon="{ToolkitUi:FontIcon Glyph=&#xE74E;}"
+                        Label="Save" />
+                    <AppBarButton
+                        Click="ImportFile"
+                        Icon="{ToolkitUi:FontIcon Glyph=&#xEA52;}"
+                        Label="Import" />
+                    <AppBarSeparator />
+                    <AppBarButton
+                        Command="{Binding OpenHelpPageCommand}"
+                        Icon="{ToolkitUi:FontIcon Glyph=&#xE897;}"
+                        Label="Help" />
+                    <AppBarElementContainer>
+                        <ComboBox
+                            x:Name="SelectedFile"
+                            MinWidth="200"
+                            Margin="5,0,0,0"
+                            CornerRadius="4"
+                            SelectedIndex="0"
+                            SelectionChanged="UpdateEditingFile">
+                            <ComboBoxItem Content="Pitch Data" />
+                            <ComboBoxItem Content="Effects Data" />
+                        </ComboBox>
+                    </AppBarElementContainer>
+                </ToolkitControls:TabbedCommandBarItem>
+
+                <ToolkitControls:TabbedCommandBarItem Header="Edit">
+                    <AppBarButton
+                        Click="Undo"
+                        Icon="{ToolkitUi:FontIcon Glyph=&#xE7A7;}"
+                        Label="Undo" />
+                    <AppBarButton
+                        Click="Redo"
+                        Icon="{ToolkitUi:FontIcon Glyph=&#xE7A6;}"
+                        Label="Redo" />
+                    <AppBarButton
+                        Click="DiscardChanges"
+                        Icon="{ToolkitUi:FontIcon Glyph=&#xE845;}"
+                        Label="Revert" />
+                    <AppBarSeparator />
+                    <AppBarButton
+                        Click="FormatData"
+                        Icon="{ToolkitUi:FontIcon Glyph=&#xE8CB;}"
+                        Label="Format" />
+                </ToolkitControls:TabbedCommandBarItem>
+            </ToolkitControls:TabbedCommandBar.MenuItems>
+        </ToolkitControls:TabbedCommandBar>
+        <DataEditor:CodeEditorControl
+            x:Name="CustomDataEditor"
+            Height="280"
+            HighlightingLanguage="json" />
+
+    </StackPanel>
+</Page>

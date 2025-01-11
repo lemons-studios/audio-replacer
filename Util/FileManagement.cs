@@ -1,23 +1,18 @@
-﻿using AudioReplacer.Generic;
-using System;
+﻿using System;
 using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
-using Windows.Storage;
 
 namespace AudioReplacer.Util
 {
     public class FileManagement
     {
         private string currentFile, truncatedCurrentFile, currentOutFile, currentFileName, directoryName;
-        private readonly string outputFolderPath, projectPath;
+        private string outputFolderPath, projectPath;
 
-        private readonly string rootDataDirectoryPath = @$"{Environment.GetFolderPath(Environment.SpecialFolder.UserProfile)}";
-
-        public FileManagement(string path)
+        public void SetFilesSource(string path)
         {
             projectPath = path;
-            outputFolderPath = @$"{rootDataDirectoryPath}\audio-replacer\out\{TruncateDirectory(path, 1)}";
+            outputFolderPath = Path.Combine(Generic.extraApplicationData, "out", TruncateDirectory(path, 1));
             CreateInitialData();
             SetCurrentFile();
         }
@@ -28,31 +23,36 @@ namespace AudioReplacer.Util
             currentFile = GetNextAudioFile(projectPath);
             truncatedCurrentFile = currentFile == "" ? "YOU ARE DONE!!!" : TruncateDirectory(currentFile, 2);
 
-            currentOutFile = $"{outputFolderPath}\\{truncatedCurrentFile}";
+            currentOutFile = Path.Combine(outputFolderPath, truncatedCurrentFile);
             currentFileName = TruncateDirectory(currentFile, 1);
-            directoryName = truncatedCurrentFile.Split("\\")[0];
+            directoryName = Path.GetDirectoryName(truncatedCurrentFile);
         }
 
         private void CreateInitialData()
         {
+            string setupIgnore = Path.Combine(outputFolderPath, ".setupIgnore");
+
             string[] inFolderStructure = GetPathSubdirectories(projectPath);
             if (!DoesDirectoryExist(outputFolderPath)) CreateDirectory(outputFolderPath);
-            if (inFolderStructure == GetPathSubdirectories(outputFolderPath) || File.Exists($"{outputFolderPath}\\.setupIgnore")) return;
+            if (inFolderStructure == GetPathSubdirectories(outputFolderPath) || File.Exists(setupIgnore)) return;
 
             string[] subdirectoryNames = TruncateSubdirectories(inFolderStructure);
             for (int i = 0; i < inFolderStructure.Length; i++) { CreateDirectory($"{outputFolderPath}\\{subdirectoryNames[i]}"); }
-            File.WriteAllText($"{outputFolderPath}\\.setupIgnore", "This file is here to tell AudioReplacer2 to ignore this folder when launching.\nDo not delete this unless starting a new project");
+            File.WriteAllText(setupIgnore, "This file is here to tell AudioReplacer2 to ignore this folder when launching.\nDo not delete this unless starting a new project");
         }
 
-        private string TruncateDirectory(string inputPath, int dirLevels, string delimiter = "\\")
+        private string TruncateDirectory(string inputPath, int dirLevels)
         {
-            if (string.IsNullOrEmpty(inputPath) || string.IsNullOrEmpty(delimiter) || dirLevels <= 0) return inputPath;
+            if (string.IsNullOrEmpty(inputPath) || dirLevels <= 0) return inputPath;
 
-            string[] splitDir = inputPath.Split(delimiter);
+            // Normalize the path to ensure consistent directory separators
+            inputPath = Path.GetFullPath(inputPath);
+            string[] splitDir = inputPath.Split(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
+
             if (dirLevels > splitDir.Length) dirLevels = splitDir.Length;
 
             var truncatedDir = splitDir[^dirLevels..];
-            return string.Join(delimiter, truncatedDir);
+            return Path.Combine(truncatedDir);
         }
 
         public int GetFileCount(string path)
@@ -66,18 +66,19 @@ namespace AudioReplacer.Util
             var audioFiles = Directory.GetFiles(path, "*.*", SearchOption.AllDirectories).Where(IsAudioFile).ToList();
 
             // If there are no audio files, return nothing
-            if (!audioFiles.Any()) return string.Empty;
+            if (audioFiles.Count == 0) return string.Empty;
 
             // Pick a random audio file if input file randomization is enabled
-            if (AppGeneric.InputRandomizationEnabled)
+            switch (App.AppSettings.InputRandomizationEnabled)
             {
-                var rng = new Random();
-                int randomFileIndex = rng.Next(audioFiles.Count);
-                return audioFiles[randomFileIndex];
+                case 1:
+                    var rng = new Random();
+                    var randomFileIndex = rng.Next(audioFiles.Count);
+                    return audioFiles[randomFileIndex];
+                default:
+                    // Return the first audio file (if input is not randomized)
+                    return audioFiles.First();
             }
-
-            // Return the first audio file (if input is not randomized)
-            return audioFiles.First();
         }
 
         public float CalculatePercentageComplete()
@@ -101,8 +102,16 @@ namespace AudioReplacer.Util
 
         private bool IsAudioFile(string path)
         {
-            string[] supportedFileTypes = [".mp3", ".wav", ".wma", ".aac", ".m4a", ".flac", ".ogg", ".amr", ".aiff", ".3gp", ".asf", ".pcm"]; // This should be a good enough list. Most people will have either wav or mp3 anyway (maybe flac or ogg but that's really it)
-            return supportedFileTypes.Any(fileType => path.EndsWith(fileType, StringComparison.OrdinalIgnoreCase));
+            try
+            {
+                var file = TagLib.File.Create(path);
+                return file.Properties.MediaTypes.HasFlag(TagLib.MediaTypes.Audio);
+            }
+            catch
+            {
+                // Just in case....
+                return false;
+            }
         }
 
         // Another go at my yummy code minification
@@ -121,19 +130,9 @@ namespace AudioReplacer.Util
             return truncated ? truncatedCurrentFile : currentFile;
         }
 
-        public async Task<StorageFolder> GetDirectoryAsStorageFolder()
-        {
-            return await StorageFolder.GetFolderFromPathAsync($"{outputFolderPath}\\{directoryName}");
-        }
-
         public string GetOutFolderStructure()
         {
-            return @$"{outputFolderPath}\{directoryName}";
-        }
-
-        public string GetRootFolderPath()
-        {
-            return rootDataDirectoryPath;
+            return Path.Combine(outputFolderPath, directoryName);
         }
 
         public string GetOutFilePath()

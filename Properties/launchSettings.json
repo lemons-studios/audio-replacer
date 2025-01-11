@@ -1,7 +1,7 @@
 {
   "profiles": {
     "Audio Replacer": {
-      "commandName": "MsixPackage"
+      "commandName": "Project"
     }
   }
 }
