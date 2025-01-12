@@ -38,7 +38,7 @@
                         HorizontalContentAlignment="Center"
                         VerticalContentAlignment="Center"
                         Background="{ThemeResource ControlFillColorSecondaryBrush}"
-                        Command="{Binding ChangeProjectFolderCommand}"
+                        Click="ChangeProjectFolder"
                         Content="{Binding TempButtonTesting}"
                         CornerRadius="4"
                         FontSize="17"

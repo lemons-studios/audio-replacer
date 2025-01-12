@@ -18,25 +18,29 @@ public partial class RecordPageViewModel : ObservableObject
     [ObservableProperty] private string mainFileHeader =
         App.AppSettings.LastSelectedFolder == string.Empty || App.AppSettings.RememberSelectedFolder == 0
             ? "Select a folder to begin"
-            : Generic.fileManagement.GetCurrentFile();
+            : ProjectFileUtils.GetCurrentFile();
+
+    public RecordPageViewModel()
+    {
+
+    }
 
 
     private readonly AudioRecordingUtils audioRecordingUtils = new();
-
     private void SwitchStates()
     {
         (IsIdle, IsRecording, IsReviewing) =
             IsIdle ? (false, true, false) : IsRecording ? (false, false, true) : (true, false, false);
 
         MainFileHeader = IsReviewing || IsRecording
-            ? Generic.fileManagement.GetCurrentFile()
+            ? ProjectFileUtils.GetCurrentFile()
             : "Review Your Changes";
     }
 
     [RelayCommand]
     private async Task StartRecord()
     {
-        if (Generic.projectLoaded)
+        if (ProjectFileUtils.IsProjectLoaded)
         {
             SwitchStates();
             await audioRecordingUtils.StartRecordingAudio();

@@ -9,17 +9,15 @@ namespace AudioReplacer.Util;
 
 public class Generic
 {
-    public static FileManagement fileManagement = new();
-
     public static string extraApplicationData = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "audio-replacer");
     public static string configPath = Path.Combine(extraApplicationData, "config");
-    public static bool projectLoaded = false;
     public static bool isAppLoaded = false;
     public static string SettingsFile = Path.Combine(configPath, "AppSettings.json");
     public static string PitchDataFile = Path.Combine(configPath, "PitchData.json");
     public static string EffectsDataFile = Path.Combine(configPath, "EffectsData.json");
     public static string[][] PitchData;
     public static string[][] EffectData;
+    public static bool InRecordState;
 
     public static List<string> pitchMenuTitles, effectMenuTitles, effectMenuValues;
     public static List<float> pitchValues;
@@ -66,9 +64,10 @@ public class Generic
         }
     }
 
-    public static void SetProject(string path)
+    public static int GenerateRandomNumber(int min, int max)
     {
-        fileManagement.SetFilesSource(path);
+        var rng = new Random((int) DateTime.Now.Ticks);
+        return rng.Next(min, max);
     }
 
     public static void OpenUrl(string url)
@@ -108,7 +107,5 @@ public class Generic
             return 1;
         }
     }
-
-
 }
 

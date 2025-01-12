@@ -5,12 +5,18 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
+using Microsoft.UI.Windowing;
 using Velopack;
+using Microsoft.UI;
+using System;
+using System.Threading.Tasks;
+using WinRT.Interop;
 
 namespace AudioReplacer
 {
     public partial class App // I will admit, code-behind is still pretty useful here. Mvvm would overcomplicate things. While this is messier, it gets the job done
     {
+        public static AppWindow AppWindow;
         public static MainWindow MainWindow { get; private set; }
         public static IAppSettings AppSettings { get; private set; }
         public static RichPresenceController DiscordController;
@@ -109,6 +115,14 @@ namespace AudioReplacer
             MainWindow = new MainWindow();
             MainWindow.Activate();
             Generic.isAppLoaded = true;
+            Task.Run(AppUpdater.AreUpdatesAvailable);
+        }
+
+        public static AppWindow GetAppWindowForCurrentWindow(object window) // Thanks StackOverflow man!
+        {
+            IntPtr hWnd = WindowNative.GetWindowHandle(window);
+            var currentWndId = Win32Interop.GetWindowIdFromWindow(hWnd);
+            return AppWindow.GetFromWindowId(currentWndId);
         }
     }
 }

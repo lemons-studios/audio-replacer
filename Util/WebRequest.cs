@@ -9,7 +9,7 @@ namespace AudioReplacer.Util
 {
     public class WebRequest
     {
-        private readonly HttpClient client = new() 
+        private static readonly HttpClient WebClient = new() 
         { 
             DefaultRequestHeaders =
         {
@@ -19,11 +19,11 @@ namespace AudioReplacer.Util
         }
         };
 
-        public async Task<string> GetWebVersion(string url)
+        public static async Task<string> GetWebVersion(string url)
         {
             try
             {
-                var apiResponse = await client.GetAsync(url);
+                var apiResponse = await WebClient.GetAsync(url);
                 if (!apiResponse.IsSuccessStatusCode) throw new Exception($"API responded with status code {apiResponse.StatusCode}");
                 string responseData = await apiResponse.Content.ReadAsStringAsync();
 
@@ -44,7 +44,7 @@ namespace AudioReplacer.Util
             }
         }
 
-        public async Task<string> GetWebData(string url) // I sure do love stealing my own code!!
+        public static async Task<string> GetWebData(string url) // I sure do love stealing my own code!!
         {
             using HttpClient httpClient = new HttpClient();
             try
@@ -56,11 +56,11 @@ namespace AudioReplacer.Util
             catch (HttpRequestException) { return string.Empty; }
         }
 
-        public void DownloadFile(string url, string outPath, string outName)
+        public static void DownloadFile(string url, string outPath, string outName)
         {
             try
             {
-                using var webStream = client.GetStreamAsync(url);
+                using var webStream = WebClient.GetStreamAsync(url);
                 using var fileStream = new FileStream($"{outPath}\\{outName}", FileMode.OpenOrCreate);
                 webStream.Result.CopyTo(fileStream);
             }

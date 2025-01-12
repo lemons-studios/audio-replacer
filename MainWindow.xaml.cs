@@ -1,9 +1,13 @@
+using AudioReplacer.Util;
 using AudioReplacer.Views;
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
 using System;
 using System.Collections.Generic;
 using TitleBarDrag;
+using Windows.Storage.Pickers;
+using WinRT.Interop;
 
 namespace AudioReplacer
 {
@@ -14,6 +18,7 @@ namespace AudioReplacer
         public MainWindow()
         {
             InitializeComponent();
+            App.AppWindow = App.GetAppWindowForCurrentWindow(this);
             ExtendsContentIntoTitleBar = true;
             SetTitleBar(AppTitleBar);
 
@@ -25,19 +30,33 @@ namespace AudioReplacer
             // Sure, the package may only have 160ish downloads, but it abstracts the Microsoft way of making the code very nicely
             var dragRegions = new DragRegions(this, AppTitleBar)
             {
-                NonDragElements = [FolderChanger]
+                NonDragElements = [ FolderChanger ]
             };
+
+            string lastSelectedFolder = App.AppSettings.LastSelectedFolder;
+            if (App.AppSettings.RememberSelectedFolder == 1 && lastSelectedFolder != string.Empty)
+            {
+                ProjectFileUtils.SetProjectData(App.AppSettings.LastSelectedFolder);
+            }
         }
 
-        public void FolderPickerHelper()
+        private async void ChangeProjectFolder(object sender, RoutedEventArgs e)
         {
-            var switchType = typeof(RecordPage);
-            if (!pageCache.TryGetValue(switchType, out var page))
+            var folderPicker = new FolderPicker { FileTypeFilter = { "*" } };
+            InitializeWithWindow.Initialize(folderPicker, WindowNative.GetWindowHandle(this));
+            var folder = await folderPicker.PickSingleFolderAsync();
+            if (folder != null && !string.IsNullOrEmpty(folder.Path))
             {
-                page = (Page) Activator.CreateInstance(switchType);
-                pageCache[switchType] = page;
+                string folderPath = folder.Path;
+                if (Generic.IntToBool(App.AppSettings.RememberSelectedFolder))
+                    App.AppSettings.LastSelectedFolder = folderPath;
+                ProjectFileUtils.SetProjectData(folderPath);
             }
-            MainFrame.Content = page;
+        }
+
+        public void DisableFolderChanger()
+        {
+            FolderChanger.IsEnabled = false;
         }
 
         private void Navigate(NavigationView sender, NavigationViewItemInvokedEventArgs args)
@@ -57,7 +76,7 @@ namespace AudioReplacer
 
             if (!pageCache.TryGetValue(pageSwitchType, out var page))
             {
-                page = (Page) Activator.CreateInstance(pageSwitchType);
+                page = (Page)Activator.CreateInstance(pageSwitchType);
                 pageCache[pageSwitchType] = page;
             }
             MainFrame.Content = page;

@@ -104,6 +104,7 @@ public partial class SettingsViewModel : ObservableObject
     {
         if (!Generic.isAppLoaded) return;
         File.Delete(Generic.SettingsFile);
+        Generic.RestartApp();
     }
 
     [RelayCommand]
@@ -111,6 +112,7 @@ public partial class SettingsViewModel : ObservableObject
     {
         if (!Generic.isAppLoaded) return;
         File.Delete(Generic.PitchDataFile);
+        Generic.RestartApp();
     }
 
     [RelayCommand]
@@ -118,6 +120,7 @@ public partial class SettingsViewModel : ObservableObject
     {
         if (!Generic.isAppLoaded) return;
         File.Delete(Generic.EffectsDataFile);
+        Generic.RestartApp();
     }
 
     [RelayCommand]
@@ -127,5 +130,6 @@ public partial class SettingsViewModel : ObservableObject
         File.Delete(Generic.EffectsDataFile);
         File.Delete(Generic.PitchDataFile);
         File.Delete(Generic.SettingsFile); // TODO: Check if settings also included
+        Generic.RestartApp();
     }
 }

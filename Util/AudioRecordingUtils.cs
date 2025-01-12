@@ -5,6 +5,7 @@ using Windows.Media;
 using Windows.Media.Capture;
 using Windows.Media.MediaProperties;
 using Windows.Storage;
+using AudioReplacer.ViewModels;
 
 namespace AudioReplacer.Util
 {
@@ -33,8 +34,8 @@ namespace AudioReplacer.Util
 
         public async Task StartRecordingAudio()
         {
-            string saveLocation = Generic.fileManagement.GetOutFilePath();
-            string fileName = Generic.fileManagement.GetCurrentFileName();
+            string saveLocation = ProjectFileUtils.GetOutFolderStructure();
+            string fileName = ProjectFileUtils.GetCurrentFileName();
 
             string formattedFileName = requiresExtraEdits ? $"ExtraEditsRequired-{fileName}" : fileName;
             var outputFolder = await StorageFolder.GetFolderFromPathAsync(saveLocation);
@@ -47,7 +48,7 @@ namespace AudioReplacer.Util
 
         public async Task StopRecordingAudio(bool discarding = false)
         {
-            var file = Path.Combine(Generic.fileManagement.GetOutFilePath(), Generic.fileManagement.GetCurrentFileName());
+            var file = Path.Combine(ProjectFileUtils.GetOutFolderStructure(), ProjectFileUtils.GetCurrentFileName());
             switch (discarding)
             {
                 case true:
