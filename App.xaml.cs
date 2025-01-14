@@ -23,13 +23,12 @@ namespace AudioReplacer
 
         public App()
         {
-            VelopackApp.Build().Run();
-
             CreateSettingsData();
             CreateJsonData();
             AppSettings = new ConfigurationBuilder<IAppSettings>().UseJsonFile(Generic.SettingsFile).Build();
             DiscordController = new RichPresenceController(1325340097234866297, "On Record Page", "No Project Loaded", "idle", "Idle");
             InitializeComponent();
+            VelopackApp.Build().Run();
         }
 
         private void CreateSettingsData()
