@@ -10,6 +10,7 @@ using Velopack;
 using Microsoft.UI;
 using System;
 using System.Threading.Tasks;
+using AudioReplacer.Windows.MainWindow;
 using WinRT.Interop;
 
 namespace AudioReplacer
@@ -111,6 +112,7 @@ namespace AudioReplacer
         protected override void OnLaunched(LaunchActivatedEventArgs args)
         {
             Generic.PopulateCustomData();
+            // TODO: Add logic for onboarding page handling here
             MainWindow = new MainWindow();
             MainWindow.Activate();
             Generic.isAppLoaded = true;

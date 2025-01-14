@@ -1,4 +1,5 @@
 ﻿using AudioReplacer.Util;
+using AudioReplacer.Windows.MainWindow.Util;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
@@ -10,7 +11,7 @@ using Windows.Media.Core;
 using Windows.Storage.Pickers;
 using WinRT.Interop;
 
-namespace AudioReplacer.Views
+namespace AudioReplacer.Windows.MainWindow.Pages
 {
     public sealed partial class RecordPage
     {
@@ -81,7 +82,6 @@ namespace AudioReplacer.Views
             var folder = await folderPicker.PickSingleFolderAsync();
 
             if (folder == null) return;
-            Windows.Storage.AccessCache.StorageApplicationPermissions.FutureAccessList.AddOrReplace("PickedFolderToken", folder);
             App.AppSettings.LastSelectedFolder = folder.Path;
             ProjectSetup(folder.Path);
         }
@@ -211,13 +211,13 @@ namespace AudioReplacer.Views
 
         public void DownloadDependencies()
         {
-            string latestFfMpegVersion = Task.Run(() => WebRequest.GetWebData("https://www.gyan.dev/ffmpeg/builds/release-version")).Result;
+            string latestFfMpegVersion = Task.Run(() => Generic.GetWebData("https://www.gyan.dev/ffmpeg/builds/release-version")).Result;
             string ffMpegUrl = $"https://www.gyan.dev/ffmpeg/builds/packages/ffmpeg-{latestFfMpegVersion}-full_build.7z";
             string outPath = @$"{Environment.GetFolderPath(Environment.SpecialFolder.UserProfile)}\audio-replacer\";
             string fullOutPath = $@"{outPath}\ffmpeg";
             string currentSystemPath = Environment.GetEnvironmentVariable("PATH", EnvironmentVariableTarget.User);
 
-            WebRequest.DownloadFile(ffMpegUrl, outPath, "ffmpeg.7z");
+            Generic.DownloadFile(ffMpegUrl, outPath, "ffmpeg.7z");
             using (ArchiveFile ffmpegArchive = new ArchiveFile($"{fullOutPath}.7z")) { ffmpegArchive.Extract($"{fullOutPath}"); }
 
             Directory.Move(@$"{fullOutPath}\ffmpeg-{latestFfMpegVersion}-full_build\bin", @$"{outPath}\ffmpeg-bin");

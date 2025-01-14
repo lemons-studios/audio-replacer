@@ -1,6 +1,6 @@
 ﻿using Microsoft.UI.Xaml.Controls;
 
-namespace AudioReplacer.Views
+namespace AudioReplacer.Windows.MainWindow.Pages
 {
     public sealed partial class SettingsPage : Page
     {

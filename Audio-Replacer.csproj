@@ -13,6 +13,7 @@
 	</PropertyGroup>
 	<ItemGroup>
 	  <None Remove="Views\ReleaseLogsPage.xaml" />
+	  <None Remove="Windows\FirstTimeSetup\FirstTimeSetupWindow.xaml" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -58,6 +59,16 @@
 		<Page Update="Resources\Styles.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</Page>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Folder Include="Windows\MainWindow\Pages\" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Page Update="Windows\FirstTimeSetup\FirstTimeSetupWindow.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </Page>
 	</ItemGroup>
 
 	<!-- Publish Properties -->

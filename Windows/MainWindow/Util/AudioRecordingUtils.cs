@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AudioReplacer.Util;
+using System;
 using System.IO;
 using System.Threading.Tasks;
 using Windows.Media;
@@ -6,7 +7,7 @@ using Windows.Media.Capture;
 using Windows.Media.MediaProperties;
 using Windows.Storage;
 
-namespace AudioReplacer.Util
+namespace AudioReplacer.Windows.MainWindow.Util
 {
     public class AudioRecordingUtils
     {
@@ -25,9 +26,9 @@ namespace AudioReplacer.Util
             recordingCapture = new MediaCapture();
             var captureSettings = new MediaCaptureInitializationSettings
             {
-                StreamingCaptureMode = StreamingCaptureMode.Audio, 
+                StreamingCaptureMode = StreamingCaptureMode.Audio,
                 AudioProcessing = AudioProcessing.Raw
-            }; 
+            };
             await recordingCapture.InitializeAsync(captureSettings);
         }
 

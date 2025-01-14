@@ -1,11 +1,11 @@
 ﻿<Page
-    x:Class="AudioReplacer.Views.RecordPage"
+    x:Class="AudioReplacer.Windows.MainWindow.Pages.RecordPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:Converters="using:AudioReplacer.Converters"
     xmlns:D="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:Mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:Models="using:AudioReplacer.ViewModels"
+    xmlns:Models="using:AudioReplacer.Windows.MainWindow.PageData"
     Mc:Ignorable="D">
 
     <Page.DataContext>

@@ -1,7 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 
-namespace AudioReplacer.ViewModels;
+namespace AudioReplacer.Windows.MainWindow.PageData;
 partial class RecordPageViewModel : ObservableObject
 {
     [ObservableProperty] private bool isIdle = true , isRecording = false, isReviewing = false;

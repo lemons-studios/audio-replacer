@@ -8,7 +8,7 @@ using System.IO;
 using System.Threading.Tasks;
 using AudioReplacer.Util;
 
-namespace AudioReplacer.Util;
+namespace AudioReplacer.Windows.MainWindow.PageData;
 
 public partial class SettingsViewModel : ObservableObject
 {

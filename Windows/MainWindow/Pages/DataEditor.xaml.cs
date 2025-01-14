@@ -5,11 +5,12 @@ using Newtonsoft.Json;
 using System;
 using System.IO;
 using System.Threading.Tasks;
+using Windows.Storage.Pickers;
 using AudioReplacer.Util;
 using WinUIEditor;
 using WinRT.Interop;
 
-namespace AudioReplacer.Views
+namespace AudioReplacer.Windows.MainWindow.Pages
 {
     public sealed partial class DataEditor
     {
@@ -83,7 +84,7 @@ namespace AudioReplacer.Views
             var result = Task.Run(async() => await importType.ShowAsync()).Result;
             if (result == ContentDialogResult.None) return;
 
-            var openPicker = new Windows.Storage.Pickers.FileOpenPicker();
+            var openPicker = new FileOpenPicker();
             InitializeWithWindow.Initialize(openPicker, WindowNative.GetWindowHandle(App.MainWindow));
             openPicker.FileTypeFilter.Add(".json");
             var file = Task.Run(async() => await openPicker.PickSingleFileAsync()).Result;

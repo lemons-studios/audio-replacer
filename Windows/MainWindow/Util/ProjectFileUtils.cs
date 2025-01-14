@@ -1,10 +1,11 @@
-﻿using System;
+﻿using AudioReplacer.Util;
+using System;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Windows.Storage;
 
-namespace AudioReplacer.Util;
+namespace AudioReplacer.Windows.MainWindow.Util;
 
 public static class ProjectFileUtils
 {

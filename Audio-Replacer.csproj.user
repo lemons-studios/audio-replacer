@@ -11,13 +11,7 @@
     <None Update="App.xaml">
       <SubType>Designer</SubType>
     </None>
-    <None Update="MainWindow.xaml">
-      <SubType>Designer</SubType>
-    </None>
-    <Page Update="Views\ReleaseLogsPage.xaml">
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Update="Views\RecordPage.xaml">
+    <Page Update="Windows\FirstTimeSetup\FirstTimeSetupWindow.xaml">
       <SubType>Designer</SubType>
     </Page>
   </ItemGroup>

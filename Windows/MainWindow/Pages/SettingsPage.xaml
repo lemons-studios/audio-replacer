@@ -1,11 +1,11 @@
 ﻿<Page
-    x:Class="AudioReplacer.Views.SettingsPage"
+    x:Class="AudioReplacer.Windows.MainWindow.Pages.SettingsPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:CommunityToolkit="using:CommunityToolkit.WinUI.Controls"
     xmlns:D="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:Mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:Models="using:AudioReplacer.Util"
+    xmlns:Models="using:AudioReplacer.Windows.MainWindow.PageData"
     Mc:Ignorable="D">
 
     <Page.DataContext>
