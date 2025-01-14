@@ -5,7 +5,6 @@ using Windows.Media;
 using Windows.Media.Capture;
 using Windows.Media.MediaProperties;
 using Windows.Storage;
-using AudioReplacer.ViewModels;
 
 namespace AudioReplacer.Util
 {

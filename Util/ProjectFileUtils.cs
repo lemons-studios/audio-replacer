@@ -13,6 +13,14 @@ public static class ProjectFileUtils
     private static string rootDataDirectoryPath = @$"{Environment.GetFolderPath(Environment.SpecialFolder.UserProfile)}";
     public static bool IsProjectLoaded = false;
 
+    public delegate void BroadcastEventHandler();
+    public static event BroadcastEventHandler OnProjectLoaded;
+
+    public static void Broadcast()
+    {
+        OnProjectLoaded?.Invoke();
+    }
+
     public static void SetProjectData(string path)
     {
         projectPath = path;
@@ -20,6 +28,7 @@ public static class ProjectFileUtils
         CreateInitialData();
         SetCurrentFile();
         IsProjectLoaded = true;
+        Broadcast();
     }
 
     private static void SetCurrentFile()

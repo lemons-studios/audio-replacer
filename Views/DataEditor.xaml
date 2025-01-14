@@ -10,9 +10,6 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
-    <Page.DataContext>
-        <Models:DataEditorViewModel />
-    </Page.DataContext>
     <StackPanel Height="500" Padding="5.5,0">
         <ToolkitControls:TabbedCommandBar>
             <ToolkitControls:TabbedCommandBar.MenuItems>

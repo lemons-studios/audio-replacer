@@ -13,10 +13,6 @@
         <Setter Property="Margin" Value="4.5" />
     </Style>
 
-    <Style x:Key="FluentIcon" TargetType="TextBlock">
-        <Setter Property="FontFamily" Value="{StaticResource SegoeFluentIcons}" />
-    </Style>
-
     <Style x:Key="FileCounter" TargetType="TextBlock">
         <Setter Property="TextAlignment" Value="Center" />
         <Setter Property="HorizontalAlignment" Value="Center" />

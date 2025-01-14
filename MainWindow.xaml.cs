@@ -5,8 +5,10 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using TitleBarDrag;
 using Windows.Storage.Pickers;
+using Microsoft.UI.Windowing;
 using WinRT.Interop;
 
 namespace AudioReplacer
@@ -19,6 +21,7 @@ namespace AudioReplacer
         {
             InitializeComponent();
             App.AppWindow = App.GetAppWindowForCurrentWindow(this);
+            App.AppWindow.Closing += OnClosing;
             ExtendsContentIntoTitleBar = true;
             SetTitleBar(AppTitleBar);
 
@@ -37,6 +40,14 @@ namespace AudioReplacer
             if (App.AppSettings.RememberSelectedFolder == 1 && lastSelectedFolder != string.Empty)
             {
                 ProjectFileUtils.SetProjectData(App.AppSettings.LastSelectedFolder);
+            }
+        }
+
+        private void OnClosing(AppWindow sender, AppWindowClosingEventArgs args)
+        {
+            if (Generic.InRecordState)
+            {
+                File.Delete(ProjectFileUtils.GetOutFilePath());
             }
         }
 
