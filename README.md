@@ -1,45 +1,44 @@
 <h1 align="center">Audio Replacer</h1>
+
+<p align="center">
+<img src="https://raw.githubusercontent.com/lemons-studios/audio-replacer/refs/heads/main/Assets/AppIcon.ico" width="128">
+</p>
 <p align="center">
   <img src="https://img.shields.io/badge/c%23-%23239120.svg?style=for-the-badge&logo=csharp&logoColor=white" alt="C# Badge">
   <img src="https://img.shields.io/badge/.NET-5C2D91?style=for-the-badge&logo=.net&logoColor=white" alt=".NET Badge">
 </p>
 
-This tool was made for the purpose of being a useful tool for a Persona 4 Golden mod I am working on; where one of my friends dubs the entire game over. However, Not only have I made it publicly available, I have turned it into a batch audio replacement processor that works with any input folder structure!
+This application was created to streamline the dubbing process when making mods for video games. In addition to dubbing, custom pitch and audio filter json files can be created to apply ffmpeg audio filters when dubbing.
 
-**This tool WILL work on Windows 10 Version 22H2**, although this app was designed with Windows 11 in mind
+Audio Replacer is intended to run on Windows 11, but it should run perfectly fine on Windows 10. After 22H2 reaches end of life on [October 24th, 2025](https://learn.microsoft.com/en-us/lifecycle/products/windows-10-home-and-pro), This app will not also have Windows 10 support in mind.
+## Install
+You can download the latest release [**here**](https://github.com/lemons-studios/audio-replacer-2/releases/latest).
 
-## How To Install:
-You can download the latest release [here](https://github.com/lemons-studios/audio-replacer-2/releases/latest). The .msix file is the installer. You must have the code signing certificate installed on your system before installing. Instructions on how to do that are below
+> [!IMPORTANT]
+>
+> As of version 4.0, the certificate install method is no longer used. 
+>
+> Those with pre-4.0 versions should uninstall any old versions before installing this new version. All app data should be safe when migrating applications 
 
-> [!Important]
-> If you are on Windows 10, you should also install the [Segoe Fluent Icons](https://raw.githubusercontent.com/lemons-studios/audio-replacer-2/refs/heads/main/Assets/Font/SegoeFluentIcons/SegoeFluentIcons.ttf) font. While not required, some icons will not render correctly without this font installed
-
-Before installing, you must also have my code signing certificate installed on your computer. This only has to be done once, downloading newer versions will use the installed code signing certificate
-> [!CAUTION]
-> Only install software certificates from people you trust. If you don't trust me, go build the application yourself. Steps on how to do this are below
-
-You can obtain my self-signed certificate through the [releases](https://github.com/lemons-studios/audio-replacer-2/releases/latest) page
-To add the certificate properly, perform the following steps:
-1. Click "Install certificate" after opening the file
-2. Select "Local Machine" as the store location
-3. In the next page, Choose "Place all certificates in the following store:". Click the browse button and Select the "Trusted People" store
-4. Continue with setup normally until Windows tells you that you're done!
-
-## How to Develop:
-If you want to develop for this application, you'll need a few things:
-- [FFMpeg](https://ffmpeg.org) installed on your system
+## Build From Source
+If you want to develop for this application, you'll need a few things installed on your computer:
+- [FFMpeg](https://ffmpeg.org)
 - [Visual Studio 2022](https://visualstudio.microsoft.com/vs/) with the following components/workloads
      - Windows Application Development workload
      - .NET desktop development workload
      - Windows App SDK C# Templates component
      - Windows 11 SDK (10.0.22621.0) component
 - [.NET SDK 9.0](https://dotnet.microsoft.com/en-us/download)
+> [!TIP]
+>
+> All development tools should use up around 15-30Gb of system storage once installed
 
 Once the software needed for development are both installed, you can clone the repository:
 ```sh
 git clone https://github.com/lemons-studios/audio-replacer.git
 ```
-If you plan on contributing back to the project, replace the above clone command with whatever the address is for the fork you created!
+## Contributing
+See [CONTRIBUTING](https://github.com/lemons-studios/audio-replacer/blob/main/CONTRIBUTING.md)
 
 ## Known Issues:
-- Folder picker doesn't allow you to select the directory it opens in. This is (from what I can tell) a bug with the Windows operating system, and cannot be fixed by me
+- Folder picker cannot pick the directory it opens in. This is a bug with the Windows OS itself and something that I cannot fix

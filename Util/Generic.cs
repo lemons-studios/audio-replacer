@@ -27,10 +27,7 @@ public class Generic
 
     private static readonly HttpClient WebClient = new()
     {
-        DefaultRequestHeaders =
-        {
-            { "User-Agent", "Audio Replacer" }
-        }
+        DefaultRequestHeaders = {{ "User-Agent", "Audio Replacer" }}
     };
 
     public static async Task SpawnProcess(string command, string args, bool autoStart = true)

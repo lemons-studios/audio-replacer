@@ -10,6 +10,7 @@ using Velopack;
 using Microsoft.UI;
 using System;
 using System.Threading.Tasks;
+using AudioReplacer.Windows.FirstTimeSetup;
 using AudioReplacer.Windows.MainWindow;
 using WinRT.Interop;
 
@@ -19,6 +20,7 @@ namespace AudioReplacer
     {
         public static AppWindow AppWindow;
         public static MainWindow MainWindow { get; private set; }
+        private FirstTimeSetupWindow SetupWindow { get; set; }
         public static IAppSettings AppSettings { get; private set; }
         public static RichPresenceController DiscordController;
 
@@ -41,6 +43,7 @@ namespace AudioReplacer
                 var existingConfig = JsonSerializer.Deserialize<Dictionary<string, object>>(File.ReadAllText(Generic.SettingsFile));
                 var defaultConfig = new Dictionary<string, object>
                 {
+                    { "AppConfigured", 0 },
                     { "Theme", 0 },
                     { "TransparencyEffect", Generic.GetTransparencyMode() },
                     { "EnableUpdateChecks", 1 },
@@ -66,6 +69,7 @@ namespace AudioReplacer
 
             var newConfig = new
             {
+                AppConfigured = 0,
                 Theme = 0,
                 TransparencyEffect = Generic.GetTransparencyMode(), // Prevents mica being set on Windows 10 devices
                 EnableUpdateChecks = 1,
@@ -112,9 +116,18 @@ namespace AudioReplacer
         protected override void OnLaunched(LaunchActivatedEventArgs args)
         {
             Generic.PopulateCustomData();
-            // TODO: Add logic for onboarding page handling here
-            MainWindow = new MainWindow();
-            MainWindow.Activate();
+            switch (Generic.IntToBool(AppSettings.AppConfigured))
+            {
+                case true:
+                    MainWindow = new MainWindow();
+                    MainWindow.Activate();
+                    break;
+                case false:
+                    SetupWindow = new FirstTimeSetupWindow();
+                    SetupWindow.Activate();
+                    break;
+            }
+
             Generic.isAppLoaded = true;
             Task.Run(AppUpdater.AreUpdatesAvailable);
         }
