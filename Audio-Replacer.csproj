@@ -6,9 +6,11 @@
 		<RootNamespace>AudioReplacer</RootNamespace>
 		<RuntimeIdentifiers>win-x64</RuntimeIdentifiers>
 		<UseWinUI>true</UseWinUI>
-		<WindowsPackagedType>None</WindowsPackagedType>
+		<WindowsPackageType>None</WindowsPackageType>
 		<WindowsAppSDKSelfContained>true</WindowsAppSDKSelfContained>
 		<Platforms>x64</Platforms>
+        <!-- Requiring EnableMsixTooling for unpackaged publish and building on other IDEs is a bit scary. remove if it's causing any issues with unpackaged builds -->
+		<EnableMsixTooling>true</EnableMsixTooling>
 		<PublishProfile>win-$(Platform).pubxml</PublishProfile>
 	</PropertyGroup>
 	<ItemGroup>

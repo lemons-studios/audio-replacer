@@ -90,6 +90,12 @@
             </Frame>
         </NavigationView>
 
+        <InfoBar x:Name="NotificationPopup" Style="{StaticResource ToastNotification}">
+            <InfoBar.Transitions>
+                <PopupThemeTransition />
+            </InfoBar.Transitions>
+        </InfoBar>
+
         <InfoBar Severity="Success" Style="{StaticResource ToastNotification}">
             <InfoBar.Transitions>
                 <PopupThemeTransition />
@@ -103,6 +109,7 @@
         </InfoBar>
 
         <InfoBar
+            x:Name="Test"
             Title="Update Available"
             Background="{ThemeResource SystemFillColorCriticalBackgroundBrush}"
             Severity="Informational"
@@ -115,22 +122,6 @@
                     Command="{Binding OpenGitHubCommand}"
                     Content="View Update Details"
                     CornerRadius="4" />
-            </InfoBar.ActionButton>
-            <InfoBar.Transitions>
-                <PopupThemeTransition />
-            </InfoBar.Transitions>
-        </InfoBar>
-
-        <InfoBar
-            Title="Error"
-            Background="{ThemeResource SystemFillColorCriticalBackgroundBrush}"
-            IsClosable="False"
-            IsOpen="False"
-            Message="Required Dependencies Not Installed"
-            Severity="Error"
-            Style="{StaticResource ToastNotification}">
-            <InfoBar.ActionButton>
-                <Button Content="Download Dependencies" CornerRadius="4" />
             </InfoBar.ActionButton>
             <InfoBar.Transitions>
                 <PopupThemeTransition />
@@ -152,5 +143,6 @@
                 <PopupThemeTransition />
             </InfoBar.Transitions>
         </InfoBar>
+
     </StackPanel>
 </WinUiEx:WindowEx>

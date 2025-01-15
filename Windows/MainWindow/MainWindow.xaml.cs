@@ -5,6 +5,7 @@ using Microsoft.UI.Xaml.Media;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Threading.Tasks;
 using TitleBarDrag;
 using Windows.Storage.Pickers;
 using AudioReplacer.Windows.MainWindow.Pages;
@@ -37,10 +38,45 @@ namespace AudioReplacer.Windows.MainWindow
                 NonDragElements = [ FolderChanger ]
             };
 
-            string lastSelectedFolder = App.AppSettings.LastSelectedFolder;
+            var lastSelectedFolder = App.AppSettings.LastSelectedFolder;
             if (App.AppSettings.RememberSelectedFolder == 1 && lastSelectedFolder != string.Empty)
             {
                 ProjectFileUtils.SetProjectData(App.AppSettings.LastSelectedFolder);
+            }
+        }
+
+        public async Task ShowNotification(InfoBarSeverity severity, string title, string message, bool autoclose = true, bool closable = true, bool replaceExistingNotifications = false)
+        {
+            if (!replaceExistingNotifications && NotificationPopup.IsOpen)
+            {
+                return;
+            }
+            else
+            {
+                if (replaceExistingNotifications)
+                    NotificationPopup.IsOpen = false;
+
+                NotificationPopup.Severity = severity;
+                NotificationPopup.Title = title;
+                NotificationPopup.Message = message;
+                NotificationPopup.IsClosable = closable;
+
+                NotificationPopup.IsEnabled = true;
+                if (autoclose)
+                {
+                    await Task.Delay(App.AppSettings.NotificationTimeout);
+                    try
+                    {
+                        NotificationPopup.DispatcherQueue.TryEnqueue(() =>
+                        {
+                            NotificationPopup.IsOpen = false;
+                        });
+                    }
+                    catch
+                    {
+                        Console.WriteLine("Whoopsie!");
+                    }
+                }
             }
         }
 
