@@ -13,121 +13,119 @@ using Microsoft.UI.Windowing;
 using WinRT.Interop;
 using AudioReplacer.Windows.MainWindow.Util;
 
-namespace AudioReplacer.Windows.MainWindow
+namespace AudioReplacer.Windows.MainWindow;
+
+public sealed partial class MainWindow
 {
-    public sealed partial class MainWindow
+    private readonly Dictionary<Type, Page> pageCache = new();
+
+    public MainWindow()
     {
-        private readonly Dictionary<Type, Page> pageCache = new();
+        InitializeComponent();
+        App.AppWindow = App.GetAppWindowForCurrentWindow(this);
+        App.AppWindow.Closing += OnClosing;
+        ExtendsContentIntoTitleBar = true;
+        SetTitleBar(AppTitleBar);
 
-        public MainWindow()
+        SystemBackdrop = new MicaBackdrop();
+        MainFrame.Navigate(typeof(RecordPage));
+
+        // Remove the change folder button from the draggable region on the titlebar
+        // The official Microsoft-intended method is absolutely wild, so I'll use this really obscure nuget package
+        // Sure, the package may only have 160ish downloads, but it abstracts the Microsoft way of making the code very nicely
+        var dragRegions = new DragRegions(this, AppTitleBar)
         {
-            InitializeComponent();
-            App.AppWindow = App.GetAppWindowForCurrentWindow(this);
-            App.AppWindow.Closing += OnClosing;
-            ExtendsContentIntoTitleBar = true;
-            SetTitleBar(AppTitleBar);
+            NonDragElements = [FolderChanger]
+        };
 
-            SystemBackdrop = new MicaBackdrop();
-            MainFrame.Navigate(typeof(RecordPage));
-
-            // Remove the change folder button from the draggable region on the titlebar
-            // The official Microsoft-intended method is absolutely wild, so I'll use this really obscure nuget package
-            // Sure, the package may only have 160ish downloads, but it abstracts the Microsoft way of making the code very nicely
-            var dragRegions = new DragRegions(this, AppTitleBar)
-            {
-                NonDragElements = [ FolderChanger ]
-            };
-
-            var lastSelectedFolder = App.AppSettings.LastSelectedFolder;
-            if (App.AppSettings.RememberSelectedFolder == 1 && lastSelectedFolder != string.Empty)
-            {
-                ProjectFileUtils.SetProjectData(App.AppSettings.LastSelectedFolder);
-            }
+        var lastSelectedFolder = App.AppSettings.LastSelectedFolder;
+        if (App.AppSettings.RememberSelectedFolder == 1 && lastSelectedFolder != string.Empty)
+        {
+            ProjectFileUtils.SetProjectData(App.AppSettings.LastSelectedFolder);
         }
+    }
 
-        public async Task ShowNotification(InfoBarSeverity severity, string title, string message, bool autoclose = true, bool closable = true, bool replaceExistingNotifications = false)
+    public async Task ShowNotification(InfoBarSeverity severity, string title, string message, bool autoclose = true,
+        bool closable = true, bool replaceExistingNotifications = false)
+    {
+        if (!replaceExistingNotifications && NotificationPopup.IsOpen)
         {
-            if (!replaceExistingNotifications && NotificationPopup.IsOpen)
-            {
-                return;
-            }
-            else
-            {
-                if (replaceExistingNotifications)
-                    NotificationPopup.IsOpen = false;
+            return;
+        }
+        else
+        {
+            if (replaceExistingNotifications)
+                NotificationPopup.IsOpen = false;
 
-                NotificationPopup.Severity = severity;
-                NotificationPopup.Title = title;
-                NotificationPopup.Message = message;
-                NotificationPopup.IsClosable = closable;
+            NotificationPopup.Severity = severity;
+            NotificationPopup.Title = title;
+            NotificationPopup.Message = message;
+            NotificationPopup.IsClosable = closable;
 
-                NotificationPopup.IsEnabled = true;
-                if (autoclose)
+            NotificationPopup.IsEnabled = true;
+            if (autoclose)
+            {
+                await Task.Delay(App.AppSettings.NotificationTimeout);
+                try
                 {
-                    await Task.Delay(App.AppSettings.NotificationTimeout);
-                    try
-                    {
-                        NotificationPopup.DispatcherQueue.TryEnqueue(() =>
-                        {
-                            NotificationPopup.IsOpen = false;
-                        });
-                    }
-                    catch
-                    {
-                        Console.WriteLine("Whoopsie!");
-                    }
+                    NotificationPopup.DispatcherQueue.TryEnqueue(() => { NotificationPopup.IsOpen = false; });
+                }
+                catch
+                {
+                    Console.WriteLine("Whoopsie!");
                 }
             }
         }
+    }
 
-        private void OnClosing(AppWindow sender, AppWindowClosingEventArgs args)
+    private void OnClosing(AppWindow sender, AppWindowClosingEventArgs args)
+    {
+        if (Generic.InRecordState)
         {
-            if (Generic.InRecordState)
+            File.Delete(ProjectFileUtils.GetOutFilePath());
+        }
+    }
+
+    private async void ChangeProjectFolder(object sender, RoutedEventArgs e)
+    {
+        var folderPicker = new FolderPicker { FileTypeFilter = { "*" } };
+        InitializeWithWindow.Initialize(folderPicker, WindowNative.GetWindowHandle(this));
+        var folder = await folderPicker.PickSingleFolderAsync();
+        if (folder != null && !string.IsNullOrEmpty(folder.Path))
+        {
+            string folderPath = folder.Path;
+            if (Generic.IntToBool(App.AppSettings.RememberSelectedFolder))
+                App.AppSettings.LastSelectedFolder = folderPath;
+            ProjectFileUtils.SetProjectData(folderPath);
+        }
+    }
+
+    public void DisableFolderChanger()
+    {
+        FolderChanger.IsEnabled = false;
+    }
+
+    private void Navigate(NavigationView sender, NavigationViewItemInvokedEventArgs args)
+    {
+        var pageSwitchType = typeof(RecordPage); // Default page of project
+        if (args.InvokedItemContainer != null && args.InvokedItemContainer.Tag is string tag)
+        {
+            pageSwitchType = tag switch
             {
-                File.Delete(ProjectFileUtils.GetOutFilePath());
-            }
+                "Record" => typeof(RecordPage),
+                "Settings" => typeof(SettingsPage),
+                "Data Editor" => typeof(DataEditor),
+                "Update Logs" => typeof(ReleaseLogsPage),
+                _ => pageSwitchType
+            };
         }
 
-        private async void ChangeProjectFolder(object sender, RoutedEventArgs e)
+        if (!pageCache.TryGetValue(pageSwitchType, out var page))
         {
-            var folderPicker = new FolderPicker { FileTypeFilter = { "*" } };
-            InitializeWithWindow.Initialize(folderPicker, WindowNative.GetWindowHandle(this));
-            var folder = await folderPicker.PickSingleFolderAsync();
-            if (folder != null && !string.IsNullOrEmpty(folder.Path))
-            {
-                string folderPath = folder.Path;
-                if (Generic.IntToBool(App.AppSettings.RememberSelectedFolder))
-                    App.AppSettings.LastSelectedFolder = folderPath;
-                ProjectFileUtils.SetProjectData(folderPath);
-            }
+            page = (Page) Activator.CreateInstance(pageSwitchType);
+            pageCache[pageSwitchType] = page;
         }
 
-        public void DisableFolderChanger()
-        {
-            FolderChanger.IsEnabled = false;
-        }
-
-        private void Navigate(NavigationView sender, NavigationViewItemInvokedEventArgs args)
-        {
-            var pageSwitchType = typeof(RecordPage); // Default page of project
-            if (args.InvokedItemContainer != null && args.InvokedItemContainer.Tag is string tag)
-            {
-                pageSwitchType = tag switch
-                {
-                    "Record" => typeof(RecordPage),
-                    "Settings" => typeof(SettingsPage),
-                    "Data Editor" => typeof(DataEditor),
-                    "Update Logs" => typeof(ReleaseLogsPage),
-                    _ => pageSwitchType
-                };
-            }
-
-            if (!pageCache.TryGetValue(pageSwitchType, out var page))
-            {
-                page = (Page)Activator.CreateInstance(pageSwitchType);
-                pageCache[pageSwitchType] = page;
-            }
-            MainFrame.Content = page;
-        }
+        MainFrame.Content = page;
     }
 }

@@ -16,6 +16,10 @@
 	<ItemGroup>
 	  <None Remove="Views\ReleaseLogsPage.xaml" />
 	  <None Remove="Windows\FirstTimeSetup\FirstTimeSetupWindow.xaml" />
+	  <None Remove="Windows\FirstTimeSetup\Pages\SetupAdvanced.xaml" />
+	  <None Remove="Windows\FirstTimeSetup\Pages\SetupDownloading.xaml" />
+	  <None Remove="Windows\FirstTimeSetup\Pages\SetupSettings.xaml" />
+	  <None Remove="Windows\FirstTimeSetup\Pages\SetupWelcome.xaml" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -30,7 +34,6 @@
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
 		<PackageReference Include="SevenZipExtractor" Version="1.0.19" />
 		<PackageReference Include="System.Text.Json" Version="9.0.0" />
-		<PackageReference Include="TagLibSharp" Version="2.3.0" />
 		<PackageReference Include="Velopack" Version="0.0.1053" />
 		<PackageReference Include="WinUI.TitleBarDragRegions" Version="1.0.0" />
 		<PackageReference Include="WinUIEdit" Version="0.0.3-prerelease" />
@@ -65,6 +68,30 @@
 
 	<ItemGroup>
 	  <Folder Include="Windows\MainWindow\Pages\" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Page Update="Windows\FirstTimeSetup\Pages\SetupDownloading.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </Page>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Page Update="Windows\FirstTimeSetup\Pages\SetupAdvanced.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </Page>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Page Update="Windows\FirstTimeSetup\Pages\SetupSettings.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </Page>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Page Update="Windows\FirstTimeSetup\Pages\SetupWelcome.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </Page>
 	</ItemGroup>
 
 	<ItemGroup>

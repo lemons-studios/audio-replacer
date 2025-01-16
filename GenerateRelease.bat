@@ -16,9 +16,13 @@ where dotnet >nul 2>&1 || (
 echo Updating Velopack CLI tools...
 dotnet tool update -g vpk
 
+:: Publish release build before packaging application
+echo Creating new release build....
+dotnet publish -c Release --self-contained -r win-x64 -o .\Publish
+
 :: Build app installer with vpk
 echo Building app installer with vpk...
-vpk pack -u AudioReplacer -v %~1 -p .\bin\x64\Release\net9.0-windows10.0.22621.0\win-x64 -e AudioReplacer.exe --splashImage .\Assets\SplashScreen.gif || (
+vpk pack -u AudioReplacer -v %~1 -p .\Publish -e AudioReplacer.exe --splashImage .\Assets\SplashScreen.gif || (
     echo Error: vpk build process failed.
     exit /b 1
 )
