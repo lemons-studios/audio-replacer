@@ -45,8 +45,7 @@ public sealed partial class MainWindow
         }
     }
 
-    public async Task ShowNotification(InfoBarSeverity severity, string title, string message, bool autoclose = true,
-        bool closable = true, bool replaceExistingNotifications = false)
+    public async Task ShowNotification(InfoBarSeverity severity, string title, string message, bool autoclose = false, bool closable = true, bool replaceExistingNotifications = false)
     {
         if (!replaceExistingNotifications && NotificationPopup.IsOpen)
         {
