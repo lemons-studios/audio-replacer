@@ -28,6 +28,7 @@
 		<PackageReference Include="CommunityToolkit.WinUI.Controls.Primitives" Version="8.1.240916" />
 		<PackageReference Include="CommunityToolkit.WinUI.Controls.SettingsControls" Version="8.1.240916" />
 		<PackageReference Include="CommunityToolkit.WinUI.Controls.TabbedCommandBar" Version="8.1.240916" />
+		<PackageReference Include="CommunityToolkit.WinUI.Media" Version="8.1.240916" />
 		<PackageReference Include="Config.Net" Version="5.2.1" />
 		<PackageReference Include="DiscordRichPresence" Version="1.2.1.24" />
 		<PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.26100.1742" />

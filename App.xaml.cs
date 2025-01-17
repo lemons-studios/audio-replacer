@@ -16,12 +16,11 @@ using WinRT.Interop;
 
 namespace AudioReplacer;
 
-public partial class
-    App // I will admit, code-behind is still pretty useful here. Mvvm would overcomplicate things. While this is messier, it gets the job done
+public partial class App // I will admit, code-behind is still pretty useful here. Mvvm would overcomplicate things. While this is messier, it gets the job done
 {
     public static AppWindow AppWindow;
     public static MainWindow MainWindow { get; private set; }
-    private FirstTimeSetupWindow SetupWindow { get; set; }
+    public static FirstTimeSetupWindow SetupWindow { get; set; }
     public static IAppSettings AppSettings { get; private set; }
     public static RichPresenceController DiscordController;
 
@@ -134,7 +133,6 @@ public partial class
         }
 
         Generic.isAppLoaded = true;
-        Task.Run(AppUpdater.AreUpdatesAvailable);
     }
 
     public static AppWindow GetAppWindowForCurrentWindow(object window) // Thanks StackOverflow man!
