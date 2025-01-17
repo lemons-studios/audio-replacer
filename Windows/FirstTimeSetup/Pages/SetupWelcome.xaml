@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8" ?>
 <Page
     x:Class="AudioReplacer.Windows.FirstTimeSetup.Pages.SetupWelcome"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
@@ -6,43 +5,15 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
-    <Grid>
-        <Viewbox Stretch="Uniform">
-            <Grid
-                Margin="0,50,0,50"
-                Padding="35"
-                HorizontalAlignment="Center"
-                VerticalAlignment="Center"
-                ColumnDefinitions="Auto, Auto">
-
-                <Image
-                    Grid.Column="0"
-                    Width="125"
-                    Height="125"
-                    Margin="20,0,20,0"
-                    HorizontalAlignment="Center"
-                    VerticalAlignment="Center"
-                    Source="/Assets/AppIcon.ico" />
-
-                <Border
-                    Grid.Column="1"
-                    Padding="25"
-                    HorizontalAlignment="Center"
-                    Style="{StaticResource PanelCard}">
-                    <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-                        <TextBlock
-                            FontSize="45"
-                            FontWeight="Medium"
-                            Text="Welcome To Audio Replacer"
-                            TextAlignment="Center" />
-                        <TextBlock
-                            Margin="0,10,0,0"
-                            FontSize="18"
-                            Text="Continue with this setup to start using the app"
-                            TextAlignment="Center" />
-                    </StackPanel>
-                </Border>
-            </Grid>
+    <Grid
+        Padding="35"
+        Background="Aqua"
+        VerticalAlignment="Center">
+        <Viewbox
+            Stretch="Fill"
+            Margin="0 -200 0 0"
+            StretchDirection="Both">
+            <TextBlock Text="aadb" TextWrapping="Wrap" VerticalAlignment="Center"/>
         </Viewbox>
     </Grid>
 </Page>
