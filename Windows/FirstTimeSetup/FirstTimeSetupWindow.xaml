@@ -9,12 +9,17 @@
     MinWidth="750"
     MinHeight="450"
     mc:Ignorable="d">
-    <StackPanel VerticalAlignment="Stretch">
+    <Grid VerticalAlignment="Stretch">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
         <Border
             x:Name="AppTitleBar"
+            Grid.Row="0"
             Padding="10"
             VerticalAlignment="Top"
-            Background="White"
             BorderThickness="0,0,0,1">
             <StackPanel Orientation="Horizontal">
                 <FontIcon Glyph="&#xE9F5;" Style="{StaticResource TitleBarIcon}" />
@@ -27,13 +32,18 @@
             </StackPanel>
         </Border>
 
-        <Frame x:Name="MainFrame" Background="White">
+        <Frame
+            x:Name="MainFrame"
+            Grid.Row="1"
+            Padding="15"
+            HorizontalAlignment="Stretch"
+            VerticalAlignment="Stretch">
             <Frame.ContentTransitions>
                 <TransitionCollection>
                     <EntranceThemeTransition />
                 </TransitionCollection>
             </Frame.ContentTransitions>
         </Frame>
-    </StackPanel>
 
+    </Grid>
 </WinUiEx:WindowEx>

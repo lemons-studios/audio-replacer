@@ -31,14 +31,14 @@
 		<PackageReference Include="Config.Net" Version="5.2.1" />
 		<PackageReference Include="DiscordRichPresence" Version="1.2.1.24" />
 		<PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.26100.1742" />
-		<PackageReference Include="Microsoft.WindowsAppSDK" Version="1.6.241114003" />
+		<PackageReference Include="Microsoft.WindowsAppSDK" Version="1.6.250108002" />
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
 		<PackageReference Include="SevenZipExtractor" Version="1.0.19" />
-		<PackageReference Include="System.Text.Json" Version="9.0.0" />
+		<PackageReference Include="System.Text.Json" Version="9.0.1" />
 		<PackageReference Include="Velopack" Version="0.0.1053" />
 		<PackageReference Include="WinUI.TitleBarDragRegions" Version="1.0.0" />
 		<PackageReference Include="WinUIEdit" Version="0.0.3-prerelease" />
-		<PackageReference Include="WinUIEx" Version="2.5.0" />
+		<PackageReference Include="WinUIEx" Version="2.5.1" />
 	</ItemGroup>
 
 	<ItemGroup>

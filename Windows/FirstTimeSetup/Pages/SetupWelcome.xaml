@@ -5,15 +5,65 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
-    <Grid
-        Padding="35"
-        Background="Aqua"
-        VerticalAlignment="Center">
-        <Viewbox
-            Stretch="Fill"
-            Margin="0 -200 0 0"
-            StretchDirection="Both">
-            <TextBlock Text="aadb" TextWrapping="Wrap" VerticalAlignment="Center"/>
-        </Viewbox>
+    <Grid VerticalAlignment="Stretch">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1*" />
+            <ColumnDefinition Width="3*" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Border
+            Grid.Row="0"
+            Grid.Column="0"
+            Margin="10">
+            <Image
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                Source="/Assets/SetupIntro.png" />
+        </Border>
+
+        <Border
+            Grid.Row="0"
+            Grid.Column="1"
+            Margin="10"
+            Background="{ThemeResource LayerFillColorAltBrush}"
+            BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+            CornerRadius="4">
+            <Grid Padding="35">
+                <TextBlock
+                    Margin="0,0,0,125"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    FontSize="55"
+                    Text="Welcome To Audio Replacer" 
+                    TextWrapping="WrapWholeWords" />
+                <TextBlock
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    FontSize="25"
+                    FontWeight="Light"
+                    Text="Continue through this short setup to begin using the app"
+                    TextWrapping="WrapWholeWords" />
+                <AppBarButton
+                    Width="125"
+                    Height="45"
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Bottom"
+                    Click="ButtonBase_OnClick"
+                    Style="{StaticResource AccentButtonStyle}">
+                    <AppBarButton.Content>
+                        <TextBlock
+                            Padding="5"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            FontSize="25"
+                            FontWeight="Normal"
+                            Text="Next"
+                            TextAlignment="Center" />
+                    </AppBarButton.Content>
+                </AppBarButton>
+            </Grid>
+        </Border>
     </Grid>
 </Page>
