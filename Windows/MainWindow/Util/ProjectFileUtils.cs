@@ -2,8 +2,6 @@
 using System;
 using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
-using Windows.Storage;
 
 namespace AudioReplacer.Windows.MainWindow.Util;
 
@@ -11,8 +9,7 @@ public static class ProjectFileUtils
 {
     private static string currentFile, truncatedCurrentFile, currentOutFile, currentFileName, directoryName;
     private static string outputFolderPath, projectPath;
-    private static string rootDataDirectoryPath = @$"{Environment.GetFolderPath(Environment.SpecialFolder.UserProfile)}";
-    public static bool IsProjectLoaded = false;
+    public static bool IsProjectLoaded;
 
     public delegate void BroadcastEventHandler();
     public static event BroadcastEventHandler OnProjectLoaded;
@@ -25,7 +22,7 @@ public static class ProjectFileUtils
     public static void SetProjectData(string path)
     {
         projectPath = path;
-        outputFolderPath = @$"{rootDataDirectoryPath}\audio-replacer\out\{TruncateDirectory(path, 1)}";
+        outputFolderPath = Path.Combine(Generic.extraApplicationData, "out", TruncateDirectory(path, 1));
         CreateInitialData();
         SetCurrentFile();
         IsProjectLoaded = true;
@@ -34,96 +31,113 @@ public static class ProjectFileUtils
 
     private static void SetCurrentFile()
     {
-        FindDeleteEmptyDirs();
+        FindAndDeleteEmptyDirs();
         currentFile = GetNextAudioFile(projectPath);
-        truncatedCurrentFile = currentFile == "" ? "YOU ARE DONE!!!" : TruncateDirectory(currentFile, 2);
 
-        currentOutFile = $"{outputFolderPath}\\{truncatedCurrentFile}";
-        currentFileName = TruncateDirectory(currentFile, 1);
-        directoryName = truncatedCurrentFile.Split("\\")[0];
+        if (string.IsNullOrEmpty(currentFile))
+        {
+            truncatedCurrentFile = "YOU ARE DONE!";
+            currentOutFile = string.Empty;
+            currentFileName = string.Empty;
+            directoryName = string.Empty;
+        }
+        else
+        {
+            truncatedCurrentFile = TruncateDirectory(currentFile, 2);
+            currentOutFile = Path.Join(outputFolderPath, truncatedCurrentFile);
+            currentFileName = Path.GetFileName(currentFile);
+            directoryName = TruncateDirectory(Path.GetDirectoryName(currentFile)!, 1);
+        }
     }
 
     private static void CreateInitialData()
     {
-        string[] inFolderStructure = GetPathSubdirectories(projectPath);
-        if (!DoesDirectoryExist(outputFolderPath)) CreateDirectory(outputFolderPath);
-        if (inFolderStructure == GetPathSubdirectories(outputFolderPath) || File.Exists($"{outputFolderPath}\\.setupIgnore")) return;
+        string setupIgnorePath = Path.Combine(outputFolderPath, ".setupIgnore");
 
-        string[] subdirectoryNames = TruncateSubdirectories(inFolderStructure);
-        for (int i = 0; i < inFolderStructure.Length; i++) { CreateDirectory($"{outputFolderPath}\\{subdirectoryNames[i]}"); }
-        File.WriteAllText($"{outputFolderPath}\\.setupIgnore", "This file is here to tell AudioReplacer2 to ignore this folder when launching.\nDo not delete this unless starting a new project");
+        if (!Directory.Exists(outputFolderPath))
+            Directory.CreateDirectory(outputFolderPath);
+
+        string[] inputDirectories = GetPathSubdirectories(projectPath);
+        string[] outputDirectories = GetPathSubdirectories(outputFolderPath);
+
+        if (inputDirectories.SequenceEqual(outputDirectories) || File.Exists(setupIgnorePath))
+            return;
+
+        foreach (string dir in inputDirectories)
+        {
+            string relativePath = TruncateDirectory(dir, int.MaxValue);
+            Directory.CreateDirectory(Path.Combine(outputFolderPath, relativePath));
+        }
+
+        File.WriteAllText(setupIgnorePath, "This file is here to tell Audio Replacer to ignore this folder when launching. Do NOT delete");
     }
 
     private static string TruncateDirectory(string inputPath, int dirLevels, string delimiter = "\\")
     {
-        if (string.IsNullOrEmpty(inputPath) || string.IsNullOrEmpty(delimiter) || dirLevels <= 0) return inputPath;
+        if (string.IsNullOrEmpty(inputPath) || dirLevels <= 0) return inputPath;
 
         string[] splitDir = inputPath.Split(delimiter);
         if (dirLevels > splitDir.Length) dirLevels = splitDir.Length;
 
-        var truncatedDir = splitDir[^dirLevels..];
-        return string.Join(delimiter, truncatedDir);
+        return string.Join(delimiter, splitDir[^dirLevels..]);
     }
 
     public static int GetFileCount(string path)
     {
-        string[] directories = GetPathSubdirectories(path);
-        return directories.Sum(dir => Directory.GetFiles(dir, "*", SearchOption.AllDirectories).Length);
+        return Directory.EnumerateFiles(path, "*", SearchOption.AllDirectories).Count();
     }
 
     private static string GetNextAudioFile(string path)
     {
-        var audioFiles = Directory.GetFiles(path, "*.*", SearchOption.AllDirectories).Where(IsAudioFile).ToList();
-
-        // If there are no audio files, return nothing
+        var audioFiles = Directory.EnumerateFiles(path, "*.*", SearchOption.AllDirectories).Where(IsAudioFile).ToList();
         if (!audioFiles.Any()) return string.Empty;
 
-        // Pick a random audio file if input file randomization is enabled
         if (Generic.IntToBool(App.AppSettings.InputRandomizationEnabled))
         {
+            // Pick random file from current project files if input randomization is enabled
             var rng = new Random();
-            int randomFileIndex = rng.Next(audioFiles.Count);
-            return audioFiles[randomFileIndex];
+            return audioFiles[rng.Next(audioFiles.Count)];
         }
 
-        // Return the first audio file (if input is not randomized)
         return audioFiles.First();
     }
 
     public static float CalculatePercentageComplete()
     {
-        float inputFolderCount = GetFileCount(projectPath);
-        float outputFolderCount = GetFileCount(outputFolderPath);
-        return float.Round(outputFolderCount / (outputFolderCount + inputFolderCount) * 100, 2);
+        int inputFileCount = GetFileCount(projectPath);
+        int outputFileCount = GetFileCount(outputFolderPath);
+        return inputFileCount + outputFileCount == 0 ? 100 : (float) Math.Round((outputFileCount / (double) (inputFileCount + outputFileCount)) * 100, 2);
     }
 
     public static void SkipAudioTrack()
     {
-        File.Move(currentFile, currentOutFile);
-        SetCurrentFile();
+        if (!string.IsNullOrEmpty(currentFile) && !string.IsNullOrEmpty(currentOutFile))
+        {
+            Directory.CreateDirectory(Path.GetDirectoryName(currentOutFile)!);
+            File.Move(currentFile, currentOutFile);
+            SetCurrentFile();
+        }
     }
 
     public static void DeleteCurrentFile()
     {
-        File.Delete(currentFile);
-        SetCurrentFile();
+        if (!string.IsNullOrEmpty(currentFile))
+        {
+            File.Delete(currentFile);
+            SetCurrentFile();
+        }
     }
 
     private static bool IsAudioFile(string path)
     {
-        string[] supportedFileTypes = [".mp3", ".wav", ".wma", ".aac", ".m4a", ".flac", ".ogg", ".amr", ".aiff", ".3gp", ".asf", ".pcm"]; // This should be a good enough list. Most people will have either wav or mp3 anyway (maybe flac or ogg but that's really it)
+        // I should PROBABLY rewrite this method in a way that includes all audio file types, but this list already contains the popular audio formats
+        string[] supportedFileTypes = [ ".mp3", ".wav", ".wma", ".aac", ".m4a", ".flac", ".ogg", ".amr", ".aiff", ".3gp", ".asf", ".pcm" ];
         return supportedFileTypes.Any(fileType => path.EndsWith(fileType, StringComparison.OrdinalIgnoreCase));
     }
 
-    // Another go at my yummy code minification
     private static string[] GetPathSubdirectories(string path)
     {
         return Directory.GetDirectories(path, "*", SearchOption.TopDirectoryOnly);
-    }
-
-    private static string[] TruncateSubdirectories(string[] notTruncatedDirectories)
-    {
-        return notTruncatedDirectories.Select(dir => dir.Split(Path.DirectorySeparatorChar).Last()).ToArray();
     }
 
     public static string GetCurrentFile(bool truncated = true)
@@ -131,19 +145,9 @@ public static class ProjectFileUtils
         return truncated ? truncatedCurrentFile : currentFile;
     }
 
-    public static async Task<StorageFolder> GetDirectoryAsStorageFolder()
-    {
-        return await StorageFolder.GetFolderFromPathAsync($"{outputFolderPath}\\{directoryName}");
-    }
-
     public static string GetOutFolderStructure()
     {
-        return @$"{outputFolderPath}\{directoryName}";
-    }
-
-    public static string GetRootFolderPath()
-    {
-        return rootDataDirectoryPath;
+        return Path.Combine(outputFolderPath, directoryName);
     }
 
     public static string GetOutFilePath()
@@ -161,23 +165,12 @@ public static class ProjectFileUtils
         return currentFileName;
     }
 
-    private static void CreateDirectory(string dir)
+    private static void FindAndDeleteEmptyDirs()
     {
-        Directory.CreateDirectory(dir);
-    }
-
-    private static bool DoesDirectoryExist(string dir)
-    {
-        return Directory.Exists(dir);
-    }
-
-    private static void FindDeleteEmptyDirs()
-    {
-        foreach (string directory in Directory.GetDirectories(projectPath))
+        foreach (var dir in Directory.GetDirectories(projectPath, "*", SearchOption.AllDirectories))
         {
-            if (Directory.GetFiles(directory).Length == 0)
-                Directory.Delete(directory);
+            if (!Directory.EnumerateFileSystemEntries(dir).Any())
+                Directory.Delete(dir);
         }
     }
 }
-

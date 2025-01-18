@@ -8,9 +8,32 @@
     xmlns:local="using:AudioReplacer.Windows.FirstTimeSetup.Pages"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
-    <Page.DataContext>
-        <Models:SetupData />
-    </Page.DataContext>
 
-    <Grid />
+    <Grid Padding="35" VerticalAlignment="Center">
+        <StackPanel x:Name="DownloadingPanel" VerticalAlignment="Top">
+            <FlipView
+                MaxWidth="375"
+                MaxHeight="250"
+                VerticalAlignment="Top"
+                Background="Transparent">
+                <Image Source="/Assets/SetupComplete.png" />
+                <Image Source="/Assets/SetupImport.png" />
+                <Image Source="/Assets/SetupIntro.png" />
+            </FlipView>
+            <ProgressBar MaxWidth="350" IsIndeterminate="True" />
+            <TextBlock FontSize="20" Text="Downloading Dependencies.... (xx% Complete)" />
+        </StackPanel>
+        <StackPanel x:Name="DownloadCompletePanel" Visibility="Collapsed">
+            <Image Source="/Assets/SetupComplete.png" />
+            <TextBlock Text="Setup Completed" />
+            <TextBlock Text="Click 'Finish' to start using the application" />
+        </StackPanel>
+        <Button
+            x:Name="FinishButton"
+            HorizontalAlignment="Left"
+            VerticalAlignment="Bottom"
+            Content="Finish"
+            Style="{StaticResource AccentButtonStyle}"
+            Visibility="Collapsed" />
+    </Grid>
 </Page>

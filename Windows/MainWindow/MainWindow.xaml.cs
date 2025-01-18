@@ -25,6 +25,7 @@ public sealed partial class MainWindow
         App.AppWindow = App.GetAppWindowForCurrentWindow(this);
         App.AppWindow.Closing += OnClosing;
         ExtendsContentIntoTitleBar = true;
+        AppTitle.Text = $"Audio Replacer {Generic.GetAppVersion()}";
         SetTitleBar(AppTitleBar);
 
         SystemBackdrop = new MicaBackdrop();

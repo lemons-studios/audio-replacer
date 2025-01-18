@@ -4,8 +4,15 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
 using System;
+using System.CodeDom;
 using System.IO;
+using System.Threading.Tasks;
 using Windows.Media.Core;
+using NAudio.Wave;
+using NAudio.Wave.SampleProviders;
+using Whisper.net;
+using CommunityToolkit.WinUI;
+using Whisper.net.LibraryLoader;
 
 namespace AudioReplacer.Windows.MainWindow.Pages;
 
@@ -114,6 +121,72 @@ public sealed partial class RecordPage
         App.DiscordController.SetState($"{progressPercentage}% Complete");
         App.DiscordController.SetSmallAsset("idle", "Idle");
         App.DiscordController.SetLargeAsset("appicon", $"Current File: {ProjectFileUtils.GetCurrentFileName()}");
+
+        TranscribeAudio();
+    }
+
+    private void TranscribeAudio()
+    {
+        var dispatcherQueue = Transcription.DispatcherQueue;
+        Transcription.Text = "Now Processing....";
+        Task.Run(async () =>
+        {
+            try
+            {
+                // Check if the Whisper model path exists
+                if (!Path.Exists(Generic.whisperPath))
+                {
+                    await dispatcherQueue.EnqueueAsync(() =>
+                    {
+                        Transcription.Text = "Download speech-to-text data from settings to transcribe audio files.";
+                    });
+                    return;
+                }
+
+                // Validate the current file format
+                var currentFile = ProjectFileUtils.GetCurrentFile(false);
+                if (!currentFile.EndsWith(".wav", StringComparison.OrdinalIgnoreCase))
+                {
+                    await dispatcherQueue.EnqueueAsync(() =>
+                    {
+                        Transcription.Text = "Only .wav files support transcription.";
+                    });
+                    return;
+                }
+
+                // Initialize Whisper model and processor
+                var whisperFactory = WhisperFactory.FromPath(Generic.whisperPath);
+                RuntimeOptions.RuntimeLibraryOrder = [ RuntimeLibrary.Cuda, RuntimeLibrary.Vulkan, RuntimeLibrary.Cpu];
+                var whisperProcessor = whisperFactory.CreateBuilder()
+                    .WithLanguage("auto")
+                    .Build();
+
+                // Do some funky wizardry to make the file work with Whisper.NET
+                using var fileStream = File.OpenRead(currentFile);
+                using var wavStream = new MemoryStream();
+                using var reader = new WaveFileReader(fileStream);
+                var resamplingProcessor = new WdlResamplingSampleProvider(reader.ToSampleProvider(), 16000);
+                WaveFileWriter.WriteWavFileToStream(wavStream, resamplingProcessor.ToWaveProvider16());
+                wavStream.Seek(0, SeekOrigin.Begin);
+
+                // Process audio file
+                await foreach (var result in whisperProcessor.ProcessAsync(wavStream))
+                {
+                    await dispatcherQueue.EnqueueAsync(() =>
+                    {
+                        Transcription.Text = $"Transcription: \n{result.Text}";
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                await dispatcherQueue.EnqueueAsync(() =>
+                {
+                    Transcription.Text = $"Error: {ex.Message}";
+                });
+                Console.WriteLine($"Error during transcription: {ex}");
+            }
+        });
     }
 
     private async void CancelCurrentRecording(object sender, RoutedEventArgs e)

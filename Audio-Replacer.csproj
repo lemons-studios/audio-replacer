@@ -33,12 +33,15 @@
 		<PackageReference Include="DiscordRichPresence" Version="1.2.1.24" />
 		<PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.26100.1742" />
 		<PackageReference Include="Microsoft.WindowsAppSDK" Version="1.6.250108002" />
+		<PackageReference Include="NAudio" Version="2.2.1" />
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
 		<PackageReference Include="SevenZipExtractor" Version="1.0.19" />
 		<PackageReference Include="System.Text.Json" Version="9.0.1" />
 		<PackageReference Include="Velopack" Version="0.0.1053" />
 		<PackageReference Include="Whisper.net" Version="1.7.4" />
 		<PackageReference Include="Whisper.net.Runtime" Version="1.7.4" />
+		<PackageReference Include="Whisper.net.Runtime.Cuda.Windows" Version="1.7.4" />
+		<PackageReference Include="Whisper.net.Runtime.Vulkan" Version="1.7.4" />
 		<PackageReference Include="WinUI.TitleBarDragRegions" Version="1.0.0" />
 		<PackageReference Include="WinUIEdit" Version="0.0.3-prerelease" />
 		<PackageReference Include="WinUIEx" Version="2.5.1" />

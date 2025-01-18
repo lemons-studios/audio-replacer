@@ -10,8 +10,8 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
-    <StackPanel Height="500" Padding="5.5,0">
-        <ToolkitControls:TabbedCommandBar>
+    <Grid RowDefinitions="Auto, *">
+        <ToolkitControls:TabbedCommandBar Grid.Row="0" VerticalAlignment="Top">
             <ToolkitControls:TabbedCommandBar.MenuItems>
                 <ToolkitControls:TabbedCommandBarItem Header="File">
                     <AppBarButton
@@ -24,7 +24,7 @@
                         Label="Import" />
                     <AppBarSeparator />
                     <AppBarButton
-                        Command="{Binding OpenHelpPageCommand}"
+                        Click="OpenHelpPage"
                         Icon="{ToolkitUi:FontIcon Glyph=&#xE897;}"
                         Label="Help" />
                     <AppBarElementContainer>
@@ -64,8 +64,8 @@
         </ToolkitControls:TabbedCommandBar>
         <DataEditor:CodeEditorControl
             x:Name="CustomDataEditor"
-            Height="280"
+            Grid.Row="1"
             HighlightingLanguage="json" />
 
-    </StackPanel>
+    </Grid>
 </Page>

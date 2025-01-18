@@ -16,156 +16,155 @@
         <Converters:VisibilityConverter x:Key="VisibilityConverter" />
     </Page.Resources>
 
-    <Grid>
-        <StackPanel Height="450">
-            <Border
-                Height="12"
-                VerticalAlignment="Top"
-                Background="Transparent" />
-            <Grid Padding="7.5,8" ColumnDefinitions="60*, 40*">
-                <Border
-                    Grid.Column="0"
-                    Width="575"
-                    Padding="10"
-                    Style="{StaticResource PanelCard}">
-                    <StackPanel Padding="5" VerticalAlignment="Center">
+    <Grid Padding="15" ColumnDefinitions="60*, 40*">
+        <Border
+            Grid.Column="0"
+            Margin="0,0,20,0"
+            Style="{StaticResource PanelCard}">
+            <Grid VerticalAlignment="Center" RowDefinitions="Auto, *, Auto">
+                <StackPanel Grid.Row="0">
+                    <TextBlock
+                        x:Name="CurrentFile"
+                        Margin="0,7.5"
+                        Style="{StaticResource TitleText}"
+                        Text="Select a folder to begin.">
+                        <TextBlock.Transitions>
+                            <ContentThemeTransition />
+                        </TextBlock.Transitions>
+                    </TextBlock>
+                    <StackPanel x:Name="FileProgressPanel" Visibility="Collapsed">
+                        <TextBlock x:Name="RemainingFiles" Style="{StaticResource FileCounter}" />
+                        <ProgressBar
+                            x:Name="RemainingFilesProgress"
+                            Width="275"
+                            Height="20"
+                            Value="32" />
+                    </StackPanel>
+                </StackPanel>
+                <StackPanel Grid.Row="1" HorizontalAlignment="Center">
+                    <StackPanel>
+                        <MediaPlayerElement
+                            x:Name="AudioPreview"
+                            Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+                            Style="{StaticResource AudioPlayer}"
+                            Visibility="Visible">
+                            <MediaPlayerElement.TransportControls>
+                                <MediaTransportControls
+                                    x:Name="AudioPreviewControls"
+                                    VerticalAlignment="Center"
+                                    IsCompact="True"
+                                    IsEnabled="False"
+                                    IsSeekBarVisible="True"
+                                    IsZoomButtonVisible="False"
+                                    ShowAndHideAutomatically="False" />
+                            </MediaPlayerElement.TransportControls>
+                        </MediaPlayerElement>
                         <TextBlock
-                            x:Name="CurrentFile"
-                            Margin="0,7.5"
-                            Style="{StaticResource TitleText}"
-                            Text="Select a folder to begin.">
+                            x:Name="Transcription"
+                            HorizontalAlignment="Center"
+                            FontSize="13.5"
+                            FontWeight="Normal"
+                            Text="Temporary"
+                            TextAlignment="Center">
                             <TextBlock.Transitions>
                                 <ContentThemeTransition />
                             </TextBlock.Transitions>
                         </TextBlock>
-                        <StackPanel x:Name="FileProgressPanel" Visibility="Collapsed">
-                            <TextBlock x:Name="RemainingFiles" Style="{StaticResource FileCounter}" />
-                            <ProgressBar
-                                x:Name="RemainingFilesProgress"
-                                Width="275"
-                                Height="20"
-                                Value="32" />
-                        </StackPanel>
-                        <StackPanel>
-                            <MediaPlayerElement
-                                x:Name="AudioPreview"
-                                Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
-                                Style="{StaticResource AudioPlayer}"
-                                Visibility="Visible">
-                                <MediaPlayerElement.TransportControls>
-                                    <MediaTransportControls
-                                        x:Name="AudioPreviewControls"
-                                        VerticalAlignment="Center"
-                                        IsCompact="True"
-                                        IsEnabled="False"
-                                        IsSeekBarVisible="True"
-                                        IsZoomButtonVisible="False"
-                                        ShowAndHideAutomatically="False" />
-                                </MediaPlayerElement.TransportControls>
-                            </MediaPlayerElement>
-                            <TextBlock
-                                x:Name="Transcription"
-                                HorizontalAlignment="Center"
-                                FontSize="13.5"
-                                FontWeight="Normal"
-                                Text="Temporary"
-                                TextAlignment="Center">
-                                <TextBlock.Transitions>
-                                    <ContentThemeTransition />
-                                </TextBlock.Transitions>
-                            </TextBlock>
-                        </StackPanel>
-                        <StackPanel
-                            Margin="0,15,0,0"
-                            HorizontalAlignment="Center"
-                            Orientation="Horizontal">
-                            <Button
-                                x:Name="SkipAudioButton"
-                                Click="SkipCurrentAudioFile"
-                                Content="Skip"
-                                IsEnabled="{Binding IsIdle}"
-                                Style="{StaticResource OperationButton}"
-                                Visibility="{Binding IsIdle, Converter={StaticResource VisibilityConverter}}" />
-                            <Button
-                                x:Name="CancelRecordingButton"
-                                Click="CancelCurrentRecording"
-                                Command="{Binding CancelRecordCommand}"
-                                Content="Cancel"
-                                IsEnabled="{Binding IsRecording}"
-                                Style="{StaticResource OperationButton}"
-                                Visibility="{Binding IsRecording, Converter={StaticResource VisibilityConverter}}" />
-                            <Button
-                                x:Name="DiscardRecordingButton"
-                                Click="UpdateAudioStatus"
-                                Command="{Binding SwitchButtonStatesCommand}"
-                                Content="Reject"
-                                IsEnabled="{Binding IsReviewing}"
-                                Style="{StaticResource OperationButton}"
-                                Visibility="{Binding IsReviewing, Converter={StaticResource VisibilityConverter}}" />
-                            <Button
-                                x:Name="StartRecordingButton"
-                                Click="StartRecordingAudio"
-                                Command="{Binding SwitchButtonStatesCommand}"
-                                Content="Record"
-                                IsEnabled="{Binding IsIdle}"
-                                Style="{StaticResource OperationButton}"
-                                Visibility="{Binding IsIdle, Converter={StaticResource VisibilityConverter}}" />
-                            <Button
-                                x:Name="EndRecordingButton"
-                                Click="StopRecordingAudio"
-                                Command="{Binding SwitchButtonStatesCommand}"
-                                Content="End Recording"
-                                IsEnabled="{Binding IsRecording}"
-                                Style="{StaticResource OperationButton}"
-                                Visibility="{Binding IsRecording, Converter={StaticResource VisibilityConverter}}" />
-                            <Button
-                                x:Name="SubmitRecordingButton"
-                                Click="UpdateAudioStatus"
-                                Command="{Binding SwitchButtonStatesCommand}"
-                                Content="Submit"
-                                IsEnabled="{Binding IsReviewing}"
-                                Style="{StaticResource OperationButton}"
-                                Visibility="{Binding IsReviewing, Converter={StaticResource VisibilityConverter}}" />
-                        </StackPanel>
                     </StackPanel>
-                </Border>
-
-                <Border
-                    Grid.Column="1"
-                    Width="375"
-                    Style="{StaticResource PanelCard}">
-                    <StackPanel Padding="5" VerticalAlignment="Center">
-                        <TextBlock
-                            Margin="0,0,0,15"
-                            Style="{StaticResource TitleText}"
-                            Text="Pitch Tuning:" />
-                        <ComboBox
-                            x:Name="VoiceTuneMenu"
-                            Margin="0,0,0,50"
-                            PlaceholderText="Pick Character"
-                            SelectionChanged="EffectsValueUpdate"
-                            Style="{StaticResource DropdownMenu}" />
-                        <TextBlock
-                            Width="275"
-                            Margin="0,0,0,15"
-                            Style="{StaticResource TitleText}"
-                            Text="Extra Effects:"
-                            TextWrapping="WrapWholeWords" />
-                        <ComboBox
-                            x:Name="EffectsMenu"
-                            Margin="0,0,0,10"
-                            PlaceholderText="Select Effect"
-                            SelectionChanged="EffectsValueUpdate"
-                            Style="{StaticResource DropdownMenu}" />
-                        <CheckBox
-                            x:Name="FurtherEditsCheckBox"
-                            HorizontalAlignment="Center"
-                            Checked="FlagFurtherEdits"
-                            Content="Further Edits Required?"
-                            Unchecked="FlagFurtherEdits" />
-                    </StackPanel>
-                </Border>
+                    <StackPanel
+                        Margin="0,15,0,0"
+                        HorizontalAlignment="Center"
+                        Orientation="Horizontal" />
+                </StackPanel>
+                <StackPanel
+                    Grid.Row="2"
+                    HorizontalAlignment="Center"
+                    Orientation="Horizontal">
+                    <Button
+                        x:Name="SkipAudioButton"
+                        Click="SkipCurrentAudioFile"
+                        Content="Skip"
+                        IsEnabled="{Binding IsIdle}"
+                        Style="{StaticResource OperationButton}"
+                        Visibility="{Binding IsIdle, Converter={StaticResource VisibilityConverter}}" />
+                    <Button
+                        x:Name="CancelRecordingButton"
+                        Click="CancelCurrentRecording"
+                        Command="{Binding CancelRecordCommand}"
+                        Content="Cancel"
+                        IsEnabled="{Binding IsRecording}"
+                        Style="{StaticResource OperationButton}"
+                        Visibility="{Binding IsRecording, Converter={StaticResource VisibilityConverter}}" />
+                    <Button
+                        x:Name="DiscardRecordingButton"
+                        Click="UpdateAudioStatus"
+                        Command="{Binding SwitchButtonStatesCommand}"
+                        Content="Reject"
+                        IsEnabled="{Binding IsReviewing}"
+                        Style="{StaticResource OperationButton}"
+                        Visibility="{Binding IsReviewing, Converter={StaticResource VisibilityConverter}}" />
+                    <Button
+                        x:Name="StartRecordingButton"
+                        Click="StartRecordingAudio"
+                        Command="{Binding SwitchButtonStatesCommand}"
+                        Content="Record"
+                        IsEnabled="{Binding IsIdle}"
+                        Style="{StaticResource OperationButton}"
+                        Visibility="{Binding IsIdle, Converter={StaticResource VisibilityConverter}}" />
+                    <Button
+                        x:Name="EndRecordingButton"
+                        Click="StopRecordingAudio"
+                        Command="{Binding SwitchButtonStatesCommand}"
+                        Content="End Recording"
+                        IsEnabled="{Binding IsRecording}"
+                        Style="{StaticResource OperationButton}"
+                        Visibility="{Binding IsRecording, Converter={StaticResource VisibilityConverter}}" />
+                    <Button
+                        x:Name="SubmitRecordingButton"
+                        Click="UpdateAudioStatus"
+                        Command="{Binding SwitchButtonStatesCommand}"
+                        Content="Submit"
+                        IsEnabled="{Binding IsReviewing}"
+                        Style="{StaticResource OperationButton}"
+                        Visibility="{Binding IsReviewing, Converter={StaticResource VisibilityConverter}}" />
+                </StackPanel>
             </Grid>
-        </StackPanel>
+        </Border>
+        <Border Grid.Column="1" Style="{StaticResource PanelCard}">
+            <Grid VerticalAlignment="Center" RowDefinitions="Auto, Auto">
+                <StackPanel Grid.Row="0">
+                    <TextBlock
+                        Margin="0,0,0,15"
+                        Style="{StaticResource TitleText}"
+                        Text="Pitch Tuning:" />
+                    <ComboBox
+                        x:Name="VoiceTuneMenu"
+                        Margin="0,0,0,50"
+                        PlaceholderText="Pick Character"
+                        SelectionChanged="EffectsValueUpdate"
+                        Style="{StaticResource DropdownMenu}" />
+                </StackPanel>
+                <StackPanel Grid.Row="1">
+                    <TextBlock
+                        Width="275"
+                        Margin="0,0,0,15"
+                        Style="{StaticResource TitleText}"
+                        Text="Extra Effects:"
+                        TextWrapping="WrapWholeWords" />
+                    <ComboBox
+                        x:Name="EffectsMenu"
+                        Margin="0,0,0,10"
+                        PlaceholderText="Select Effect"
+                        SelectionChanged="EffectsValueUpdate"
+                        Style="{StaticResource DropdownMenu}" />
+                    <CheckBox
+                        x:Name="FurtherEditsCheckBox"
+                        HorizontalAlignment="Center"
+                        Checked="FlagFurtherEdits"
+                        Content="Further Edits Required?"
+                        Unchecked="FlagFurtherEdits" />
+                </StackPanel>
+            </Grid>
+        </Border>
     </Grid>
 </Page>

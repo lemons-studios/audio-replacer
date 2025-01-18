@@ -14,39 +14,53 @@
     MinHeight="485"
     mc:Ignorable="d">
 
-    <StackPanel>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
         <Border
             x:Name="AppTitleBar"
+            Grid.Row="0"
             Height="55"
             Padding="5"
             VerticalAlignment="Top"
             BorderThickness="5">
-            <Grid ColumnDefinitions="Auto, *">
-                <FontIcon Glyph="&#xEC71;" Style="{StaticResource TitleBarIcon}" />
-                <StackPanel Grid.Column="1" Orientation="Horizontal">
-                    <TextBlock
-                        x:Name="AppTitle"
-                        Style="{StaticResource TitleBarText}"
-                        Text="Audio Replacer" />
-                    <AppBarButton
-                        x:Name="FolderChanger"
-                        Width="145"
-                        Height="45"
-                        Margin="35,0,0,0"
-                        VerticalAlignment="Center"
-                        HorizontalContentAlignment="Center"
-                        VerticalContentAlignment="Center"
-                        Background="{ThemeResource ControlFillColorSecondaryBrush}"
-                        Click="ChangeProjectFolder"
-                        Content="Change Project Folder"
-                        CornerRadius="4"
-                        FontSize="17"
-                        FontWeight="Medium" />
-                </StackPanel>
-            </Grid>
+            <StackPanel>
+                <Grid ColumnDefinitions="Auto, *" RowDefinitions="Auto">
+                    <FontIcon Glyph="&#xEC71;" Style="{StaticResource TitleBarIcon}" />
+                    <StackPanel Grid.Column="1" Orientation="Horizontal">
+                        <TextBlock
+                            x:Name="AppTitle"
+                            VerticalAlignment="Center"
+                            Style="{StaticResource TitleBarText}"
+                            Text="Audio Replacer" />
+                        <AppBarButton
+                            x:Name="FolderChanger"
+                            Width="145"
+                            Height="45"
+                            Margin="35,0,0,5"
+                            VerticalAlignment="Center"
+                            HorizontalContentAlignment="Center"
+                            VerticalContentAlignment="Center"
+                            Background="{ThemeResource ControlFillColorSecondaryBrush}"
+                            Click="ChangeProjectFolder"
+                            Content="Change Project Folder"
+                            CornerRadius="4"
+                            FontSize="17"
+                            FontWeight="Medium" />
+                    </StackPanel>
+                </Grid>
+            </StackPanel>
         </Border>
 
-        <NavigationView ItemInvoked="Navigate" Style="{StaticResource PageNavigation}">
+        <NavigationView
+            Grid.Row="1"
+            IsPaneOpen="True"
+            ItemInvoked="Navigate"
+            PaneDisplayMode="Left"
+            Style="{StaticResource PageNavigation}">
             <NavigationView.MenuItems>
                 <NavigationViewItem Tag="Record">
                     <NavigationViewItem.Content>
@@ -81,7 +95,12 @@
                     </NavigationViewItem.Icon>
                 </NavigationViewItem>
             </NavigationView.MenuItems>
-            <Frame x:Name="MainFrame">
+
+            <Frame
+                x:Name="MainFrame"
+                Padding="10"
+                HorizontalAlignment="Stretch"
+                VerticalAlignment="Stretch">
                 <Frame.ContentTransitions>
                     <TransitionCollection>
                         <EntranceThemeTransition />
@@ -90,59 +109,14 @@
             </Frame>
         </NavigationView>
 
-        <InfoBar x:Name="NotificationPopup" Style="{StaticResource ToastNotification}">
-            <InfoBar.Transitions>
-                <PopupThemeTransition />
-            </InfoBar.Transitions>
-        </InfoBar>
-
-        <InfoBar Severity="Success" Style="{StaticResource ToastNotification}">
-            <InfoBar.Transitions>
-                <PopupThemeTransition />
-            </InfoBar.Transitions>
-        </InfoBar>
-
-        <InfoBar Severity="Error" Style="{StaticResource ToastNotification}">
-            <InfoBar.Transitions>
-                <PopupThemeTransition />
-            </InfoBar.Transitions>
-        </InfoBar>
-
         <InfoBar
-            x:Name="Test"
-            Title="Update Available"
-            Background="{ThemeResource SystemFillColorCriticalBackgroundBrush}"
-            Severity="Informational"
+            x:Name="NotificationPopup"
+            Grid.Row="1"
             Style="{StaticResource ToastNotification}">
-            <InfoBar.IconSource>
-                <FontIconSource Glyph="&#xECC5;" />
-            </InfoBar.IconSource>
-            <InfoBar.ActionButton>
-                <Button
-                    Command="{Binding OpenGitHubCommand}"
-                    Content="View Update Details"
-                    CornerRadius="4" />
-            </InfoBar.ActionButton>
             <InfoBar.Transitions>
                 <PopupThemeTransition />
             </InfoBar.Transitions>
         </InfoBar>
+    </Grid>
 
-        <InfoBar
-            Background="{ThemeResource SystemFillColorSolidAttentionBackgroundBrush}"
-            IsClosable="False"
-            Severity="Informational"
-            Style="{StaticResource ToastNotification}">
-            <InfoBar.Content>
-                <ProgressBar
-                    MaxWidth="500"
-                    Margin="0,0,0,6"
-                    IsIndeterminate="True" />
-            </InfoBar.Content>
-            <InfoBar.Transitions>
-                <PopupThemeTransition />
-            </InfoBar.Transitions>
-        </InfoBar>
-
-    </StackPanel>
 </WinUiEx:WindowEx>

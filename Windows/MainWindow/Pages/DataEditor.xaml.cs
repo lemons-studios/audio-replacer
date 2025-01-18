@@ -162,4 +162,9 @@ public sealed partial class DataEditor
     {
         App.DiscordController.SetState("In the data editor");
     }
+
+    private void OpenHelpPage(object sender, RoutedEventArgs e)
+    {
+        Generic.OpenUrl("https://github.com/lemons-studios/audio-replacer/wiki");
+    }
 }

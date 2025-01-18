@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Net.Http;
+using System.Reflection;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 
@@ -61,8 +62,7 @@ public class Generic
         pitchValues = [];
         effectMenuValues = [];
         effectMenuTitles = [];
-
-
+        
         foreach (string[] data in PitchData)
         {
             pitchValues.Add(ParseFloat(data[0])); // Position 0 of each array in the 2d array should have the pitch data, as mentioned in GlobalData.cs
@@ -169,5 +169,18 @@ public class Generic
             throw new AggregateException(e);
         }
     }
-}
 
+    public static string GetAppVersion(bool forceBuildNumber = false)
+    {
+        try
+        {
+            var fullVer = Assembly.GetEntryAssembly().GetName().Version.ToString();
+            string[] splitVer = fullVer.Split(".");
+            return !forceBuildNumber ? $"{splitVer[0]}.{splitVer[1]}" : $"{splitVer[0]}.{splitVer[1]}.{splitVer[2]}";
+        }
+        catch (NullReferenceException)
+        {
+            return string.Empty;
+        }
+    }
+} 
