@@ -37,6 +37,8 @@
 		<PackageReference Include="SevenZipExtractor" Version="1.0.19" />
 		<PackageReference Include="System.Text.Json" Version="9.0.1" />
 		<PackageReference Include="Velopack" Version="0.0.1053" />
+		<PackageReference Include="Whisper.net" Version="1.7.4" />
+		<PackageReference Include="Whisper.net.Runtime" Version="1.7.4" />
 		<PackageReference Include="WinUI.TitleBarDragRegions" Version="1.0.0" />
 		<PackageReference Include="WinUIEdit" Version="0.0.3-prerelease" />
 		<PackageReference Include="WinUIEx" Version="2.5.1" />

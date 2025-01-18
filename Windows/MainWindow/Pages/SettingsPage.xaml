@@ -6,6 +6,7 @@
     xmlns:D="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:Mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:Models="using:AudioReplacer.Windows.MainWindow.PageData"
+    xmlns:Ui="using:CommunityToolkit.WinUI"
     Mc:Ignorable="D">
 
     <Page.DataContext>
@@ -15,10 +16,10 @@
     <ScrollViewer Style="{StaticResource SettingsScroll}">
         <ScrollViewer.Content>
             <StackPanel>
-                <CommunityToolkit:SettingsCard Margin="0,0,0,7.5" Header="App Theme">
-                    <CommunityToolkit:SettingsCard.HeaderIcon>
-                        <FontIcon Glyph="&#xE790;" />
-                    </CommunityToolkit:SettingsCard.HeaderIcon>
+                <CommunityToolkit:SettingsCard
+                    Margin="0,0,0,7.5"
+                    Header="App Theme"
+                    HeaderIcon="{Ui:FontIcon Glyph=&#xE790;}">
                     <ComboBox SelectedIndex="{Binding SelectedAppTheme, Mode=TwoWay}">
                         <ComboBoxItem>System Theme</ComboBoxItem>
                         <ComboBoxItem>Light</ComboBoxItem>
@@ -29,10 +30,8 @@
                 <CommunityToolkit:SettingsCard
                     Margin="0,0,0,7.5"
                     Description="These changes will only take effect if you have enabled transparency effects in the system settings"
-                    Header="Transparency Effects">
-                    <CommunityToolkit:SettingsCard.HeaderIcon>
-                        <FontIcon Glyph="&#xF4A5;" />
-                    </CommunityToolkit:SettingsCard.HeaderIcon>
+                    Header="Transparency Effects"
+                    HeaderIcon="{Ui:FontIcon Glyph=&#xF4A5;}">
                     <ComboBox SelectedIndex="{Binding SelectedTransparencyMode, Mode=TwoWay}">
                         <ComboBoxItem>Mica (Windows 11 Only)</ComboBoxItem>
                         <ComboBoxItem>Acrylic</ComboBoxItem>
@@ -42,40 +41,40 @@
                 <CommunityToolkit:SettingsCard
                     Margin="0,0,0,7.5"
                     Description="Check is performed each launch by checking GitHub for new releases"
-                    Header="Enable Update Checks">
-                    <CommunityToolkit:SettingsCard.HeaderIcon>
-                        <FontIcon Glyph="&#xECC5;" />
-                    </CommunityToolkit:SettingsCard.HeaderIcon>
+                    Header="Enable Update Checks"
+                    HeaderIcon="{Ui:FontIcon Glyph=&#xECC5;}">
                     <ToggleSwitch IsOn="{Binding EnableUpdateChecks, Mode=TwoWay}" />
                 </CommunityToolkit:SettingsCard>
 
                 <CommunityToolkit:SettingsCard
                     Margin="0,0,0,7.5"
+                    Description="When off, the next file will be first file in an alphabetical list"
+                    Header="Randomize Current File"
+                    HeaderIcon="{Ui:FontIcon Glyph=&#xE8AB;}">
+                    <ToggleSwitch IsOn="{Binding RandomizeFiles, Mode=TwoWay}" />
+                </CommunityToolkit:SettingsCard>
+
+                <CommunityToolkit:SettingsCard
+                    Margin="0,0,0,7.5"
+                    Description="Shows your activity on the application on Discord if the desktop version is installed"
+                    Header="Enable Discord Rich Presence"
+                    HeaderIcon="{Ui:FontIcon Glyph=&#xE8F2;}">
+                    <ToggleSwitch IsOn="{Binding EnableRpc, Mode=TwoWay}" />
+                </CommunityToolkit:SettingsCard>
+
+                <CommunityToolkit:SettingsCard
+                    Margin="0,0,0,7.5"
                     Description="Automatically loads last selected folder from previous launch"
-                    Header="Remember Selected Folder">
-                    <CommunityToolkit:SettingsCard.HeaderIcon>
-                        <FontIcon Glyph="&#xE8F7;" />
-                    </CommunityToolkit:SettingsCard.HeaderIcon>
+                    Header="Remember Selected Folder"
+                    HeaderIcon="{Ui:FontIcon Glyph=&#xE8F7;}">
                     <ToggleSwitch IsOn="{Binding EnableFolderMemory, Mode=TwoWay}" />
                 </CommunityToolkit:SettingsCard>
 
                 <CommunityToolkit:SettingsCard
                     Margin="0,0,0,7.5"
-                    Description="Shows your selected pitch/effect under the audio player on the recording page"
-                    Header="Show effect selection details">
-                    <CommunityToolkit:SettingsCard.HeaderIcon>
-                        <FontIcon Glyph="&#xE90B;" />
-                    </CommunityToolkit:SettingsCard.HeaderIcon>
-                    <ToggleSwitch IsOn="{Binding EnableVerbosePitch, Mode=TwoWay}" />
-                </CommunityToolkit:SettingsCard>
-
-                <CommunityToolkit:SettingsCard
-                    Margin="0,0,0,7.5"
                     Description="Measured in milliseconds"
-                    Header="Notification Stay Time">
-                    <CommunityToolkit:SettingsCard.HeaderIcon>
-                        <FontIcon Glyph="&#xE8BD;" />
-                    </CommunityToolkit:SettingsCard.HeaderIcon>
+                    Header="Notification Stay Time"
+                    HeaderIcon="{Ui:FontIcon Glyph=&#xE8BD;}">
                     <NumberBox
                         LargeChange="100"
                         Maximum="5500"
@@ -88,10 +87,8 @@
                 <CommunityToolkit:SettingsCard
                     Margin="0,0,0,7.5"
                     Description="Measured in milliseconds"
-                    Header="Record Stop Delay">
-                    <CommunityToolkit:SettingsCard.HeaderIcon>
-                        <FontIcon Glyph="&#xF781;" />
-                    </CommunityToolkit:SettingsCard.HeaderIcon>
+                    Header="Record Stop Delay"
+                    HeaderIcon="{Ui:FontIcon Glyph=&#xF781;}">
                     <NumberBox
                         LargeChange="50"
                         Maximum="5000"
@@ -104,10 +101,8 @@
                 <CommunityToolkit:SettingsCard
                     Margin="0,0,0,7.5"
                     Description="Measured in milliseconds"
-                    Header="Record Start Delay">
-                    <CommunityToolkit:SettingsCard.HeaderIcon>
-                        <FontIcon Glyph="&#xE916;" />
-                    </CommunityToolkit:SettingsCard.HeaderIcon>
+                    Header="Record Start Delay"
+                    HeaderIcon="{Ui:FontIcon Glyph=&#xE916;}">
                     <NumberBox
                         LargeChange="50"
                         Maximum="5000"
@@ -119,94 +114,62 @@
 
                 <CommunityToolkit:SettingsCard
                     Margin="0,0,0,7.5"
+                    ActionIcon="{Ui:FontIcon Glyph=&#xE8A7;}"
                     Command="{Binding OpenOutputFolderCommand}"
                     Description="Opens an explorer window into the output directory of the app"
                     Header="Open Output Directory"
-                    IsClickEnabled="True">
-                    <CommunityToolkit:SettingsCard.ActionIcon>
-                        <FontIcon Glyph="&#xE8A7;" />
-                    </CommunityToolkit:SettingsCard.ActionIcon>
-                    <CommunityToolkit:SettingsCard.HeaderIcon>
-                        <FontIcon Glyph="&#xE8DA;" />
-                    </CommunityToolkit:SettingsCard.HeaderIcon>
-                </CommunityToolkit:SettingsCard>
+                    HeaderIcon="{Ui:FontIcon Glyph=&#xE8DA;}"
+                    IsClickEnabled="True" />
 
                 <CommunityToolkit:SettingsCard
                     Margin="0,0,0,7.5"
+                    ActionIcon="{Ui:FontIcon Glyph=&#xE8A7;}"
                     Command="{Binding OpenDataFileCommand}"
                     Description="Opens your preferred text editor to the chosen custom data file"
                     Header="Edit Custom Data"
-                    IsClickEnabled="True">
-                    <CommunityToolkit:SettingsCard.ActionIcon>
-                        <FontIcon Glyph="&#xE8A7;" />
-                    </CommunityToolkit:SettingsCard.ActionIcon>
-                    <CommunityToolkit:SettingsCard.HeaderIcon>
-                        <FontIcon Glyph="&#xE792;" />
-                    </CommunityToolkit:SettingsCard.HeaderIcon>
-                </CommunityToolkit:SettingsCard>
+                    HeaderIcon="{Ui:FontIcon Glyph=&#xE792;}"
+                    IsClickEnabled="True" />
 
                 <CommunityToolkit:SettingsExpander
                     Margin="0,0,0,7.5"
                     Description="App will restart if anything is reset"
-                    Header="Reset Data">
-                    <CommunityToolkit:SettingsExpander.HeaderIcon>
-                        <FontIcon Glyph="&#xE74D;" />
-                    </CommunityToolkit:SettingsExpander.HeaderIcon>
+                    Header="Reset Data"
+                    HeaderIcon="{Ui:FontIcon Glyph=&#xE74D;}">
                     <CommunityToolkit:SettingsExpander.Items>
                         <CommunityToolkit:SettingsCard
                             Margin="0,5,0,4.5"
+                            ActionIcon="{Ui:FontIcon Glyph=&#xE76C;}"
                             Command="{Binding ResetSettingsCommand}"
                             Header="Reset Settings"
-                            IsClickEnabled="True">
-                            <CommunityToolkit:SettingsCard.ActionIcon>
-                                <FontIcon Glyph="&#xE76C;" />
-                            </CommunityToolkit:SettingsCard.ActionIcon>
-                            <CommunityToolkit:SettingsCard.HeaderIcon>
-                                <FontIcon Glyph="&#xE713;" />
-                            </CommunityToolkit:SettingsCard.HeaderIcon>
-                        </CommunityToolkit:SettingsCard>
+                            HeaderIcon="{Ui:FontIcon Glyph=&#xE713;}"
+                            IsClickEnabled="True" />
                         <CommunityToolkit:SettingsCard
                             Margin="0,0,0,4.5"
+                            ActionIcon="{Ui:FontIcon Glyph=&#xE76C;}"
                             Command="{Binding ResetCustomPitchCommand}"
                             Header="Reset Custom Pitch Data"
-                            IsClickEnabled="True">
-                            <CommunityToolkit:SettingsCard.ActionIcon>
-                                <FontIcon Glyph="&#xE76C;" />
-                            </CommunityToolkit:SettingsCard.ActionIcon>
-                            <CommunityToolkit:SettingsCard.HeaderIcon>
-                                <FontIcon Glyph="&#xE9E9;" />
-                            </CommunityToolkit:SettingsCard.HeaderIcon>
-                        </CommunityToolkit:SettingsCard>
+                            HeaderIcon="{Ui:FontIcon Glyph=&#xE9E9;}"
+                            IsClickEnabled="True" />
                         <CommunityToolkit:SettingsCard
                             Margin="0,0,0,4.5"
+                            ActionIcon="{Ui:FontIcon Glyph=&#xE76C;}"
                             Command="{Binding ResetCustomEffectsCommand}"
                             Header="Reset Custom Effect Data"
-                            IsClickEnabled="True">
-                            <CommunityToolkit:SettingsCard.ActionIcon>
-                                <FontIcon Glyph="&#xE76C;" />
-                            </CommunityToolkit:SettingsCard.ActionIcon>
-                            <CommunityToolkit:SettingsCard.HeaderIcon>
-                                <FontIcon Glyph="&#xE8D6;" />
-                            </CommunityToolkit:SettingsCard.HeaderIcon>
-                        </CommunityToolkit:SettingsCard>
+                            HeaderIcon="{Ui:FontIcon Glyph=&#xE8D6;}"
+                            IsClickEnabled="True" />
                         <CommunityToolkit:SettingsCard
+                            ActionIcon="{Ui:FontIcon Glyph=&#xE76C;}"
                             Command="{Binding ResetAllCommand}"
                             Header="Reset All"
-                            IsClickEnabled="True">
-                            <CommunityToolkit:SettingsCard.ActionIcon>
-                                <FontIcon Glyph="&#xE76C;" />
-                            </CommunityToolkit:SettingsCard.ActionIcon>
-                            <CommunityToolkit:SettingsCard.HeaderIcon>
-                                <FontIcon Glyph="&#xE7BA;" />
-                            </CommunityToolkit:SettingsCard.HeaderIcon>
-                        </CommunityToolkit:SettingsCard>
+                            HeaderIcon="{Ui:FontIcon Glyph=&#xE7BA;}"
+                            IsClickEnabled="True" />
                     </CommunityToolkit:SettingsExpander.Items>
                 </CommunityToolkit:SettingsExpander>
 
-                <CommunityToolkit:SettingsExpander Description="© 2024 Shob3r/Lemon Studios" Header="About Audio Replacer 2">
-                    <CommunityToolkit:SettingsExpander.HeaderIcon>
-                        <FontIcon Glyph="&#xEC71;" />
-                    </CommunityToolkit:SettingsExpander.HeaderIcon>
+                <CommunityToolkit:SettingsExpander
+                    Description="© 2024-2025 Shob3r/Lemon Studios"
+                    Header="About Audio Replacer"
+                    HeaderIcon="{Ui:FontIcon Glyph=&#xEC71;}">
                     <CommunityToolkit:SettingsExpander.Items>
                         <CommunityToolkit:SettingsCard HorizontalContentAlignment="Left" ContentAlignment="Vertical">
                             <StackPanel>
@@ -226,7 +189,6 @@
                                     Margin="0,0,0,15"
                                     Content="Config.Net"
                                     NavigateUri="https://github.com/aloneguid/config" />
-
                                 <TextBlock
                                     Margin="0,0,0,5"
                                     FontWeight="SemiBold"

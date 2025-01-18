@@ -16,9 +16,7 @@ public partial class SettingsViewModel : ObservableObject
     partial void OnSelectedAppThemeChanged(int value)
     {
         if (App.MainWindow.Content is FrameworkElement rootElement)
-        {
             rootElement.RequestedTheme = (ElementTheme) value;
-        }
         App.AppSettings.AppThemeSetting = value;
     }
 
@@ -29,43 +27,39 @@ public partial class SettingsViewModel : ObservableObject
     partial void OnSelectedTransparencyModeChanged(int value)
     {
         if (value == 0 && MicaController.IsSupported())
-        {
             App.MainWindow.SystemBackdrop = new MicaBackdrop();
-        }
         else
         {
             App.MainWindow.SystemBackdrop = new DesktopAcrylicBackdrop();
             if (value == 0) // Ensure the value is set to 1 only if it was 0
-            {
                 SelectedTransparencyMode = 1;
-            }
         }
 
         App.AppSettings.AppTransparencySetting = value;
     }
 
-    [ObservableProperty] private bool enableUpdateChecks = App.AppSettings.AppUpdateCheck == 1;
+    [ObservableProperty] private bool enableUpdateChecks = Generic.IntToBool(App.AppSettings.AppUpdateCheck);
     partial void OnEnableUpdateChecksChanged(bool value)
     {
         App.AppSettings.AppUpdateCheck = Generic.BoolToInt(value);
     }
 
-    [ObservableProperty] private bool enableFolderMemory = App.AppSettings.RememberSelectedFolder == 1;
+    [ObservableProperty] private bool enableFolderMemory = Generic.IntToBool(App.AppSettings.RememberSelectedFolder);
     partial void OnEnableFolderMemoryChanged(bool value)
     {
         App.AppSettings.RememberSelectedFolder = Generic.BoolToInt(value);
     }
 
-    [ObservableProperty] private bool randomizeFiles = App.AppSettings.InputRandomizationEnabled == 1;
+    [ObservableProperty] private bool randomizeFiles = Generic.IntToBool(App.AppSettings.InputRandomizationEnabled);
     partial void OnRandomizeFilesChanged(bool value)
     {
         App.AppSettings.InputRandomizationEnabled = Generic.BoolToInt(value);
     }
 
-    [ObservableProperty] private bool enableVerbosePitch = App.AppSettings.ShowEffectSelection == 1;
-    partial void OnEnableVerbosePitchChanged(bool value)
+    [ObservableProperty] private bool enableRpc = Generic.IntToBool(App.AppSettings.EnableRichPresence);
+    partial void OnEnableRpcChanged(bool value)
     {
-        App.AppSettings.ShowEffectSelection = Generic.BoolToInt(value);
+        App.AppSettings.EnableRichPresence = Generic.BoolToInt(value);
     }
 
     [ObservableProperty] private int notificationStayTime = App.AppSettings.NotificationTimeout;

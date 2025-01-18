@@ -13,6 +13,9 @@ namespace AudioReplacer.Util;
 public class Generic
 {
     public static string extraApplicationData = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "audio-replacer");
+    public static string binaryPath = Path.Combine(extraApplicationData, "bin");
+    public static string ffmpegPath = Path.Combine(binaryPath, "ffmpeg.exe");
+    public static string whisperPath = Path.Combine(binaryPath, "whisper.bin");
     public static string configPath = Path.Combine(extraApplicationData, "config");
     public static bool isAppLoaded = false;
     public static string SettingsFile = Path.Combine(configPath, "AppSettings.json");
@@ -116,10 +119,6 @@ public class Generic
         }
     }
 
-
-
-
-
     public static async Task<string> GetWebVersion(string url)
     {
         try
@@ -157,12 +156,12 @@ public class Generic
         catch (HttpRequestException) { return string.Empty; }
     }
 
-    public static void DownloadFile(string url, string outPath, string outName)
+    public static void DownloadFile(string url, string outPath)
     {
         try
         {
             using var webStream = WebClient.GetStreamAsync(url);
-            using var fileStream = new FileStream($"{outPath}\\{outName}", FileMode.OpenOrCreate);
+            using var fileStream = new FileStream(outPath, FileMode.OpenOrCreate);
             webStream.Result.CopyTo(fileStream);
         }
         catch (AggregateException e)

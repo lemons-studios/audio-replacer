@@ -29,8 +29,6 @@ public partial class App // I will admit, code-behind is still pretty useful her
         CreateSettingsData();
         CreateJsonData();
         AppSettings = new ConfigurationBuilder<IAppSettings>().UseJsonFile(Generic.SettingsFile).Build();
-        DiscordController =
-            new RichPresenceController(1325340097234866297, "On Record Page", "No Project Loaded", "idle", "Idle");
         InitializeComponent();
         VelopackApp.Build().Run();
     }
@@ -123,6 +121,8 @@ public partial class App // I will admit, code-behind is still pretty useful her
         switch (Generic.IntToBool(AppSettings.AppConfigured))
         {
             case true:
+                // Only initialize rich presence when app is configured
+                DiscordController = new RichPresenceController(1325340097234866297, "On Record Page", "No Project Loaded", "idle", "Idle");
                 MainWindow = new MainWindow();
                 MainWindow.Activate();
                 break;

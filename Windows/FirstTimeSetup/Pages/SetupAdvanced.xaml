@@ -3,23 +3,20 @@
     x:Class="AudioReplacer.Windows.FirstTimeSetup.Pages.SetupAdvanced"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:Models="using:AudioReplacer.Windows.FirstTimeSetup"
+    xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:firstTimeSetup="using:AudioReplacer.Windows.FirstTimeSetup"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+    xmlns:ui="using:CommunityToolkit.WinUI"
     mc:Ignorable="d">
 
     <Page.DataContext>
-        <firstTimeSetup:SetupData />
+        <Models:SetupData />
     </Page.DataContext>
-    <Grid VerticalAlignment="Stretch">
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="1*" />
-            <ColumnDefinition Width="3*" />
-        </Grid.ColumnDefinitions>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="*" />
-        </Grid.RowDefinitions>
+    <Grid
+        VerticalAlignment="Stretch"
+        ColumnDefinitions="1*, 3*"
+        RowDefinitions="*">
 
         <Border
             Grid.Row="0"
@@ -27,9 +24,11 @@
             Margin="10"
             Opacity="10">
             <Image
+                MaxWidth="375"
+                Margin="32"
                 HorizontalAlignment="Center"
                 VerticalAlignment="Center"
-                Source="/Assets/SetupIntro.png" />
+                Source="/Assets/SetupImport.png" />
         </Border>
 
         <Border
@@ -49,12 +48,39 @@
                         Text="Further Configuration"
                         TextWrapping="WrapWholeWords" />
                     <TextBlock
+                        Margin="0,0,0,15"
                         HorizontalAlignment="Center"
                         VerticalAlignment="Center"
                         FontSize="25"
                         FontWeight="Light"
                         Text="Slightly more advanced options"
                         TextWrapping="WrapWholeWords" />
+                    <controls:SettingsCard
+                        Margin="0,0,0,10"
+                        Description="(Optional) Import a json file to adjust the pitch with ffmpeg after finishing a recording"
+                        Header="Import Pitch Data"
+                        HeaderIcon="{ui:FontIcon Glyph=&#xE9E9;}">
+                        <Button
+                            Command="{Binding ImportPitchDataCommand}"
+                            Content="Import"
+                            Style="{StaticResource AccentButtonStyle}" />
+                    </controls:SettingsCard>
+                    <controls:SettingsCard
+                        Margin="0,0,0,10"
+                        Description="(Optional) Import a json file to apply custom effects with ffmpeg after finishing a recording"
+                        Header="Import Custom Effects Data"
+                        HeaderIcon="{ui:FontIcon Glyph=&#xE8D6;}">
+                        <Button
+                            Command="{Binding ImportEffectDataCommand}"
+                            Content="Import"
+                            Style="{StaticResource AccentButtonStyle}" />
+                    </controls:SettingsCard>
+                    <controls:SettingsCard
+                        Description="(Recommended) Downloads additional data to transcribe the current file. Takes up an additional 200mb of storage"
+                        Header="Download Whisper Text Transcription"
+                        HeaderIcon="{ui:FontIcon Glyph=&#xE76D;}">
+                        <ToggleSwitch IsOn="{Binding DownloadWhisper, Mode=TwoWay}" />
+                    </controls:SettingsCard>
                 </StackPanel>
 
                 <AppBarButton

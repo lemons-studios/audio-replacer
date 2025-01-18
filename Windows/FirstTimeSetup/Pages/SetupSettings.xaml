@@ -3,27 +3,21 @@
     x:Class="AudioReplacer.Windows.FirstTimeSetup.Pages.SetupSettings"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:Models="using:AudioReplacer.Windows.FirstTimeSetup"
+    xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:firstTimeSetup="using:AudioReplacer.Windows.FirstTimeSetup"
-    xmlns:local="using:AudioReplacer.Windows.FirstTimeSetup.Pages"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:media="using:CommunityToolkit.WinUI.Media"
     xmlns:ui="using:CommunityToolkit.WinUI"
-    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
     mc:Ignorable="d">
 
     <Page.DataContext>
-        <firstTimeSetup:SetupData />
+        <Models:SetupData />
     </Page.DataContext>
 
-    <Grid VerticalAlignment="Stretch">
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="1*" />
-            <ColumnDefinition Width="3*" />
-        </Grid.ColumnDefinitions>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="*" />
-        </Grid.RowDefinitions>
+    <Grid
+        VerticalAlignment="Stretch"
+        ColumnDefinitions="1*, 3*"
+        RowDefinitions="*">
 
         <Border
             Grid.Row="0"
@@ -31,9 +25,11 @@
             Margin="10"
             Opacity="10">
             <Image
+                MaxWidth="375"
+                Margin="32"
                 HorizontalAlignment="Center"
                 VerticalAlignment="Center"
-                Source="/Assets/SetupIntro.png" />
+                Source="/Assets/SetupSettings.png" />
         </Border>
 
         <Border
@@ -53,12 +49,48 @@
                         Text="Common Settings"
                         TextWrapping="WrapWholeWords" />
                     <TextBlock
+                        Margin="0,0,0,15"
                         HorizontalAlignment="Center"
                         VerticalAlignment="Center"
                         FontSize="25"
                         FontWeight="Light"
                         Text="Configure the app to your liking"
                         TextWrapping="WrapWholeWords" />
+                    <controls:SettingsCard
+                        Margin="0,0,0,5"
+                        Description="Updates are checked every app launch by checking GitHub for new releases"
+                        Header="Check for updates"
+                        HeaderIcon="{ui:FontIcon Glyph=&#xECC5;}">
+                        <ToggleSwitch IsOn="{Binding CheckForUpdates, Mode=TwoWay}" />
+                    </controls:SettingsCard>
+                    <controls:SettingsCard
+                        Margin="0,0,0,5"
+                        Description="Pick a random file from the input folder each time. When off, the next file will be picked based on what comes first in your project alphabetically"
+                        Header="File randomization"
+                        HeaderIcon="{ui:FontIcon Glyph=&#xE8AB;}">
+                        <ToggleSwitch IsOn="{Binding EnableFileRandomization, Mode=TwoWay}" />
+                    </controls:SettingsCard>
+                    <controls:SettingsCard
+                        Margin="0,0,0,5"
+                        Description="How long to start recording after clicking the start record button (ms)"
+                        Header="Record Start Delay"
+                        HeaderIcon="{ui:FontIcon Glyph=&#xE916;}">
+                        <NumberBox Value="{Binding RecordStartDelay, Mode=TwoWay}" />
+                    </controls:SettingsCard>
+                    <controls:SettingsCard
+                        Margin="0,0,0,5"
+                        Description="How long to stop recording after clicking the stop record button (ms)"
+                        Header="Record Stop Delay"
+                        HeaderIcon="{ui:FontIcon Glyph=&#xF781;}">
+                        <NumberBox Value="{Binding RecordEndDelay, Mode=TwoWay}" />
+                    </controls:SettingsCard>
+                    <controls:SettingsCard
+                        Margin="0,0,0,15"
+                        Description="Display Audio Replacer on your Discord profile when using it (If Discord desktop is installed)"
+                        Header="Discord Rich Presence"
+                        HeaderIcon="{ui:FontIcon Glyph=&#xE8F2;}">
+                        <ToggleSwitch IsOn="{Binding RichPresenceEnabled, Mode=TwoWay}" />
+                    </controls:SettingsCard>
                 </StackPanel>
 
                 <AppBarButton

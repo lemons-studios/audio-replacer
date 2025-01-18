@@ -37,13 +37,6 @@
             Grid.Row="1"
             Padding="15"
             HorizontalAlignment="Stretch"
-            VerticalAlignment="Stretch">
-            <Frame.ContentTransitions>
-                <TransitionCollection>
-                    <EntranceThemeTransition />
-                </TransitionCollection>
-            </Frame.ContentTransitions>
-        </Frame>
-
+            VerticalAlignment="Stretch" />
     </Grid>
 </WinUiEx:WindowEx>
