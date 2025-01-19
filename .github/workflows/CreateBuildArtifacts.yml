@@ -23,5 +23,5 @@ jobs:
         run: dotnet restore
         
       - name: Build and package application
-        run: .\GenerateRelease.bat ${{ github.ref_name || 'manual-trigger' }}
+        run: .\GenerateRelease.bat 4.0.0
         shell: cmd
