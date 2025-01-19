@@ -1,4 +1,5 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+﻿using AudioReplacer.Util;
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.UI.Composition.SystemBackdrops;
 using Microsoft.UI.Xaml;
@@ -6,7 +7,6 @@ using Microsoft.UI.Xaml.Media;
 using System;
 using System.IO;
 using System.Threading.Tasks;
-using AudioReplacer.Util;
 using Whisper.net.Ggml;
 
 namespace AudioReplacer.Windows.MainWindow.PageData;
@@ -26,8 +26,6 @@ public partial class SettingsViewModel : ObservableObject
 
     [ObservableProperty]
     private int selectedTransparencyMode = App.AppSettings.AppTransparencySetting;
-
- 
     partial void OnSelectedTransparencyModeChanged(int value)
     {
         if (value == 0 && MicaController.IsSupported())

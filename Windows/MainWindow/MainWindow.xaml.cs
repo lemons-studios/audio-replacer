@@ -1,4 +1,7 @@
 using AudioReplacer.Util;
+using AudioReplacer.Windows.MainWindow.Pages;
+using AudioReplacer.Windows.MainWindow.Util;
+using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
@@ -8,10 +11,7 @@ using System.IO;
 using System.Threading.Tasks;
 using TitleBarDrag;
 using Windows.Storage.Pickers;
-using AudioReplacer.Windows.MainWindow.Pages;
-using Microsoft.UI.Windowing;
 using WinRT.Interop;
-using AudioReplacer.Windows.MainWindow.Util;
 
 namespace AudioReplacer.Windows.MainWindow;
 

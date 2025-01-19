@@ -1,4 +1,5 @@
 ﻿using Microsoft.UI.Composition.SystemBackdrops;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -7,7 +8,6 @@ using System.IO;
 using System.Net.Http;
 using System.Reflection;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
 
 namespace AudioReplacer.Util;
 

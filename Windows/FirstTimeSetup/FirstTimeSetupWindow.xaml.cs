@@ -15,7 +15,7 @@ public sealed partial class FirstTimeSetupWindow
         SystemBackdrop = MicaController.IsSupported() ? new MicaBackdrop() : new DesktopAcrylicBackdrop();
 
         // Open first page of setup
-        MainFrame.Navigate(typeof(SetupWelcome), null, new SlideNavigationTransitionInfo() {Effect = SlideNavigationTransitionEffect.FromRight});
+        MainFrame.Navigate(typeof(SetupWelcome), null, new SlideNavigationTransitionInfo {Effect = SlideNavigationTransitionEffect.FromRight});
     }
 
     public Frame GetMainFrame()
