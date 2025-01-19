@@ -132,8 +132,7 @@ public partial class SetupData : ObservableObject
         // Download Whisper model if enabled
         if (DownloadWhisper)
         {
-            await using var whisperStream =
-                await WhisperGgmlDownloader.GetGgmlModelAsync(GgmlType.Small, QuantizationType.Q5_1);
+            await using var whisperStream = await WhisperGgmlDownloader.GetGgmlModelAsync(GgmlType.Small, QuantizationType.Q5_1);
             await using var fileWriter = File.OpenWrite(Generic.whisperPath);
             await whisperStream.CopyToAsync(fileWriter);
         }

@@ -101,9 +101,22 @@
         </NavigationView>
 
         <InfoBar
-            x:Name="NotificationPopup"
+            x:Name="GeneralNotificationPopup"
             Grid.Row="1"
             Style="{StaticResource ToastNotification}">
+            <InfoBar.Transitions>
+                <PopupThemeTransition />
+            </InfoBar.Transitions>
+        </InfoBar>
+        <InfoBar
+            x:Name="InProgressNotification"
+            Background="{ThemeResource SystemFillColorSolidAttentionBackgroundBrush}"
+            IsClosable="False"
+            Severity="Informational"
+            Style="{StaticResource ToastNotification}">
+            <InfoBar.Content>
+                <ProgressBar IsIndeterminate="True" />
+            </InfoBar.Content>
             <InfoBar.Transitions>
                 <PopupThemeTransition />
             </InfoBar.Transitions>

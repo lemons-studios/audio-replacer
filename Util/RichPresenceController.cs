@@ -31,7 +31,7 @@ public class RichPresenceController
             Assets = new Assets
             {
                 LargeImageKey = "appicon",
-                LargeImageText = "Version 4.0",
+                LargeImageText = $"Version {Generic.GetAppVersion()}",
                 SmallImageKey = smallImage,
                 SmallImageText = smallImageText
             }

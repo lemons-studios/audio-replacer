@@ -27,13 +27,13 @@ public interface IAppSettings
     [Option(Alias = "InputRandomizationEnabled", DefaultValue = 0)]
     int InputRandomizationEnabled { get; set; }
 
-    [Option(Alias = "ShowEffectSelection", DefaultValue = 0)]
-    int ShowEffectSelection { get; set; }
-
     [Option(Alias = "RecordStartWaitTime", DefaultValue = 25)]
     int RecordStartWaitTime { get; set; }
 
     [Option(Alias = "EnableRichPresence", DefaultValue = 1)]
     int EnableRichPresence { get; set; }
+
+    [Option(Alias = "EnableTranscription", DefaultValue = 1)]
+    int EnableTranscription { get; set; }
 }
 

@@ -29,6 +29,8 @@ public class Generic
     public static List<string> PitchTitles, EffectTitles, EffectValues;
     public static List<float> PitchValues;
 
+    public static bool isWhisperInstalled = File.Exists(whisperPath);
+
     private static readonly HttpClient WebClient = new()
     {
         DefaultRequestHeaders = {{ "User-Agent", "Audio Replacer" }}

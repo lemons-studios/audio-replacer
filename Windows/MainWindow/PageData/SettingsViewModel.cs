@@ -7,11 +7,15 @@ using System;
 using System.IO;
 using System.Threading.Tasks;
 using AudioReplacer.Util;
+using Whisper.net.Ggml;
 
 namespace AudioReplacer.Windows.MainWindow.PageData;
 
 public partial class SettingsViewModel : ObservableObject
 {
+    [ObservableProperty] private bool whisperAvailable = Generic.isWhisperInstalled;
+    [ObservableProperty] private bool whisperInstalled = !Generic.isWhisperInstalled;
+
     [ObservableProperty] private int selectedAppTheme = App.AppSettings.AppThemeSetting;
     partial void OnSelectedAppThemeChanged(int value)
     {
@@ -60,6 +64,12 @@ public partial class SettingsViewModel : ObservableObject
     partial void OnEnableRpcChanged(bool value)
     {
         App.AppSettings.EnableRichPresence = Generic.BoolToInt(value);
+    }
+
+    [ObservableProperty] private bool enableTranscription = Generic.IntToBool(App.AppSettings.EnableTranscription);
+    partial void OnEnableTranscriptionChanged(bool value)
+    {
+        App.AppSettings.EnableTranscription = Generic.BoolToInt(value);
     }
 
     [ObservableProperty] private int notificationStayTime = App.AppSettings.NotificationTimeout;
@@ -123,7 +133,17 @@ public partial class SettingsViewModel : ObservableObject
         if (!Generic.isAppLoaded) return;
         File.Delete(Generic.EffectsDataFile);
         File.Delete(Generic.PitchDataFile);
-        File.Delete(Generic.SettingsFile); // TODO: Check if settings also included
+        File.Delete(Generic.SettingsFile);
+        Generic.RestartApp();
+    }
+
+    [RelayCommand]
+    private async Task DownloadWhisper()
+    {
+        App.MainWindow.ToggleProgressNotification("Downloading Data", "Do not disconnect from the internet. App will restart after download is completed");
+        await using var whisperStream = await WhisperGgmlDownloader.GetGgmlModelAsync(GgmlType.Small, QuantizationType.Q5_1);
+        await using var fileWriter = File.OpenWrite(Generic.whisperPath);
+        await whisperStream.CopyToAsync(fileWriter);
         Generic.RestartApp();
     }
 }

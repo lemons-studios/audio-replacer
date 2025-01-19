@@ -1,17 +1,16 @@
 ﻿using AudioReplacer.Util;
+using AudioReplacer.Windows.FirstTimeSetup;
+using AudioReplacer.Windows.MainWindow;
 using Config.Net;
+using Microsoft.UI;
+using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
-using Microsoft.UI.Windowing;
 using Velopack;
-using Microsoft.UI;
-using System;
-using System.Threading.Tasks;
-using AudioReplacer.Windows.FirstTimeSetup;
-using AudioReplacer.Windows.MainWindow;
 using WinRT.Interop;
 
 namespace AudioReplacer;
@@ -56,8 +55,8 @@ public partial class App // I will admit, code-behind is still pretty useful her
                 { "RememberSelectedFolder", 1 },
                 { "LastSelectedFolder", "" },
                 { "InputRandomizationEnabled", 0 },
-                { "ShowEffectSelection", 0 },
-                { "RecordStartWaitTime", 25 }
+                { "RecordStartWaitTime", 25 },
+                { "EnableTranscription", 1}
             };
 
             // Merge existing settings with default settings
@@ -83,8 +82,8 @@ public partial class App // I will admit, code-behind is still pretty useful her
             RememberSelectedFolder = 1,
             LastSelectedFolder = "",
             InputRandomizationEnabled = 0,
-            ShowEffectSelection = 0,
-            RecordStartWaitTime = 25
+            RecordStartWaitTime = 25,
+            EnableTranscription = 1
         };
         string defaultJson = JsonSerializer.Serialize(newConfig, new JsonSerializerOptions { WriteIndented = true });
         File.WriteAllText(Generic.SettingsFile, defaultJson);

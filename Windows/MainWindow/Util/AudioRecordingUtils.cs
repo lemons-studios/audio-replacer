@@ -34,9 +34,8 @@ public class AudioRecordingUtils
 
     public async Task StartRecordingAudio()
     {
-        string fileName = ProjectFileUtils.GetCurrentFileName();
-
-        string formattedFileName = requiresExtraEdits ? $"ExtraEditsRequired-{fileName}" : fileName;
+        var fileName = ProjectFileUtils.GetCurrentFileName();
+        var formattedFileName = requiresExtraEdits ? $"ExtraEditsRequired-{fileName}" : fileName;
         var outputFolder = await ProjectFileUtils.GetDirectoryAsStorageFolder();
         var fileSaveLocation = await outputFolder.CreateFileAsync(formattedFileName, CreationCollisionOption.ReplaceExisting);
         var encodingProfile = MediaEncodingProfile.CreateWav(AudioEncodingQuality.High);
@@ -64,13 +63,13 @@ public class AudioRecordingUtils
 
     private async Task ApplyFilters(string file)
     {
-        string outFile = $"{file}0.wav"; // Temporary name. FFmpeg doesn't like it when the user tries to set the output as the input since
-        float validatedPitchChange = MathF.Max(pitchChange, 0.001f); // Pitch values below zero do not work
-        string command = string.IsNullOrEmpty(effectCommand)
+        var outFile = $"{file}0.wav"; // Temporary name. FFmpeg doesn't like it when the user tries to set the output as the input since
+        var validatedPitchChange = MathF.Max(pitchChange, 0.001f); // Pitch values below zero do not work
+        var command = string.IsNullOrEmpty(effectCommand)
             ? $"rubberband=pitch={validatedPitchChange}"
             : $"rubberband=pitch={validatedPitchChange}, {effectCommand}";
         await File.WriteAllTextAsync(Path.Join(Generic.extraApplicationData, "coolThing.txt"), command);
-        await Generic.SpawnProcess("ffmpeg", $"-i {file} -af \"{command}\" -y {outFile}");
+        await Generic.SpawnProcess($"{Generic.ffmpegPath}", $"-i {file} -af \"{command}\" -y {outFile}");
         File.Delete(file);
         File.Move(outFile, file);
     }

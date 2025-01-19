@@ -46,29 +46,35 @@ public sealed partial class MainWindow
         }
     }
 
-    public async Task ShowNotification(InfoBarSeverity severity, string title, string message, bool autoclose = false, bool closable = true, bool replaceExistingNotifications = false)
+    public async Task ShowNotification(InfoBarSeverity severity, string title, string message, bool autoclose = false, bool closable = true, bool replaceExistingNotifications = true)
     {
-        if (!replaceExistingNotifications && NotificationPopup.IsOpen)
+        if (!replaceExistingNotifications && GeneralNotificationPopup.IsOpen)
         {
             return;
         }
         else
         {
             if (replaceExistingNotifications)
-                NotificationPopup.IsOpen = false;
+            {
+                GeneralNotificationPopup.IsOpen = false;
+                InProgressNotification.IsOpen = false;
+            }
 
-            NotificationPopup.Severity = severity;
-            NotificationPopup.Title = title;
-            NotificationPopup.Message = message;
-            NotificationPopup.IsClosable = closable;
+            GeneralNotificationPopup.Severity = severity;
+            GeneralNotificationPopup.Title = title;
+            GeneralNotificationPopup.Message = message;
+            GeneralNotificationPopup.IsClosable = closable;
 
-            NotificationPopup.IsEnabled = true;
+            GeneralNotificationPopup.IsOpen = true;
             if (autoclose)
             {
                 await Task.Delay(App.AppSettings.NotificationTimeout);
                 try
                 {
-                    NotificationPopup.DispatcherQueue.TryEnqueue(() => { NotificationPopup.IsOpen = false; });
+                    GeneralNotificationPopup.DispatcherQueue.TryEnqueue(() =>
+                    {
+                        GeneralNotificationPopup.IsOpen = false;
+                    });
                 }
                 catch
                 {
@@ -76,6 +82,14 @@ public sealed partial class MainWindow
                 }
             }
         }
+    }
+
+    public void ToggleProgressNotification(string title, string message)
+    {
+        InProgressNotification.Title = title;
+        InProgressNotification.Message = message;
+
+        InProgressNotification.IsOpen = !InProgressNotification.IsOpen;
     }
 
     private void OnClosing(AppWindow sender, AppWindowClosingEventArgs args)
@@ -100,11 +114,6 @@ public sealed partial class MainWindow
         }
     }
 
-    public void DisableFolderChanger()
-    {
-        FolderChanger.IsEnabled = false;
-    }
-
     private void Navigate(NavigationView sender, NavigationViewItemInvokedEventArgs args)
     {
         var pageSwitchType = typeof(RecordPage); // Default page of project
@@ -125,7 +134,6 @@ public sealed partial class MainWindow
             page = (Page) Activator.CreateInstance(pageSwitchType);
             pageCache[pageSwitchType] = page;
         }
-
         MainFrame.Content = page;
     }
 }

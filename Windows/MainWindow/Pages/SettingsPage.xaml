@@ -15,7 +15,7 @@
 
     <ScrollViewer Style="{StaticResource SettingsScroll}">
         <ScrollViewer.Content>
-            <StackPanel>
+            <StackPanel MaxWidth="740">
                 <CommunityToolkit:SettingsCard
                     Margin="0,0,0,7.5"
                     Header="App Theme"
@@ -52,6 +52,15 @@
                     Header="Randomize Current File"
                     HeaderIcon="{Ui:FontIcon Glyph=&#xE8AB;}">
                     <ToggleSwitch IsOn="{Binding RandomizeFiles, Mode=TwoWay}" />
+                </CommunityToolkit:SettingsCard>
+
+                <CommunityToolkit:SettingsCard
+                    Margin="0,0,0,7.5"
+                    Description="When off, the next file will be first file in an alphabetical list"
+                    Header="Enable Audio Transcription"
+                    HeaderIcon="{Ui:FontIcon Glyph=&#xE76D;}"
+                    IsEnabled="{Binding WhisperAvailable}">
+                    <ToggleSwitch IsOn="{Binding EnableTranscription, Mode=TwoWay}" />
                 </CommunityToolkit:SettingsCard>
 
                 <CommunityToolkit:SettingsCard
@@ -130,6 +139,16 @@
                     HeaderIcon="{Ui:FontIcon Glyph=&#xE792;}"
                     IsClickEnabled="True" />
 
+                <CommunityToolkit:SettingsCard
+                    Margin="0,0,0,7.5"
+                    ActionIcon="{Ui:FontIcon Glyph=&#xE76C;}"
+                    Command="{Binding DownloadWhisperCommand}"
+                    Description="Downloads file needed to transcribe audio files"
+                    Header="Download Audio Transcription Data"
+                    HeaderIcon="{Ui:FontIcon Glyph=&#xE896;}"
+                    IsClickEnabled="True"
+                    IsEnabled="{Binding WhisperInstalled}" />
+
                 <CommunityToolkit:SettingsExpander
                     Margin="0,0,0,7.5"
                     Description="App will restart if anything is reset"
@@ -167,6 +186,7 @@
                 </CommunityToolkit:SettingsExpander>
 
                 <CommunityToolkit:SettingsExpander
+                    Margin="0,0,0,50"
                     Description="© 2024-2025 Shob3r/Lemon Studios"
                     Header="About Audio Replacer"
                     HeaderIcon="{Ui:FontIcon Glyph=&#xEC71;}">
@@ -185,6 +205,7 @@
                                 <HyperlinkButton Content="Windows Community Toolkit" NavigateUri="https://github.com/CommunityToolkit/WindowsCommunityToolkit" />
                                 <HyperlinkButton Content="WinUiEdit" NavigateUri="https://github.com/BreeceW/WinUIEdit" />
                                 <HyperlinkButton Content="FFMpeg" NavigateUri="https://ffmpeg.org" />
+                                <HyperlinkButton Content="Whisper.NET" NavigateUri="https://github.com/sandrohanea/whisper.net"/>
                                 <HyperlinkButton
                                     Margin="0,0,0,15"
                                     Content="Config.Net"

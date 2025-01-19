@@ -78,6 +78,8 @@ public sealed partial class RecordPage
             case false:
                 break;
         }
+
+        App.MainWindow.ShowNotification(InfoBarSeverity.Success, "Skipped File", string.Empty, true);
     }
 
     private async void StartRecordingAudio(object sender, RoutedEventArgs e)
@@ -90,6 +92,7 @@ public sealed partial class RecordPage
             await audioRecordingUtils.StartRecordingAudio();
             App.DiscordController.SetSmallAsset("recording", "Recording Audio");
         }
+        App.MainWindow.ToggleProgressNotification("Recording In Progress", string.Empty);
     }
 
     private async void StopRecordingAudio(object sender, RoutedEventArgs e)
@@ -100,6 +103,7 @@ public sealed partial class RecordPage
         CurrentFile.Text = "Review your recording...";
         App.DiscordController.SetSmallAsset("reviewing", "In review phase");
         AudioPreview.Source = MediaSourceFromUri(ProjectFileUtils.GetOutFilePath());
+        App.MainWindow.ShowNotification(InfoBarSeverity.Informational, "Recording Stopped", "Entering Review Phase", true, replaceExistingNotifications: true);
     }
 
     private void UpdateFileElements()
@@ -133,11 +137,11 @@ public sealed partial class RecordPage
             try
             {
                 // Check if the Whisper model path exists
-                if (!Path.Exists(Generic.whisperPath))
+                if (!Path.Exists(Generic.whisperPath) || !Generic.IntToBool(App.AppSettings.EnableTranscription))
                 {
                     await dispatcherQueue.EnqueueAsync(() =>
                     {
-                        Transcription.Text = "Download speech-to-text data from settings to transcribe audio files.";
+                        Transcription.Text = string.Empty;
                     });
                     return;
                 }
@@ -192,6 +196,7 @@ public sealed partial class RecordPage
     {
         Generic.InRecordState = false;
         await audioRecordingUtils.StopRecordingAudio(true);
+        App.MainWindow.ShowNotification(InfoBarSeverity.Informational, "Recording Cancelled", string.Empty, true, replaceExistingNotifications: true);
     }
 
     private void UpdateAudioStatus(object sender, RoutedEventArgs e)
@@ -204,12 +209,13 @@ public sealed partial class RecordPage
         {
             case true:
                 // Submission Accepted
-                ProjectFileUtils.DeleteCurrentFile(
-/* This method essentially acts as a way to confirm the submission*/);
+                ProjectFileUtils.DeleteCurrentFile(/* This method essentially acts as a way to confirm the submission*/);
+                App.MainWindow.ShowNotification(InfoBarSeverity.Success, "Recording Accepted", "Moving to next file...", true, replaceExistingNotifications: true);
                 break;
             case false:
                 // Submission Rejected
                 File.Delete(ProjectFileUtils.GetOutFilePath());
+                App.MainWindow.ShowNotification(InfoBarSeverity.Success, "Recording Rejected", "Moving back to current file...", true, replaceExistingNotifications: true);
                 break;
         }
 
