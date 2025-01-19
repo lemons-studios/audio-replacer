@@ -34,13 +34,11 @@ public class AudioRecordingUtils
 
     public async Task StartRecordingAudio()
     {
-        string saveLocation = ProjectFileUtils.GetOutFolderStructure();
         string fileName = ProjectFileUtils.GetCurrentFileName();
 
         string formattedFileName = requiresExtraEdits ? $"ExtraEditsRequired-{fileName}" : fileName;
-        var outputFolder = await StorageFolder.GetFolderFromPathAsync(saveLocation);
-        var fileSaveLocation =
-            await outputFolder.CreateFileAsync(formattedFileName, CreationCollisionOption.ReplaceExisting);
+        var outputFolder = await ProjectFileUtils.GetDirectoryAsStorageFolder();
+        var fileSaveLocation = await outputFolder.CreateFileAsync(formattedFileName, CreationCollisionOption.ReplaceExisting);
         var encodingProfile = MediaEncodingProfile.CreateWav(AudioEncodingQuality.High);
 
         await Task.Delay(App.AppSettings.RecordStartWaitTime);
@@ -49,7 +47,7 @@ public class AudioRecordingUtils
 
     public async Task StopRecordingAudio(bool discarding = false)
     {
-        var file = Path.Combine(ProjectFileUtils.GetOutFolderStructure(), ProjectFileUtils.GetCurrentFileName());
+        var file = ProjectFileUtils.GetOutFilePath();
         switch (discarding)
         {
             case true:
@@ -66,15 +64,13 @@ public class AudioRecordingUtils
 
     private async Task ApplyFilters(string file)
     {
-        string
-            outFile = $"{file}0.wav"; // Temporary name. FFmpeg doesn't like it when the user tries to set the output as the input since
+        string outFile = $"{file}0.wav"; // Temporary name. FFmpeg doesn't like it when the user tries to set the output as the input since
         float validatedPitchChange = MathF.Max(pitchChange, 0.001f); // Pitch values below zero do not work
         string command = string.IsNullOrEmpty(effectCommand)
             ? $"rubberband=pitch={validatedPitchChange}"
-            : $"rubberband=pitch{validatedPitchChange},{effectCommand}";
-        await Generic.SpawnProcess("ffmpeg", $"-i \"{file}\" -af \"{command}\" -y \"{outFile}\"");
-
-        // Move the ffmpeg-modified audio file to the intended location after deleting the unedited output file
+            : $"rubberband=pitch={validatedPitchChange}, {effectCommand}";
+        await File.WriteAllTextAsync(Path.Join(Generic.extraApplicationData, "coolThing.txt"), command);
+        await Generic.SpawnProcess("ffmpeg", $"-i {file} -af \"{command}\" -y {outFile}");
         File.Delete(file);
         File.Move(outFile, file);
     }

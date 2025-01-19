@@ -31,6 +31,10 @@ public partial class App // I will admit, code-behind is still pretty useful her
         AppSettings = new ConfigurationBuilder<IAppSettings>().UseJsonFile(Generic.SettingsFile).Build();
         InitializeComponent();
         VelopackApp.Build().Run();
+        if (!Directory.Exists(Generic.binaryPath))
+        {
+            Directory.CreateDirectory(Generic.binaryPath);
+        }
     }
 
     private void CreateSettingsData()
@@ -105,14 +109,7 @@ public partial class App // I will admit, code-behind is still pretty useful her
             Generic.PitchData = [];
         }
 
-        try
-        {
-            Generic.EffectData = JsonSerializer.Deserialize<string[][]>(File.ReadAllText(Generic.EffectsDataFile));
-        }
-        catch (JsonException)
-        {
-            Generic.EffectData = [];
-        }
+        Generic.EffectData = JsonSerializer.Deserialize<string[][]>(File.ReadAllText(Generic.EffectsDataFile));
     }
 
     protected override void OnLaunched(LaunchActivatedEventArgs args)

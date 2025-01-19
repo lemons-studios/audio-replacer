@@ -9,6 +9,7 @@ using Windows.Storage.Pickers;
 using AudioReplacer.Util;
 using WinUIEditor;
 using WinRT.Interop;
+using AudioReplacer.Windows.MainWindow.Util;
 
 namespace AudioReplacer.Windows.MainWindow.Pages;
 
@@ -35,6 +36,7 @@ public sealed partial class DataEditor
     {
         CustomDataEditor.Editor.SetText(File.ReadAllText(Generic.PitchDataFile));
         App.DiscordController.SetDetails("In the data editor");
+        App.DiscordController.SetState("");
         isLoaded = true;
     }
 

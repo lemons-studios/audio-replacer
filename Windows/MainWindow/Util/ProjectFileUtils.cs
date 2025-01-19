@@ -2,6 +2,8 @@
 using System;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
+using Windows.Storage;
 
 namespace AudioReplacer.Windows.MainWindow.Util;
 
@@ -17,15 +19,16 @@ public static class ProjectFileUtils
     public static void Broadcast()
     {
         OnProjectLoaded?.Invoke();
+        IsProjectLoaded = true;
     }
 
     public static void SetProjectData(string path)
     {
         projectPath = path;
-        outputFolderPath = Path.Combine(Generic.extraApplicationData, "out", TruncateDirectory(path, 1));
+        outputFolderPath = Path.Join(Generic.extraApplicationData, "out", TruncateDirectory(path, 1));
         CreateInitialData();
         SetCurrentFile();
-        IsProjectLoaded = true;
+
         Broadcast();
     }
 
@@ -60,15 +63,24 @@ public static class ProjectFileUtils
         string[] inputDirectories = GetPathSubdirectories(projectPath);
         string[] outputDirectories = GetPathSubdirectories(outputFolderPath);
 
-        if (inputDirectories.SequenceEqual(outputDirectories) || File.Exists(setupIgnorePath))
+        inputDirectories = inputDirectories.Select(d => Path.GetFullPath(d).TrimEnd(Path.DirectorySeparatorChar)).ToArray();
+        outputDirectories = outputDirectories.Select(d => Path.GetFullPath(d).TrimEnd(Path.DirectorySeparatorChar)).ToArray();
+
+        if (inputDirectories.SequenceEqual(outputDirectories, StringComparer.OrdinalIgnoreCase) || File.Exists(setupIgnorePath))
             return;
 
         foreach (string dir in inputDirectories)
         {
-            string relativePath = TruncateDirectory(dir, int.MaxValue);
-            Directory.CreateDirectory(Path.Combine(outputFolderPath, relativePath));
+            string relativePath = Path.GetRelativePath(projectPath, dir);
+            string outputDir = Path.Combine(outputFolderPath, relativePath);
+
+            if (!Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
         }
 
+        // Create the ignore file
         File.WriteAllText(setupIgnorePath, "This file is here to tell Audio Replacer to ignore this folder when launching. Do NOT delete");
     }
 
@@ -147,7 +159,7 @@ public static class ProjectFileUtils
 
     public static string GetOutFolderStructure()
     {
-        return Path.Combine(outputFolderPath, directoryName);
+        return Path.Join(outputFolderPath, directoryName);
     }
 
     public static string GetOutFilePath()
@@ -172,5 +184,10 @@ public static class ProjectFileUtils
             if (!Directory.EnumerateFileSystemEntries(dir).Any())
                 Directory.Delete(dir);
         }
+    }
+
+    public static async Task<StorageFolder> GetDirectoryAsStorageFolder()
+    {
+        return await StorageFolder.GetFolderFromPathAsync($"{outputFolderPath}\\{directoryName}");
     }
 }

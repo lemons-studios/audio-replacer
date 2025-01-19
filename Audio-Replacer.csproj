@@ -41,6 +41,7 @@
 		<PackageReference Include="Whisper.net" Version="1.7.4" />
 		<PackageReference Include="Whisper.net.Runtime" Version="1.7.4" />
 		<PackageReference Include="Whisper.net.Runtime.Cuda.Windows" Version="1.7.4" />
+		<PackageReference Include="Whisper.net.Runtime.NoAvx" Version="1.7.4" />
 		<PackageReference Include="Whisper.net.Runtime.Vulkan" Version="1.7.4" />
 		<PackageReference Include="WinUI.TitleBarDragRegions" Version="1.0.0" />
 		<PackageReference Include="WinUIEdit" Version="0.0.3-prerelease" />

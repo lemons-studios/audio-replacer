@@ -23,7 +23,7 @@
         <Border
             x:Name="AppTitleBar"
             Grid.Row="0"
-            Height="55"
+            Height="65"
             Padding="5"
             VerticalAlignment="Top"
             BorderThickness="5">
@@ -57,10 +57,10 @@
 
         <NavigationView
             Grid.Row="1"
-            IsPaneOpen="True"
+            IsBackButtonVisible="Collapsed"
+            IsPaneOpen="False"
             ItemInvoked="Navigate"
-            PaneDisplayMode="Left"
-            Style="{StaticResource PageNavigation}">
+            PaneDisplayMode="Left">
             <NavigationView.MenuItems>
                 <NavigationViewItem Tag="Record">
                     <NavigationViewItem.Content>
@@ -86,16 +86,7 @@
                         <FontIcon Glyph="&#xEB41;" />
                     </NavigationViewItem.Icon>
                 </NavigationViewItem>
-                <NavigationViewItem Tag="Settings">
-                    <NavigationViewItem.Content>
-                        <TextBlock FontWeight="Light" Text="Settings" />
-                    </NavigationViewItem.Content>
-                    <NavigationViewItem.Icon>
-                        <FontIcon Glyph="&#xE713;" />
-                    </NavigationViewItem.Icon>
-                </NavigationViewItem>
             </NavigationView.MenuItems>
-
             <Frame
                 x:Name="MainFrame"
                 Padding="10"

@@ -13,21 +13,21 @@ namespace AudioReplacer.Util;
 
 public class Generic
 {
-    public static string extraApplicationData = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "audio-replacer");
-    public static string binaryPath = Path.Combine(extraApplicationData, "bin");
+    public static string extraApplicationData = Path.Join(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "audio-replacer");
+    public static string binaryPath = Path.Join(extraApplicationData, "bin");
     public static string ffmpegPath = Path.Combine(binaryPath, "ffmpeg.exe");
-    public static string whisperPath = Path.Combine(binaryPath, "whisper.bin");
-    public static string configPath = Path.Combine(extraApplicationData, "config");
+    public static string whisperPath = Path.Join(binaryPath, "whisper.bin");
+    public static string configPath = Path.Join(extraApplicationData, "config");
     public static bool isAppLoaded = false;
-    public static string SettingsFile = Path.Combine(configPath, "AppSettings.json");
-    public static string PitchDataFile = Path.Combine(configPath, "PitchData.json");
-    public static string EffectsDataFile = Path.Combine(configPath, "EffectsData.json");
+    public static string SettingsFile = Path.Join(configPath, "AppSettings.json");
+    public static string PitchDataFile = Path.Join(configPath, "PitchData.json");
+    public static string EffectsDataFile = Path.Join(configPath, "EffectsData.json");
     public static string[][] PitchData;
     public static string[][] EffectData;
     public static bool InRecordState;
 
-    public static List<string> pitchMenuTitles, effectMenuTitles, effectMenuValues;
-    public static List<float> pitchValues;
+    public static List<string> PitchTitles, EffectTitles, EffectValues;
+    public static List<float> PitchValues;
 
     private static readonly HttpClient WebClient = new()
     {
@@ -58,20 +58,20 @@ public class Generic
 
     public static void PopulateCustomData()
     {
-        pitchMenuTitles = [];
-        pitchValues = [];
-        effectMenuValues = [];
-        effectMenuTitles = [];
+        PitchTitles = [];
+        PitchValues = [];
+        EffectValues = [];
+        EffectTitles = [];
         
         foreach (string[] data in PitchData)
         {
-            pitchValues.Add(ParseFloat(data[0])); // Position 0 of each array in the 2d array should have the pitch data, as mentioned in GlobalData.cs
-            pitchMenuTitles.Add(data[1]); // Position 1 of each array in the 2d array should have the name of the character, as mentioned in GlobalData.cs
+            PitchValues.Add(ParseFloat(data[0])); // Position 0 of each array in the 2d array should have the data
+            PitchTitles.Add(data[1]); // Position 1 of each array in the 2d array should have the name of the property
         }
         foreach (string[] effects in EffectData)
         {
-            effectMenuValues.Add(effects[0]);
-            effectMenuTitles.Add(effects[1]);
+            EffectValues.Add(effects[0]);
+            EffectTitles.Add(effects[1]);
         }
     }
 
@@ -156,17 +156,17 @@ public class Generic
         catch (HttpRequestException) { return string.Empty; }
     }
 
-    public static void DownloadFile(string url, string outPath)
+    public static async Task DownloadFileAsync(string url, string outPath)
     {
         try
         {
-            using var webStream = WebClient.GetStreamAsync(url);
-            using var fileStream = new FileStream(outPath, FileMode.OpenOrCreate);
-            webStream.Result.CopyTo(fileStream);
+            using var webStream = await WebClient.GetStreamAsync(url);
+            using var fileStream = new FileStream(outPath, FileMode.OpenOrCreate, FileAccess.Write, FileShare.None);
+            await webStream.CopyToAsync(fileStream);
         }
-        catch (AggregateException e)
+        catch (Exception e)
         {
-            throw new AggregateException(e);
+            throw new Exception("An error occurred while downloading the file.", e);
         }
     }
 

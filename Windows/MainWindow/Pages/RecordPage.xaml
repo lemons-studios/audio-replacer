@@ -65,7 +65,8 @@
                             FontSize="13.5"
                             FontWeight="Normal"
                             Text="Temporary"
-                            TextAlignment="Center">
+                            TextAlignment="Center"
+                            TextWrapping="WrapWholeWords">
                             <TextBlock.Transitions>
                                 <ContentThemeTransition />
                             </TextBlock.Transitions>

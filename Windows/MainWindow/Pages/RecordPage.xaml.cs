@@ -1,18 +1,17 @@
 ﻿using AudioReplacer.Util;
 using AudioReplacer.Windows.MainWindow.Util;
+using CommunityToolkit.WinUI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
-using System;
-using System.CodeDom;
-using System.IO;
-using System.Threading.Tasks;
-using Windows.Media.Core;
 using NAudio.Wave;
 using NAudio.Wave.SampleProviders;
+using System;
+using System.IO;
+using System.Threading.Tasks;
 using Whisper.net;
-using CommunityToolkit.WinUI;
 using Whisper.net.LibraryLoader;
+using Windows.Media.Core;
 
 namespace AudioReplacer.Windows.MainWindow.Pages;
 
@@ -31,8 +30,8 @@ public sealed partial class RecordPage
 
     private void OnLoaded(object sender, RoutedEventArgs e)
     {
-        VoiceTuneMenu.ItemsSource = Generic.pitchMenuTitles;
-        EffectsMenu.ItemsSource = Generic.effectMenuTitles;
+        VoiceTuneMenu.ItemsSource = Generic.PitchTitles;
+        EffectsMenu.ItemsSource = Generic.EffectTitles;
 
         // Looping needs to be on to work around a bug in which the audio gets cut off for a split second after the first play.
         AudioPreview.MediaPlayer.IsLoopingEnabled = true;
@@ -48,11 +47,11 @@ public sealed partial class RecordPage
         if (audioRecordingUtils == null) return;
         if (VoiceTuneMenu.SelectedItem != null)
         {
-            audioRecordingUtils.pitchChange = Generic.pitchValues[VoiceTuneMenu.SelectedIndex];
+            audioRecordingUtils.pitchChange = Generic.PitchValues[VoiceTuneMenu.SelectedIndex];
         }
         if (EffectsMenu.SelectedItem != null)
         {
-            audioRecordingUtils.effectCommand = Generic.effectMenuValues[EffectsMenu.SelectedIndex];
+            audioRecordingUtils.effectCommand = Generic.EffectValues[EffectsMenu.SelectedIndex];
         }
     }
 
@@ -156,15 +155,15 @@ public sealed partial class RecordPage
 
                 // Initialize Whisper model and processor
                 var whisperFactory = WhisperFactory.FromPath(Generic.whisperPath);
-                RuntimeOptions.RuntimeLibraryOrder = [ RuntimeLibrary.Cuda, RuntimeLibrary.Vulkan, RuntimeLibrary.Cpu];
+                RuntimeOptions.RuntimeLibraryOrder = [ RuntimeLibrary.Cuda, RuntimeLibrary.Vulkan, RuntimeLibrary.Cpu, RuntimeLibrary.CpuNoAvx];
                 var whisperProcessor = whisperFactory.CreateBuilder()
                     .WithLanguage("auto")
                     .Build();
 
                 // Do some funky wizardry to make the file work with Whisper.NET
-                using var fileStream = File.OpenRead(currentFile);
+                await using var fileStream = File.OpenRead(currentFile);
                 using var wavStream = new MemoryStream();
-                using var reader = new WaveFileReader(fileStream);
+                await using var reader = new WaveFileReader(fileStream);
                 var resamplingProcessor = new WdlResamplingSampleProvider(reader.ToSampleProvider(), 16000);
                 WaveFileWriter.WriteWavFileToStream(wavStream, resamplingProcessor.ToWaveProvider16());
                 wavStream.Seek(0, SeekOrigin.Begin);
