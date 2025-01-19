@@ -64,7 +64,7 @@
                             HorizontalAlignment="Center"
                             FontSize="13.5"
                             FontWeight="Normal"
-                            Text="Temporary"
+                            Text=""
                             TextAlignment="Center"
                             TextWrapping="WrapWholeWords">
                             <TextBlock.Transitions>
@@ -89,7 +89,6 @@
                         Style="{StaticResource OperationButton}"
                         Visibility="{Binding IsIdle, Converter={StaticResource VisibilityConverter}}" />
                     <Button
-                        x:Name="CancelRecordingButton"
                         Click="CancelCurrentRecording"
                         Command="{Binding CancelRecordCommand}"
                         Content="Cancel"
@@ -97,7 +96,6 @@
                         Style="{StaticResource OperationButton}"
                         Visibility="{Binding IsRecording, Converter={StaticResource VisibilityConverter}}" />
                     <Button
-                        x:Name="DiscardRecordingButton"
                         Click="UpdateAudioStatus"
                         Command="{Binding SwitchButtonStatesCommand}"
                         Content="Reject"
@@ -113,7 +111,6 @@
                         Style="{StaticResource OperationButton}"
                         Visibility="{Binding IsIdle, Converter={StaticResource VisibilityConverter}}" />
                     <Button
-                        x:Name="EndRecordingButton"
                         Click="StopRecordingAudio"
                         Command="{Binding SwitchButtonStatesCommand}"
                         Content="End Recording"
@@ -121,7 +118,6 @@
                         Style="{StaticResource OperationButton}"
                         Visibility="{Binding IsRecording, Converter={StaticResource VisibilityConverter}}" />
                     <Button
-                        x:Name="SubmitRecordingButton"
                         Click="UpdateAudioStatus"
                         Command="{Binding SwitchButtonStatesCommand}"
                         Content="Submit"

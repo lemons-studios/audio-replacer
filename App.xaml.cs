@@ -115,7 +115,7 @@ public partial class App // I will admit, code-behind is still pretty useful her
     protected override void OnLaunched(LaunchActivatedEventArgs args)
     {
         Generic.PopulateCustomData();
-        switch (Generic.IntToBool(AppSettings.AppConfigured))
+        switch (File.Exists(Path.Join(Generic.configPath, ".setupCompleted")))
         {
             case true:
                 // Only initialize rich presence when app is configured

@@ -3,9 +3,6 @@ namespace AudioReplacer.Util;
 
 public interface IAppSettings
 {
-    [Option(Alias = "AppConfigured", DefaultValue = 0)]
-    int AppConfigured { get; set; }
-
     [Option(Alias = "Theme", DefaultValue = 0)]
     int AppThemeSetting { get; set; }
 

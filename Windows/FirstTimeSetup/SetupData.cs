@@ -139,7 +139,7 @@ public partial class SetupData : ObservableObject
         }
 
         // Mark the app as "set up" and restart the application
-        App.AppSettings.AppConfigured = 1;
+        File.Create(Path.Join(Generic.configPath, ".setupCompleted"));
         Generic.RestartApp();
     }
 }

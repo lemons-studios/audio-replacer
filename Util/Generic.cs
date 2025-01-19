@@ -13,7 +13,7 @@ namespace AudioReplacer.Util;
 
 public class Generic
 {
-    public static string extraApplicationData = Path.Join(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "audio-replacer");
+    public static string extraApplicationData = Path.Join(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "audio-replacer");
     public static string binaryPath = Path.Join(extraApplicationData, "bin");
     public static string ffmpegPath = Path.Combine(binaryPath, "ffmpeg.exe");
     public static string whisperPath = Path.Join(binaryPath, "whisper.bin");
