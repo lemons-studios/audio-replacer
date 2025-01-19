@@ -205,7 +205,7 @@
                                 <HyperlinkButton Content="Windows Community Toolkit" NavigateUri="https://github.com/CommunityToolkit/WindowsCommunityToolkit" />
                                 <HyperlinkButton Content="WinUiEdit" NavigateUri="https://github.com/BreeceW/WinUIEdit" />
                                 <HyperlinkButton Content="FFMpeg" NavigateUri="https://ffmpeg.org" />
-                                <HyperlinkButton Content="Whisper.NET" NavigateUri="https://github.com/sandrohanea/whisper.net"/>
+                                <HyperlinkButton Content="Whisper.NET" NavigateUri="https://github.com/sandrohanea/whisper.net" />
                                 <HyperlinkButton
                                     Margin="0,0,0,15"
                                     Content="Config.Net"

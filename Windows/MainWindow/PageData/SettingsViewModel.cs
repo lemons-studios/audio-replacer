@@ -64,6 +64,15 @@ public partial class SettingsViewModel : ObservableObject
     partial void OnEnableRpcChanged(bool value)
     {
         App.AppSettings.EnableRichPresence = Generic.BoolToInt(value);
+        switch (value)
+        {
+            case true:
+                App.DiscordController.CreateRichPresence();
+                break;
+            case false:
+                App.DiscordController.DisposeRpc();
+                break;
+        }
     }
 
     [ObservableProperty] private bool enableTranscription = Generic.IntToBool(App.AppSettings.EnableTranscription);

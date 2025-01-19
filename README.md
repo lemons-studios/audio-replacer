@@ -10,7 +10,7 @@
 
 This application was created to streamline the dubbing process when making mods for video games. In addition to dubbing, custom pitch and audio filter json files can be created to apply ffmpeg audio filters when dubbing.
 
-Audio Replacer is intended to run on Windows 11, but it should run perfectly fine on Windows 10. After 22H2 reaches end of life on [October 24th, 2025](https://learn.microsoft.com/en-us/lifecycle/products/windows-10-home-and-pro), This app will not also have Windows 10 support in mind.
+Audio Replacer is intended to run on Windows 11, but it should run perfectly fine on Windows 10. After 22H2 reaches end of life on [October 24th, 2025](https://learn.microsoft.com/en-us/lifecycle/products/windows-10-home-and-pro), This application will stop accepting issues from Windows 10.
 ## Install
 You can download the latest release [**here**](https://github.com/lemons-studios/audio-replacer-2/releases/latest).
 
@@ -33,12 +33,12 @@ If you want to develop for this application, you'll need a few things installed 
 >
 > All development tools should use up around 15-30Gb of system storage once installed
 
-Once the software needed for development are both installed, you can clone the repository:
-```sh
+Once the software needed for development are both installed, you can run the following to clone and build the application:
+```batch
 git clone https://github.com/lemons-studios/audio-replacer.git
+cd audio-replacer 
+dotnet publish -c Release --self-contained -r win-x64 -o .\Publish
 ```
+
 ## Contributing
 See [CONTRIBUTING](https://github.com/lemons-studios/audio-replacer/blob/main/CONTRIBUTING.md)
-
-## Known Issues:
-- Folder picker cannot pick the directory it opens in. This is a bug with the Windows OS itself and something that I cannot fix

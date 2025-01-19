@@ -10,6 +10,8 @@ public class RichPresenceController
 
     public RichPresenceController(long clientId, string initialDetails, string initialState, string initialSmallImage, string initialSmallImageText)
     {
+        bool autoCreate = Generic.IntToBool(App.AppSettings.EnableRichPresence);
+
         startTimestamp = Timestamps.Now;
         state = initialState;
         details = initialDetails;
@@ -17,10 +19,10 @@ public class RichPresenceController
         smallImageText = initialSmallImageText;
 
         client = new DiscordRpcClient(clientId.ToString());
-        CreateRichPresence();
+        if(autoCreate) CreateRichPresence();
     }
 
-    private void CreateRichPresence()
+    public void CreateRichPresence()
     {
         client.Initialize();
         client.SetPresence(new RichPresence
