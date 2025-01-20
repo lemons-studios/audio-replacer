@@ -11,14 +11,21 @@ namespace AudioReplacer.Windows.MainWindow.Util;
 
 public class AudioRecordingUtils
 {
-    public float pitchChange = 1;
-    public string effectCommand = "";
+    private float pitchChange = 1;
+    private string effectCommand = "";
     public bool requiresExtraEdits = false;
     private MediaCapture recordingCapture;
 
     public AudioRecordingUtils()
     {
         Task.Run(InitializeMediaCapture);
+    }
+
+    public void SetEffectCommands(float newPitch = 1, string newEffect = "", bool extraEdits = false)
+    {
+        pitchChange = newPitch;
+        effectCommand = newEffect;
+        requiresExtraEdits = extraEdits;
     }
 
     private async Task InitializeMediaCapture()
@@ -68,8 +75,8 @@ public class AudioRecordingUtils
         var command = string.IsNullOrEmpty(effectCommand)
             ? $"rubberband=pitch={validatedPitchChange}"
             : $"rubberband=pitch={validatedPitchChange}, {effectCommand}";
-        await File.WriteAllTextAsync(Path.Join(Generic.extraApplicationData, "coolThing.txt"), command);
-        await Generic.SpawnProcess($"{Generic.ffmpegPath}", $"-i {file} -af \"{command}\" -y {outFile}");
+        await File.WriteAllTextAsync(Path.Join(Generic.ExtraApplicationData, "coolThing.txt"), command);
+        await Generic.SpawnProcess($"{Generic.FfmpegPath}", $"-i {file} -af \"{command}\" -y {outFile}");
         File.Delete(file);
         File.Move(outFile, file);
     }

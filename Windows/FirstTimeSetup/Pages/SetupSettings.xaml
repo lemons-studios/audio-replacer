@@ -58,6 +58,16 @@
                         TextWrapping="WrapWholeWords" />
                     <controls:SettingsCard
                         Margin="0,0,0,5"
+                        Header="App Theme"
+                        HeaderIcon="{ui:FontIcon Glyph=&#xECC5;}">
+                        <ComboBox SelectedIndex="{Binding AppTheme, Mode=TwoWay}">
+                            <ComboBoxItem Content="System" />
+                            <ComboBoxItem Content="Light" />
+                            <ComboBoxItem Content="Dark" />
+                        </ComboBox>
+                    </controls:SettingsCard>
+                    <controls:SettingsCard
+                        Margin="0,0,0,5"
                         Description="Updates are checked every app launch by checking GitHub for new releases"
                         Header="Check for updates"
                         HeaderIcon="{ui:FontIcon Glyph=&#xECC5;}">

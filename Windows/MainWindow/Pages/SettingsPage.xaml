@@ -10,7 +10,7 @@
     Mc:Ignorable="D">
 
     <Page.DataContext>
-        <Models:SettingsViewModel />
+        <Models:SettingsData />
     </Page.DataContext>
 
     <ScrollViewer Style="{StaticResource SettingsScroll}">

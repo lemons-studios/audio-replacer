@@ -9,7 +9,7 @@
     Mc:Ignorable="D">
 
     <Page.DataContext>
-        <Models:RecordPageViewModel />
+        <Models:RecordPageData />
     </Page.DataContext>
     <Page.Resources>
         <Converters:VisibilityConverter x:Key="VisibilityConverter" />
@@ -71,7 +71,7 @@
                             FontWeight="Medium"
                             Text=""
                             TextAlignment="Center"
-                            TextWrapping="WrapWholeWords">
+                            TextWrapping="Wrap">
                             <TextBlock.Transitions>
                                 <ContentThemeTransition />
                             </TextBlock.Transitions>
@@ -145,8 +145,9 @@
                     <ComboBox
                         x:Name="VoiceTuneMenu"
                         Margin="0,0,0,50"
+                        ItemsSource="{Binding PitchList}"
                         PlaceholderText="Pick Character"
-                        SelectionChanged="EffectsValueUpdate"
+                        SelectionChanged="UpdateRecordingValues"
                         Style="{StaticResource DropdownMenu}" />
                 </StackPanel>
                 <StackPanel>
@@ -159,14 +160,17 @@
                     <ComboBox
                         x:Name="EffectsMenu"
                         Margin="0,0,0,10"
+                        ItemsSource="{Binding EffectsList}"
                         PlaceholderText="Select Effect"
-                        SelectionChanged="EffectsValueUpdate"
+                        SelectionChanged="UpdateRecordingValues"
                         Style="{StaticResource DropdownMenu}" />
                     <CheckBox
+                        x:Name="ExtraEditsToggle"
                         HorizontalAlignment="Center"
-                        Checked="FlagFurtherEdits"
+                        Checked="UpdateRecordingValues"
                         Content="Further Edits Required?"
-                        Unchecked="FlagFurtherEdits" />
+                        IsChecked="False"
+                        Unchecked="UpdateRecordingValues" />
                 </StackPanel>
             </StackPanel>
         </Border>

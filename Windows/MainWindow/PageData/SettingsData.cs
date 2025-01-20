@@ -11,10 +11,10 @@ using Whisper.net.Ggml;
 
 namespace AudioReplacer.Windows.MainWindow.PageData;
 
-public partial class SettingsViewModel : ObservableObject
+public partial class SettingsData : ObservableObject
 {
-    [ObservableProperty] private bool whisperAvailable = Generic.isWhisperInstalled;
-    [ObservableProperty] private bool whisperInstalled = !Generic.isWhisperInstalled;
+    [ObservableProperty] private bool whisperAvailable = Generic.IsWhisperInstalled;
+    [ObservableProperty] private bool whisperInstalled = !Generic.IsWhisperInstalled;
 
     [ObservableProperty] private int selectedAppTheme = App.AppSettings.AppThemeSetting;
     partial void OnSelectedAppThemeChanged(int value)
@@ -100,20 +100,20 @@ public partial class SettingsViewModel : ObservableObject
     [RelayCommand]
     private void OpenOutputFolder()
     {
-        Task.Run(async () => await Generic.SpawnProcess("explorer", Path.Combine(Generic.extraApplicationData, "out")));
+        Task.Run(async () => await Generic.SpawnProcess("explorer", Path.Combine(Generic.ExtraApplicationData, "out")));
     }
 
     [RelayCommand]
     private void OpenDataFile()
     {
-        if (!Generic.isAppLoaded) return;
+        if (!Generic.IsAppLoaded) return;
         Task.Run(async () => await Generic.SpawnProcess("", string.Empty));
     }
 
     [RelayCommand]
     private void ResetSettings()
     {
-        if (!Generic.isAppLoaded) return;
+        if (!Generic.IsAppLoaded) return;
         File.Delete(Generic.SettingsFile);
         Generic.RestartApp();
     }
@@ -121,7 +121,7 @@ public partial class SettingsViewModel : ObservableObject
     [RelayCommand]
     private void ResetCustomPitch()
     {
-        if (!Generic.isAppLoaded) return;
+        if (!Generic.IsAppLoaded) return;
         File.Delete(Generic.PitchDataFile);
         Generic.RestartApp();
     }
@@ -129,7 +129,7 @@ public partial class SettingsViewModel : ObservableObject
     [RelayCommand]
     private void ResetCustomEffects()
     {
-        if (!Generic.isAppLoaded) return;
+        if (!Generic.IsAppLoaded) return;
         File.Delete(Generic.EffectsDataFile);
         Generic.RestartApp();
     }
@@ -137,7 +137,7 @@ public partial class SettingsViewModel : ObservableObject
     [RelayCommand]
     private void ResetAll()
     {
-        if (!Generic.isAppLoaded) return;
+        if (!Generic.IsAppLoaded) return;
         File.Delete(Generic.EffectsDataFile);
         File.Delete(Generic.PitchDataFile);
         File.Delete(Generic.SettingsFile);

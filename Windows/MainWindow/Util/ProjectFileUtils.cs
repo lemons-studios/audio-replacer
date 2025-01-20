@@ -25,10 +25,9 @@ public static class ProjectFileUtils
     public static void SetProjectData(string path)
     {
         projectPath = path;
-        outputFolderPath = Path.Join(Generic.extraApplicationData, "out", TruncateDirectory(path, 1));
+        outputFolderPath = Path.Join(Generic.ExtraApplicationData, "out", TruncateDirectory(path, 1));
         CreateInitialData();
         SetCurrentFile();
-
         Broadcast();
     }
 
@@ -157,11 +156,6 @@ public static class ProjectFileUtils
         return truncated ? truncatedCurrentFile : currentFile;
     }
 
-    public static string GetOutFolderStructure()
-    {
-        return Path.Join(outputFolderPath, directoryName);
-    }
-
     public static string GetOutFilePath()
     {
         return currentOutFile;
@@ -172,9 +166,9 @@ public static class ProjectFileUtils
         return projectPath;
     }
 
-    public static string GetCurrentFileName()
+    public static string GetCurrentFileName(bool humanizeOutput = false)
     {
-        return currentFileName;
+        return humanizeOutput ? currentFileName.Replace(@"\", "/") : currentFileName;
     }
 
     private static void FindAndDeleteEmptyDirs()
@@ -188,6 +182,6 @@ public static class ProjectFileUtils
 
     public static async Task<StorageFolder> GetDirectoryAsStorageFolder()
     {
-        return await StorageFolder.GetFolderFromPathAsync($"{outputFolderPath}\\{directoryName}");
+        return await StorageFolder.GetFolderFromPathAsync(Path.Join(outputFolderPath, directoryName));
     }
 }

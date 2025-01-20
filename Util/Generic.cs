@@ -13,15 +13,15 @@ namespace AudioReplacer.Util;
 
 public class Generic
 {
-    public static string extraApplicationData = Path.Join(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "audio-replacer");
-    public static string binaryPath = Path.Join(extraApplicationData, "bin");
-    public static string ffmpegPath = Path.Combine(binaryPath, "ffmpeg.exe");
-    public static string whisperPath = Path.Join(binaryPath, "whisper.bin");
-    public static string configPath = Path.Join(extraApplicationData, "config");
-    public static bool isAppLoaded = false;
-    public static string SettingsFile = Path.Join(configPath, "AppSettings.json");
-    public static string PitchDataFile = Path.Join(configPath, "PitchData.json");
-    public static string EffectsDataFile = Path.Join(configPath, "EffectsData.json");
+    public static readonly string ExtraApplicationData = Path.Join(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "audio-replacer");
+    public static readonly string BinaryPath = Path.Join(ExtraApplicationData, "bin");
+    public static readonly string FfmpegPath = Path.Combine(BinaryPath, "ffmpeg.exe");
+    public static readonly string whisperPath = Path.Join(BinaryPath, "whisper.bin");
+    public static readonly string ConfigPath = Path.Join(ExtraApplicationData, "config");
+    public static bool IsAppLoaded = false;
+    public static readonly string SettingsFile = Path.Join(ConfigPath, "AppSettings.json");
+    public static readonly string PitchDataFile = Path.Join(ConfigPath, "PitchData.json");
+    public static readonly string EffectsDataFile = Path.Join(ConfigPath, "EffectsData.json");
     public static string[][] PitchData;
     public static string[][] EffectData;
     public static bool InRecordState;
@@ -29,7 +29,7 @@ public class Generic
     public static List<string> PitchTitles, EffectTitles, EffectValues;
     public static List<float> PitchValues;
 
-    public static bool isWhisperInstalled = File.Exists(whisperPath);
+    public static readonly bool IsWhisperInstalled = File.Exists(whisperPath);
 
     private static readonly HttpClient WebClient = new()
     {
@@ -65,12 +65,12 @@ public class Generic
         EffectValues = [];
         EffectTitles = [];
         
-        foreach (string[] data in PitchData)
+        foreach (var data in PitchData)
         {
             PitchValues.Add(ParseFloat(data[0])); // Position 0 of each array in the 2d array should have the data
             PitchTitles.Add(data[1]); // Position 1 of each array in the 2d array should have the name of the property
         }
-        foreach (string[] effects in EffectData)
+        foreach (var effects in EffectData)
         {
             EffectValues.Add(effects[0]);
             EffectTitles.Add(effects[1]);
@@ -121,28 +121,26 @@ public class Generic
         }
     }
 
-    public static async Task<string> GetWebVersion(string url)
+    public static async Task<string> GetDataFromGithub(string tagName)
     {
+        string url = "https://api.github.com/repos/lemons-studios/audio-replacer/releases/latest";
         try
         {
             var apiResponse = await WebClient.GetAsync(url);
-            if (!apiResponse.IsSuccessStatusCode) throw new Exception($"API responded with status code {apiResponse.StatusCode}");
+            if (!apiResponse.IsSuccessStatusCode)
+                return "# Error getting release notes.";
             string responseData = await apiResponse.Content.ReadAsStringAsync();
 
-            var jsonTags = JArray.Parse(responseData);
-            if (jsonTags.Count == 0) throw new Exception("No valid tags found in response data");
+            var json = JObject.Parse(responseData);
+            string tagInfo = json[tagName]?.ToString();
+            if (string.IsNullOrEmpty(tagInfo))
+                return "# Error getting release notes.";
 
-            string name = jsonTags[0]["name"]?.ToString();
-            if (string.IsNullOrEmpty(name)) throw new Exception("The 'name' property is missing or empty in the first tag.");
-            return name;
+            return tagInfo;
         }
-        catch (JsonException ex)
+        catch
         {
-            throw new Exception($"Failed to parse JSON: {ex}");
-        }
-        catch (Exception ex)
-        {
-            throw new Exception($"An error occurred during the web request: {ex.Message}");
+            return "# Error getting release notes.";
         }
     }
 

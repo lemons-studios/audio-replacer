@@ -22,17 +22,21 @@ public sealed partial class RecordPage
     public RecordPage()
     {
         Loaded += OnLoaded;
+        Unloaded += OnUnloaded;
         ProjectFileUtils.OnProjectLoaded += UpdateFileElements;
         InitializeComponent();
         if (ProjectFileUtils.IsProjectLoaded)
             UpdateFileElements();
     }
 
+    private void OnUnloaded(object sender, RoutedEventArgs e)
+    {
+        // Prevent audio from playing on other pages if the media player is left playing
+        AudioPreview.MediaPlayer.Pause();
+    }
+
     private void OnLoaded(object sender, RoutedEventArgs e)
     {
-        VoiceTuneMenu.ItemsSource = Generic.PitchTitles;
-        EffectsMenu.ItemsSource = Generic.EffectTitles;
-
         // Looping needs to be on to work around a bug in which the audio gets cut off for a split second after the first play.
         AudioPreview.MediaPlayer.IsLoopingEnabled = true;
         audioRecordingUtils = new AudioRecordingUtils();
@@ -42,17 +46,11 @@ public sealed partial class RecordPage
             App.DiscordController.SetState($"{ProjectFileUtils.CalculatePercentageComplete()}% Complete");
     }
 
-    private void UpdateRecordingValues()
+    private void UpdateRecordingValues(object sender, object args)
     {
         if (audioRecordingUtils == null) return;
-        if (VoiceTuneMenu.SelectedItem != null)
-        {
-            audioRecordingUtils.pitchChange = Generic.PitchValues[VoiceTuneMenu.SelectedIndex];
-        }
-        if (EffectsMenu.SelectedItem != null)
-        {
-            audioRecordingUtils.effectCommand = Generic.EffectValues[EffectsMenu.SelectedIndex];
-        }
+        bool extraEditsToggled = (bool) ExtraEditsToggle.IsChecked!;
+        audioRecordingUtils.SetEffectCommands(Generic.PitchValues[VoiceTuneMenu.SelectedIndex], Generic.EffectValues[EffectsMenu.SelectedIndex], extraEditsToggled);
     }
 
     private async void SkipCurrentAudioFile(object sender, RoutedEventArgs e)
@@ -74,12 +72,12 @@ public sealed partial class RecordPage
             case true:
                 ProjectFileUtils.SkipAudioTrack();
                 UpdateFileElements();
+                App.MainWindow.ShowNotification(InfoBarSeverity.Success, "File Skipped!", string.Empty, true);
                 break;
             case false:
                 break;
         }
 
-        App.MainWindow.ShowNotification(InfoBarSeverity.Success, "Skipped File", string.Empty, true);
     }
 
     private async void StartRecordingAudio(object sender, RoutedEventArgs e)
@@ -102,7 +100,7 @@ public sealed partial class RecordPage
         // Update source of audio player and the title manually
         CurrentFile.Text = "Review your recording...";
         App.DiscordController.SetSmallAsset("reviewing", "In review phase");
-        AudioPreview.Source = MediaSourceFromUri(ProjectFileUtils.GetOutFilePath());
+        AudioPreview.Source = MediaSource.CreateFromUri(new Uri(ProjectFileUtils.GetOutFilePath()));
         App.MainWindow.ShowNotification(InfoBarSeverity.Informational, "Recording Stopped", "Entering Review Phase", true, replaceExistingNotifications: true);
     }
 
@@ -114,11 +112,11 @@ public sealed partial class RecordPage
         StartRecordingButton.IsEnabled = true;
 
         FileProgressPanel.Visibility = Visibility.Visible;
-        CurrentFile.Text = GetFormattedCurrentFile(ProjectFileUtils.GetCurrentFile());
+        CurrentFile.Text = ProjectFileUtils.GetCurrentFile().Replace(@"\", "/");
         RemainingFiles.Text = $"Files Remaining: {ProjectFileUtils.GetFileCount(projectPath):N0} ({progressPercentage}%)";
 
         RemainingFilesProgress.Value = progressPercentage;
-        AudioPreview.Source = MediaSourceFromUri(ProjectFileUtils.GetCurrentFile(false));
+        AudioPreview.Source = MediaSource.CreateFromUri(new Uri(ProjectFileUtils.GetCurrentFile(false)));
         AudioPreview.TransportControls.IsEnabled = true;
 
         App.DiscordController.SetState($"{progressPercentage}% Complete");
@@ -159,9 +157,11 @@ public sealed partial class RecordPage
 
                 // Initialize Whisper model and processor
                 var whisperFactory = WhisperFactory.FromPath(Generic.whisperPath);
-                RuntimeOptions.RuntimeLibraryOrder = [ RuntimeLibrary.Cuda, RuntimeLibrary.Vulkan, RuntimeLibrary.Cpu, RuntimeLibrary.CpuNoAvx];
+                // Determine the best runtime for the model
+                RuntimeOptions.RuntimeLibraryOrder = [RuntimeLibrary.Cuda, RuntimeLibrary.Vulkan, RuntimeLibrary.Cpu, RuntimeLibrary.CpuNoAvx];
                 var whisperProcessor = whisperFactory.CreateBuilder()
                     .WithLanguage("auto")
+                    .WithTranslate()
                     .Build();
 
                 // Do some funky wizardry to make the file work with Whisper.NET
@@ -177,7 +177,7 @@ public sealed partial class RecordPage
                 {
                     await dispatcherQueue.EnqueueAsync(() =>
                     {
-                        Transcription.Text = $"Transcription: \n{result.Text}";
+                        Transcription.Text = $"Transcription:\n{result.Text}";
                     });
                 }
             }
@@ -220,38 +220,5 @@ public sealed partial class RecordPage
         }
 
         UpdateFileElements();
-    }
-
-    private void FlagFurtherEdits(object sender, RoutedEventArgs e)
-    {
-        audioRecordingUtils.requiresExtraEdits = !audioRecordingUtils.requiresExtraEdits;
-        UpdateRecordingValues();
-    }
-
-    // Awesome boilerplate here
-    private void EffectsValueUpdate(object sender, SelectionChangedEventArgs e)
-    {
-        UpdateRecordingValues();
-    }
-
-    private void PauseMediaPlayer()
-    {
-        AudioPreview.MediaPlayer.Pause();
-    }
-
-    protected override void OnNavigatedFrom(NavigationEventArgs e)
-    {
-        // Prevent audio from playing on other pages if the media player is left playing
-        PauseMediaPlayer();
-    }
-
-    public string GetFormattedCurrentFile(string input)
-    {
-        return input.Replace(@"\", "/");
-    }
-
-    public MediaSource MediaSourceFromUri(string path)
-    {
-        return MediaSource.CreateFromUri(new Uri(path));
     }
 }

@@ -25,6 +25,9 @@ csharp_space_after_cast = true
 # CS8602: Dereference of a possibly null reference.
 dotnet_diagnostic.CS8602.severity = silent
 
+# CS4014: Because this call is not awaited, execution of the current method continues before the call is completed
+dotnet_diagnostic.CS4014.severity = none
+
 [*.{cs,vb}]
 #### Naming styles ####
 

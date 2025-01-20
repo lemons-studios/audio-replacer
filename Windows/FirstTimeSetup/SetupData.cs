@@ -2,6 +2,7 @@
 using AudioReplacer.Windows.FirstTimeSetup.Pages;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Media.Animation;
 using SevenZipExtractor;
 using System;
@@ -16,10 +17,17 @@ namespace AudioReplacer.Windows.FirstTimeSetup;
 public partial class SetupData : ObservableObject
 {
     // All properties must be static so all setup pages will have the correct value (since they are separate instances of the class)
-    [ObservableProperty] private static int recordStartDelay, recordEndDelay;
+    [ObservableProperty] private static int recordStartDelay = 20, recordEndDelay = 20, appTheme = 0;
     [ObservableProperty] private static bool checkForUpdates = true, richPresenceEnabled = true, enableFileRandomization, downloadWhisper = true;
     [ObservableProperty] private static string pitchSettingsPath, effectSettingsPath;
     private static int currentSetupStep;
+
+    partial void OnAppThemeChanged(int value)
+    {
+        if (App.SetupWindow.Content is FrameworkElement rootElement)
+            rootElement.RequestedTheme = (ElementTheme) value;
+        App.AppSettings.AppThemeSetting = value;
+    }
 
     partial void OnRecordStartDelayChanged(int value)
     {
@@ -107,9 +115,9 @@ public partial class SetupData : ObservableObject
         // Download FFmpeg
         var latestVersion = await Generic.GetWebData("https://www.gyan.dev/ffmpeg/builds/release-version");
         var ffmpegUrl = $"https://www.gyan.dev/ffmpeg/builds/packages/ffmpeg-{latestVersion}-full_build.7z";
-        var outPath = Path.Join(Generic.extraApplicationData, "ffmpeg");
+        var outPath = Path.Join(Generic.ExtraApplicationData, "ffmpeg");
 
-        await Generic.DownloadFileAsync(ffmpegUrl, $@"{Generic.extraApplicationData}\ffmpeg.7z");
+        await Generic.DownloadFileAsync(ffmpegUrl, $@"{Generic.ExtraApplicationData}\ffmpeg.7z");
         // Extract FFmpeg
         using (var ffmpegExtractor = new ArchiveFile($"{outPath}.7z"))
         {
@@ -121,7 +129,7 @@ public partial class SetupData : ObservableObject
         // Move FFmpeg executables to the application's binary folder
         foreach (var exe in info.GetFiles("ffmpeg.exe", SearchOption.AllDirectories))
         {
-            File.Move(exe.FullName, Path.Combine(Generic.binaryPath, exe.Name));
+            File.Move(exe.FullName, Path.Combine(Generic.BinaryPath, exe.Name));
         }
 
         Directory.Delete(outPath, true);
@@ -136,7 +144,7 @@ public partial class SetupData : ObservableObject
         }
 
         // Mark the app as "set up" and restart the application
-        File.Create(Path.Join(Generic.configPath, ".setupCompleted"));
+        File.Create(Path.Join(Generic.ConfigPath, ".setupCompleted"));
         Generic.RestartApp();
     }
 }

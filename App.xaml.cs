@@ -29,16 +29,16 @@ public partial class App // I will admit, code-behind is still pretty useful her
         CreateJsonData();
         AppSettings = new ConfigurationBuilder<IAppSettings>().UseJsonFile(Generic.SettingsFile).Build();
         InitializeComponent();
-        if (!Directory.Exists(Generic.binaryPath))
+        if (!Directory.Exists(Generic.BinaryPath))
         {
-            Directory.CreateDirectory(Generic.binaryPath);
+            Directory.CreateDirectory(Generic.BinaryPath);
         }
         VelopackApp.Build().Run();
     }
 
     private void CreateSettingsData()
     {
-        if (!Directory.Exists(Generic.configPath)) Directory.CreateDirectory(Generic.configPath);
+        if (!Directory.Exists(Generic.ConfigPath)) Directory.CreateDirectory(Generic.ConfigPath);
         if (File.Exists(Generic.SettingsFile))
         {
             // Load existing settings
@@ -114,7 +114,7 @@ public partial class App // I will admit, code-behind is still pretty useful her
     protected override void OnLaunched(LaunchActivatedEventArgs args)
     {
         Generic.PopulateCustomData();
-        switch (File.Exists(Path.Join(Generic.configPath, ".setupCompleted")))
+        switch (File.Exists(Path.Join(Generic.ConfigPath, ".setupCompleted")))
         {
             case true:
                 // Only initialize rich presence when app is configured
@@ -128,7 +128,7 @@ public partial class App // I will admit, code-behind is still pretty useful her
                 break;
         }
 
-        Generic.isAppLoaded = true;
+        Generic.IsAppLoaded = true;
     }
 
     public static AppWindow GetAppWindowForCurrentWindow(object window) // Thanks StackOverflow man!
