@@ -25,6 +25,7 @@ public partial class App // I will admit, code-behind is still pretty useful her
 
     public App()
     {
+        VelopackApp.Build().Run();
         CreateSettingsData();
         CreateJsonData();
         AppSettings = new ConfigurationBuilder<IAppSettings>().UseJsonFile(Generic.SettingsFile).Build();
@@ -33,7 +34,6 @@ public partial class App // I will admit, code-behind is still pretty useful her
         {
             Directory.CreateDirectory(Generic.BinaryPath);
         }
-        VelopackApp.Build().Run();
     }
 
     private void CreateSettingsData()

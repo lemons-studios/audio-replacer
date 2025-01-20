@@ -1,14 +1,11 @@
 ﻿using System.Threading.Tasks;
 using Velopack;
-using Velopack.Sources;
 
 namespace AudioReplacer.Util;
 
 public static class AppUpdater
 {
-    private static readonly UpdateManager AppUpdateManager =
-        new UpdateManager(new GithubSource("https://github.com/lemons-studios/audio-replacer", null, false));
-
+    private static readonly UpdateManager AppUpdateManager = new("https://github.com/lemons-studios/audio-replacer/releases/latest/download/releases.win.json");
     public static async Task UpdateApplication()
     {
         var newVer = await AppUpdateManager.CheckForUpdatesAsync();
@@ -25,5 +22,5 @@ public static class AppUpdater
         return check != null;
     }
 
-}
 
+}

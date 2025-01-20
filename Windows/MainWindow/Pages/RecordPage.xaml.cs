@@ -3,7 +3,6 @@ using AudioReplacer.Windows.MainWindow.Util;
 using CommunityToolkit.WinUI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Navigation;
 using NAudio.Wave;
 using NAudio.Wave.SampleProviders;
 using System;

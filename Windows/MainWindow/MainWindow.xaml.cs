@@ -136,4 +136,9 @@ public sealed partial class MainWindow
         }
         MainFrame.Content = page;
     }
+
+    private void ApplyUpdates(object sender, RoutedEventArgs e)
+    {
+        Task.Run(AppUpdater.UpdateApplication);
+    }
 }
