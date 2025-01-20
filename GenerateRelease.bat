@@ -22,7 +22,7 @@ dotnet publish -c Release --self-contained -r win-x64 -o .\Publish
 
 :: Build app installer with vpk
 echo Building app installer with vpk...
-vpk pack -u AudioReplacer -v %~1 -p .\Publish -e AudioReplacer.exe --splashImage .\Assets\SplashScreen.gif -i .\Assets\AppIcon.ico || (
+vpk pack -u AudioReplacer -v %~1 -p .\Publish -e AudioReplacer.exe --splashImage .\Assets\SplashScreen.gif -i .\Assets\AppIcon.ico --noPortable --skipVeloAppCheck --signSkipDll || (
     echo Error: vpk build process failed.
     exit /b 1
 )
