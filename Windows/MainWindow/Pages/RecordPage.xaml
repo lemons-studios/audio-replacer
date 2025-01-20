@@ -11,18 +11,23 @@
     <Page.DataContext>
         <Models:RecordPageViewModel />
     </Page.DataContext>
-
     <Page.Resources>
         <Converters:VisibilityConverter x:Key="VisibilityConverter" />
     </Page.Resources>
 
-    <Grid Padding="15" ColumnDefinitions="60*, 40*">
+    <Grid
+        VerticalAlignment="Stretch"
+        ColumnDefinitions="3*, 2*"
+        RowDefinitions="*">
         <Border
+            Grid.Row="0"
             Grid.Column="0"
-            Margin="0,0,20,0"
-            Style="{StaticResource PanelCard}">
-            <Grid VerticalAlignment="Center" RowDefinitions="Auto, *, Auto">
-                <StackPanel Grid.Row="0">
+            Margin="10"
+            Background="{ThemeResource LayerFillColorAltBrush}"
+            BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+            CornerRadius="8">
+            <StackPanel VerticalAlignment="Center">
+                <StackPanel>
                     <TextBlock
                         x:Name="CurrentFile"
                         Margin="0,7.5"
@@ -41,7 +46,7 @@
                             Value="32" />
                     </StackPanel>
                 </StackPanel>
-                <StackPanel Grid.Row="1" HorizontalAlignment="Center">
+                <StackPanel>
                     <StackPanel>
                         <MediaPlayerElement
                             x:Name="AudioPreview"
@@ -62,8 +67,8 @@
                         <TextBlock
                             x:Name="Transcription"
                             HorizontalAlignment="Center"
-                            FontSize="13.5"
-                            FontWeight="Normal"
+                            FontSize="15"
+                            FontWeight="Medium"
                             Text=""
                             TextAlignment="Center"
                             TextWrapping="WrapWholeWords">
@@ -77,10 +82,7 @@
                         HorizontalAlignment="Center"
                         Orientation="Horizontal" />
                 </StackPanel>
-                <StackPanel
-                    Grid.Row="2"
-                    HorizontalAlignment="Center"
-                    Orientation="Horizontal">
+                <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
                     <Button
                         x:Name="SkipAudioButton"
                         Click="SkipCurrentAudioFile"
@@ -125,11 +127,17 @@
                         Style="{StaticResource OperationButton}"
                         Visibility="{Binding IsReviewing, Converter={StaticResource VisibilityConverter}}" />
                 </StackPanel>
-            </Grid>
+            </StackPanel>
         </Border>
-        <Border Grid.Column="1" Style="{StaticResource PanelCard}">
-            <Grid VerticalAlignment="Center" RowDefinitions="Auto, Auto">
-                <StackPanel Grid.Row="0">
+        <Border
+            Grid.Row="0"
+            Grid.Column="1"
+            Margin="10"
+            Background="{ThemeResource LayerFillColorAltBrush}"
+            BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+            CornerRadius="8">
+            <StackPanel VerticalAlignment="Center">
+                <StackPanel>
                     <TextBlock
                         Margin="0,0,0,15"
                         Style="{StaticResource TitleText}"
@@ -141,7 +149,7 @@
                         SelectionChanged="EffectsValueUpdate"
                         Style="{StaticResource DropdownMenu}" />
                 </StackPanel>
-                <StackPanel Grid.Row="1">
+                <StackPanel>
                     <TextBlock
                         Width="275"
                         Margin="0,0,0,15"
@@ -155,13 +163,12 @@
                         SelectionChanged="EffectsValueUpdate"
                         Style="{StaticResource DropdownMenu}" />
                     <CheckBox
-                        x:Name="FurtherEditsCheckBox"
                         HorizontalAlignment="Center"
                         Checked="FlagFurtherEdits"
                         Content="Further Edits Required?"
                         Unchecked="FlagFurtherEdits" />
                 </StackPanel>
-            </Grid>
+            </StackPanel>
         </Border>
     </Grid>
 </Page>

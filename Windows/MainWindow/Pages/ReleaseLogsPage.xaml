@@ -7,7 +7,26 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
 
-    <Grid>
-        <TextBlock Text="Temp" />
+    <Grid Padding="35" RowDefinitions="Auto, *">
+        <TextBlock
+            Grid.Row="0"
+            HorizontalAlignment="Left"
+            VerticalAlignment="Top"
+            FontSize="25"
+            FontWeight="SemiBold"
+            Text="Patch Version"
+            TextAlignment="Left" />
+        <Border
+            Grid.Row="1"
+            Margin="10"
+            Background="{ThemeResource LayerFillColorAltBrush}"
+            BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+            CornerRadius="8">
+            <TextBlock
+                HorizontalAlignment="Stretch"
+                VerticalAlignment="Center"
+                Text="Patch Text placeholder"
+                TextAlignment="Left" />
+        </Border>
     </Grid>
 </Page>
