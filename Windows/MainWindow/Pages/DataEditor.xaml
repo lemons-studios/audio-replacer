@@ -4,7 +4,6 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:DataEditor="using:WinUIEditor"
-    xmlns:Models="using:AudioReplacer.ViewModels"
     xmlns:ToolkitControls="using:CommunityToolkit.WinUI.Controls"
     xmlns:ToolkitUi="using:CommunityToolkit.WinUI"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -18,10 +17,14 @@
                         Click="ReloadChanges"
                         Icon="{ToolkitUi:FontIcon Glyph=&#xE74E;}"
                         Label="Save" />
-                    <AppBarButton
-                        Click="ImportFile"
-                        Icon="{ToolkitUi:FontIcon Glyph=&#xEA52;}"
-                        Label="Import" />
+                    <AppBarButton Icon="{ToolkitUi:FontIcon Glyph=&#xEA52;}" Label="Import">
+                        <AppBarButton.Flyout>
+                            <MenuFlyout>
+                                <MenuFlyoutItem Click="ImportPitch" Text="Pitch" />
+                                <MenuFlyoutItem Click="ImportEffects" Text="Effect" />
+                            </MenuFlyout>
+                        </AppBarButton.Flyout>
+                    </AppBarButton>
                     <AppBarSeparator />
                     <AppBarButton
                         Click="OpenHelpPage"

@@ -79,36 +79,28 @@ public sealed partial class DataEditor
         CustomDataEditor.Editor.SetText(File.ReadAllText(currentFilePath));
     }
 
-    private void ImportFile(object sender, RoutedEventArgs e)
+    private void ImportEffects(object sender, RoutedEventArgs e)
+    {
+        Task.Run(() => ImportFile(true));
+    }
+
+    private void ImportPitch(object sender, RoutedEventArgs e)
+    {
+       Task.Run(() => ImportFile(false));
+    }
+
+    private async Task ImportFile(bool effect)
     {
         if (!isLoaded) return;
-        var importType = new ContentDialog
-        {
-            Title = "Choose Import File",
-            Content = "What data is the imported data meant for? App will restart after import",
-            PrimaryButtonText = "Pitch Data", SecondaryButtonText = "Effect Data", CloseButtonText = "Cancel",
-            XamlRoot = Content.XamlRoot, Width = 500
-        };
-        var result = Task.Run(async () => await importType.ShowAsync()).Result;
-        if (result == ContentDialogResult.None) return;
+        var copyPath = effect ? Generic.EffectsDataFile : Generic.PitchDataFile;
 
         var openPicker = new FileOpenPicker();
         InitializeWithWindow.Initialize(openPicker, WindowNative.GetWindowHandle(App.MainWindow));
         openPicker.FileTypeFilter.Add(".json");
-        var file = Task.Run(async () => await openPicker.PickSingleFileAsync()).Result;
+        var file = await openPicker.PickSingleFileAsync();
         if (file != null)
         {
-            string fileContents = File.ReadAllText(file.Path);
-            switch (result == ContentDialogResult.Primary)
-            {
-                case true:
-                    File.WriteAllText(Generic.PitchDataFile, fileContents);
-                    break;
-                case false:
-                    File.WriteAllText(Generic.EffectsDataFile, fileContents);
-                    break;
-            }
-
+            File.Copy(file.Path, copyPath, overwrite: true);
             Generic.RestartApp();
         }
     }
