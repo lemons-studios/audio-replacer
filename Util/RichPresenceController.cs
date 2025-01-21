@@ -86,9 +86,4 @@ public class RichPresenceController
     {
         client.Dispose();
     }
-
-    public DiscordRpcClient GetRpcClient()
-    {
-        return client;
-    }
 }

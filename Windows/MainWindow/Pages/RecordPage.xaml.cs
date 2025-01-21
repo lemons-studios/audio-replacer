@@ -14,7 +14,7 @@ using Windows.Media.Core;
 
 namespace AudioReplacer.Windows.MainWindow.Pages;
 
-public sealed partial class RecordPage
+public sealed partial class RecordPage // This file is among the worst written files in the project. It works though so I won't be changing it until I'm bored
 {
     private AudioRecordingUtils audioRecordingUtils;
 
