@@ -177,7 +177,7 @@
                 </CommunityToolkit:SettingsExpander>
 
                 <CommunityToolkit:SettingsExpander
-                    Margin="0,0,0,50"
+                    Margin="0,0,0,10"
                     Description="© 2024-2025 Shob3r/Lemon Studios"
                     Header="About Audio Replacer"
                     HeaderIcon="{Ui:FontIcon Glyph=&#xEC71;}">

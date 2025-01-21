@@ -77,25 +77,21 @@ public class Generic
         }
     }
 
-    public static int GenerateRandomNumber(int min, int max)
-    {
-        var rng = new Random((int) DateTime.Now.Ticks);
-        return rng.Next(min, max);
-    }
-
     public static void OpenUrl(string url)
     {
         Task.Run(async() => await SpawnProcess("cmd", $"/c start {url}"));
     }
 
+    // Config.NET does not allow boolean types with my setup, So these two boolean converter methods are needed.
     public static int BoolToInt(bool value)
     {
+        // true = 1, false = 0.
         return value ? 1 : 0;
     }
 
     public static bool IntToBool(int value)
     {
-        // If the value is not 1, return a false boolean
+        // If the value is not 1, return a false boolean.
         return value == 1;
     }
 

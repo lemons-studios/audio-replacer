@@ -4,7 +4,7 @@ namespace AudioReplacer.Util;
 
 public class RichPresenceController
 {
-    public string details, smallImage, smallImageText, state;
+    private string details, smallImage, smallImageText, state;
     private readonly DiscordRpcClient client;
     private readonly Timestamps startTimestamp;
 

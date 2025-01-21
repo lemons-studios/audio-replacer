@@ -97,7 +97,5 @@
         <Setter Property="HorizontalScrollBarVisibility" Value="Disabled" />
         <Setter Property="VerticalScrollMode" Value="Enabled" />
         <Setter Property="VerticalScrollBarVisibility" Value="Hidden" />
-        <Setter Property="Padding" Value="15" />
-        <Setter Property="Margin" Value="0,-10,0,0" />
     </Style>
 </ResourceDictionary>

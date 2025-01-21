@@ -26,6 +26,7 @@ public sealed partial class RecordPage
         InitializeComponent();
         if (ProjectFileUtils.IsProjectLoaded)
             UpdateFileElements();
+        AudioPreview.MediaPlayer.Pause(); // Needed to fix an issue where audio would play after second navigation to the page after launch
     }
 
     private void OnUnloaded(object sender, RoutedEventArgs e)
@@ -76,7 +77,6 @@ public sealed partial class RecordPage
             case false:
                 break;
         }
-
     }
 
     private async void StartRecordingAudio(object sender, RoutedEventArgs e)
@@ -202,9 +202,8 @@ public sealed partial class RecordPage
     {
         if (sender is not Button button) return;
         Generic.InRecordState = false;
-        bool isSubmitButton = button.Name == "SubmitRecordingButton";
 
-        switch (isSubmitButton)
+        switch (button.Name == "SubmitRecordingButton")
         {
             case true:
                 // Submission Accepted
@@ -214,10 +213,9 @@ public sealed partial class RecordPage
             case false:
                 // Submission Rejected
                 File.Delete(ProjectFileUtils.GetOutFilePath());
-                App.MainWindow.ShowNotification(InfoBarSeverity.Success, "Recording Rejected", "Moving back to current file...", true, replaceExistingNotifications: true);
+                App.MainWindow.ShowNotification(InfoBarSeverity.Informational, "Recording Rejected", "Moving back to current file...", true, replaceExistingNotifications: true);
                 break;
         }
-
         UpdateFileElements();
     }
 }
