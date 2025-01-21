@@ -5,7 +5,7 @@ namespace AudioReplacer.Util;
 
 public static class AppUpdater
 {
-    private static readonly UpdateManager AppUpdateManager = new("https://github.com/lemons-studios/audio-replacer/releases/latest/download/releases.win.json");
+    private static readonly UpdateManager AppUpdateManager = new("https://audioreplacerupdates.blob.core.windows.net/updates");
     public static async Task UpdateApplication()
     {
         var newVer = await AppUpdateManager.CheckForUpdatesAsync();
@@ -21,6 +21,4 @@ public static class AppUpdater
         var check = await AppUpdateManager.CheckForUpdatesAsync();
         return check != null;
     }
-
-
 }

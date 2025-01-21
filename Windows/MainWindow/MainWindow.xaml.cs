@@ -7,6 +7,7 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
 using TitleBarDrag;
@@ -44,6 +45,8 @@ public sealed partial class MainWindow
         {
             ProjectFileUtils.SetProjectData(App.AppSettings.LastSelectedFolder);
         }
+
+        Task.Run(async () => await CheckForUpdates());
     }
 
     public async Task ShowNotification(InfoBarSeverity severity, string title, string message, bool autoclose = false, bool closable = true, bool replaceExistingNotifications = true)
@@ -137,8 +140,22 @@ public sealed partial class MainWindow
         MainFrame.Content = page;
     }
 
-    private void ApplyUpdates(object sender, RoutedEventArgs e)
+    private async Task CheckForUpdates()
     {
-        Task.Run(AppUpdater.UpdateApplication);
+        // Update checks fail from non-velopack envrionments (aka. the debugger)
+        if (!Debugger.IsAttached && Generic.IntToBool(App.AppSettings.AppUpdateCheck))
+        {
+            bool updatesAvailable = await AppUpdater.AreUpdatesAvailable();
+            if (updatesAvailable)
+            {
+                UpdateAvailableNotification.IsOpen = true;
+            }
+        }
+    }
+
+    private async void ApplyUpdates(object sender, RoutedEventArgs e)
+    {
+        ToggleProgressNotification("Downloading Updates...", "App will restart after update is complete");
+        await AppUpdater.UpdateApplication();
     }
 }

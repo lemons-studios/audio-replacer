@@ -100,27 +100,45 @@
             </Frame>
         </NavigationView>
 
-        <InfoBar
-            x:Name="GeneralNotificationPopup"
-            Grid.Row="1"
-            Style="{StaticResource ToastNotification}">
-            <InfoBar.Transitions>
-                <PopupThemeTransition />
-            </InfoBar.Transitions>
-        </InfoBar>
-        <InfoBar
-            x:Name="InProgressNotification"
-            Background="{ThemeResource SystemFillColorSolidAttentionBackgroundBrush}"
-            IsClosable="False"
-            Severity="Informational"
-            Style="{StaticResource ToastNotification}">
-            <InfoBar.Content>
-                <ProgressBar IsIndeterminate="True" />
-            </InfoBar.Content>
-            <InfoBar.Transitions>
-                <PopupThemeTransition />
-            </InfoBar.Transitions>
-        </InfoBar>
+        <StackPanel Grid.Row="0">
+            <InfoBar
+                x:Name="GeneralNotificationPopup"
+                Grid.Row="1"
+                Style="{StaticResource ToastNotification}">
+                <InfoBar.Transitions>
+                    <PopupThemeTransition />
+                </InfoBar.Transitions>
+            </InfoBar>
+            <InfoBar
+                x:Name="InProgressNotification"
+                Background="{ThemeResource SystemFillColorSolidAttentionBackgroundBrush}"
+                IsClosable="False"
+                Severity="Informational"
+                Style="{StaticResource ToastNotification}">
+                <InfoBar.Content>
+                    <ProgressBar IsIndeterminate="True" />
+                </InfoBar.Content>
+                <InfoBar.Transitions>
+                    <PopupThemeTransition />
+                </InfoBar.Transitions>
+            </InfoBar>
+
+            <InfoBar
+                x:Name="UpdateAvailableNotification"
+                Title="Update Available"
+                Background="{ThemeResource SystemFillColorSolidAttentionBackgroundBrush}"
+                IsClosable="True"
+                IsOpen="False"
+                Severity="Informational">
+                <InfoBar.ActionButton>
+                    <Button
+                        Click="ApplyUpdates"
+                        Content="Download Updates"
+                        Style="{StaticResource AccentButtonStyle}" />
+                </InfoBar.ActionButton>
+            </InfoBar>
+        </StackPanel>
+
 
     </Grid>
 
