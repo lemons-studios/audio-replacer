@@ -27,6 +27,7 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+		<!--Do NOT upgrade CommunityToolkit.Mvvm. I have had some issues with it and from my research the devs just tell developers to use 8.3.2 (the version before 8.4.0) -->
 		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.3.2" />
 		<PackageReference Include="CommunityToolkit.WinUI.Behaviors" Version="8.1.240916" />
 		<PackageReference Include="CommunityToolkit.WinUI.Controls.Primitives" Version="8.1.240916" />

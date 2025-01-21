@@ -5,7 +5,9 @@ namespace AudioReplacer.Util;
 
 public static class AppUpdater
 {
-    private static readonly UpdateManager AppUpdateManager = new("https://audioreplacerupdates.blob.core.windows.net/updates");
+    // Velopack will search through the url below for updates
+    private static readonly UpdateManager AppUpdateManager = new("https://updates.lemon-studios.ca/updates");
+    
     public static async Task UpdateApplication()
     {
         var newVer = await AppUpdateManager.CheckForUpdatesAsync();

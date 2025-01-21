@@ -100,10 +100,10 @@
             </Frame>
         </NavigationView>
 
-        <StackPanel Grid.Row="0">
+        <StackPanel Grid.Row="1">
             <InfoBar
                 x:Name="GeneralNotificationPopup"
-                Grid.Row="1"
+                Margin="0,0,0,-75"
                 Style="{StaticResource ToastNotification}">
                 <InfoBar.Transitions>
                     <PopupThemeTransition />
@@ -111,6 +111,7 @@
             </InfoBar>
             <InfoBar
                 x:Name="InProgressNotification"
+                Margin="0,0,0,-75"
                 Background="{ThemeResource SystemFillColorSolidAttentionBackgroundBrush}"
                 IsClosable="False"
                 Severity="Informational"
@@ -126,10 +127,14 @@
             <InfoBar
                 x:Name="UpdateAvailableNotification"
                 Title="Update Available"
+                Margin="0,0,0,-75"
                 Background="{ThemeResource SystemFillColorSolidAttentionBackgroundBrush}"
                 IsClosable="True"
-                IsOpen="False"
-                Severity="Informational">
+                Severity="Informational"
+                Style="{StaticResource ToastNotification}">
+                <InfoBar.IconSource>
+                    <FontIconSource Glyph="&#xE896;" />
+                </InfoBar.IconSource>
                 <InfoBar.ActionButton>
                     <Button
                         Click="ApplyUpdates"
@@ -138,8 +143,5 @@
                 </InfoBar.ActionButton>
             </InfoBar>
         </StackPanel>
-
-
     </Grid>
-
 </WinUiEx:WindowEx>
