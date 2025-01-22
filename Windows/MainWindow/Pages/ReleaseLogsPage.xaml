@@ -18,15 +18,16 @@
             FontWeight="SemiBold"
             Text="Release Logs:"
             TextAlignment="Left" />
-        <controls:MarkdownTextBlock
-            x:Name="MarkdownText"
-            Grid.Row="1"
-            HorizontalAlignment="Center"
-            VerticalAlignment="Top"
-            AllowFocusOnInteraction="False"
-            FontSize="20"
-            FontWeight="Medium"
-            IsFocusEngagementEnabled="False"
-            Text="No Release Logs Available." />
+        <ScrollViewer Grid.Row="1">
+            <controls:MarkdownTextBlock
+                x:Name="MarkdownText"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Top"
+                AllowFocusOnInteraction="False"
+                FontSize="20"
+                FontWeight="Medium"
+                IsFocusEngagementEnabled="False"
+                Text="No Release Logs Available." />
+        </ScrollViewer>
     </Grid>
 </Page>

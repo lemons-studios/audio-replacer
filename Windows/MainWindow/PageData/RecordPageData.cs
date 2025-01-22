@@ -1,4 +1,5 @@
 ﻿using AudioReplacer.Util;
+using AudioReplacer.Windows.MainWindow.Util;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using System.Collections.Generic;
@@ -12,6 +13,7 @@ partial class RecordPageData : ObservableObject
     [RelayCommand]
     private void SwitchButtonStates()
     {
+        if (!ProjectFileUtils.IsProjectLoaded) return;
         (IsIdle, IsRecording, IsReviewing) =
             IsIdle ? (false, true, false)
             : IsRecording ? (false, false, true)
