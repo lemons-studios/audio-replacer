@@ -4,6 +4,7 @@
     x:Class="AudioReplacer.Windows.MainWindow.MainWindow"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:Ui="using:CommunityToolkit.WinUI"
     xmlns:WinUiEx="using:WinUIEx"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -62,30 +63,18 @@
             ItemInvoked="Navigate"
             PaneDisplayMode="Left">
             <NavigationView.MenuItems>
-                <NavigationViewItem Tag="Record">
-                    <NavigationViewItem.Content>
-                        <TextBlock FontWeight="Light" Text="Record" />
-                    </NavigationViewItem.Content>
-                    <NavigationViewItem.Icon>
-                        <FontIcon Glyph="&#xE720;" />
-                    </NavigationViewItem.Icon>
-                </NavigationViewItem>
-                <NavigationViewItem Tag="Data Editor">
-                    <NavigationViewItem.Content>
-                        <TextBlock FontWeight="Light" Text="Data Editor" />
-                    </NavigationViewItem.Content>
-                    <NavigationViewItem.Icon>
-                        <FontIcon Glyph="&#xE70F;" />
-                    </NavigationViewItem.Icon>
-                </NavigationViewItem>
-                <NavigationViewItem Tag="Update Logs">
-                    <NavigationViewItem.Content>
-                        <TextBlock FontWeight="Light" Text="Update Logs" />
-                    </NavigationViewItem.Content>
-                    <NavigationViewItem.Icon>
-                        <FontIcon Glyph="&#xEB41;" />
-                    </NavigationViewItem.Icon>
-                </NavigationViewItem>
+                <NavigationViewItem
+                    Content="Record"
+                    Icon="{Ui:FontIcon Glyph=&#xE720;}"
+                    Tag="Record" />
+                <NavigationViewItem
+                    Content="Data Editor"
+                    Icon="{Ui:FontIcon Glyph=&#xE70F;}"
+                    Tag="Data Editor" />
+                <NavigationViewItem
+                    Content="Release Notes"
+                    Icon="{Ui:FontIcon Glyph=&#xE777;}"
+                    Tag="Update Logs" />
             </NavigationView.MenuItems>
             <Frame
                 x:Name="MainFrame"

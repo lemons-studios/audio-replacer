@@ -1,7 +1,9 @@
-using System.Threading.Tasks;
 using AudioReplacer.Util;
-using Markdig;
+using CommunityToolkit.Labs.WinUI.MarkdownTextBlock;
+using CommunityToolkit.WinUI;
 using Microsoft.UI.Xaml;
+using System.Threading.Tasks;
+
 namespace AudioReplacer.Windows.MainWindow.Pages;
 
 public sealed partial class ReleaseLogsPage
@@ -9,6 +11,7 @@ public sealed partial class ReleaseLogsPage
     public ReleaseLogsPage()
     {
         InitializeComponent();
+        MarkdownText.Config = new MarkdownConfig();
         Loaded += OnLoaded;
     }
 
@@ -16,12 +19,16 @@ public sealed partial class ReleaseLogsPage
     {
         App.DiscordController.SetDetails("Viewing Release Logs");
         App.DiscordController.SetState("");
-        Task.Run(ConvertMarkdown);
+        Task.Run(SetContent);
     }
 
-    private async Task ConvertMarkdown()
+    private async Task SetContent()
     {
-        string markdown = await Generic.GetDataFromGithub("body");
-        MarkdownText.Text = markdown;
+        var markdown = await Generic.GetDataFromGithub("body");
+
+        await MarkdownText.DispatcherQueue.EnqueueAsync(() =>
+        {
+            MarkdownText.Text = markdown;
+        });
     }
 }

@@ -14,6 +14,11 @@ In order to contribute to this application, You should have the following:
 >
 > All development tools should use up around 15-30Gb of system storage once installed
 
+After you clone your repo, you must run the following command before opening the solution (Or add the custom source to the nuget package manager window after opening the solution)
+```
+dotnet nuget add source https://pkgs.dev.azure.com/dotnet/CommunityToolkit/_packaging/CommunityToolkit-Labs/nuget/v3/index.json --name Labs-Windows
+```
+
 ## How to contribute:
 1. Fork the repo!
 2. Make your changes!

@@ -37,7 +37,7 @@ Once the software needed for development are both installed, you can run the fol
 ```batch
 git clone https://github.com/lemons-studios/audio-replacer.git
 cd audio-replacer 
-dotnet publish -c Release --self-contained -r win-x64 -o .\Publish
+.\GenerateReleaseBuild.bat [Major].[Minor].[Build]
 ```
 
 ## Contributing
