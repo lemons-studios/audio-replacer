@@ -2,7 +2,6 @@
 using Velopack;
 
 namespace AudioReplacer.Util;
-
 public static class AppUpdater
 {
     // Velopack will search through the url below for updates
@@ -22,7 +21,6 @@ public static class AppUpdater
 
     public static async Task<bool> AreUpdatesAvailable()
     {
-        var check = await AppUpdateManager.CheckForUpdatesAsync();
-        return check != null;
+        return await AppUpdateManager.CheckForUpdatesAsync() != null;
     }
 }

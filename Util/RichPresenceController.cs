@@ -1,7 +1,6 @@
 ﻿using DiscordRPC;
 
 namespace AudioReplacer.Util;
-
 public class RichPresenceController
 {
     private string details, smallImage, smallImageText, state;

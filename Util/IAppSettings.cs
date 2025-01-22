@@ -1,6 +1,6 @@
 ﻿using Config.Net;
-namespace AudioReplacer.Util;
 
+namespace AudioReplacer.Util;
 public interface IAppSettings
 {
     [Option(Alias = "Theme", DefaultValue = 0)]
@@ -36,4 +36,3 @@ public interface IAppSettings
     [Option(Alias = "EnableTranscription", DefaultValue = 1)]
     int EnableTranscription { get; set; }
 }
-

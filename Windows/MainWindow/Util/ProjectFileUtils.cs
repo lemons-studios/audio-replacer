@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using Windows.Storage;
 
 namespace AudioReplacer.Windows.MainWindow.Util;
-
 public static class ProjectFileUtils
 {
     private static string currentFile, truncatedCurrentFile, currentOutFile, currentFileName, directoryName;

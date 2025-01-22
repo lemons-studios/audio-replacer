@@ -8,12 +8,11 @@ using Windows.Media.MediaProperties;
 using Windows.Storage;
 
 namespace AudioReplacer.Windows.MainWindow.Util;
-
 public class AudioRecordingUtils
 {
     private float pitchChange = 1;
-    private string effectCommand = "";
-    public bool requiresExtraEdits = false;
+    private string effectCommand = string.Empty;
+    public bool requiresExtraEdits;
     private MediaCapture recordingCapture;
 
     public AudioRecordingUtils()
@@ -81,4 +80,3 @@ public class AudioRecordingUtils
         File.Move(outFile, file);
     }
 }
-

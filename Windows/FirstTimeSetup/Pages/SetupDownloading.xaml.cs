@@ -1,9 +1,1 @@
-namespace AudioReplacer.Windows.FirstTimeSetup.Pages;
-
-public sealed partial class SetupDownloading
-{
-    public SetupDownloading()
-    {
-        InitializeComponent();
-    }
-}
+namespace AudioReplacer.Windows.FirstTimeSetup.Pages; public sealed partial class SetupDownloading { public SetupDownloading() { InitializeComponent(); } }

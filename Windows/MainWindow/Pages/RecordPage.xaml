@@ -50,6 +50,7 @@
                     <StackPanel>
                         <MediaPlayerElement
                             x:Name="AudioPreview"
+                            AutoPlay="False"
                             Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
                             Style="{StaticResource AudioPlayer}"
                             Visibility="Visible">
@@ -119,7 +120,9 @@
                         IsEnabled="{Binding IsRecording}"
                         Style="{StaticResource OperationButton}"
                         Visibility="{Binding IsRecording, Converter={StaticResource VisibilityConverter}}" />
+                    <!--  Do not delete the name of the next button even if your ide says it's not used. it very much is in use  -->
                     <Button
+                        x:Name="SubmitRecordingButton"
                         Click="UpdateAudioStatus"
                         Command="{Binding SwitchButtonStatesCommand}"
                         Content="Submit"

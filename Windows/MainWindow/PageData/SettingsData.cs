@@ -149,7 +149,7 @@ public partial class SettingsData : ObservableObject
     {
         App.MainWindow.ToggleProgressNotification("Downloading Data", "Do not disconnect from the internet. App will restart after download is completed");
         await using var whisperStream = await WhisperGgmlDownloader.GetGgmlModelAsync(GgmlType.Small, QuantizationType.Q5_1);
-        await using var fileWriter = File.OpenWrite(Generic.whisperPath);
+        await using var fileWriter = File.OpenWrite(Generic.WhisperPath);
         await whisperStream.CopyToAsync(fileWriter);
         Generic.RestartApp();
     }

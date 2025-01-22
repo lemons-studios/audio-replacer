@@ -15,7 +15,6 @@ namespace AudioReplacer.Windows.MainWindow.Pages;
 public sealed partial class DataEditor
 {
     private bool isLoaded;
-
     public DataEditor()
     {
         InitializeComponent();
@@ -111,12 +110,6 @@ public sealed partial class DataEditor
         string currentEditorText = GetEditorText();
         CustomDataEditor.Editor.SetText(JsonConvert.SerializeObject(JsonConvert.DeserializeObject(currentEditorText),
             Formatting.Indented));
-    }
-
-    private void PasteText(object sender, RoutedEventArgs e)
-    {
-        if (!isLoaded) return;
-        CustomDataEditor.Editor.Paste();
     }
 
     private void Undo(object sender, RoutedEventArgs e)

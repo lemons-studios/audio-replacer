@@ -54,7 +54,6 @@ public partial class SetupData : ObservableObject
         App.AppSettings.InputRandomizationEnabled = Generic.BoolToInt(value);
     }
 
-
     [RelayCommand]
     private void NextPage()
     {
@@ -139,7 +138,7 @@ public partial class SetupData : ObservableObject
         if (DownloadWhisper)
         {
             await using var whisperStream = await WhisperGgmlDownloader.GetGgmlModelAsync(GgmlType.Small, QuantizationType.Q5_1);
-            await using var fileWriter = File.OpenWrite(Generic.whisperPath);
+            await using var fileWriter = File.OpenWrite(Generic.WhisperPath);
             await whisperStream.CopyToAsync(fileWriter);
         }
 

@@ -23,9 +23,11 @@ public sealed partial class RecordPage // This file is among the worst written f
         Loaded += OnLoaded;
         Unloaded += OnUnloaded;
         ProjectFileUtils.OnProjectLoaded += UpdateFileElements;
+
         InitializeComponent();
-        if (ProjectFileUtils.IsProjectLoaded)
+        if (ProjectFileUtils.IsProjectLoaded) 
             UpdateFileElements();
+
         AudioPreview.MediaPlayer.Pause(); // Needed to fix an issue where audio would play after second navigation to the page after launch
     }
 
@@ -125,6 +127,7 @@ public sealed partial class RecordPage // This file is among the worst written f
         TranscribeAudio();
     }
 
+    // Should probably move this into its own file in the future due to the sheer length of this thing
     private void TranscribeAudio()
     {
         var dispatcherQueue = Transcription.DispatcherQueue;
@@ -134,7 +137,7 @@ public sealed partial class RecordPage // This file is among the worst written f
             try
             {
                 // Check if the Whisper model path exists
-                if (!Path.Exists(Generic.whisperPath) || !Generic.IntToBool(App.AppSettings.EnableTranscription))
+                if (!Path.Exists(Generic.WhisperPath) || !Generic.IntToBool(App.AppSettings.EnableTranscription))
                 {
                     await dispatcherQueue.EnqueueAsync(() =>
                     {
@@ -155,7 +158,7 @@ public sealed partial class RecordPage // This file is among the worst written f
                 }
 
                 // Initialize Whisper model and processor
-                var whisperFactory = WhisperFactory.FromPath(Generic.whisperPath);
+                var whisperFactory = WhisperFactory.FromPath(Generic.WhisperPath);
                 // Determine the best runtime for the model
                 RuntimeOptions.RuntimeLibraryOrder = [RuntimeLibrary.Cuda, RuntimeLibrary.Vulkan, RuntimeLibrary.Cpu, RuntimeLibrary.CpuNoAvx];
                 var whisperProcessor = whisperFactory.CreateBuilder()

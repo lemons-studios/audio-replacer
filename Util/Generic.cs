@@ -1,5 +1,4 @@
 ﻿using Microsoft.UI.Composition.SystemBackdrops;
-using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -8,28 +7,25 @@ using System.IO;
 using System.Net.Http;
 using System.Reflection;
 using System.Threading.Tasks;
+using Microsoft.Windows.AppLifecycle;
 
 namespace AudioReplacer.Util;
-
 public class Generic
 {
     public static readonly string ExtraApplicationData = Path.Join(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "audio-replacer");
     public static readonly string BinaryPath = Path.Join(ExtraApplicationData, "bin");
     public static readonly string FfmpegPath = Path.Combine(BinaryPath, "ffmpeg.exe");
-    public static readonly string whisperPath = Path.Join(BinaryPath, "whisper.bin");
+    public static readonly string WhisperPath = Path.Join(BinaryPath, "whisper.bin");
     public static readonly string ConfigPath = Path.Join(ExtraApplicationData, "config");
-    public static bool IsAppLoaded = false;
     public static readonly string SettingsFile = Path.Join(ConfigPath, "AppSettings.json");
     public static readonly string PitchDataFile = Path.Join(ConfigPath, "PitchData.json");
     public static readonly string EffectsDataFile = Path.Join(ConfigPath, "EffectsData.json");
-    public static string[][] PitchData;
-    public static string[][] EffectData;
-    public static bool InRecordState;
-
-    public static List<string> PitchTitles, EffectTitles, EffectValues;
-    public static List<float> PitchValues;
-
-    public static readonly bool IsWhisperInstalled = File.Exists(whisperPath);
+    public static readonly bool IsWhisperInstalled = File.Exists(WhisperPath);
+    public static bool IsAppLoaded = false;
+    public static bool InRecordState = false;
+    public static string[][] PitchData, EffectData;
+    public static List<string> PitchTitles = [], EffectTitles = [], EffectValues = [];
+    public static List<float> PitchValues = [];
 
     private static readonly HttpClient WebClient = new()
     {
@@ -60,11 +56,6 @@ public class Generic
 
     public static void PopulateCustomData()
     {
-        PitchTitles = [];
-        PitchValues = [];
-        EffectValues = [];
-        EffectTitles = [];
-        
         foreach (var data in PitchData)
         {
             PitchValues.Add(ParseFloat(data[0])); // Position 0 of each array in the 2d array should have the data
@@ -97,7 +88,7 @@ public class Generic
 
     public static void RestartApp()
     {
-        Microsoft.Windows.AppLifecycle.AppInstance.Restart("");
+       AppInstance.Restart("");
     }
 
     public static int GetTransparencyMode()
@@ -119,33 +110,28 @@ public class Generic
 
     public static async Task<string> GetDataFromGithub(string tagName)
     {
-        string url = "https://api.github.com/repos/lemons-studios/audio-replacer/releases/latest";
+        var url = "https://api.github.com/repos/lemons-studios/audio-replacer/releases/latest";
         try
         {
             var apiResponse = await WebClient.GetAsync(url);
-            if (!apiResponse.IsSuccessStatusCode)
-                return "# Error getting release notes.";
-            string responseData = await apiResponse.Content.ReadAsStringAsync();
+            if (!apiResponse.IsSuccessStatusCode) return "Error Getting Tag Information";
 
+            var responseData = await apiResponse.Content.ReadAsStringAsync();
             var json = JObject.Parse(responseData);
-            string tagInfo = json[tagName]?.ToString();
-            if (string.IsNullOrEmpty(tagInfo))
-                return "# Error getting release notes.";
-
-            return tagInfo;
+            var tagInfo = json[tagName]?.ToString();
+            return string.IsNullOrEmpty(tagInfo) ? "Error Getting Tag Information" : tagInfo;
         }
         catch
         {
-            return "# Error getting release notes.";
+            return "Error Getting Tag Information";
         }
     }
 
     public static async Task<string> GetWebData(string url) // I sure do love stealing my own code!!
     {
-        using HttpClient httpClient = new HttpClient();
         try
         {
-            HttpResponseMessage response = await httpClient.GetAsync(url);
+            var response = await WebClient.GetAsync(url);
             response.EnsureSuccessStatusCode();
             return await response.Content.ReadAsStringAsync();
         }
@@ -156,8 +142,8 @@ public class Generic
     {
         try
         {
-            using var webStream = await WebClient.GetStreamAsync(url);
-            using var fileStream = new FileStream(outPath, FileMode.OpenOrCreate, FileAccess.Write, FileShare.None);
+            await using var webStream = await WebClient.GetStreamAsync(url);
+            await using var fileStream = new FileStream(outPath, FileMode.OpenOrCreate, FileAccess.Write, FileShare.None);
             await webStream.CopyToAsync(fileStream);
         }
         catch (Exception e)
@@ -168,15 +154,8 @@ public class Generic
 
     public static string GetAppVersion(bool forceBuildNumber = false)
     {
-        try
-        {
-            var fullVer = Assembly.GetEntryAssembly().GetName().Version.ToString();
-            string[] splitVer = fullVer.Split(".");
-            return !forceBuildNumber ? $"{splitVer[0]}.{splitVer[1]}" : $"{splitVer[0]}.{splitVer[1]}.{splitVer[2]}";
-        }
-        catch (NullReferenceException)
-        {
-            return string.Empty;
-        }
+        // I genuinely don't know why .NET thinks that any C# application wouldn't have an entry point running
+        var splitVer = Assembly.GetEntryAssembly()!.GetName()!.Version!.ToString().Split(".");
+        return !forceBuildNumber ? $"{splitVer[0]}.{splitVer[1]}" : $"{splitVer[0]}.{splitVer[1]}.{splitVer[2]}";
     }
 } 

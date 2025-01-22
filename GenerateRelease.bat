@@ -24,10 +24,14 @@ dotnet tool update -g vpk
 :: Publish release build before packaging application
 echo Creating new release build....
 dotnet publish -c Release --self-contained -r win-x64 -o .\Publish
+:: For whatever reason, dotnet publish doesn't include the Assets/ folder. Copy it over to publish before packaging
+echo Copying Assets..
+mkdir Publish\Assets\
+copy /y Assets Publish\Assets\
 
 :: Build app installer with vpk
 echo Building app installer with vpk...
-vpk pack -u AudioReplacer -v %~1 -p .\Publish -e AudioReplacer.exe --splashImage .\Assets\SplashScreen.gif -i .\Assets\AppIcon.ico --noPortable --skipVeloAppCheck --signSkipDll --packTitle "Audio Replacer" --packAuthors "Lemon Studios" || (
+vpk pack -u AudioReplacer -v %~1 -p .\Publish -e AudioReplacer.exe --splashImage .\Assets\SplashScreen.gif -i .\Assets\AppIcon.ico --noPortable --skipVeloAppCheck --signSkipDll --packTitle "Audio Replacer" --packAuthors "Lemon Studios" --delta BestSize || (
     echo Error: vpk build process failed.
     exit /b 1
 )
