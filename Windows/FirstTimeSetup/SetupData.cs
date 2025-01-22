@@ -13,70 +13,12 @@ using Windows.Storage.Pickers;
 using WinRT.Interop;
 
 namespace AudioReplacer.Windows.FirstTimeSetup;
-
 public partial class SetupData : ObservableObject
 {
     // All properties must be static so all setup pages will have the correct value (since they are separate instances of the class)
-    [ObservableProperty] private static int recordStartDelay = 20, recordEndDelay = 20, appTheme = 0;
-    [ObservableProperty] private static bool checkForUpdates = true, richPresenceEnabled = true, enableFileRandomization, downloadWhisper = true;
+    [ObservableProperty] private static bool downloadWhisper = true;
     [ObservableProperty] private static string pitchSettingsPath, effectSettingsPath;
     private static int currentSetupStep;
-
-    partial void OnAppThemeChanged(int value)
-    {
-        if (App.SetupWindow.Content is FrameworkElement rootElement)
-            rootElement.RequestedTheme = (ElementTheme) value;
-        App.AppSettings.AppThemeSetting = value;
-    }
-
-    partial void OnRecordStartDelayChanged(int value)
-    {
-        App.AppSettings.RecordStartWaitTime = value;
-    }
-
-    partial void OnRecordEndDelayChanged(int value)
-    {
-        App.AppSettings.RecordEndWaitTime = value;
-    }
-
-    partial void OnCheckForUpdatesChanged(bool value)
-    {
-        App.AppSettings.AppUpdateCheck = Generic.BoolToInt(value);
-    }
-
-    partial void OnRichPresenceEnabledChanged(bool value)
-    {
-        App.AppSettings.EnableRichPresence = Generic.BoolToInt(value);
-    }
-
-    partial void OnEnableFileRandomizationChanged(bool value)
-    {
-        App.AppSettings.InputRandomizationEnabled = Generic.BoolToInt(value);
-    }
-
-    [RelayCommand]
-    private void NextPage()
-    {
-        currentSetupStep += 1;
-        Type[] steps = [typeof(SetupWelcome), typeof(SetupSettings), typeof(SetupAdvanced), typeof(SetupDownloading)];
-        App.SetupWindow.GetMainFrame().Navigate(steps[currentSetupStep], null, new SlideNavigationTransitionInfo { Effect = SlideNavigationTransitionEffect.FromRight });
-        if (currentSetupStep == 3)
-        {
-            Task.Run(DownloadData);
-        }
-    }
-
-    [RelayCommand]
-    private async Task ImportPitchData()
-    {
-        await ImportData(true);
-    }
-
-    [RelayCommand]
-    private async Task ImportEffectData()
-    {
-        await ImportData(false);
-    }
 
     private async Task ImportData(bool isPitchFile)
     {
@@ -98,7 +40,7 @@ public partial class SetupData : ObservableObject
         }
     }
 
-    public async Task DownloadData()
+    private async Task DownloadData()
     {
         // Before downloading, first import any data files the user wanted to import
         if (!string.IsNullOrWhiteSpace(PitchSettingsPath) && File.Exists(PitchSettingsPath))
@@ -145,5 +87,68 @@ public partial class SetupData : ObservableObject
         // Mark the app as "set up" and restart the application
         File.Create(Path.Join(Generic.ConfigPath, ".setupCompleted"));
         Generic.RestartApp();
+    }
+
+    [RelayCommand]
+    private void NextPage()
+    {
+        currentSetupStep += 1;
+        Type[] steps = [typeof(SetupWelcome), typeof(SetupSettings), typeof(SetupAdvanced), typeof(SetupDownloading)];
+        App.SetupWindow.GetMainFrame().Navigate(steps[currentSetupStep], null, new SlideNavigationTransitionInfo { Effect = SlideNavigationTransitionEffect.FromRight });
+        if (currentSetupStep == 3)
+        {
+            Task.Run(DownloadData);
+        }
+    }
+
+    [RelayCommand]
+    private async Task ImportPitchData()
+    {
+        await ImportData(true);
+    }
+
+    [RelayCommand]
+    private async Task ImportEffectData()
+    {
+        await ImportData(false);
+    }
+
+    [ObservableProperty] private static int appTheme;
+    partial void OnAppThemeChanged(int value)
+    {
+        if (App.SetupWindow.Content is FrameworkElement rootElement)
+            rootElement.RequestedTheme = (ElementTheme) value;
+        App.AppSettings.AppThemeSetting = value;
+    }
+
+    [ObservableProperty] private static int recordStartDelay = 20;
+    partial void OnRecordStartDelayChanged(int value)
+    {
+        App.AppSettings.RecordStartWaitTime = value;
+    }
+
+    
+    [ObservableProperty] private static int recordEndDelay = 20;
+    partial void OnRecordEndDelayChanged(int value)
+    {
+        App.AppSettings.RecordEndWaitTime = value;
+    }
+
+    [ObservableProperty] private static bool checkForUpdates = true;
+    partial void OnCheckForUpdatesChanged(bool value)
+    {
+        App.AppSettings.AppUpdateCheck = Generic.BoolToInt(value);
+    }
+
+    [ObservableProperty] private static bool richPresenceEnabled = true;
+    partial void OnRichPresenceEnabledChanged(bool value)
+    {
+        App.AppSettings.EnableRichPresence = Generic.BoolToInt(value);
+    }
+
+    [ObservableProperty] private static bool enableFileRandomization;
+    partial void OnEnableFileRandomizationChanged(bool value)
+    {
+        App.AppSettings.InputRandomizationEnabled = Generic.BoolToInt(value);
     }
 }

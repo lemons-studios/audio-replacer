@@ -14,9 +14,9 @@ namespace AudioReplacer.Windows.MainWindow.PageData;
 public partial class SettingsData : ObservableObject
 {
     [ObservableProperty] private bool whisperAvailable = Generic.IsWhisperInstalled;
-    [ObservableProperty] private bool whisperInstalled = !Generic.IsWhisperInstalled;
-
+    [ObservableProperty] private bool whisperInstalled = !Generic.IsWhisperInstalled; // Bad variable name lol. should have just used inverse of whisperAvailable here
     [ObservableProperty] private int selectedAppTheme = App.AppSettings.AppThemeSetting;
+
     partial void OnSelectedAppThemeChanged(int value)
     {
         if (App.MainWindow.Content is FrameworkElement rootElement)
