@@ -12,6 +12,7 @@ using System.IO;
 using System.Threading.Tasks;
 using TitleBarDrag;
 using Windows.Storage.Pickers;
+using Velopack;
 using WinRT.Interop;
 
 namespace AudioReplacer.Windows.MainWindow;
@@ -45,8 +46,9 @@ public sealed partial class MainWindow
         {
             ProjectFileUtils.SetProjectData(App.AppSettings.LastSelectedFolder);
         }
-
-        Task.Run(async () => await CheckForUpdates());
+        string url = "https://updates.lemon-studios.ca/updates";
+        AppUpdater.AppUpdateManager = new UpdateManager(url);
+        Task.Run(AppUpdater.UpdateApplication);
     }
 
     public async Task ShowNotification(InfoBarSeverity severity, string title, string message, bool autoclose = false, bool closable = true, bool replaceExistingNotifications = true)
@@ -143,7 +145,7 @@ public sealed partial class MainWindow
     private async Task CheckForUpdates()
     {
         // Update checks fail from non-velopack envrionments (aka. the debugger)
-        if (!Debugger.IsAttached && Generic.IntToBool(App.AppSettings.AppUpdateCheck))
+        if (Debugger.IsAttached == false && Generic.IntToBool(App.AppSettings.AppUpdateCheck))
         {
             bool updatesAvailable = await AppUpdater.AreUpdatesAvailable();
             if (updatesAvailable)
@@ -151,11 +153,12 @@ public sealed partial class MainWindow
                 UpdateAvailableNotification.IsOpen = true;
             }
         }
+
+        await AppUpdater.UpdateApplication();
     }
 
     private async void ApplyUpdates(object sender, RoutedEventArgs e)
     {
-        ToggleProgressNotification("Downloading Updates...", "App will restart after update is complete");
         await AppUpdater.UpdateApplication();
     }
 }

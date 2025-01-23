@@ -12,7 +12,6 @@ namespace AudioReplacer.Converters
             {
                 return isVisible ? Visibility.Visible : Visibility.Collapsed;
             }
-
             return Visibility.Collapsed;
         }
 
@@ -22,7 +21,6 @@ namespace AudioReplacer.Converters
             {
                 return visibility == Visibility.Visible;
             }
-
             return false;
         }
     }

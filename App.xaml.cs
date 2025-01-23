@@ -5,12 +5,11 @@ using Config.Net;
 using Microsoft.UI;
 using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
-using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
-using System.Threading.Tasks;
 using Velopack;
 using WinRT.Interop;
 
@@ -26,11 +25,12 @@ public partial class App // I will admit, code-behind is still pretty useful her
 
     public App()
     {
-        VelopackApp.Build().Run();
         CreateSettingsData();
         CreateJsonData();
         AppSettings = new ConfigurationBuilder<IAppSettings>().UseJsonFile(Generic.SettingsFile).Build();
         InitializeComponent();
+        VelopackApp.Build()
+            .Run();
         if (!Directory.Exists(Generic.BinaryPath))
         {
             Directory.CreateDirectory(Generic.BinaryPath);
@@ -134,7 +134,7 @@ public partial class App // I will admit, code-behind is still pretty useful her
 
     public static AppWindow GetAppWindowForCurrentWindow(object window) // Thanks StackOverflow man!
     {
-        IntPtr hWnd = WindowNative.GetWindowHandle(window);
+        var hWnd = WindowNative.GetWindowHandle(window);
         var currentWndId = Win32Interop.GetWindowIdFromWindow(hWnd);
         return AppWindow.GetFromWindowId(currentWndId);
     }
