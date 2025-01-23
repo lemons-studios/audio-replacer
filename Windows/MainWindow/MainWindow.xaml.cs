@@ -7,12 +7,11 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
 using TitleBarDrag;
-using Windows.Storage.Pickers;
 using Velopack;
+using Windows.Storage.Pickers;
 using WinRT.Interop;
 
 namespace AudioReplacer.Windows.MainWindow;
@@ -140,25 +139,5 @@ public sealed partial class MainWindow
             pageCache[pageSwitchType] = page;
         }
         MainFrame.Content = page;
-    }
-
-    private async Task CheckForUpdates()
-    {
-        // Update checks fail from non-velopack envrionments (aka. the debugger)
-        if (Debugger.IsAttached == false && Generic.IntToBool(App.AppSettings.AppUpdateCheck))
-        {
-            bool updatesAvailable = await AppUpdater.AreUpdatesAvailable();
-            if (updatesAvailable)
-            {
-                UpdateAvailableNotification.IsOpen = true;
-            }
-        }
-
-        await AppUpdater.UpdateApplication();
-    }
-
-    private async void ApplyUpdates(object sender, RoutedEventArgs e)
-    {
-        await AppUpdater.UpdateApplication();
     }
 }

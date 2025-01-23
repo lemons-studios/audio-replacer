@@ -111,25 +111,6 @@
                     <PopupThemeTransition />
                 </InfoBar.Transitions>
             </InfoBar>
-
-            <InfoBar
-                x:Name="UpdateAvailableNotification"
-                Title="Update Available"
-                Margin="0,0,0,-75"
-                Background="{ThemeResource SystemFillColorSolidAttentionBackgroundBrush}"
-                IsClosable="True"
-                Severity="Informational"
-                Style="{StaticResource ToastNotification}">
-                <InfoBar.IconSource>
-                    <FontIconSource Glyph="&#xE896;" />
-                </InfoBar.IconSource>
-                <InfoBar.ActionButton>
-                    <Button
-                        Click="ApplyUpdates"
-                        Content="Download Updates"
-                        Style="{StaticResource AccentButtonStyle}" />
-                </InfoBar.ActionButton>
-            </InfoBar>
         </StackPanel>
     </Grid>
 </WinUiEx:WindowEx>
