@@ -23,6 +23,7 @@ public static class AppUpdater
             {
                 await File.AppendAllTextAsync($"{Generic.ExtraApplicationData}\\log.txt", $"Update Found");
                 await AppUpdateManager.DownloadUpdatesAsync(AppUpdateInfo).ConfigureAwait(true);
+                AppUpdateManager.ApplyUpdatesAndRestart(AppUpdateInfo);
             }
             else
             {
@@ -32,12 +33,19 @@ public static class AppUpdater
         catch (Exception e)
         {
             await File.AppendAllTextAsync($"{Generic.ExtraApplicationData}\\log.txt", $"Error: {e.Message}");
-            throw new Exception(e.Message);
         }
     }
 
     public static async Task<bool> AreUpdatesAvailable()
     {
-        return await AppUpdateManager.CheckForUpdatesAsync() != null;
+        try
+        {
+            AppUpdateInfo = await AppUpdateManager.CheckForUpdatesAsync().ConfigureAwait(true);
+            return AppUpdateInfo != null && Debugger.IsAttached == false;
+        }
+        catch (Exception e)
+        {
+            return false;
+        }
     }
 }

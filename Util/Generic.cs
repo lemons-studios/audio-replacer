@@ -154,8 +154,18 @@ public class Generic
 
     public static string GetAppVersion(bool forceBuildNumber = false)
     {
-        // I genuinely don't know why .NET thinks that any C# application wouldn't have an entry point running
         var splitVer = Assembly.GetEntryAssembly()!.GetName()!.Version!.ToString().Split(".");
-        return !forceBuildNumber ? $"{splitVer[0]}.{splitVer[1]}" : $"{splitVer[0]}.{splitVer[1]}.{splitVer[2]}";
+        var major = splitVer[0];
+        var minor = splitVer[1];
+        var build = splitVer[2];
+
+        if (forceBuildNumber || build != "0")
+        {
+            return $"{major}.{minor}.{build}";
+        }
+        else
+        {
+            return $"{major}.{minor}";
+        }
     }
 } 

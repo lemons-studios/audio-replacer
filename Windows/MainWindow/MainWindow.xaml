@@ -34,7 +34,6 @@
                     <StackPanel Grid.Column="1" Orientation="Horizontal">
                         <TextBlock
                             x:Name="AppTitle"
-                            VerticalAlignment="Center"
                             Style="{StaticResource TitleBarText}"
                             Text="Audio Replacer" />
                         <AppBarButton
