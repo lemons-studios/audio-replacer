@@ -1,6 +1,4 @@
-﻿using System;
-using System.Diagnostics;
-using System.IO;
+﻿using System.Diagnostics;
 using System.Threading.Tasks;
 using Velopack;
 
@@ -25,23 +23,20 @@ public static class AppUpdater
     {
         try
         {
-            await File.WriteAllTextAsync($"{Generic.ExtraApplicationData}\\log.txt", "Method called");
-            AppUpdateInfo = await AppUpdateManager.CheckForUpdatesAsync().ConfigureAwait(true);
-            if (AppUpdateInfo != null && Debugger.IsAttached == false)
+            if (!Debugger.IsAttached && Generic.IntToBool(App.AppSettings.AppUpdateCheck))
             {
-                Broadcast();
-                await File.AppendAllTextAsync($"{Generic.ExtraApplicationData}\\log.txt", $"Update Found");
-                await AppUpdateManager.DownloadUpdatesAsync(AppUpdateInfo).ConfigureAwait(true);
-                AppUpdateManager.ApplyUpdatesAndRestart(AppUpdateInfo);
-            }
-            else
-            {
-                await File.AppendAllTextAsync($"{Generic.ExtraApplicationData}\\log.txt", $"No Update Found");
+                AppUpdateInfo = await AppUpdateManager.CheckForUpdatesAsync().ConfigureAwait(true);
+                if (AppUpdateInfo != null)
+                {
+                    Broadcast();
+                    await AppUpdateManager.DownloadUpdatesAsync(AppUpdateInfo).ConfigureAwait(true);
+                    AppUpdateManager.ApplyUpdatesAndRestart(AppUpdateInfo);
+                }
             }
         }
-        catch (Exception e)
+        catch
         {
-            await File.AppendAllTextAsync($"{Generic.ExtraApplicationData}\\log.txt", $"Error: {e.Message}");
+            return;
         }
     }
 }
