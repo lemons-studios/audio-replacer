@@ -1,9 +1,11 @@
 ﻿using AudioReplacer.Util;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Windows.Storage;
+using Microsoft.UI.Xaml.Controls;
 
 namespace AudioReplacer.Windows.MainWindow.Util;
 public static class ProjectFileUtils
@@ -49,6 +51,36 @@ public static class ProjectFileUtils
             currentFileName = Path.GetFileName(currentFile);
             directoryName = TruncateDirectory(Path.GetDirectoryName(currentFile)!, 1);
         }
+    }
+
+    // The application prefers that all input files are of the .wav format
+    private static async Task ConvertAudioFiles()
+    {
+        List<string> projectFiles = GetAllFiles().Where(IsUndesirableAudioFile).ToList();
+        if (projectFiles.Count != 0)
+        {
+            int totalFiles = projectFiles.Count + 1;
+            App.MainWindow.ToggleProgressNotification("Converting files to .Wav format...", "Progress: 0%");
+            for (int i = 0; i < totalFiles - 1; i++)
+            {
+                var input = projectFiles[i];
+                var output = $"{input.Split(".")[0]}.wav";
+                await Generic.SpawnProcess("ffmpeg", $"-i {projectFiles[i]} -ar 16000 -b:a 16k {output}");
+
+                File.Delete(input);
+                App.MainWindow.SetProgressMessage($"Progress: {MathF.Floor(((float) i / totalFiles) * 100)}%");
+            }
+            App.MainWindow.ShowNotification(InfoBarSeverity.Success, "Success!", "All files converted");
+            return;
+        }
+        
+        App.MainWindow.ShowNotification(InfoBarSeverity.Informational, "File Conversion Skipped",
+            "All files are of preferred type, auto-conversion has been turned off in settings or no valid input files have been found");
+    }
+
+    private static List<string> GetAllFiles()
+    {
+        return Directory.EnumerateFiles(projectPath, "*" ,SearchOption.AllDirectories).ToList();
     }
 
     private static void CreateInitialData()
@@ -143,6 +175,13 @@ public static class ProjectFileUtils
     {
         // I should PROBABLY rewrite this method in a way that includes all audio file types, but this list already contains the popular audio formats
         string[] supportedFileTypes = [ ".mp3", ".wav", ".wma", ".aac", ".m4a", ".flac", ".ogg", ".amr", ".aiff", ".3gp", ".asf", ".pcm" ];
+        return supportedFileTypes.Any(fileType => path.EndsWith(fileType, StringComparison.OrdinalIgnoreCase));
+    }
+
+    private static bool IsUndesirableAudioFile(string path)
+    {
+        // I am a GENIUS
+        string[] supportedFileTypes = [".mp3", ".wma", ".aac", ".m4a", ".flac", ".ogg", ".amr", ".aiff", ".3gp", ".asf", ".pcm"];
         return supportedFileTypes.Any(fileType => path.EndsWith(fileType, StringComparison.OrdinalIgnoreCase));
     }
 
