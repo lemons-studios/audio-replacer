@@ -41,7 +41,7 @@
                 <CommunityToolkit:SettingsCard
                     Margin="0,0,0,7.5"
                     Description="Check is performed each launch by checking GitHub for new releases"
-                    Header="Enable Update Checks"
+                    Header="Update Checks"
                     HeaderIcon="{Ui:FontIcon Glyph=&#xECC5;}">
                     <ToggleSwitch IsOn="{Binding EnableUpdateChecks, Mode=TwoWay}" />
                 </CommunityToolkit:SettingsCard>
@@ -57,7 +57,7 @@
                 <CommunityToolkit:SettingsCard
                     Margin="0,0,0,7.5"
                     Description="When off, the next file will be first file in an alphabetical list"
-                    Header="Enable Audio Transcription"
+                    Header="Audio Transcription"
                     HeaderIcon="{Ui:FontIcon Glyph=&#xE76D;}"
                     IsEnabled="{Binding WhisperAvailable}">
                     <ToggleSwitch IsOn="{Binding EnableTranscription, Mode=TwoWay}" />
@@ -66,7 +66,7 @@
                 <CommunityToolkit:SettingsCard
                     Margin="0,0,0,7.5"
                     Description="Shows your activity on the application on Discord if the desktop version is installed"
-                    Header="Enable Discord Rich Presence"
+                    Header="Discord Rich Presence"
                     HeaderIcon="{Ui:FontIcon Glyph=&#xE8F2;}">
                     <ToggleSwitch IsOn="{Binding EnableRpc, Mode=TwoWay}" />
                 </CommunityToolkit:SettingsCard>

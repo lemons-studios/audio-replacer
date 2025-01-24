@@ -107,6 +107,11 @@ public class Generic
         }
     }
 
+    public static bool UnNullBool(bool? x)
+    {
+        return (bool) x!;
+    }
+
     public static async Task<string> GetDataFromGithub(string tagName)
     {
         var url = "https://api.github.com/repos/lemons-studios/audio-replacer/releases/latest";

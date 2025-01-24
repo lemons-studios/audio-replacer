@@ -53,29 +53,27 @@ public static class ProjectFileUtils
 
     private static void CreateInitialData()
     {
-        string setupIgnorePath = Path.Combine(outputFolderPath, ".setupIgnore");
+        var setupIgnorePath = Path.Combine(outputFolderPath, ".setupIgnore");
 
         if (!Directory.Exists(outputFolderPath))
             Directory.CreateDirectory(outputFolderPath);
 
-        string[] inputDirectories = GetPathSubdirectories(projectPath);
-        string[] outputDirectories = GetPathSubdirectories(outputFolderPath);
+        var inputDirectories = GetPathSubdirectories(projectPath);
+        var outputDirectories = GetPathSubdirectories(outputFolderPath);
 
         inputDirectories = inputDirectories.Select(d => Path.GetFullPath(d).TrimEnd(Path.DirectorySeparatorChar)).ToArray();
         outputDirectories = outputDirectories.Select(d => Path.GetFullPath(d).TrimEnd(Path.DirectorySeparatorChar)).ToArray();
 
         if (inputDirectories.SequenceEqual(outputDirectories, StringComparer.OrdinalIgnoreCase) || File.Exists(setupIgnorePath))
-            return;
+           return;
 
-        foreach (string dir in inputDirectories)
+        foreach (var dir in inputDirectories)
         {
-            string relativePath = Path.GetRelativePath(projectPath, dir);
-            string outputDir = Path.Combine(outputFolderPath, relativePath);
+            var relativePath = Path.GetRelativePath(projectPath, dir);
+            var outputDir = Path.Combine(outputFolderPath, relativePath);
 
             if (!Directory.Exists(outputDir))
-            {
                 Directory.CreateDirectory(outputDir);
-            }
         }
 
         // Create the ignore file
@@ -85,16 +83,10 @@ public static class ProjectFileUtils
     private static string TruncateDirectory(string inputPath, int dirLevels, string delimiter = "\\")
     {
         if (string.IsNullOrEmpty(inputPath) || dirLevels <= 0) return inputPath;
+        var splitDir = inputPath.Split(delimiter);
 
-        string[] splitDir = inputPath.Split(delimiter);
         if (dirLevels > splitDir.Length) dirLevels = splitDir.Length;
-
         return string.Join(delimiter, splitDir[^dirLevels..]);
-    }
-
-    public static int GetFileCount(string path)
-    {
-        return Directory.EnumerateFiles(path, "*", SearchOption.AllDirectories).Count();
     }
 
     private static string GetNextAudioFile(string path)
@@ -138,6 +130,15 @@ public static class ProjectFileUtils
         }
     }
 
+    private static void FindAndDeleteEmptyDirs()
+    {
+        foreach (var dir in Directory.GetDirectories(projectPath, "*", SearchOption.AllDirectories))
+        {
+            if (!Directory.EnumerateFileSystemEntries(dir).Any())
+                Directory.Delete(dir);
+        }
+    }
+
     private static bool IsAudioFile(string path)
     {
         // I should PROBABLY rewrite this method in a way that includes all audio file types, but this list already contains the popular audio formats
@@ -170,13 +171,9 @@ public static class ProjectFileUtils
         return humanizeOutput ? currentFileName.Replace(@"\", "/") : currentFileName;
     }
 
-    private static void FindAndDeleteEmptyDirs()
+    public static int GetFileCount(string path)
     {
-        foreach (var dir in Directory.GetDirectories(projectPath, "*", SearchOption.AllDirectories))
-        {
-            if (!Directory.EnumerateFileSystemEntries(dir).Any())
-                Directory.Delete(dir);
-        }
+        return Directory.EnumerateFiles(path, "*", SearchOption.AllDirectories).Count();
     }
 
     public static async Task<StorageFolder> GetDirectoryAsStorageFolder()

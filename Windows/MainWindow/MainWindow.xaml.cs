@@ -105,6 +105,15 @@ public sealed partial class MainWindow
         });
     }
 
+    // For a future part of the app
+    public void SetProgressMessage(string message)
+    {
+        InProgressNotification.DispatcherQueue.TryEnqueue(() =>
+        {
+            InProgressNotification.Message = message;
+        });
+    }
+
     private void OnClosing(AppWindow sender, AppWindowClosingEventArgs args)
     {
         if (Generic.InRecordState)

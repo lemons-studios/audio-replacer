@@ -31,12 +31,6 @@ public sealed partial class RecordPage // This file is among the worst written f
         AudioPreview.MediaPlayer.Pause(); // Needed to fix an issue where audio would play after second navigation to the page after launch
     }
 
-    private void OnUnloaded(object sender, RoutedEventArgs e)
-    {
-        // Prevent audio from playing on other pages if the media player is left playing
-        AudioPreview.MediaPlayer.Pause();
-    }
-
     private void OnLoaded(object sender, RoutedEventArgs e)
     {
         // Looping needs to be on to work around a bug in which the audio gets cut off for a split second after the first play.
@@ -51,7 +45,7 @@ public sealed partial class RecordPage // This file is among the worst written f
     private void UpdateRecordingValues(object sender, object args)
     {
         if (audioRecordingUtils == null) return;
-        bool extraEditsToggled = (bool) ExtraEditsToggle.IsChecked!;
+        var extraEditsToggled = Generic.UnNullBool(ExtraEditsToggle.IsChecked);
         audioRecordingUtils.SetEffectCommands(Generic.PitchValues[VoiceTuneMenu.SelectedIndex], Generic.EffectValues[EffectsMenu.SelectedIndex], extraEditsToggled);
     }
 
@@ -108,10 +102,8 @@ public sealed partial class RecordPage // This file is among the worst written f
     private void UpdateFileElements()
     {
         var progressPercentage = ProjectFileUtils.CalculatePercentageComplete();
-        var projectPath = ProjectFileUtils.GetProjectPath();
-        SkipAudioButton.IsEnabled = true;
-        StartRecordingButton.IsEnabled = true;
-
+        var projectPath = ProjectFileUtils.GetProjectPath(); 
+        
         FileProgressPanel.Visibility = Visibility.Visible;
         CurrentFile.Text = ProjectFileUtils.GetCurrentFile().Replace(@"\", "/");
         RemainingFiles.Text = $"Files Remaining: {ProjectFileUtils.GetFileCount(projectPath):N0} ({progressPercentage}%)";
@@ -159,6 +151,7 @@ public sealed partial class RecordPage // This file is among the worst written f
 
                 // Initialize Whisper model and processor
                 var whisperFactory = WhisperFactory.FromPath(Generic.WhisperPath);
+
                 // Determine the best runtime for the model
                 RuntimeOptions.RuntimeLibraryOrder = [RuntimeLibrary.Cuda, RuntimeLibrary.Vulkan, RuntimeLibrary.Cpu, RuntimeLibrary.CpuNoAvx];
                 var whisperProcessor = whisperFactory.CreateBuilder()
@@ -220,5 +213,11 @@ public sealed partial class RecordPage // This file is among the worst written f
                 break;
         }
         UpdateFileElements();
+    }
+
+    private void OnUnloaded(object sender, RoutedEventArgs e)
+    {
+        // Prevent audio from playing on other pages if the media player is left playing
+        AudioPreview.MediaPlayer.Pause();
     }
 }
