@@ -13,6 +13,14 @@ public static class AppUpdater
     public static UpdateManager AppUpdateManager;
     public static UpdateInfo AppUpdateInfo;
 
+    public delegate void BroadcastEventHandler();
+    public static event BroadcastEventHandler OnUpdateFound;
+
+    public static void Broadcast()
+    {
+        OnUpdateFound?.Invoke();
+    }
+
     public static async Task UpdateApplication()
     {
         try
@@ -21,6 +29,7 @@ public static class AppUpdater
             AppUpdateInfo = await AppUpdateManager.CheckForUpdatesAsync().ConfigureAwait(true);
             if (AppUpdateInfo != null && Debugger.IsAttached == false)
             {
+                Broadcast();
                 await File.AppendAllTextAsync($"{Generic.ExtraApplicationData}\\log.txt", $"Update Found");
                 await AppUpdateManager.DownloadUpdatesAsync(AppUpdateInfo).ConfigureAwait(true);
                 AppUpdateManager.ApplyUpdatesAndRestart(AppUpdateInfo);
@@ -33,19 +42,6 @@ public static class AppUpdater
         catch (Exception e)
         {
             await File.AppendAllTextAsync($"{Generic.ExtraApplicationData}\\log.txt", $"Error: {e.Message}");
-        }
-    }
-
-    public static async Task<bool> AreUpdatesAvailable()
-    {
-        try
-        {
-            AppUpdateInfo = await AppUpdateManager.CheckForUpdatesAsync().ConfigureAwait(true);
-            return AppUpdateInfo != null && Debugger.IsAttached == false;
-        }
-        catch (Exception e)
-        {
-            return false;
         }
     }
 }

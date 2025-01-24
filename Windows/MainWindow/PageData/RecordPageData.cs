@@ -5,7 +5,7 @@ using CommunityToolkit.Mvvm.Input;
 using System.Collections.Generic;
 
 namespace AudioReplacer.Windows.MainWindow.PageData;
-partial class RecordPageData : ObservableObject
+internal partial class RecordPageData : ObservableObject
 {
     [ObservableProperty] private bool isIdle = true, isRecording, isReviewing;
     [ObservableProperty] private List<string> pitchList = Generic.PitchTitles, effectsList = Generic.EffectTitles;

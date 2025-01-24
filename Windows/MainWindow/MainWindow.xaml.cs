@@ -48,6 +48,12 @@ public sealed partial class MainWindow
         string url = "https://updates.lemon-studios.ca/updates";
         AppUpdater.AppUpdateManager = new UpdateManager(url);
         Task.Run(AppUpdater.UpdateApplication);
+        AppUpdater.OnUpdateFound += OnUpdateFound;
+    }
+
+    private void OnUpdateFound()
+    {
+        ToggleProgressNotification("Updates found", "App will restart once updates are downloaded");
     }
 
     public async Task ShowNotification(InfoBarSeverity severity, string title, string message, bool autoclose = false, bool closable = true, bool replaceExistingNotifications = true)
@@ -90,10 +96,13 @@ public sealed partial class MainWindow
 
     public void ToggleProgressNotification(string title, string message)
     {
-        InProgressNotification.Title = title;
-        InProgressNotification.Message = message;
+        InProgressNotification.DispatcherQueue.TryEnqueue(() =>
+        {
+            InProgressNotification.Title = title;
+            InProgressNotification.Message = message;
 
-        InProgressNotification.IsOpen = !InProgressNotification.IsOpen;
+            InProgressNotification.IsOpen = !InProgressNotification.IsOpen;
+        });
     }
 
     private void OnClosing(AppWindow sender, AppWindowClosingEventArgs args)
