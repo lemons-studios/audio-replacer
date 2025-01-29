@@ -1,4 +1,5 @@
-﻿using Config.Net;
+﻿using System.ComponentModel;
+using Config.Net;
 
 namespace AudioReplacer.Util;
 public interface IAppSettings
@@ -35,4 +36,10 @@ public interface IAppSettings
 
     [Option(Alias = "EnableTranscription", DefaultValue = 1)]
     int EnableTranscription { get; set; }
+
+    [Option(Alias = "AutoConvertFiles", DefaultValue = 1)]
+    int AutoConvertFiles { get; set; }
+
+    [Option(Alias = "OutputFileType", DefaultValue = "wav")]
+    string OutputFileType { get; set; }
 }

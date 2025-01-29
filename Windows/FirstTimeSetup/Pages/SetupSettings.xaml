@@ -40,69 +40,70 @@
             BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
             CornerRadius="4">
             <Grid Padding="35">
-                <StackPanel VerticalAlignment="Center">
-                    <TextBlock
-                        HorizontalAlignment="Center"
-                        VerticalAlignment="Center"
-                        FontSize="55"
-                        FontWeight="Medium"
-                        Text="Common Settings"
-                        TextWrapping="WrapWholeWords" />
-                    <TextBlock
-                        Margin="0,0,0,15"
-                        HorizontalAlignment="Center"
-                        VerticalAlignment="Center"
-                        FontSize="25"
-                        FontWeight="Light"
-                        Text="Configure the app to your liking"
-                        TextWrapping="WrapWholeWords" />
-                    <controls:SettingsCard
-                        Margin="0,0,0,5"
-                        Header="App Theme"
-                        HeaderIcon="{ui:FontIcon Glyph=&#xECC5;}">
-                        <ComboBox SelectedIndex="{Binding AppTheme, Mode=TwoWay}">
-                            <ComboBoxItem Content="System" />
-                            <ComboBoxItem Content="Light" />
-                            <ComboBoxItem Content="Dark" />
-                        </ComboBox>
-                    </controls:SettingsCard>
-                    <controls:SettingsCard
-                        Margin="0,0,0,5"
-                        Description="Updates are checked every app launch by checking GitHub for new releases"
-                        Header="Check for updates"
-                        HeaderIcon="{ui:FontIcon Glyph=&#xECC5;}">
-                        <ToggleSwitch IsOn="{Binding CheckForUpdates, Mode=TwoWay}" />
-                    </controls:SettingsCard>
-                    <controls:SettingsCard
-                        Margin="0,0,0,5"
-                        Description="Pick a random file from the input folder each time. When off, the next file will be picked based on what comes first in your project alphabetically"
-                        Header="File randomization"
-                        HeaderIcon="{ui:FontIcon Glyph=&#xE8AB;}">
-                        <ToggleSwitch IsOn="{Binding EnableFileRandomization, Mode=TwoWay}" />
-                    </controls:SettingsCard>
-                    <controls:SettingsCard
-                        Margin="0,0,0,5"
-                        Description="How long to start recording after clicking the start record button (ms)"
-                        Header="Record Start Delay"
-                        HeaderIcon="{ui:FontIcon Glyph=&#xE916;}">
-                        <NumberBox Value="{Binding RecordStartDelay, Mode=TwoWay}" />
-                    </controls:SettingsCard>
-                    <controls:SettingsCard
-                        Margin="0,0,0,5"
-                        Description="How long to stop recording after clicking the stop record button (ms)"
-                        Header="Record Stop Delay"
-                        HeaderIcon="{ui:FontIcon Glyph=&#xF781;}">
-                        <NumberBox Value="{Binding RecordEndDelay, Mode=TwoWay}" />
-                    </controls:SettingsCard>
-                    <controls:SettingsCard
-                        Margin="0,0,0,15"
-                        Description="Display Audio Replacer on your Discord profile when using it (If Discord desktop is installed)"
-                        Header="Discord Rich Presence"
-                        HeaderIcon="{ui:FontIcon Glyph=&#xE8F2;}">
-                        <ToggleSwitch IsOn="{Binding RichPresenceEnabled, Mode=TwoWay}" />
-                    </controls:SettingsCard>
-                </StackPanel>
-
+                <ScrollViewer>
+                    <StackPanel VerticalAlignment="Center">
+                        <TextBlock
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            FontSize="55"
+                            FontWeight="Medium"
+                            Text="Common Settings"
+                            TextWrapping="WrapWholeWords" />
+                        <TextBlock
+                            Margin="0,0,0,15"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            FontSize="25"
+                            FontWeight="Light"
+                            Text="Configure the app to your liking"
+                            TextWrapping="WrapWholeWords" />
+                        <controls:SettingsCard
+                            Margin="0,0,0,5"
+                            Header="App Theme"
+                            HeaderIcon="{ui:FontIcon Glyph=&#xECC5;}">
+                            <ComboBox SelectedIndex="{Binding AppTheme, Mode=TwoWay}">
+                                <ComboBoxItem Content="System" />
+                                <ComboBoxItem Content="Light" />
+                                <ComboBoxItem Content="Dark" />
+                            </ComboBox>
+                        </controls:SettingsCard>
+                        <controls:SettingsCard
+                            Margin="0,0,0,5"
+                            Description="Updates are checked every app launch by checking GitHub for new releases"
+                            Header="Check for updates"
+                            HeaderIcon="{ui:FontIcon Glyph=&#xECC5;}">
+                            <ToggleSwitch IsOn="{Binding CheckForUpdates, Mode=TwoWay}" />
+                        </controls:SettingsCard>
+                        <controls:SettingsCard
+                            Margin="0,0,0,5"
+                            Description="Pick a random file from the input folder each time. When off, the next file will be picked based on what comes first in your project alphabetically"
+                            Header="File randomization"
+                            HeaderIcon="{ui:FontIcon Glyph=&#xE8AB;}">
+                            <ToggleSwitch IsOn="{Binding EnableFileRandomization, Mode=TwoWay}" />
+                        </controls:SettingsCard>
+                        <controls:SettingsCard
+                            Margin="0,0,0,5"
+                            Description="How long to start recording after clicking the start record button (ms)"
+                            Header="Record Start Delay"
+                            HeaderIcon="{ui:FontIcon Glyph=&#xE916;}">
+                            <NumberBox Value="{Binding RecordStartDelay, Mode=TwoWay}" />
+                        </controls:SettingsCard>
+                        <controls:SettingsCard
+                            Margin="0,0,0,5"
+                            Description="How long to stop recording after clicking the stop record button (ms)"
+                            Header="Record Stop Delay"
+                            HeaderIcon="{ui:FontIcon Glyph=&#xF781;}">
+                            <NumberBox Value="{Binding RecordEndDelay, Mode=TwoWay}" />
+                        </controls:SettingsCard>
+                        <controls:SettingsCard
+                            Margin="0,0,0,15"
+                            Description="Display Audio Replacer on your Discord profile when using it (If Discord desktop is installed)"
+                            Header="Discord Rich Presence"
+                            HeaderIcon="{ui:FontIcon Glyph=&#xE8F2;}">
+                            <ToggleSwitch IsOn="{Binding RichPresenceEnabled, Mode=TwoWay}" />
+                        </controls:SettingsCard>
+                    </StackPanel>
+                </ScrollViewer>
                 <AppBarButton
                     Width="75"
                     Height="35"

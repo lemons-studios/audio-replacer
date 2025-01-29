@@ -28,6 +28,7 @@ public static class ProjectFileUtils
         projectPath = path;
         outputFolderPath = Path.Join(Generic.ExtraApplicationData, "out", TruncateDirectory(path, 1));
         CreateInitialData();
+        // Task.Run(ConvertAudioFiles); // TODO: Make this work properly later
         SetCurrentFile();
         Broadcast();
     }

@@ -71,6 +71,10 @@
                     Icon="{Ui:FontIcon Glyph=&#xE70F;}"
                     Tag="Data Editor" />
                 <NavigationViewItem
+                    Content="Project Importer"
+                    Icon="{Ui:FontIcon Glyph=&#xE8B6;}"
+                    Tag="Project Importer" />
+                <NavigationViewItem
                     Content="Release Notes"
                     Icon="{Ui:FontIcon Glyph=&#xE777;}"
                     Tag="Update Logs" />
