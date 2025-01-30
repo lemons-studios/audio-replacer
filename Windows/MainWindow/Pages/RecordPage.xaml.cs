@@ -49,30 +49,12 @@ public sealed partial class RecordPage // This file is among the worst written f
         audioRecordingUtils.SetEffectCommands(Generic.PitchValues[VoiceTuneMenu.SelectedIndex], Generic.EffectValues[EffectsMenu.SelectedIndex], extraEditsToggled);
     }
 
-    private async void SkipCurrentAudioFile(object sender, RoutedEventArgs e)
+    private void SkipCurrentAudioFile(object sender, RoutedEventArgs e)
     {
-        if (!ProjectFileUtils.IsProjectLoaded) return;
-        AudioPreview.MediaPlayer.Pause();
-        var confirmSkip = new ContentDialog
-        {
-            Title = "Skip this file?",
-            Content = "Are you sure you want to skip this file?",
-            PrimaryButtonText = "Skip",
-            CloseButtonText = "Don't Skip",
-            XamlRoot = Content.XamlRoot
-        };
-        var confirmResult = await confirmSkip.ShowAsync();
-
-        switch (confirmResult == ContentDialogResult.Primary)
-        {
-            case true:
-                ProjectFileUtils.SkipAudioTrack();
-                UpdateFileElements();
-                App.MainWindow.ShowNotification(InfoBarSeverity.Success, "File Skipped!", string.Empty, true);
-                break;
-            case false:
-                break;
-        }
+        skipFlyout.Hide();
+        ProjectFileUtils.SkipAudioTrack();
+        UpdateFileElements();
+        App.MainWindow.ShowNotification(InfoBarSeverity.Success, "File Skipped!", string.Empty, true);
     }
 
     private async void StartRecordingAudio(object sender, RoutedEventArgs e)

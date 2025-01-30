@@ -39,6 +39,7 @@
 		<PackageReference Include="Config.Net" Version="5.2.1" />
 		<PackageReference Include="DiscordRichPresence" Version="1.2.1.24" />
 		<PackageReference Include="Markdig" Version="0.40.0" />
+		<PackageReference Include="Microsoft.Extensions.Logging" Version="9.0.1" />
 		<PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.26100.1742" />
 		<PackageReference Include="Microsoft.WindowsAppSDK" Version="1.6.250108002" />
 		<PackageReference Include="NAudio" Version="2.2.1" />

@@ -85,12 +85,25 @@
                 </StackPanel>
                 <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
                     <Button
-                        x:Name="SkipAudioButton"
-                        Click="SkipCurrentAudioFile"
                         Content="Skip"
                         IsEnabled="{Binding IsIdle}"
                         Style="{StaticResource OperationButton}"
-                        Visibility="{Binding IsIdle, Converter={StaticResource VisibilityConverter}}" />
+                        Visibility="{Binding IsIdle, Converter={StaticResource VisibilityConverter}}">
+                        <Button.Flyout>
+                            <Flyout x:Name="skipFlyout">
+                                <StackPanel MinWidth="150">
+                                    <TextBlock
+                                        Margin="0,0,0,10"
+                                        FontWeight="Medium"
+                                        Text="Confirm Skip?" />
+                                    <Button
+                                        Click="SkipCurrentAudioFile"
+                                        Content="Confirm"
+                                        Style="{StaticResource AccentButtonStyle}" />
+                                </StackPanel>
+                            </Flyout>
+                        </Button.Flyout>
+                    </Button>
                     <Button
                         Click="CancelCurrentRecording"
                         Command="{Binding CancelRecordCommand}"
@@ -106,7 +119,6 @@
                         Style="{StaticResource OperationButton}"
                         Visibility="{Binding IsReviewing, Converter={StaticResource VisibilityConverter}}" />
                     <Button
-                        x:Name="StartRecordingButton"
                         Click="StartRecordingAudio"
                         Command="{Binding SwitchButtonStatesCommand}"
                         Content="Record"

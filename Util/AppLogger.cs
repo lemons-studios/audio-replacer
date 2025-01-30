@@ -1,16 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.IO;
 
 namespace AudioReplacer.Util;
-
 public static class AppLogger
 {
+    private static readonly string LogFilePath = Path.Join(Generic.LoggerPath, Generic.LoggerFileName);
     public static void LogEvent(string logContent)
     {
-        // Append data to logger from logContent
+        if (!File.Exists(LogFilePath)) File.Create(LogFilePath);
+        File.AppendAllText(LogFilePath, string.IsNullOrWhiteSpace(File.ReadAllText(LogFilePath)) ? $"\n{logContent}" : logContent);
     }
 }
-

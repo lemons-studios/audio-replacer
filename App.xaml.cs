@@ -121,6 +121,7 @@ public partial class App // I will admit, code-behind is still pretty useful her
     protected override void OnLaunched(LaunchActivatedEventArgs args)
     {
         Generic.PopulateCustomData();
+        Generic.LoggerFileName = DateTime.Now.ToShortTimeString() + "-log.txt";
         switch (File.Exists(Path.Join(Generic.ConfigPath, ".setupCompleted")))
         {
             case true:
