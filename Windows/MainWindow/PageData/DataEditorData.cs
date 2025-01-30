@@ -1,20 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing.Imaging.Effects;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using AudioReplacer.Util;
+﻿using AudioReplacer.Util;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Newtonsoft.Json;
+using System;
+using System.IO;
+using System.Threading.Tasks;
 using Windows.Storage.Pickers;
 using WinRT.Interop;
+using WinUIEditor;
 
 namespace AudioReplacer.Windows.MainWindow.PageData;
 
 internal partial class DataEditorData : ObservableObject
 {
+    public static CodeEditorControl CodeEditor;
+    
     [RelayCommand]
     private void OpenHelpPage()
     {
@@ -31,6 +31,31 @@ internal partial class DataEditorData : ObservableObject
     private async Task ImportEffects()
     {
         await ImportFile(true);
+    }
+
+    [RelayCommand]
+    private void Undo()
+    {
+        CodeEditor.Editor.Undo();
+    }
+
+    [RelayCommand]
+    private void Redo()
+    {
+        CodeEditor.Editor.Redo();
+    }
+
+    [RelayCommand]
+    private void FormatContent()
+    {
+        var currentEditorText = CodeEditor.Editor.GetText(CodeEditor.Editor.TextLength);
+        CodeEditor.Editor.SetText(JsonConvert.SerializeObject(JsonConvert.DeserializeObject(currentEditorText), Formatting.Indented));
+    }
+
+    [RelayCommand]
+    private void Reload()
+    {
+        Generic.RestartApp();
     }
 
     private async Task ImportFile(bool isEffects)

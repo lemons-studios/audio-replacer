@@ -1,4 +1,5 @@
-﻿using AudioReplacer.Util;
+﻿using System;
+using AudioReplacer.Util;
 using AudioReplacer.Windows.MainWindow;
 using AudioReplacer.Windows.Setup;
 using Config.Net;
@@ -28,8 +29,7 @@ public partial class App // I will admit, code-behind is still pretty useful her
         CreateJsonData();
         AppSettings = new ConfigurationBuilder<IAppSettings>().UseJsonFile(Generic.SettingsFile).Build();
         InitializeComponent();
-        VelopackApp.Build()
-            .Run();
+        VelopackApp.Build().Run();
         if (!Directory.Exists(Generic.BinaryPath))
         {
             Directory.CreateDirectory(Generic.BinaryPath);
@@ -38,15 +38,15 @@ public partial class App // I will admit, code-behind is still pretty useful her
 
     private void CreateSettingsData()
     {
-        if (!Directory.Exists(Generic.ConfigPath)) Directory.CreateDirectory(Generic.ConfigPath);
+        if (!Directory.Exists(Generic.ConfigPath)) 
+            Directory.CreateDirectory(Generic.ConfigPath);
+
         if (File.Exists(Generic.SettingsFile))
         {
-            // Load existing settings
-            var existingConfig =
-                JsonSerializer.Deserialize<Dictionary<string, object>>(File.ReadAllText(Generic.SettingsFile));
+            // Create missing properties in the settings json on updates
+            var existingConfig = JsonSerializer.Deserialize<Dictionary<string, object>>(File.ReadAllText(Generic.SettingsFile));
             var defaultConfig = new Dictionary<string, object>
             {
-                { "AppConfigured", 0 },
                 { "Theme", 0 },
                 { "TransparencyEffect", Generic.GetTransparencyMode() },
                 { "EnableUpdateChecks", 1 },
@@ -56,7 +56,9 @@ public partial class App // I will admit, code-behind is still pretty useful her
                 { "LastSelectedFolder", "" },
                 { "InputRandomizationEnabled", 0 },
                 { "RecordStartWaitTime", 25 },
-                { "EnableTranscription", 1}
+                { "EnableTranscription", 1},
+                { "AutoConvertFiles", 1 },
+                { "OutputFileType", "wav"}
             };
 
             // Merge existing settings with default settings
@@ -65,15 +67,14 @@ public partial class App // I will admit, code-behind is still pretty useful her
                 existingConfig[key] = defaultConfig[key];
             }
 
-            string updatedJson =
-                JsonSerializer.Serialize(existingConfig, new JsonSerializerOptions { WriteIndented = true });
+            var updatedJson = JsonSerializer.Serialize(existingConfig, new JsonSerializerOptions { WriteIndented = true });
             File.WriteAllText(Generic.SettingsFile, updatedJson);
             return;
         }
 
+        // Generate a new configuration file with the default values if the configuration file does not exist
         var newConfig = new
         {
-            AppConfigured = 0,
             Theme = 0,
             TransparencyEffect = Generic.GetTransparencyMode(), // Prevents mica being set on Windows 10 devices
             EnableUpdateChecks = 1,
@@ -83,9 +84,12 @@ public partial class App // I will admit, code-behind is still pretty useful her
             LastSelectedFolder = "",
             InputRandomizationEnabled = 0,
             RecordStartWaitTime = 25,
-            EnableTranscription = 1
+            EnableTranscription = 1,
+            AutoConvertFiles = 1,
+            OutputFileType = "wav"
         };
-        string defaultJson = JsonSerializer.Serialize(newConfig, new JsonSerializerOptions { WriteIndented = true });
+
+        var defaultJson = JsonSerializer.Serialize(newConfig, new JsonSerializerOptions { WriteIndented = true });
         File.WriteAllText(Generic.SettingsFile, defaultJson);
     }
 
@@ -93,11 +97,8 @@ public partial class App // I will admit, code-behind is still pretty useful her
     {
         // Users will have to import their own data files for this app to work,
         // but create an empty file with the start of a json array (for functionality purposes)
-        if (!File.Exists(Generic.PitchDataFile))
-            File.WriteAllText(Generic.PitchDataFile, "[\n\n]");
-
-        if (!File.Exists(Generic.EffectsDataFile))
-            File.WriteAllText(Generic.EffectsDataFile, "[\n\n]");
+        if (!File.Exists(Generic.PitchDataFile)) File.WriteAllText(Generic.PitchDataFile, "[\n\n]");
+        if (!File.Exists(Generic.EffectsDataFile)) File.WriteAllText(Generic.EffectsDataFile, "[\n\n]");
 
         try
         {
@@ -107,8 +108,14 @@ public partial class App // I will admit, code-behind is still pretty useful her
         {
             Generic.PitchData = [];
         }
-
-        Generic.EffectData = JsonSerializer.Deserialize<string[][]>(File.ReadAllText(Generic.EffectsDataFile));
+        try
+        {
+            Generic.EffectData = JsonSerializer.Deserialize<string[][]>(File.ReadAllText(Generic.EffectsDataFile));
+        }
+        catch (JsonException)
+        {
+            Generic.EffectData = [];
+        }
     }
 
     protected override void OnLaunched(LaunchActivatedEventArgs args)

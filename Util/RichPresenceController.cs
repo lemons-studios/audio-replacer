@@ -1,9 +1,9 @@
 ﻿using DiscordRPC;
-
 namespace AudioReplacer.Util;
+
 public class RichPresenceController
 {
-    private string details, smallImage, smallImageText, state;
+    private readonly string details, smallImage, smallImageText, state;
     private readonly DiscordRpcClient client;
     private readonly Timestamps startTimestamp;
 
@@ -18,7 +18,7 @@ public class RichPresenceController
         smallImageText = initialSmallImageText;
 
         client = new DiscordRpcClient(clientId.ToString());
-        if(autoCreate) CreateRichPresence();
+        if (autoCreate) CreateRichPresence();
     }
 
     public void CreateRichPresence()

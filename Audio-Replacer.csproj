@@ -134,8 +134,8 @@
 		<StartupObject>AudioReplacer.Program</StartupObject>
 		<NuGetAuditLevel>low</NuGetAuditLevel>
 		<GenerateDocumentationFile>False</GenerateDocumentationFile>
-		<AssemblyVersion>4.0.1</AssemblyVersion>
-		<FileVersion>4.0.1</FileVersion>
+		<AssemblyVersion>4.1.0</AssemblyVersion>
+		<FileVersion>4.1.0</FileVersion>
 		<Title>Audio Replacer</Title>
 		<NeutralLanguage>en-CA</NeutralLanguage>
 		<ApplicationIcon>Assets\AppIcon.ico</ApplicationIcon>

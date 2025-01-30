@@ -1,5 +1,4 @@
-﻿using System.ComponentModel;
-using Config.Net;
+﻿using Config.Net;
 
 namespace AudioReplacer.Util;
 public interface IAppSettings

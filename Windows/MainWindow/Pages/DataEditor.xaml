@@ -19,10 +19,19 @@
         <ToolkitControls:TabbedCommandBar Grid.Row="0" VerticalAlignment="Top">
             <ToolkitControls:TabbedCommandBar.MenuItems>
                 <ToolkitControls:TabbedCommandBarItem Header="File">
-                    <AppBarButton
-                        Click="ReloadChanges"
-                        Icon="{ToolkitUi:FontIcon Glyph=&#xE74E;}"
-                        Label="Save" />
+                    <AppBarButton Icon="{ToolkitUi:FontIcon Glyph=&#xE74E;}" Label="Save">
+                        <AppBarButton.Flyout>
+                            <Flyout>
+                                <StackPanel>
+                                    <TextBlock FontWeight="Medium" Text="Reload To Apply Changes?" Margin="0,0,0,10"/>
+                                    <Button
+                                        Command="{Binding ReloadCommand}"
+                                        Content="Confirm"
+                                        Style="{StaticResource AccentButtonStyle}" />
+                                </StackPanel>
+                            </Flyout>
+                        </AppBarButton.Flyout>
+                    </AppBarButton>
                     <AppBarButton Icon="{ToolkitUi:FontIcon Glyph=&#xEA52;}" Label="Import">
                         <AppBarButton.Flyout>
                             <MenuFlyout>
@@ -52,16 +61,16 @@
 
                 <ToolkitControls:TabbedCommandBarItem Header="Edit">
                     <AppBarButton
-                        Click="Undo"
+                        Command="{Binding UndoCommand}"
                         Icon="{ToolkitUi:FontIcon Glyph=&#xE7A7;}"
                         Label="Undo" />
                     <AppBarButton
-                        Click="Redo"
+                        Command="{Binding RedoCommand}"
                         Icon="{ToolkitUi:FontIcon Glyph=&#xE7A6;}"
                         Label="Redo" />
                     <AppBarSeparator />
                     <AppBarButton
-                        Click="FormatData"
+                        Command="{Binding FormatContentCommand}"
                         Icon="{ToolkitUi:FontIcon Glyph=&#xE8CB;}"
                         Label="Format" />
                 </ToolkitControls:TabbedCommandBarItem>
