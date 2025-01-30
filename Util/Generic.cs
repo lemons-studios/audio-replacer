@@ -20,6 +20,8 @@ public class Generic
     public static readonly string SettingsFile = Path.Join(ConfigPath, "AppSettings.json");
     public static readonly string PitchDataFile = Path.Join(ConfigPath, "PitchData.json");
     public static readonly string EffectsDataFile = Path.Join(ConfigPath, "EffectsData.json");
+    public static readonly string LoggerPath = Path.Join(ExtraApplicationData, "logs");
+    public static string LoggerFileName;
     public static readonly bool IsWhisperInstalled = File.Exists(WhisperPath);
     public static bool InRecordState = false, IsAppLoaded = false;
     public static string[][] PitchData, EffectData;
