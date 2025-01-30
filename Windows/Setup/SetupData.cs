@@ -1,5 +1,5 @@
 ﻿using AudioReplacer.Util;
-using AudioReplacer.Windows.FirstTimeSetup.Pages;
+using AudioReplacer.Windows.Setup.Pages;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.UI.Xaml;
@@ -12,7 +12,7 @@ using Whisper.net.Ggml;
 using Windows.Storage.Pickers;
 using WinRT.Interop;
 
-namespace AudioReplacer.Windows.FirstTimeSetup;
+namespace AudioReplacer.Windows.Setup;
 public partial class SetupData : ObservableObject
 {
     // All properties must be static so all setup pages will have the correct value (since they are separate instances of the class)

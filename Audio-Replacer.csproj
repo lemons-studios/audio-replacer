@@ -15,11 +15,11 @@
 	</PropertyGroup>
 	<ItemGroup>
 	  <None Remove="Views\ReleaseLogsPage.xaml" />
-	  <None Remove="Windows\FirstTimeSetup\FirstTimeSetupWindow.xaml" />
-	  <None Remove="Windows\FirstTimeSetup\Pages\SetupAdvanced.xaml" />
-	  <None Remove="Windows\FirstTimeSetup\Pages\SetupDownloading.xaml" />
-	  <None Remove="Windows\FirstTimeSetup\Pages\SetupSettings.xaml" />
-	  <None Remove="Windows\FirstTimeSetup\Pages\SetupWelcome.xaml" />
+	  <None Remove="Windows\Setup\FirstTimeSetupWindow.xaml" />
+	  <None Remove="Windows\Setup\Pages\SetupAdvanced.xaml" />
+	  <None Remove="Windows\Setup\Pages\SetupDownloading.xaml" />
+	  <None Remove="Windows\Setup\Pages\SetupSettings.xaml" />
+	  <None Remove="Windows\Setup\Pages\SetupWelcome.xaml" />
 	  <None Remove="Windows\MainWindow\Pages\ProjectImporter.xaml" />
 	</ItemGroup>
 

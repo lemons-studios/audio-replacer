@@ -45,7 +45,7 @@ public sealed partial class MainWindow
         {
             ProjectFileUtils.SetProjectData(App.AppSettings.LastSelectedFolder);
         }
-        string url = "https://f004.backblazeb2.com/file/audio-replacer-updates/";
+        var url = "https://f004.backblazeb2.com/file/audio-replacer-updates/";
         AppUpdater.AppUpdateManager = new UpdateManager(url);
         Task.Run(AppUpdater.UpdateApplication);
         AppUpdater.OnUpdateFound += OnUpdateFound;

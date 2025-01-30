@@ -1,5 +1,5 @@
 <WinUiEx:WindowEx
-    x:Class="AudioReplacer.Windows.FirstTimeSetup.FirstTimeSetupWindow"
+    x:Class="AudioReplacer.Windows.Setup.FirstTimeSetupWindow"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:WinUiEx="using:WinUIEx"

@@ -14,20 +14,5 @@
     <Page Update="Windows\MainWindow\Pages\ProjectImporter.xaml">
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="Windows\FirstTimeSetup\Pages\SetupDownloading.xaml">
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Update="Windows\FirstTimeSetup\Pages\SetupAdvanced.xaml">
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Update="Windows\FirstTimeSetup\Pages\SetupSettings.xaml">
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Update="Windows\FirstTimeSetup\Pages\SetupWelcome.xaml">
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Update="Windows\FirstTimeSetup\FirstTimeSetupWindow.xaml">
-      <SubType>Designer</SubType>
-    </Page>
   </ItemGroup>
 </Project>

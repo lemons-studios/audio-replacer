@@ -1,12 +1,11 @@
 ﻿using AudioReplacer.Util;
-using AudioReplacer.Windows.FirstTimeSetup;
 using AudioReplacer.Windows.MainWindow;
+using AudioReplacer.Windows.Setup;
 using Config.Net;
 using Microsoft.UI;
 using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text.Json;

@@ -1,10 +1,10 @@
-using AudioReplacer.Windows.FirstTimeSetup.Pages;
+using AudioReplacer.Windows.Setup.Pages;
 using Microsoft.UI.Composition.SystemBackdrops;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Animation;
 
-namespace AudioReplacer.Windows.FirstTimeSetup;
+namespace AudioReplacer.Windows.Setup;
 public sealed partial class FirstTimeSetupWindow
 {
     public FirstTimeSetupWindow()
