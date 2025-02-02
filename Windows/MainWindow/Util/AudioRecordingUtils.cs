@@ -49,9 +49,11 @@ public class AudioRecordingUtils
     public async Task StopRecordingAudio(bool discarding = false)
     {
         var file = ProjectFileUtils.GetOutFilePath();
+        var formattedFileName = requiresExtraEdits ? $"ExtraEditsRequired-{file}" : file;
+
         await Task.Delay(App.AppSettings.RecordEndWaitTime);
         await recordingCapture.StopRecordAsync();
-        await ApplyFilters(file);
+        await ApplyFilters(formattedFileName);
     }
 
     [Log]

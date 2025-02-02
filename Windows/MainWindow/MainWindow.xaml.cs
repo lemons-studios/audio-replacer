@@ -13,6 +13,7 @@ using System.Threading.Tasks;
 using TitleBarDrag;
 using Velopack;
 using Windows.Storage.Pickers;
+using CommunityToolkit.WinUI;
 using WinRT.Interop;
 
 namespace AudioReplacer.Windows.MainWindow;
@@ -68,17 +69,17 @@ public sealed partial class MainWindow
         {
             if (replaceExistingNotifications)
             {
-                GeneralNotificationPopup.DispatcherQueue.TryEnqueue(() =>
+                await GeneralNotificationPopup.DispatcherQueue.EnqueueAsync(() =>
                 {
                     GeneralNotificationPopup.IsOpen = false;
                 });
-                InProgressNotification.DispatcherQueue.TryEnqueue(() =>
+                await InProgressNotification.DispatcherQueue.EnqueueAsync(() =>
                 {
                     InProgressNotification.IsOpen = false;
                 });
             }
 
-            GeneralNotificationPopup.DispatcherQueue.TryEnqueue(() =>
+            await GeneralNotificationPopup.DispatcherQueue.EnqueueAsync(() =>
             {
                 GeneralNotificationPopup.Severity = severity;
                 GeneralNotificationPopup.Title = title;
@@ -92,7 +93,7 @@ public sealed partial class MainWindow
                 await Task.Delay(App.AppSettings.NotificationTimeout);
                 try
                 {
-                    GeneralNotificationPopup.DispatcherQueue.TryEnqueue(() =>
+                    await GeneralNotificationPopup.DispatcherQueue.EnqueueAsync(() =>
                     {
                         GeneralNotificationPopup.IsOpen = false;
                     });

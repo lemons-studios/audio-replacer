@@ -48,6 +48,7 @@ public sealed partial class RecordPage // This file is among the worst written f
     private void UpdateRecordingValues(object sender, object args)
     {
         if (audioRecordingUtils == null) return;
+        // For some reason, C# throws ArgumentOutOfRangeExceptions here. I don't know why, because the code works as intended and doesn't cause any issues whatsoever
         audioRecordingUtils.pitchChange = Generic.PitchValues[PitchMenu.SelectedIndex];
         audioRecordingUtils.effectCommand = Generic.EffectValues[EffectsMenu.SelectedIndex];
     }
@@ -89,7 +90,12 @@ public sealed partial class RecordPage // This file is among the worst written f
         // Update source of audio player and the title manually
         CurrentFile.Text = "Review your recording...";
         App.DiscordController.SetSmallAsset("reviewing", "In review phase");
-        AudioPreview.Source = MediaSource.CreateFromUri(new Uri(ProjectFileUtils.GetOutFilePath()));
+        await AudioPreview.DispatcherQueue.EnqueueAsync(() =>
+        {
+            AudioPreview.Source = MediaSource.CreateFromUri(new Uri(ProjectFileUtils.GetOutFilePath()));
+            AudioPreview.MediaPlayer.Play();
+        });
+
         App.MainWindow.ShowNotification(InfoBarSeverity.Informational, "Recording Stopped", "Entering Review Phase", true, replaceExistingNotifications: true);
     }
 

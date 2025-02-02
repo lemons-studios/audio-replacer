@@ -50,7 +50,7 @@
                     <StackPanel>
                         <MediaPlayerElement
                             x:Name="AudioPreview"
-                            AutoPlay="False"
+                            AutoPlay="True"
                             Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
                             Style="{StaticResource AudioPlayer}"
                             Visibility="Visible">
@@ -177,12 +177,7 @@
                         PlaceholderText="Select Effect"
                         SelectionChanged="UpdateRecordingValues"
                         Style="{StaticResource DropdownMenu}" />
-                    <CheckBox
-                        HorizontalAlignment="Center"
-                        Checked="ToggleExtraEdits"
-                        Content="Further Edits Required?"
-                        IsChecked="False"
-                        Unchecked="ToggleExtraEdits" />
+                    <!-- <CheckBox HorizontalAlignment="Center" Checked="ToggleExtraEdits" Content="Further Edits Required?" IsChecked="False" Unchecked="ToggleExtraEdits" /> -->
                 </StackPanel>
             </StackPanel>
         </Border>
