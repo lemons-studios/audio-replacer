@@ -1,5 +1,4 @@
 ﻿using AudioReplacer.Util;
-using AudioReplacer.Util.Logger;
 using System;
 using System.IO;
 using System.Threading.Tasks;
@@ -32,7 +31,7 @@ public class AudioRecordingUtils
         await recordingCapture.InitializeAsync(captureSettings);
     }
 
-    [Log]
+    [AppLogger]
     public async Task StartRecordingAudio()
     {
         var fileName = ProjectFileUtils.GetCurrentFileName();
@@ -44,7 +43,7 @@ public class AudioRecordingUtils
         await recordingCapture.StartRecordToStorageFileAsync(encodingProfile, fileSaveLocation);
     }
 
-    [Log]
+    [AppLogger]
     public async Task StopRecordingAudio(bool discarding = false)
     {
         var file = ProjectFileUtils.GetOutFilePath();
@@ -54,14 +53,14 @@ public class AudioRecordingUtils
         await ApplyFilters(file);
     }
 
-    [Log]
+    [AppLogger]
     public async Task CancelRecording()
     {
         await recordingCapture.StopRecordAsync();
         File.Delete(ProjectFileUtils.GetOutFilePath());
     }
 
-    [Log]
+    [AppLogger]
     private async Task ApplyFilters(string file)
     {
         var tempOutFile = $"{file}.wav";

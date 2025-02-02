@@ -1,5 +1,4 @@
 ﻿using AudioReplacer.Util;
-using AudioReplacer.Util.Logger;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Newtonsoft.Json;
@@ -59,7 +58,7 @@ public partial class DataEditorData : ObservableObject
         Generic.RestartApp();
     }
 
-    [Log]
+    [AppLogger]
     private async Task ImportFile(bool isEffects)
     {
         var copyPath = isEffects ? Generic.EffectsDataFile : Generic.PitchDataFile;

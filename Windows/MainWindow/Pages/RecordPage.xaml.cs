@@ -1,5 +1,4 @@
 ﻿using AudioReplacer.Util;
-using AudioReplacer.Util.Logger;
 using AudioReplacer.Windows.MainWindow.Util;
 using CommunityToolkit.WinUI;
 using Microsoft.UI.Xaml;
@@ -32,7 +31,7 @@ public sealed partial class RecordPage // This file is among the worst written f
         AudioPreview.MediaPlayer.Pause(); // Needed to fix an issue where audio would play after second navigation to the page after launch
     }
 
-    [Log]
+    [AppLogger]
     private void OnLoaded(object sender, RoutedEventArgs e)
     {
         // Looping needs to be on to work around a bug in which the audio gets cut off for a split second after the first play.
@@ -44,7 +43,7 @@ public sealed partial class RecordPage // This file is among the worst written f
             App.DiscordController.SetState($"{ProjectFileUtils.CalculatePercentageComplete()}% Complete");
     }
 
-    [Log]
+    [AppLogger]
     private void UpdateRecordingValues(object sender, object args)
     {
         if (audioRecordingUtils == null) return;
@@ -53,13 +52,13 @@ public sealed partial class RecordPage // This file is among the worst written f
         audioRecordingUtils.effectCommand = Generic.EffectValues[EffectsMenu.SelectedIndex];
     }
 
-    [Log]
+    [AppLogger]
     private void ToggleExtraEdits(object sender, object args)
     {
         ProjectFileUtils.ExtraEditsFlagged = !ProjectFileUtils.ExtraEditsFlagged;
     }
 
-    [Log]
+    [AppLogger]
     private void SkipCurrentAudioFile(object sender, RoutedEventArgs e)
     {
         SkipFileFlyout.Hide();
@@ -68,7 +67,7 @@ public sealed partial class RecordPage // This file is among the worst written f
         App.MainWindow.ShowNotification(InfoBarSeverity.Success, "File Skipped!", string.Empty, true);
     }
 
-    [Log]
+    [AppLogger]
     private async void StartRecordingAudio(object sender, RoutedEventArgs e)
     {
         Generic.InRecordState = true;
@@ -82,7 +81,7 @@ public sealed partial class RecordPage // This file is among the worst written f
         App.MainWindow.ToggleProgressNotification("Recording In Progress", string.Empty);
     }
 
-    [Log]
+    [AppLogger]
     private async void StopRecordingAudio(object sender, RoutedEventArgs e)
     {
         await audioRecordingUtils.StopRecordingAudio();
@@ -99,7 +98,7 @@ public sealed partial class RecordPage // This file is among the worst written f
         App.MainWindow.ShowNotification(InfoBarSeverity.Informational, "Recording Stopped", "Entering Review Phase", true, replaceExistingNotifications: true);
     }
 
-    [Log]
+    [AppLogger]
     private void UpdateFileElements(bool transcribeAudio = true)
     {
         var progressPercentage = ProjectFileUtils.CalculatePercentageComplete();
@@ -149,7 +148,7 @@ public sealed partial class RecordPage // This file is among the worst written f
     }
 
     // Should probably move this into its own file in the future due to the sheer length of this thing
-    [Log]
+    [AppLogger]
     private void TranscribeAudio()
     {
         var dispatcherQueue = Transcription.DispatcherQueue;
@@ -224,7 +223,7 @@ public sealed partial class RecordPage // This file is among the worst written f
         App.MainWindow.ShowNotification(InfoBarSeverity.Informational, "Recording Cancelled", string.Empty, true, replaceExistingNotifications: true);
     }
 
-    [Log]
+    [AppLogger]
     private void AcceptSubmission(object sender, RoutedEventArgs e)
     {
         Generic.InRecordState = false;
@@ -234,7 +233,7 @@ public sealed partial class RecordPage // This file is among the worst written f
         UpdateFileElements();
     }
 
-    [Log]
+    [AppLogger]
     private void RejectSubmission(object sender, RoutedEventArgs e)
     {
         Generic.InRecordState = false;
@@ -244,7 +243,7 @@ public sealed partial class RecordPage // This file is among the worst written f
         UpdateFileElements(false); // To prevent transcription when it's not needed
     }
 
-    [Log]
+    [AppLogger]
     private void OnUnloaded(object sender, RoutedEventArgs e)
     {
         // Prevent audio from playing on other pages if the media player is left playing

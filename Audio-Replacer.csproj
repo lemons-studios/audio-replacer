@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
 		<OutputType>WinExe</OutputType>
-		<TargetFramework>net9.0</TargetFramework>
+		<TargetFramework>net9.0-windows10.0.22000.0</TargetFramework>
 		<TargetPlatformMinVersion>10.0.17763.0</TargetPlatformMinVersion>
 		<RootNamespace>AudioReplacer</RootNamespace>
 		<RuntimeIdentifiers>win-x64</RuntimeIdentifiers>
@@ -13,6 +13,7 @@
 		<EnableMsixTooling>true</EnableMsixTooling>
 		<PublishProfile>win-$(Platform).pubxml</PublishProfile>
 	</PropertyGroup>
+
 	<ItemGroup>
 	  <None Remove="Views\ReleaseLogsPage.xaml" />
 	  <None Remove="Windows\Setup\FirstTimeSetupWindow.xaml" />
@@ -39,7 +40,6 @@
 		<PackageReference Include="Config.Net" Version="5.2.1" />
 		<PackageReference Include="DiscordRichPresence" Version="1.2.1.24" />
 		<PackageReference Include="Metalama.Framework" Version="2025.0.8" />
-		<PackageReference Include="Microsoft.Extensions.Logging" Version="9.0.1" />
 		<PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.26100.1742" />
 		<PackageReference Include="Microsoft.WindowsAppSDK" Version="1.6.250108002" />
 		<PackageReference Include="NAudio" Version="2.2.1" />
@@ -123,6 +123,10 @@
 	  </Page>
 	</ItemGroup>
 
+	<PropertyGroup Label="Globals">
+	  <WebView2EnableCsWinRTProjection>False</WebView2EnableCsWinRTProjection>
+	</PropertyGroup>
+
 	<!-- Publish Properties -->
 	<PropertyGroup>
 		<PublishReadyToRun Condition="'$(Configuration)' == 'Debug'">True</PublishReadyToRun>
@@ -143,11 +147,15 @@
 		<PublishAot>False</PublishAot>
 		<PackageIcon>AppIcon.ico</PackageIcon>
 		<Nullable>disable</Nullable>
+		<NuGetAuditMode>all</NuGetAuditMode>
 	</PropertyGroup>
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-		<DebugType>none</DebugType>
+		<DebugType>full</DebugType>
 	</PropertyGroup>
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
 		<DebugType>none</DebugType>
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='LamaDebug|x64'">
+	  <DebugType>full</DebugType>
 	</PropertyGroup>
 </Project>

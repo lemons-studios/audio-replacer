@@ -1,5 +1,4 @@
 ﻿using AudioReplacer.Util;
-using AudioReplacer.Util.Logger;
 using Microsoft.UI.Xaml.Controls;
 using System;
 using System.Collections.Generic;
@@ -24,7 +23,7 @@ public static class ProjectFileUtils
         IsProjectLoaded = true;
     }
 
-    [Log]
+    [AppLogger]
     public static void SetProjectData(string path)
     {
         projectPath = path;
@@ -36,7 +35,7 @@ public static class ProjectFileUtils
         Broadcast();
     }
 
-    [Log]
+    [AppLogger]
     private static void SetCurrentFile()
     {
         FindAndDeleteEmptyDirs();
@@ -59,7 +58,7 @@ public static class ProjectFileUtils
     }
 
     // The application prefers that all input files are of the .wav format
-    [Log]
+    [AppLogger]
     private static async Task ConvertAudioFiles()
     {
         List<string> projectFiles = GetAllFiles().Where(IsUndesirableAudioFile).ToList();
@@ -71,7 +70,7 @@ public static class ProjectFileUtils
             {
                 var input = projectFiles[i];
                 var output = $"{input.Split(".")[0]}.wav";
-                await Generic.SpawnProcess("ffmpeg", $"-i {projectFiles[i]} -ar 16000 -b:a 16k {output}");
+                await Generic.SpawnProcess("ffmpeg", $"-i \"{projectFiles[i]}\" -ar 16000 -b:a 16k {output}");
 
                 File.Delete(input);
                 App.MainWindow.SetProgressMessage($"Progress: {MathF.Floor(((float) i / totalFiles) * 100)}%");
@@ -159,7 +158,7 @@ public static class ProjectFileUtils
         }
     }
 
-    [Log]
+    [AppLogger]
     public static void SubmitAudioFile()
     {
         if (!string.IsNullOrEmpty(currentFile))

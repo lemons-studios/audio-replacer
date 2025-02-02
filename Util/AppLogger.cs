@@ -2,8 +2,8 @@
 using System;
 using System.IO;
 
-namespace AudioReplacer.Util.Logger;
-public class LogAttribute : OverrideMethodAspect
+namespace AudioReplacer.Util;
+public class AppLogger : OverrideMethodAspect
 {
     public override dynamic? OverrideMethod()
     {

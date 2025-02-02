@@ -3,7 +3,6 @@ using AudioReplacer.Windows.MainWindow.PageData;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using System.IO;
-using AudioReplacer.Util.Logger;
 using WinUIEditor;
 
 namespace AudioReplacer.Windows.MainWindow.Pages;
@@ -17,7 +16,7 @@ public sealed partial class DataEditor
         CustomDataEditor.Editor.Modified += AutoSave;
     }
 
-    [Log]
+    [AppLogger]
     private void OnLoaded(object sender, RoutedEventArgs e)
     {
         CustomDataEditor.Editor.SetText(File.ReadAllText(GetEditingFilePath()));

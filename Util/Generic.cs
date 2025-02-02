@@ -8,7 +8,6 @@ using System.IO;
 using System.Net.Http;
 using System.Reflection;
 using System.Threading.Tasks;
-using AudioReplacer.Util.Logger;
 
 namespace AudioReplacer.Util;
 public class Generic
@@ -33,7 +32,7 @@ public class Generic
         DefaultRequestHeaders = {{ "User-Agent", "Audio Replacer" }}
     };
 
-    [Log]
+    [AppLogger]
     public static async Task SpawnProcess(string command, string args, bool autoStart = true)
     {
         var shellProcess = new Process
@@ -136,7 +135,7 @@ public class Generic
         }
     }
 
-    [Log]
+    [AppLogger]
     public static async Task<string> GetDataFromGithub(string tagName)
     {
         var url = "https://api.github.com/repos/lemons-studios/audio-replacer/releases/latest";
@@ -156,7 +155,7 @@ public class Generic
         }
     }
 
-    [Log]
+    [AppLogger]
     public static async Task<string> GetWebData(string url) // I sure do love stealing my own code!!
     {
         try
@@ -168,7 +167,7 @@ public class Generic
         catch (HttpRequestException) { return string.Empty; }
     }
 
-    [Log]
+    [AppLogger]
     public static async Task DownloadFileAsync(string url, string outPath)
     {
         try
