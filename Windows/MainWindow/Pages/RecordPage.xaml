@@ -178,12 +178,11 @@
                         SelectionChanged="UpdateRecordingValues"
                         Style="{StaticResource DropdownMenu}" />
                     <CheckBox
-                        x:Name="ExtraEditsToggle"
                         HorizontalAlignment="Center"
-                        Checked="UpdateRecordingValues"
+                        Checked="ToggleExtraEdits"
                         Content="Further Edits Required?"
                         IsChecked="False"
-                        Unchecked="UpdateRecordingValues" />
+                        Unchecked="ToggleExtraEdits" />
                 </StackPanel>
             </StackPanel>
         </Border>

@@ -8,6 +8,7 @@ using System.IO;
 using System.Net.Http;
 using System.Reflection;
 using System.Threading.Tasks;
+using AudioReplacer.Util.Logger;
 
 namespace AudioReplacer.Util;
 public class Generic
@@ -32,6 +33,7 @@ public class Generic
         DefaultRequestHeaders = {{ "User-Agent", "Audio Replacer" }}
     };
 
+    [Log]
     public static async Task SpawnProcess(string command, string args, bool autoStart = true)
     {
         var shellProcess = new Process
@@ -47,12 +49,34 @@ public class Generic
                 CreateNoWindow = true
             }
         };
-        if (autoStart)
+
+        try
         {
-            shellProcess.Start();
-            await shellProcess.WaitForExitAsync();
+            if (autoStart)
+            {
+                // Attempt to start the process.
+                if (!shellProcess.Start())
+                {
+                    throw new InvalidOperationException($"Failed to start process: {command} {args}");
+                }
+
+                // Wait for the process to exit.
+                await shellProcess.WaitForExitAsync();
+
+                // Check the exit code; if non-zero, throw an exception.
+                if (shellProcess.ExitCode != 0)
+                {
+                    throw new Exception($"Process exited with code {shellProcess.ExitCode}. Command: {command} {args}");
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            // Optionally log the exception here if your [Log] attribute doesn't already do it.
+            throw new Exception($"Error spawning process '{command}' with arguments '{args}': {ex.Message}", ex);
         }
     }
+
 
     public static void PopulateCustomData()
     {
@@ -112,6 +136,7 @@ public class Generic
         }
     }
 
+    [Log]
     public static async Task<string> GetDataFromGithub(string tagName)
     {
         var url = "https://api.github.com/repos/lemons-studios/audio-replacer/releases/latest";
@@ -131,6 +156,7 @@ public class Generic
         }
     }
 
+    [Log]
     public static async Task<string> GetWebData(string url) // I sure do love stealing my own code!!
     {
         try
@@ -142,6 +168,7 @@ public class Generic
         catch (HttpRequestException) { return string.Empty; }
     }
 
+    [Log]
     public static async Task DownloadFileAsync(string url, string outPath)
     {
         try

@@ -48,15 +48,14 @@ public sealed partial class RecordPage // This file is among the worst written f
     private void UpdateRecordingValues(object sender, object args)
     {
         if (audioRecordingUtils == null) return;
-        try
-        {
-            var extraEditsToggled = ExtraEditsToggle.IsChecked;
-            audioRecordingUtils.SetEffectCommands(Generic.PitchValues[PitchMenu.SelectedIndex], Generic.EffectValues[EffectsMenu.SelectedIndex], (bool) extraEditsToggled!);
-        }
-        catch (ArgumentOutOfRangeException e)
-        {
+        audioRecordingUtils.pitchChange = Generic.PitchValues[PitchMenu.SelectedIndex];
+        audioRecordingUtils.effectCommand = Generic.EffectValues[EffectsMenu.SelectedIndex];
+    }
 
-        }
+    [Log]
+    private void ToggleExtraEdits(object sender, object args)
+    {
+        audioRecordingUtils.requiresExtraEdits = !audioRecordingUtils.requiresExtraEdits;
     }
 
     [Log]
@@ -215,7 +214,7 @@ public sealed partial class RecordPage // This file is among the worst written f
     private async void CancelCurrentRecording(object sender, RoutedEventArgs e)
     {
         Generic.InRecordState = false;
-        await audioRecordingUtils.StopRecordingAudio(true);
+        await audioRecordingUtils.CancelRecording();
         App.MainWindow.ShowNotification(InfoBarSeverity.Informational, "Recording Cancelled", string.Empty, true, replaceExistingNotifications: true);
     }
 

@@ -45,6 +45,7 @@
 		<PackageReference Include="Microsoft.WindowsAppSDK" Version="1.6.250108002" />
 		<PackageReference Include="NAudio" Version="2.2.1" />
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+		<PackageReference Include="NReco.VideoConverter" Version="1.2.1" />
 		<PackageReference Include="SevenZipExtractor" Version="1.0.19" />
 		<PackageReference Include="System.Text.Json" Version="9.0.1" />
 		<PackageReference Include="Velopack" Version="0.0.1053" />
@@ -136,8 +137,8 @@
 		<StartupObject>AudioReplacer.Program</StartupObject>
 		<NuGetAuditLevel>low</NuGetAuditLevel>
 		<GenerateDocumentationFile>False</GenerateDocumentationFile>
-		<AssemblyVersion>4.1.0</AssemblyVersion>
-		<FileVersion>4.1.0</FileVersion>
+		<AssemblyVersion>4.1.2</AssemblyVersion>
+		<FileVersion>4.1.2</FileVersion>
 		<Title>Audio Replacer</Title>
 		<NeutralLanguage>en-CA</NeutralLanguage>
 		<ApplicationIcon>Assets\AppIcon.ico</ApplicationIcon>

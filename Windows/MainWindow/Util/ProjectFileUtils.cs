@@ -28,7 +28,8 @@ public static class ProjectFileUtils
     public static void SetProjectData(string path)
     {
         projectPath = path;
-        outputFolderPath = Path.Join(Generic.ExtraApplicationData, "out", TruncateDirectory(path, 1));
+        string projectName = projectPath.Split("\\")[^1];
+        outputFolderPath = Path.Combine(Generic.ExtraApplicationData, "out", projectName);
         CreateInitialData();
         // Task.Run(ConvertAudioFiles); // TODO: Make this work properly later
         SetCurrentFile();
