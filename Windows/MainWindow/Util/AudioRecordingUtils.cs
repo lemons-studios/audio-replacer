@@ -36,9 +36,8 @@ public class AudioRecordingUtils
     public async Task StartRecordingAudio()
     {
         var fileName = ProjectFileUtils.GetCurrentFileName();
-        var formattedFileName = requiresExtraEdits ? $"ExtraEditsRequired-{fileName}" : fileName;
         var outputFolder = await ProjectFileUtils.GetDirectoryAsStorageFolder();
-        var fileSaveLocation = await outputFolder.CreateFileAsync(formattedFileName, CreationCollisionOption.ReplaceExisting);
+        var fileSaveLocation = await outputFolder.CreateFileAsync(fileName, CreationCollisionOption.ReplaceExisting);
         var encodingProfile = MediaEncodingProfile.CreateWav(AudioEncodingQuality.High);
 
         await Task.Delay(App.AppSettings.RecordStartWaitTime);
@@ -49,11 +48,10 @@ public class AudioRecordingUtils
     public async Task StopRecordingAudio(bool discarding = false)
     {
         var file = ProjectFileUtils.GetOutFilePath();
-        var formattedFileName = requiresExtraEdits ? $"ExtraEditsRequired-{file}" : file;
 
         await Task.Delay(App.AppSettings.RecordEndWaitTime);
         await recordingCapture.StopRecordAsync();
-        await ApplyFilters(formattedFileName);
+        await ApplyFilters(file);
     }
 
     [Log]
@@ -68,10 +66,10 @@ public class AudioRecordingUtils
     {
         var tempOutFile = $"{file}.wav";
         float validatedPitchChange = MathF.Max(pitchChange, 0.001f);
-
         string filter = string.IsNullOrWhiteSpace(effectCommand)
             ? $"rubberband=pitch={validatedPitchChange}"
             : $"rubberband=pitch={validatedPitchChange}, {effectCommand}";
+
         await Generic.SpawnProcess(Generic.FfmpegPath, $"-i \"{file}\" -af \"{filter}\" -y {tempOutFile}");
 
         if (File.Exists(tempOutFile))

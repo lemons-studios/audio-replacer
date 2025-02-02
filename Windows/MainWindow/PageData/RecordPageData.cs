@@ -3,7 +3,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 
 namespace AudioReplacer.Windows.MainWindow.PageData;
-internal partial class RecordPageData : ObservableObject
+public partial class RecordPageData : ObservableObject
 {
     [ObservableProperty] private bool isIdle = true, isRecording, isReviewing;
 

@@ -56,13 +56,13 @@ public sealed partial class RecordPage // This file is among the worst written f
     [Log]
     private void ToggleExtraEdits(object sender, object args)
     {
-        audioRecordingUtils.requiresExtraEdits = !audioRecordingUtils.requiresExtraEdits;
+        ProjectFileUtils.ExtraEditsFlagged = !ProjectFileUtils.ExtraEditsFlagged;
     }
 
     [Log]
     private void SkipCurrentAudioFile(object sender, RoutedEventArgs e)
     {
-        skipFlyout.Hide();
+        SkipFileFlyout.Hide();
         ProjectFileUtils.SkipAudioTrack();
         UpdateFileElements();
         App.MainWindow.ShowNotification(InfoBarSeverity.Success, "File Skipped!", string.Empty, true);
@@ -225,26 +225,23 @@ public sealed partial class RecordPage // This file is among the worst written f
     }
 
     [Log]
-    private void UpdateAudioStatus(object sender, RoutedEventArgs e)
+    private void AcceptSubmission(object sender, RoutedEventArgs e)
     {
-        if (sender is not Button button) return;
         Generic.InRecordState = false;
 
-        switch (button.Name == "SubmitRecordingButton")
-        {
-            case true:
-                // Submission Accepted
-                ProjectFileUtils.DeleteCurrentFile(/* This method essentially acts as a way to confirm the submission*/);
-                App.MainWindow.ShowNotification(InfoBarSeverity.Success, "Recording Accepted", "Moving to next file...", true, replaceExistingNotifications: true);
-                UpdateFileElements();
-                break;
-            case false:
-                // Submission Rejected
-                File.Delete(ProjectFileUtils.GetOutFilePath());
-                App.MainWindow.ShowNotification(InfoBarSeverity.Informational, "Recording Rejected", "Moving back to current file...", true, replaceExistingNotifications: true);
-                UpdateFileElements(false); // To prevent transcription when it's not needed
-                break;
-        }
+        ProjectFileUtils.SubmitAudioFile(); // Extra edits get renamed in this method
+        App.MainWindow.ShowNotification(InfoBarSeverity.Success, "Recording Accepted", "Moving to next file...", true, replaceExistingNotifications: true);
+        UpdateFileElements();
+    }
+
+    [Log]
+    private void RejectSubmission(object sender, RoutedEventArgs e)
+    {
+        Generic.InRecordState = false;
+
+        File.Delete(ProjectFileUtils.GetOutFilePath());
+        App.MainWindow.ShowNotification(InfoBarSeverity.Informational, "Recording Rejected", "Moving back to current file...", true, replaceExistingNotifications: true);
+        UpdateFileElements(false); // To prevent transcription when it's not needed
     }
 
     [Log]

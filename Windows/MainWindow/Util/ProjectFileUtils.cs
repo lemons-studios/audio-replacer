@@ -1,19 +1,19 @@
 ﻿using AudioReplacer.Util;
+using AudioReplacer.Util.Logger;
+using Microsoft.UI.Xaml.Controls;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Windows.Storage;
-using AudioReplacer.Util.Logger;
-using Microsoft.UI.Xaml.Controls;
 
 namespace AudioReplacer.Windows.MainWindow.Util;
 public static class ProjectFileUtils
 {
     private static string currentFile, truncatedCurrentFile, currentOutFile, currentFileName, directoryName;
     private static string outputFolderPath, projectPath;
-    public static bool IsProjectLoaded;
+    public static bool IsProjectLoaded, ExtraEditsFlagged = false;
 
     public delegate void BroadcastEventHandler();
     public static event BroadcastEventHandler OnProjectLoaded;
@@ -157,6 +157,25 @@ public static class ProjectFileUtils
             File.Move(currentFile, currentOutFile);
             SetCurrentFile();
         }
+    }
+
+    [Log]
+    public static void SubmitAudioFile()
+    {
+        if (!string.IsNullOrEmpty(currentFile))
+        {
+            File.Delete(currentFile);
+        }
+
+        if (ExtraEditsFlagged)
+        {
+            string dir = Path.GetDirectoryName(currentOutFile);
+            string file = $"ExtraEditsRequired-{Path.GetFileName(currentOutFile)}";
+            string joinedPath = Path.Join(dir, file);
+            File.Move(currentOutFile!, joinedPath);
+        }
+
+        SetCurrentFile();
     }
 
     public static void DeleteCurrentFile()

@@ -56,7 +56,6 @@
                             Visibility="Visible">
                             <MediaPlayerElement.TransportControls>
                                 <MediaTransportControls
-                                    x:Name="AudioPreviewControls"
                                     VerticalAlignment="Center"
                                     IsCompact="True"
                                     IsEnabled="False"
@@ -90,7 +89,7 @@
                         Style="{StaticResource OperationButton}"
                         Visibility="{Binding IsIdle, Converter={StaticResource VisibilityConverter}}">
                         <Button.Flyout>
-                            <Flyout x:Name="skipFlyout">
+                            <Flyout x:Name="SkipFileFlyout">
                                 <StackPanel MinWidth="150">
                                     <TextBlock
                                         Margin="0,0,0,10"
@@ -112,7 +111,7 @@
                         Style="{StaticResource OperationButton}"
                         Visibility="{Binding IsRecording, Converter={StaticResource VisibilityConverter}}" />
                     <Button
-                        Click="UpdateAudioStatus"
+                        Click="RejectSubmission"
                         Command="{Binding SwitchButtonStatesCommand}"
                         Content="Reject"
                         IsEnabled="{Binding IsReviewing}"
@@ -134,8 +133,7 @@
                         Visibility="{Binding IsRecording, Converter={StaticResource VisibilityConverter}}" />
                     <!--  Do not delete the name of the next button even if your ide says it's not used. it very much is in use  -->
                     <Button
-                        x:Name="SubmitRecordingButton"
-                        Click="UpdateAudioStatus"
+                        Click="AcceptSubmission"
                         Command="{Binding SwitchButtonStatesCommand}"
                         Content="Submit"
                         IsEnabled="{Binding IsReviewing}"
@@ -177,7 +175,12 @@
                         PlaceholderText="Select Effect"
                         SelectionChanged="UpdateRecordingValues"
                         Style="{StaticResource DropdownMenu}" />
-                    <!-- <CheckBox HorizontalAlignment="Center" Checked="ToggleExtraEdits" Content="Further Edits Required?" IsChecked="False" Unchecked="ToggleExtraEdits" /> -->
+                    <CheckBox
+                        HorizontalAlignment="Center"
+                        Checked="ToggleExtraEdits"
+                        Content="Further Edits Required?"
+                        IsChecked="False"
+                        Unchecked="ToggleExtraEdits" />
                 </StackPanel>
             </StackPanel>
         </Border>

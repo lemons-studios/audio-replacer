@@ -12,7 +12,7 @@ using WinUIEditor;
 
 namespace AudioReplacer.Windows.MainWindow.PageData;
 
-internal partial class DataEditorData : ObservableObject
+public partial class DataEditorData : ObservableObject
 {
     public static CodeEditorControl CodeEditor;
     
