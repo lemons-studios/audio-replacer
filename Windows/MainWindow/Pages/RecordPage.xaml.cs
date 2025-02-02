@@ -51,10 +51,7 @@ public sealed partial class RecordPage // This file is among the worst written f
         try
         {
             var extraEditsToggled = ExtraEditsToggle.IsChecked;
-            int selectedPitchIndex = Math.Max(Generic.PitchValues.Count, PitchMenu.SelectedIndex);
-            int selectedEffectIndex = Math.Max(Generic.EffectValues.Count, EffectsMenu.SelectedIndex);
-
-            audioRecordingUtils.SetEffectCommands(Generic.PitchValues[selectedPitchIndex], Generic.EffectValues[selectedEffectIndex], (bool) extraEditsToggled!);
+            audioRecordingUtils.SetEffectCommands(Generic.PitchValues[PitchMenu.SelectedIndex], Generic.EffectValues[EffectsMenu.SelectedIndex], (bool) extraEditsToggled!);
         }
         catch (ArgumentOutOfRangeException e)
         {
