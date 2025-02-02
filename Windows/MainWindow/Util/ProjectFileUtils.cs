@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Windows.Storage;
+using AudioReplacer.Util.Logger;
 using Microsoft.UI.Xaml.Controls;
 
 namespace AudioReplacer.Windows.MainWindow.Util;
@@ -23,6 +24,7 @@ public static class ProjectFileUtils
         IsProjectLoaded = true;
     }
 
+    [Log]
     public static void SetProjectData(string path)
     {
         projectPath = path;
@@ -33,6 +35,7 @@ public static class ProjectFileUtils
         Broadcast();
     }
 
+    [Log]
     private static void SetCurrentFile()
     {
         FindAndDeleteEmptyDirs();
@@ -55,6 +58,7 @@ public static class ProjectFileUtils
     }
 
     // The application prefers that all input files are of the .wav format
+    [Log]
     private static async Task ConvertAudioFiles()
     {
         List<string> projectFiles = GetAllFiles().Where(IsUndesirableAudioFile).ToList();

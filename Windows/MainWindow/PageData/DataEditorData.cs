@@ -1,4 +1,5 @@
 ﻿using AudioReplacer.Util;
+using AudioReplacer.Util.Logger;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Newtonsoft.Json;
@@ -21,7 +22,7 @@ internal partial class DataEditorData : ObservableObject
         Generic.OpenUrl("https://github.com/lemons-studios/audio-replacer/wiki");
     }
 
-    [RelayCommand]
+    [RelayCommand] 
     private async Task ImportPitch()
     {
         await ImportFile(false);
@@ -58,6 +59,7 @@ internal partial class DataEditorData : ObservableObject
         Generic.RestartApp();
     }
 
+    [Log]
     private async Task ImportFile(bool isEffects)
     {
         var copyPath = isEffects ? Generic.EffectsDataFile : Generic.PitchDataFile;

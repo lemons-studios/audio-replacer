@@ -1,4 +1,5 @@
 ﻿using AudioReplacer.Util;
+using AudioReplacer.Util.Logger;
 using AudioReplacer.Windows.Setup.Pages;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -40,6 +41,7 @@ public partial class SetupData : ObservableObject
         }
     }
 
+    [Log]
     private async Task DownloadData()
     {
         // Before downloading, first import any data files the user wanted to import

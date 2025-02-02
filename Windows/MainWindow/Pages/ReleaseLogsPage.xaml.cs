@@ -3,6 +3,7 @@ using CommunityToolkit.Labs.WinUI.MarkdownTextBlock;
 using CommunityToolkit.WinUI;
 using Microsoft.UI.Xaml;
 using System.Threading.Tasks;
+using AudioReplacer.Util.Logger;
 
 namespace AudioReplacer.Windows.MainWindow.Pages;
 
@@ -22,6 +23,7 @@ public sealed partial class ReleaseLogsPage
         Task.Run(SetContent);
     }
 
+    [Log]
     private async Task SetContent()
     {
         var markdown = await Generic.GetDataFromGithub("body");

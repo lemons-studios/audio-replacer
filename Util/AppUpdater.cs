@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
 using System.Threading.Tasks;
+using AudioReplacer.Util.Logger;
 using Velopack;
 
 namespace AudioReplacer.Util;
@@ -19,6 +20,7 @@ public static class AppUpdater
         OnUpdateFound?.Invoke();
     }
 
+    [Log]
     public static async Task UpdateApplication()
     {
         try

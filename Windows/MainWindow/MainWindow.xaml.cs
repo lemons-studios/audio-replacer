@@ -1,4 +1,5 @@
 using AudioReplacer.Util;
+using AudioReplacer.Util.Logger;
 using AudioReplacer.Windows.MainWindow.Pages;
 using AudioReplacer.Windows.MainWindow.Util;
 using Microsoft.UI.Windowing;
@@ -56,6 +57,7 @@ public sealed partial class MainWindow
         ToggleProgressNotification("Updates found", "App will restart once updates are downloaded");
     }
 
+    [Log]
     public async Task ShowNotification(InfoBarSeverity severity, string title, string message, bool autoclose = false, bool closable = true, bool replaceExistingNotifications = true)
     {
         if (!replaceExistingNotifications && GeneralNotificationPopup.IsOpen)
@@ -103,6 +105,7 @@ public sealed partial class MainWindow
         }
     }
 
+    [Log]
     public void ToggleProgressNotification(string title, string message)
     {
         InProgressNotification.DispatcherQueue.TryEnqueue(() =>
@@ -123,6 +126,7 @@ public sealed partial class MainWindow
         });
     }
 
+    [Log]
     private async void ChangeProjectFolder(object sender, RoutedEventArgs e)
     {
         var folderPicker = new FolderPicker { FileTypeFilter = { "*" } };
@@ -137,6 +141,7 @@ public sealed partial class MainWindow
         }
     }
 
+    [Log]
     private void Navigate(NavigationView sender, NavigationViewItemInvokedEventArgs args)
     {
         var pageSwitchType = typeof(RecordPage); // Default page of project
@@ -161,6 +166,7 @@ public sealed partial class MainWindow
         MainFrame.Content = page;
     }
 
+    [Log]
     private void OnClose(AppWindow sender, AppWindowClosingEventArgs args)
     {
         if (Generic.InRecordState)

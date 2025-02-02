@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
+using AudioReplacer.Util.Logger;
 using Velopack;
 using WinRT.Interop;
 
@@ -24,6 +25,7 @@ public partial class App // I will admit, code-behind is still pretty useful her
 
     public App()
     {
+        File.WriteAllText(Generic.LogFile, "Log Started!");
         CreateSettingsData();
         CreateJsonData();
         AppSettings = new ConfigurationBuilder<IAppSettings>().UseJsonFile(Generic.SettingsFile).Build();
@@ -90,6 +92,7 @@ public partial class App // I will admit, code-behind is still pretty useful her
         File.WriteAllText(Generic.SettingsFile, defaultJson);
     }
 
+    [Log]
     private void CreateJsonData()
     {
         // Users will have to import their own data files for this app to work,
@@ -116,6 +119,7 @@ public partial class App // I will admit, code-behind is still pretty useful her
         Generic.PopulateCustomData();
     }
 
+    [Log]
     protected override void OnLaunched(LaunchActivatedEventArgs args)
     {
         switch (File.Exists(Path.Join(Generic.ConfigPath, ".setupCompleted")))
@@ -135,6 +139,7 @@ public partial class App // I will admit, code-behind is still pretty useful her
         Generic.IsAppLoaded = true;
     }
 
+    [Log]
     public static AppWindow GetAppWindowForCurrentWindow(object window) // Thanks StackOverflow man!
     {
         var hWnd = WindowNative.GetWindowHandle(window);

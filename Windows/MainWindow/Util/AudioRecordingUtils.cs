@@ -6,6 +6,7 @@ using Windows.Media;
 using Windows.Media.Capture;
 using Windows.Media.MediaProperties;
 using Windows.Storage;
+using AudioReplacer.Util.Logger;
 
 namespace AudioReplacer.Windows.MainWindow.Util;
 public class AudioRecordingUtils
@@ -38,6 +39,7 @@ public class AudioRecordingUtils
         await recordingCapture.InitializeAsync(captureSettings);
     }
 
+    [Log]
     public async Task StartRecordingAudio()
     {
         var fileName = ProjectFileUtils.GetCurrentFileName();
@@ -50,6 +52,7 @@ public class AudioRecordingUtils
         await recordingCapture.StartRecordToStorageFileAsync(encodingProfile, fileSaveLocation);
     }
 
+    [Log]
     public async Task StopRecordingAudio(bool discarding = false)
     {
         var file = ProjectFileUtils.GetOutFilePath();
@@ -67,6 +70,7 @@ public class AudioRecordingUtils
         }
     }
 
+    [Log]
     private async Task ApplyFilters(string file)
     {
         var outFile = $"{file}0.wav"; // Temporary name. FFmpeg doesn't like it when the user tries to set the output as the input since

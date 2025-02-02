@@ -1,4 +1,5 @@
-﻿using Microsoft.UI.Xaml;
+﻿using AudioReplacer.Util.Logger;
+using Microsoft.UI.Xaml;
 
 namespace AudioReplacer.Windows.MainWindow.Pages;
 
@@ -10,6 +11,7 @@ public sealed partial class SettingsPage
         Loaded += OnLoaded;
     }
 
+    [Log]
     private void OnLoaded(object sender, RoutedEventArgs e)
     {
         App.DiscordController.SetDetails("In Settings Page");

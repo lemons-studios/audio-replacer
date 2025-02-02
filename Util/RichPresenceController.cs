@@ -1,4 +1,5 @@
-﻿using DiscordRPC;
+﻿using AudioReplacer.Util.Logger;
+using DiscordRPC;
 namespace AudioReplacer.Util;
 
 public class RichPresenceController
@@ -21,6 +22,7 @@ public class RichPresenceController
         if (autoCreate) CreateRichPresence();
     }
 
+    [Log]
     public void CreateRichPresence()
     {
         client.Initialize();

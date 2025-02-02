@@ -1,4 +1,5 @@
 ﻿using Microsoft.UI.Composition.SystemBackdrops;
+using Microsoft.Windows.AppLifecycle;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -7,7 +8,6 @@ using System.IO;
 using System.Net.Http;
 using System.Reflection;
 using System.Threading.Tasks;
-using Microsoft.Windows.AppLifecycle;
 
 namespace AudioReplacer.Util;
 public class Generic
@@ -20,7 +20,7 @@ public class Generic
     public static readonly string SettingsFile = Path.Join(ConfigPath, "AppSettings.json");
     public static readonly string PitchDataFile = Path.Join(ConfigPath, "PitchData.json");
     public static readonly string EffectsDataFile = Path.Join(ConfigPath, "EffectsData.json");
-    public static readonly string LogFile = Path.Join(ExtraApplicationData, "logs", $"audioReplacer-log-{DateTime.Now.ToString("dd-MM-yyyy HH:mm")}");
+    public static readonly string LogFile = Path.Join(ExtraApplicationData, "log.txt");
     public static readonly bool IsWhisperInstalled = File.Exists(WhisperPath);
     public static bool InRecordState = false, IsAppLoaded = false;
     public static string[][] PitchData, EffectData;
