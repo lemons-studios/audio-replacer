@@ -24,7 +24,7 @@ public sealed partial class MainWindow
     {
         InitializeComponent();
         App.AppWindow = App.GetAppWindowForCurrentWindow(this);
-        App.AppWindow.Closing += OnClosing;
+        App.AppWindow.Closing += OnClose;
         ExtendsContentIntoTitleBar = true;
         AppTitle.Text = $"Audio Replacer {Generic.GetAppVersion()}";
         SetTitleBar(AppTitleBar);
@@ -66,16 +66,25 @@ public sealed partial class MainWindow
         {
             if (replaceExistingNotifications)
             {
-                GeneralNotificationPopup.IsOpen = false;
-                InProgressNotification.IsOpen = false;
+                GeneralNotificationPopup.DispatcherQueue.TryEnqueue(() =>
+                {
+                    GeneralNotificationPopup.IsOpen = false;
+                });
+                InProgressNotification.DispatcherQueue.TryEnqueue(() =>
+                {
+                    InProgressNotification.IsOpen = false;
+                });
             }
 
-            GeneralNotificationPopup.Severity = severity;
-            GeneralNotificationPopup.Title = title;
-            GeneralNotificationPopup.Message = message;
-            GeneralNotificationPopup.IsClosable = closable;
+            GeneralNotificationPopup.DispatcherQueue.TryEnqueue(() =>
+            {
+                GeneralNotificationPopup.Severity = severity;
+                GeneralNotificationPopup.Title = title;
+                GeneralNotificationPopup.Message = message;
+                GeneralNotificationPopup.IsClosable = closable;
+                GeneralNotificationPopup.IsOpen = true;
+            });
 
-            GeneralNotificationPopup.IsOpen = true;
             if (autoclose)
             {
                 await Task.Delay(App.AppSettings.NotificationTimeout);
@@ -114,14 +123,6 @@ public sealed partial class MainWindow
         });
     }
 
-    private void OnClosing(AppWindow sender, AppWindowClosingEventArgs args)
-    {
-        if (Generic.InRecordState)
-        {
-            File.Delete(ProjectFileUtils.GetOutFilePath());
-        }
-    }
-
     private async void ChangeProjectFolder(object sender, RoutedEventArgs e)
     {
         var folderPicker = new FolderPicker { FileTypeFilter = { "*" } };
@@ -147,7 +148,7 @@ public sealed partial class MainWindow
                 "Settings" => typeof(SettingsPage),
                 "Data Editor" => typeof(DataEditor),
                 "Update Logs" => typeof(ReleaseLogsPage),
-                "Project Importer" => typeof(ProjectImporter),
+                // "Project Importer" => typeof(ProjectImporter),
                 _ => pageSwitchType
             };
         }
@@ -158,5 +159,13 @@ public sealed partial class MainWindow
             pageCache[pageSwitchType] = page;
         }
         MainFrame.Content = page;
+    }
+
+    private void OnClose(AppWindow sender, AppWindowClosingEventArgs args)
+    {
+        if (Generic.InRecordState)
+        {
+            File.Delete(ProjectFileUtils.GetOutFilePath());
+        }
     }
 }

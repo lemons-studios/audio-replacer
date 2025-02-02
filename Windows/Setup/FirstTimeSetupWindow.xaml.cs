@@ -13,7 +13,6 @@ public sealed partial class FirstTimeSetupWindow
         ExtendsContentIntoTitleBar = true;
         SetTitleBar(AppTitleBar);
         SystemBackdrop = MicaController.IsSupported() ? new MicaBackdrop() : new DesktopAcrylicBackdrop();
-
         // Open first page of setup
         MainFrame.Navigate(typeof(SetupWelcome), null, new SlideNavigationTransitionInfo {Effect = SlideNavigationTransitionEffect.FromRight});
     }

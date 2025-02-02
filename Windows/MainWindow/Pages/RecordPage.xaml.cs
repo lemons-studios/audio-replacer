@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using Whisper.net;
 using Whisper.net.LibraryLoader;
 using Windows.Media.Core;
+using Serilog;
 
 namespace AudioReplacer.Windows.MainWindow.Pages;
 
@@ -22,7 +23,7 @@ public sealed partial class RecordPage // This file is among the worst written f
     {
         Loaded += OnLoaded;
         Unloaded += OnUnloaded;
-        ProjectFileUtils.OnProjectLoaded += UpdateFileElements;
+        ProjectFileUtils.OnProjectLoaded += () => UpdateFileElements();
 
         InitializeComponent();
         if (ProjectFileUtils.IsProjectLoaded) 
@@ -45,8 +46,19 @@ public sealed partial class RecordPage // This file is among the worst written f
     private void UpdateRecordingValues(object sender, object args)
     {
         if (audioRecordingUtils == null) return;
-        var extraEditsToggled = Generic.UnNullBool(ExtraEditsToggle.IsChecked);
-        audioRecordingUtils.SetEffectCommands(Generic.PitchValues[VoiceTuneMenu.SelectedIndex], Generic.EffectValues[EffectsMenu.SelectedIndex], extraEditsToggled);
+        try
+        {
+            var extraEditsToggled = ExtraEditsToggle.IsChecked;
+            int selectedPitchIndex = Math.Max(Generic.PitchValues.Count, PitchMenu.SelectedIndex);
+            int selectedEffectIndex = Math.Max(Generic.EffectValues.Count, EffectsMenu.SelectedIndex);
+
+            audioRecordingUtils.SetEffectCommands(Generic.PitchValues[selectedPitchIndex], Generic.EffectValues[selectedEffectIndex], (bool) extraEditsToggled!);
+        }
+        catch (ArgumentOutOfRangeException e)
+        {
+            File.WriteAllText(Generic.LogFile, e.Message);
+            throw;
+        }
     }
 
     private void SkipCurrentAudioFile(object sender, RoutedEventArgs e)
@@ -81,24 +93,52 @@ public sealed partial class RecordPage // This file is among the worst written f
         App.MainWindow.ShowNotification(InfoBarSeverity.Informational, "Recording Stopped", "Entering Review Phase", true, replaceExistingNotifications: true);
     }
 
-    private void UpdateFileElements()
+    private void UpdateFileElements(bool transcribeAudio = true)
     {
         var progressPercentage = ProjectFileUtils.CalculatePercentageComplete();
-        var projectPath = ProjectFileUtils.GetProjectPath(); 
-        
-        FileProgressPanel.Visibility = Visibility.Visible;
-        CurrentFile.Text = ProjectFileUtils.GetCurrentFile().Replace(@"\", "/");
-        RemainingFiles.Text = $"Files Remaining: {ProjectFileUtils.GetFileCount(projectPath):N0} ({progressPercentage}%)";
+        var projectPath = ProjectFileUtils.GetProjectPath();
 
-        RemainingFilesProgress.Value = progressPercentage;
-        AudioPreview.Source = MediaSource.CreateFromUri(new Uri(ProjectFileUtils.GetCurrentFile(false)));
-        AudioPreview.TransportControls.IsEnabled = true;
+        PitchMenu.DispatcherQueue.TryEnqueue(() =>
+        {
+            PitchMenu.ItemsSource = Generic.PitchTitles;
+        });
+
+        EffectsMenu.DispatcherQueue.TryEnqueue(() =>
+        {
+            EffectsMenu.ItemsSource = Generic.EffectTitles;
+        });
+
+        FileProgressPanel.DispatcherQueue.TryEnqueue(() =>
+        {
+            FileProgressPanel.Visibility = Visibility.Visible;
+        });
+
+        CurrentFile.DispatcherQueue.TryEnqueue(() =>
+        {
+            CurrentFile.Text = ProjectFileUtils.GetCurrentFile().Replace(@"\", "/");
+
+        });
+
+        RemainingFiles.DispatcherQueue.TryEnqueue(() =>
+        {
+            RemainingFiles.Text = $"Files Remaining: {ProjectFileUtils.GetFileCount(projectPath):N0} ({progressPercentage}%)";
+        });
+
+        RemainingFiles.DispatcherQueue.TryEnqueue(() =>
+        {
+            RemainingFilesProgress.Value = progressPercentage;
+        });
+
+        AudioPreview.DispatcherQueue.TryEnqueue(() =>
+        {
+            AudioPreview.Source = MediaSource.CreateFromUri(new Uri(ProjectFileUtils.GetCurrentFile(false)));
+            AudioPreview.TransportControls.IsEnabled = true;
+        });
 
         App.DiscordController.SetState($"{progressPercentage}% Complete");
         App.DiscordController.SetSmallAsset("idle", "Idle");
         App.DiscordController.SetLargeAsset("appicon", $"Current File: {ProjectFileUtils.GetCurrentFileName()}");
-
-        TranscribeAudio();
+        if(transcribeAudio) TranscribeAudio();
     }
 
     // Should probably move this into its own file in the future due to the sheer length of this thing
@@ -187,14 +227,15 @@ public sealed partial class RecordPage // This file is among the worst written f
                 // Submission Accepted
                 ProjectFileUtils.DeleteCurrentFile(/* This method essentially acts as a way to confirm the submission*/);
                 App.MainWindow.ShowNotification(InfoBarSeverity.Success, "Recording Accepted", "Moving to next file...", true, replaceExistingNotifications: true);
+                UpdateFileElements();
                 break;
             case false:
                 // Submission Rejected
                 File.Delete(ProjectFileUtils.GetOutFilePath());
                 App.MainWindow.ShowNotification(InfoBarSeverity.Informational, "Recording Rejected", "Moving back to current file...", true, replaceExistingNotifications: true);
+                UpdateFileElements(false); // To prevent transcription when it's not needed
                 break;
         }
-        UpdateFileElements();
     }
 
     private void OnUnloaded(object sender, RoutedEventArgs e)

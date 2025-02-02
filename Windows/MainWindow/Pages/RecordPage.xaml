@@ -158,9 +158,8 @@
                         Style="{StaticResource TitleText}"
                         Text="Pitch Tuning:" />
                     <ComboBox
-                        x:Name="VoiceTuneMenu"
+                        x:Name="PitchMenu"
                         Margin="0,0,0,50"
-                        ItemsSource="{Binding PitchList}"
                         PlaceholderText="Pick Character"
                         SelectionChanged="UpdateRecordingValues"
                         Style="{StaticResource DropdownMenu}" />
@@ -175,7 +174,6 @@
                     <ComboBox
                         x:Name="EffectsMenu"
                         Margin="0,0,0,10"
-                        ItemsSource="{Binding EffectsList}"
                         PlaceholderText="Select Effect"
                         SelectionChanged="UpdateRecordingValues"
                         Style="{StaticResource DropdownMenu}" />

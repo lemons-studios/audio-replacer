@@ -1,5 +1,4 @@
-﻿using System;
-using AudioReplacer.Util;
+﻿using AudioReplacer.Util;
 using AudioReplacer.Windows.MainWindow;
 using AudioReplacer.Windows.Setup;
 using Config.Net;
@@ -30,10 +29,8 @@ public partial class App // I will admit, code-behind is still pretty useful her
         AppSettings = new ConfigurationBuilder<IAppSettings>().UseJsonFile(Generic.SettingsFile).Build();
         InitializeComponent();
         VelopackApp.Build().Run();
-        if (!Directory.Exists(Generic.BinaryPath))
-        {
+        if (!Directory.Exists(Generic.BinaryPath)) 
             Directory.CreateDirectory(Generic.BinaryPath);
-        }
     }
 
     private void CreateSettingsData()
@@ -116,17 +113,17 @@ public partial class App // I will admit, code-behind is still pretty useful her
         {
             Generic.EffectData = [];
         }
+        Generic.PopulateCustomData();
     }
 
     protected override void OnLaunched(LaunchActivatedEventArgs args)
     {
-        Generic.PopulateCustomData();
-        Generic.LoggerFileName = DateTime.Now.ToShortTimeString() + "-log.txt";
         switch (File.Exists(Path.Join(Generic.ConfigPath, ".setupCompleted")))
         {
             case true:
                 // Only initialize rich presence when app is configured
-                DiscordController = new RichPresenceController(1325340097234866297, "On Record Page", "No Project Loaded", "idle", "Idle");
+                if (Generic.IntToBool(App.AppSettings.EnableRichPresence)) 
+                    DiscordController = new RichPresenceController(1325340097234866297, "On Record Page", "No Project Loaded", "idle", "Idle");
                 MainWindow = new MainWindow();
                 MainWindow.Activate();
                 break;
@@ -135,7 +132,6 @@ public partial class App // I will admit, code-behind is still pretty useful her
                 SetupWindow.Activate();
                 break;
         }
-
         Generic.IsAppLoaded = true;
     }
 

@@ -1,14 +1,11 @@
-﻿using AudioReplacer.Util;
-using AudioReplacer.Windows.MainWindow.Util;
+﻿using AudioReplacer.Windows.MainWindow.Util;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using System.Collections.Generic;
 
 namespace AudioReplacer.Windows.MainWindow.PageData;
 internal partial class RecordPageData : ObservableObject
 {
     [ObservableProperty] private bool isIdle = true, isRecording, isReviewing;
-    [ObservableProperty] private List<string> pitchList = Generic.PitchTitles, effectsList = Generic.EffectTitles;
 
     [RelayCommand]
     private void SwitchButtonStates()

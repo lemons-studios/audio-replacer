@@ -20,13 +20,12 @@ public class Generic
     public static readonly string SettingsFile = Path.Join(ConfigPath, "AppSettings.json");
     public static readonly string PitchDataFile = Path.Join(ConfigPath, "PitchData.json");
     public static readonly string EffectsDataFile = Path.Join(ConfigPath, "EffectsData.json");
-    public static readonly string LoggerPath = Path.Join(ExtraApplicationData, "logs");
-    public static string LoggerFileName;
+    public static readonly string LogFile = Path.Join(ExtraApplicationData, "logs", $"audioReplacer-log-{DateTime.Now.ToString("dd-MM-yyyy HH:mm")}");
     public static readonly bool IsWhisperInstalled = File.Exists(WhisperPath);
     public static bool InRecordState = false, IsAppLoaded = false;
     public static string[][] PitchData, EffectData;
-    public static List<string> PitchTitles = [], EffectTitles = [], EffectValues = [];
-    public static List<float> PitchValues = [];
+    public static List<string> PitchTitles, EffectTitles, EffectValues;
+    public static List<float> PitchValues;
 
     private static readonly HttpClient WebClient = new()
     {
@@ -57,6 +56,10 @@ public class Generic
 
     public static void PopulateCustomData()
     {
+        PitchTitles = [];
+        PitchValues = [];
+        EffectTitles = [];
+        EffectValues = [];
         foreach (var data in PitchData)
         {
             PitchValues.Add(ParseFloat(data[0])); // Position 0 of each array in the 2d array should have the data
@@ -107,11 +110,6 @@ public class Generic
         {
             return 1;
         }
-    }
-
-    public static bool UnNullBool(bool? x)
-    {
-        return (bool) x!;
     }
 
     public static async Task<string> GetDataFromGithub(string tagName)
