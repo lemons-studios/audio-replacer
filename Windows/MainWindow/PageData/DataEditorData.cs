@@ -58,7 +58,7 @@ public partial class DataEditorData : ObservableObject
         Generic.RestartApp();
     }
 
-    [AppLogger]
+    [Log]
     private async Task ImportFile(bool isEffects)
     {
         var copyPath = isEffects ? Generic.EffectsDataFile : Generic.PitchDataFile;

@@ -23,7 +23,7 @@ public static class ProjectFileUtils
         IsProjectLoaded = true;
     }
 
-    [AppLogger]
+    [Log]
     public static void SetProjectData(string path)
     {
         projectPath = path;
@@ -35,7 +35,7 @@ public static class ProjectFileUtils
         Broadcast();
     }
 
-    [AppLogger]
+    [Log]
     private static void SetCurrentFile()
     {
         FindAndDeleteEmptyDirs();
@@ -58,7 +58,7 @@ public static class ProjectFileUtils
     }
 
     // The application prefers that all input files are of the .wav format
-    [AppLogger]
+    [Log]
     private static async Task ConvertAudioFiles()
     {
         List<string> projectFiles = GetAllFiles().Where(IsUndesirableAudioFile).ToList();
@@ -158,7 +158,7 @@ public static class ProjectFileUtils
         }
     }
 
-    [AppLogger]
+    [Log]
     public static void SubmitAudioFile()
     {
         if (!string.IsNullOrEmpty(currentFile))

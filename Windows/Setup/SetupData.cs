@@ -40,7 +40,7 @@ public partial class SetupData : ObservableObject
         }
     }
 
-    [AppLogger]
+    [Log]
     private async Task DownloadData()
     {
         // Before downloading, first import any data files the user wanted to import

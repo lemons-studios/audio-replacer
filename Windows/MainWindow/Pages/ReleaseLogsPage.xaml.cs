@@ -22,7 +22,7 @@ public sealed partial class ReleaseLogsPage
         Task.Run(SetContent);
     }
 
-    [AppLogger]
+    [Log]
     private async Task SetContent()
     {
         var markdown = await Generic.GetDataFromGithub("body");

@@ -16,7 +16,7 @@ public sealed partial class DataEditor
         CustomDataEditor.Editor.Modified += AutoSave;
     }
 
-    [AppLogger]
+    [Log]
     private void OnLoaded(object sender, RoutedEventArgs e)
     {
         CustomDataEditor.Editor.SetText(File.ReadAllText(GetEditingFilePath()));

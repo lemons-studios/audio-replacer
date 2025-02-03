@@ -177,10 +177,9 @@
                         Style="{StaticResource DropdownMenu}" />
                     <CheckBox
                         HorizontalAlignment="Center"
-                        Checked="ToggleExtraEdits"
+                        Command="{Binding FlagExtraEditsCommand}"
                         Content="Further Edits Required?"
-                        IsChecked="False"
-                        Unchecked="ToggleExtraEdits" />
+                        IsChecked="False" />
                 </StackPanel>
             </StackPanel>
         </Border>

@@ -23,4 +23,10 @@ public partial class RecordPageData : ObservableObject
         IsRecording = false;
         IsIdle = true;
     }
+
+    [RelayCommand]
+    private void FlagExtraEdits()
+    {
+        ProjectFileUtils.ExtraEditsFlagged = !ProjectFileUtils.ExtraEditsFlagged;
+    }
 }

@@ -20,7 +20,7 @@ public static class AppUpdater
         OnUpdateFound?.Invoke();
     }
 
-    [AppLogger]
+    [Log]
     public static async Task UpdateApplication()
     {
         try

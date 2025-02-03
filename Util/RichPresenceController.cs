@@ -22,7 +22,7 @@ public class RichPresenceController
         if (autoCreate) CreateRichPresence();
     }
 
-    [AppLogger]
+    [Log]
     public void CreateRichPresence()
     {
         client.Initialize();

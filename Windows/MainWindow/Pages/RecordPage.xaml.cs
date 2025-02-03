@@ -22,7 +22,7 @@ public sealed partial class RecordPage // This file is among the worst written f
     {
         Loaded += OnLoaded;
         Unloaded += OnUnloaded;
-        ProjectFileUtils.OnProjectLoaded += () => UpdateFileElements();
+        ProjectFileUtils.OnProjectLoaded += () => UpdateFileElements(firstLoad: true);
 
         InitializeComponent();
         if (ProjectFileUtils.IsProjectLoaded) 
@@ -31,7 +31,7 @@ public sealed partial class RecordPage // This file is among the worst written f
         AudioPreview.MediaPlayer.Pause(); // Needed to fix an issue where audio would play after second navigation to the page after launch
     }
 
-    [AppLogger]
+    [Log]
     private void OnLoaded(object sender, RoutedEventArgs e)
     {
         // Looping needs to be on to work around a bug in which the audio gets cut off for a split second after the first play.
@@ -43,7 +43,7 @@ public sealed partial class RecordPage // This file is among the worst written f
             App.DiscordController.SetState($"{ProjectFileUtils.CalculatePercentageComplete()}% Complete");
     }
 
-    [AppLogger]
+    [Log]
     private void UpdateRecordingValues(object sender, object args)
     {
         if (audioRecordingUtils == null) return;
@@ -52,13 +52,7 @@ public sealed partial class RecordPage // This file is among the worst written f
         audioRecordingUtils.effectCommand = Generic.EffectValues[EffectsMenu.SelectedIndex];
     }
 
-    [AppLogger]
-    private void ToggleExtraEdits(object sender, object args)
-    {
-        ProjectFileUtils.ExtraEditsFlagged = !ProjectFileUtils.ExtraEditsFlagged;
-    }
-
-    [AppLogger]
+    [Log]
     private void SkipCurrentAudioFile(object sender, RoutedEventArgs e)
     {
         SkipFileFlyout.Hide();
@@ -67,7 +61,7 @@ public sealed partial class RecordPage // This file is among the worst written f
         App.MainWindow.ShowNotification(InfoBarSeverity.Success, "File Skipped!", string.Empty, true);
     }
 
-    [AppLogger]
+    [Log]
     private async void StartRecordingAudio(object sender, RoutedEventArgs e)
     {
         Generic.InRecordState = true;
@@ -81,7 +75,7 @@ public sealed partial class RecordPage // This file is among the worst written f
         App.MainWindow.ToggleProgressNotification("Recording In Progress", string.Empty);
     }
 
-    [AppLogger]
+    [Log]
     private async void StopRecordingAudio(object sender, RoutedEventArgs e)
     {
         await audioRecordingUtils.StopRecordingAudio();
@@ -98,8 +92,8 @@ public sealed partial class RecordPage // This file is among the worst written f
         App.MainWindow.ShowNotification(InfoBarSeverity.Informational, "Recording Stopped", "Entering Review Phase", true, replaceExistingNotifications: true);
     }
 
-    [AppLogger]
-    private void UpdateFileElements(bool transcribeAudio = true)
+    [Log]
+    private void UpdateFileElements(bool transcribeAudio = true, bool firstLoad = false)
     {
         var progressPercentage = ProjectFileUtils.CalculatePercentageComplete();
         var projectPath = ProjectFileUtils.GetProjectPath();
@@ -145,10 +139,17 @@ public sealed partial class RecordPage // This file is among the worst written f
         App.DiscordController.SetSmallAsset("idle", "Idle");
         App.DiscordController.SetLargeAsset("appicon", $"Current File: {ProjectFileUtils.GetCurrentFileName()}");
         if(transcribeAudio) TranscribeAudio();
+        if (firstLoad)
+        {
+            AudioPreview.DispatcherQueue.TryEnqueue(() =>
+            {
+                AudioPreview.MediaPlayer.Pause();
+            });
+        }
     }
 
     // Should probably move this into its own file in the future due to the sheer length of this thing
-    [AppLogger]
+    [Log]
     private void TranscribeAudio()
     {
         var dispatcherQueue = Transcription.DispatcherQueue;
@@ -223,7 +224,7 @@ public sealed partial class RecordPage // This file is among the worst written f
         App.MainWindow.ShowNotification(InfoBarSeverity.Informational, "Recording Cancelled", string.Empty, true, replaceExistingNotifications: true);
     }
 
-    [AppLogger]
+    [Log]
     private void AcceptSubmission(object sender, RoutedEventArgs e)
     {
         Generic.InRecordState = false;
@@ -233,7 +234,7 @@ public sealed partial class RecordPage // This file is among the worst written f
         UpdateFileElements();
     }
 
-    [AppLogger]
+    [Log]
     private void RejectSubmission(object sender, RoutedEventArgs e)
     {
         Generic.InRecordState = false;
@@ -243,7 +244,7 @@ public sealed partial class RecordPage // This file is among the worst written f
         UpdateFileElements(false); // To prevent transcription when it's not needed
     }
 
-    [AppLogger]
+    [Log]
     private void OnUnloaded(object sender, RoutedEventArgs e)
     {
         // Prevent audio from playing on other pages if the media player is left playing

@@ -91,7 +91,7 @@ public partial class App // I will admit, code-behind is still pretty useful her
         File.WriteAllText(Generic.SettingsFile, defaultJson);
     }
 
-    [AppLogger]
+    [Log]
     private void CreateJsonData()
     {
         // Users will have to import their own data files for this app to work,
@@ -118,7 +118,7 @@ public partial class App // I will admit, code-behind is still pretty useful her
         Generic.PopulateCustomData();
     }
 
-    [AppLogger]
+    [Log]
     protected override void OnLaunched(LaunchActivatedEventArgs args)
     {
         switch (File.Exists(Path.Join(Generic.ConfigPath, ".setupCompleted")))
@@ -138,7 +138,7 @@ public partial class App // I will admit, code-behind is still pretty useful her
         Generic.IsAppLoaded = true;
     }
 
-    [AppLogger]
+    [Log]
     public static AppWindow GetAppWindowForCurrentWindow(object window) // Thanks StackOverflow man!
     {
         var hWnd = WindowNative.GetWindowHandle(window);

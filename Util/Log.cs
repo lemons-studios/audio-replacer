@@ -3,7 +3,7 @@ using System;
 using System.IO;
 
 namespace AudioReplacer.Util;
-public class AppLogger : OverrideMethodAspect
+public class Log : OverrideMethodAspect
 {
     public override dynamic? OverrideMethod()
     {
