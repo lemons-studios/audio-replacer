@@ -140,7 +140,7 @@
 		<NuGetAuditLevel>low</NuGetAuditLevel>
 		<GenerateDocumentationFile>False</GenerateDocumentationFile>
 		<AssemblyVersion>4.1.2</AssemblyVersion>
-		<FileVersion>4.1.2</FileVersion>
+		<FileVersion>4.1.3</FileVersion>
 		<Title>Audio Replacer</Title>
 		<NeutralLanguage>en-CA</NeutralLanguage>
 		<ApplicationIcon>Assets\AppIcon.ico</ApplicationIcon>
