@@ -1,4 +1,5 @@
-﻿using AudioReplacer.Util;
+﻿using AudioReplacer.Generic;
+using AudioReplacer.Util;
 using Microsoft.UI.Xaml.Controls;
 using System;
 using System.Collections.Generic;
@@ -28,9 +29,9 @@ public static class ProjectFileUtils
     {
         projectPath = path;
         string projectName = projectPath.Split("\\")[^1];
-        outputFolderPath = Path.Combine(Generic.ExtraApplicationData, "out", projectName);
+        outputFolderPath = Path.Combine(AppProperties.ExtraApplicationData, "out", projectName);
         CreateInitialData();
-        // Task.Run(ConvertAudioFiles); // TODO: Make this work properly later
+        // Task.Run(ConvertAudioFiles);
         SetCurrentFile();
         Broadcast();
     }
@@ -38,7 +39,6 @@ public static class ProjectFileUtils
     [Log]
     private static void SetCurrentFile()
     {
-        FindAndDeleteEmptyDirs();
         currentFile = GetNextAudioFile(projectPath);
 
         if (string.IsNullOrEmpty(currentFile))
@@ -70,7 +70,7 @@ public static class ProjectFileUtils
             {
                 var input = projectFiles[i];
                 var output = $"{input.Split(".")[0]}.wav";
-                await Generic.SpawnProcess("ffmpeg", $"-i \"{projectFiles[i]}\" -ar 16000 -b:a 16k {output}");
+                await AppFunctions.SpawnProcess("ffmpeg", $"-i \"{projectFiles[i]}\" -ar 16000 -b:a 16k {output}");
 
                 File.Delete(input);
                 App.MainWindow.SetProgressMessage($"Progress: {MathF.Floor(((float) i / totalFiles) * 100)}%");
@@ -90,18 +90,16 @@ public static class ProjectFileUtils
 
     private static void CreateInitialData()
     {
-        var setupIgnorePath = Path.Combine(outputFolderPath, ".setupIgnore");
-
         if (!Directory.Exists(outputFolderPath))
             Directory.CreateDirectory(outputFolderPath);
 
-        var inputDirectories = GetPathSubdirectories(projectPath);
-        var outputDirectories = GetPathSubdirectories(outputFolderPath);
+        var inputDirectories = GetSubdirectories(projectPath);
+        var outputDirectories = GetSubdirectories(outputFolderPath);
 
         inputDirectories = inputDirectories.Select(d => Path.GetFullPath(d).TrimEnd(Path.DirectorySeparatorChar)).ToArray();
         outputDirectories = outputDirectories.Select(d => Path.GetFullPath(d).TrimEnd(Path.DirectorySeparatorChar)).ToArray();
 
-        if (inputDirectories.SequenceEqual(outputDirectories, StringComparer.OrdinalIgnoreCase) || File.Exists(setupIgnorePath))
+        if (inputDirectories.SequenceEqual(outputDirectories, StringComparer.OrdinalIgnoreCase))
            return;
 
         foreach (var dir in inputDirectories)
@@ -112,9 +110,6 @@ public static class ProjectFileUtils
             if (!Directory.Exists(outputDir))
                 Directory.CreateDirectory(outputDir);
         }
-
-        // Create the ignore file
-        File.WriteAllText(setupIgnorePath, "This file is here to tell Audio Replacer to ignore this folder when launching. Do NOT delete");
     }
 
     private static string TruncateDirectory(string inputPath, int dirLevels, string delimiter = "\\")
@@ -131,7 +126,7 @@ public static class ProjectFileUtils
         var audioFiles = Directory.EnumerateFiles(path, "*.*", SearchOption.AllDirectories).Where(IsAudioFile).ToList();
         if (!audioFiles.Any()) return string.Empty;
 
-        if (Generic.IntToBool(App.AppSettings.InputRandomizationEnabled))
+        if (AppFunctions.IntToBool(App.AppSettings.InputRandomizationEnabled))
         {
             // Pick random file from current project files if input randomization is enabled
             var rng = new Random();
@@ -147,7 +142,6 @@ public static class ProjectFileUtils
         int outputFileCount = GetFileCount(outputFolderPath);
         return inputFileCount + outputFileCount == 0 ? 100 : (float) Math.Round((outputFileCount / (double) (inputFileCount + outputFileCount)) * 100, 2);
     }
-
     public static void SkipAudioTrack()
     {
         if (!string.IsNullOrEmpty(currentFile) && !string.IsNullOrEmpty(currentOutFile))
@@ -173,26 +167,12 @@ public static class ProjectFileUtils
             string joinedPath = Path.Join(dir, file);
             File.Move(currentOutFile!, joinedPath);
         }
-
-        SetCurrentFile();
-    }
-
-    public static void DeleteCurrentFile()
-    {
-        if (!string.IsNullOrEmpty(currentFile))
-        {
-            File.Delete(currentFile);
-            SetCurrentFile();
-        }
-    }
-
-    private static void FindAndDeleteEmptyDirs()
-    {
+        // Loop through all folders in input and delete any empty files
         foreach (var dir in Directory.GetDirectories(projectPath, "*", SearchOption.AllDirectories))
         {
-            if (!Directory.EnumerateFileSystemEntries(dir).Any())
-                Directory.Delete(dir);
+            if (!Directory.EnumerateFileSystemEntries(dir).Any()) Directory.Delete(dir);
         }
+        SetCurrentFile();
     }
 
     private static bool IsAudioFile(string path)
@@ -209,14 +189,14 @@ public static class ProjectFileUtils
         return supportedFileTypes.Any(fileType => path.EndsWith(fileType, StringComparison.OrdinalIgnoreCase));
     }
 
-    private static string[] GetPathSubdirectories(string path)
+    private static string[] GetSubdirectories(string path)
     {
         return Directory.GetDirectories(path, "*", SearchOption.TopDirectoryOnly);
     }
 
-    public static string GetCurrentFile(bool truncated = true)
+    public static string GetCurrentFile(bool truncate = true)
     {
-        return truncated ? truncatedCurrentFile : currentFile;
+        return truncate ? truncatedCurrentFile : currentFile;
     }
 
     public static string GetOutFilePath()

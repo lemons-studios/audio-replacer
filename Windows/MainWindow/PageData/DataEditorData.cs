@@ -1,4 +1,5 @@
-﻿using AudioReplacer.Util;
+﻿using AudioReplacer.Generic;
+using AudioReplacer.Util;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Newtonsoft.Json;
@@ -18,7 +19,7 @@ public partial class DataEditorData : ObservableObject
     [RelayCommand]
     private void OpenHelpPage()
     {
-        Generic.OpenUrl("https://github.com/lemons-studios/audio-replacer/wiki");
+        AppFunctions.OpenUrl("https://github.com/lemons-studios/audio-replacer/wiki");
     }
 
     [RelayCommand] 
@@ -55,13 +56,13 @@ public partial class DataEditorData : ObservableObject
     [RelayCommand]
     private void Reload()
     {
-        Generic.RestartApp();
+        AppFunctions.RestartApp();
     }
 
     [Log]
     private async Task ImportFile(bool isEffects)
     {
-        var copyPath = isEffects ? Generic.EffectsDataFile : Generic.PitchDataFile;
+        var copyPath = isEffects ? AppProperties.EffectsDataFile : AppProperties.PitchDataFile;
 
         var openPicker = new FileOpenPicker();
         InitializeWithWindow.Initialize(openPicker, WindowNative.GetWindowHandle(App.MainWindow));
@@ -70,7 +71,7 @@ public partial class DataEditorData : ObservableObject
         if (file != null)
         {
             File.Copy(file.Path, copyPath, overwrite: true);
-            Generic.RestartApp();
+            AppFunctions.RestartApp();
         }
     }
 }

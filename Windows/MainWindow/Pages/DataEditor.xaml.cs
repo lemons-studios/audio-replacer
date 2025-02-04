@@ -1,3 +1,4 @@
+using AudioReplacer.Generic;
 using AudioReplacer.Util;
 using AudioReplacer.Windows.MainWindow.PageData;
 using Microsoft.UI.Xaml;
@@ -46,7 +47,7 @@ public sealed partial class DataEditor
     private string GetEditingFilePath()
     {
         return SelectedFile.SelectedIndex == 0
-            ? Generic.PitchDataFile
-            : Generic.EffectsDataFile;
+            ? AppProperties.PitchDataFile
+            : AppProperties.EffectsDataFile;
     }
 }

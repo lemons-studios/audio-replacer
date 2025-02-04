@@ -1,4 +1,5 @@
-﻿using AudioReplacer.Util;
+﻿using AudioReplacer.Generic;
+using AudioReplacer.Util;
 using AudioReplacer.Windows.Setup.Pages;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -46,20 +47,20 @@ public partial class SetupData : ObservableObject
         // Before downloading, first import any data files the user wanted to import
         if (!string.IsNullOrWhiteSpace(PitchSettingsPath) && File.Exists(PitchSettingsPath))
         {
-            File.Copy(PitchSettingsPath, Generic.PitchDataFile, overwrite: true);
+            File.Copy(PitchSettingsPath, AppProperties.PitchDataFile, overwrite: true);
         }
 
         if (!string.IsNullOrWhiteSpace(EffectSettingsPath) && File.Exists(EffectSettingsPath))
         {
-            File.Copy(EffectSettingsPath, Generic.EffectsDataFile, overwrite: true);
+            File.Copy(EffectSettingsPath, AppProperties.EffectsDataFile, overwrite: true);
         }
 
         // Download FFmpeg
-        var latestVersion = await Generic.GetWebData("https://www.gyan.dev/ffmpeg/builds/release-version");
+        var latestVersion = await AppFunctions.GetWebData("https://www.gyan.dev/ffmpeg/builds/release-version");
         var ffmpegUrl = $"https://www.gyan.dev/ffmpeg/builds/packages/ffmpeg-{latestVersion}-full_build.7z";
-        var outPath = Path.Join(Generic.ExtraApplicationData, "ffmpeg");
+        var outPath = Path.Join(AppProperties.ExtraApplicationData, "ffmpeg");
 
-        await Generic.DownloadFileAsync(ffmpegUrl, $@"{Generic.ExtraApplicationData}\ffmpeg.7z");
+        await AppFunctions.DownloadFileAsync(ffmpegUrl, $@"{AppProperties.ExtraApplicationData}\ffmpeg.7z");
         // Extract FFmpeg
         using (var ffmpegExtractor = new ArchiveFile($"{outPath}.7z"))
         {
@@ -71,7 +72,7 @@ public partial class SetupData : ObservableObject
         // Move FFmpeg executables to the application's binary folder
         foreach (var exe in info.GetFiles("ffmpeg.exe", SearchOption.AllDirectories))
         {
-            File.Move(exe.FullName, Path.Combine(Generic.BinaryPath, exe.Name));
+            File.Move(exe.FullName, Path.Combine(AppProperties.BinaryPath, exe.Name));
         }
 
         Directory.Delete(outPath, true);
@@ -81,13 +82,13 @@ public partial class SetupData : ObservableObject
         if (DownloadWhisper)
         {
             await using var whisperStream = await WhisperGgmlDownloader.GetGgmlModelAsync(GgmlType.Small, QuantizationType.Q5_1);
-            await using var fileWriter = File.OpenWrite(Generic.WhisperPath);
+            await using var fileWriter = File.OpenWrite(AppProperties.WhisperPath);
             await whisperStream.CopyToAsync(fileWriter);
         }
 
         // Mark the app as "set up" and restart the application
-        File.Create(Path.Join(Generic.ConfigPath, ".setupCompleted"));
-        Generic.RestartApp();
+        File.Create(Path.Join(AppProperties.ConfigPath, ".setupCompleted"));
+        AppFunctions.RestartApp();
     }
 
     [RelayCommand]
@@ -138,18 +139,18 @@ public partial class SetupData : ObservableObject
     [ObservableProperty] private static bool checkForUpdates = true;
     partial void OnCheckForUpdatesChanged(bool value)
     {
-        App.AppSettings.AppUpdateCheck = Generic.BoolToInt(value);
+        App.AppSettings.AppUpdateCheck = AppFunctions.BoolToInt(value);
     }
 
     [ObservableProperty] private static bool richPresenceEnabled = true;
     partial void OnRichPresenceEnabledChanged(bool value)
     {
-        App.AppSettings.EnableRichPresence = Generic.BoolToInt(value);
+        App.AppSettings.EnableRichPresence = AppFunctions.BoolToInt(value);
     }
 
     [ObservableProperty] private static bool enableFileRandomization;
     partial void OnEnableFileRandomizationChanged(bool value)
     {
-        App.AppSettings.InputRandomizationEnabled = Generic.BoolToInt(value);
+        App.AppSettings.InputRandomizationEnabled = AppFunctions.BoolToInt(value);
     }
 }

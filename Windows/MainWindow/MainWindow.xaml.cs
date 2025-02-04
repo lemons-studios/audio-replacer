@@ -11,9 +11,11 @@ using System.IO;
 using System.Threading.Tasks;
 using TitleBarDrag;
 using Velopack;
+using WinUIEx;
 using Windows.Storage.Pickers;
 using CommunityToolkit.WinUI;
 using WinRT.Interop;
+using AudioReplacer.Generic;
 
 namespace AudioReplacer.Windows.MainWindow;
 
@@ -27,7 +29,7 @@ public sealed partial class MainWindow
         App.AppWindow = App.GetAppWindowForCurrentWindow(this);
         App.AppWindow.Closing += OnClose;
         ExtendsContentIntoTitleBar = true;
-        AppTitle.Text = $"Audio Replacer {Generic.GetAppVersion()}";
+        AppTitle.Text = $"Audio Replacer {AppFunctions.GetAppVersion()}";
         SetTitleBar(AppTitleBar);
 
         SystemBackdrop = new MicaBackdrop();
@@ -66,41 +68,48 @@ public sealed partial class MainWindow
         }
         else
         {
-            if (replaceExistingNotifications)
+            try
             {
-                await GeneralNotificationPopup.DispatcherQueue.EnqueueAsync(() =>
-                {
-                    GeneralNotificationPopup.IsOpen = false;
-                });
-                await InProgressNotification.DispatcherQueue.EnqueueAsync(() =>
-                {
-                    InProgressNotification.IsOpen = false;
-                });
-            }
-
-            await GeneralNotificationPopup.DispatcherQueue.EnqueueAsync(() =>
-            {
-                GeneralNotificationPopup.Severity = severity;
-                GeneralNotificationPopup.Title = title;
-                GeneralNotificationPopup.Message = message;
-                GeneralNotificationPopup.IsClosable = closable;
-                GeneralNotificationPopup.IsOpen = true;
-            });
-
-            if (autoclose)
-            {
-                await Task.Delay(App.AppSettings.NotificationTimeout);
-                try
+                if (replaceExistingNotifications)
                 {
                     await GeneralNotificationPopup.DispatcherQueue.EnqueueAsync(() =>
                     {
                         GeneralNotificationPopup.IsOpen = false;
                     });
+                    await InProgressNotification.DispatcherQueue.EnqueueAsync(() =>
+                    {
+                        InProgressNotification.IsOpen = false;
+                    });
                 }
-                catch
+
+                await GeneralNotificationPopup.DispatcherQueue.EnqueueAsync(() =>
                 {
-                    Console.WriteLine("Whoopsie!");
+                    GeneralNotificationPopup.Severity = severity;
+                    GeneralNotificationPopup.Title = title;
+                    GeneralNotificationPopup.Message = message;
+                    GeneralNotificationPopup.IsClosable = closable;
+                    GeneralNotificationPopup.IsOpen = true;
+                });
+
+                if (autoclose)
+                {
+                    await Task.Delay(App.AppSettings.NotificationTimeout);
+                    try
+                    {
+                        await GeneralNotificationPopup.DispatcherQueue.EnqueueAsync(() =>
+                        {
+                            GeneralNotificationPopup.IsOpen = false;
+                        });
+                    }
+                    catch
+                    {
+                        return;
+                    }
                 }
+            }
+            catch (NullReferenceException e)
+            {
+                return;
             }
         }
     }
@@ -135,7 +144,7 @@ public sealed partial class MainWindow
         if (folder != null && !string.IsNullOrEmpty(folder.Path))
         {
             string folderPath = folder.Path;
-            if (Generic.IntToBool(App.AppSettings.RememberSelectedFolder))
+            if (AppFunctions.IntToBool(App.AppSettings.RememberSelectedFolder))
                 App.AppSettings.LastSelectedFolder = folderPath;
             ProjectFileUtils.SetProjectData(folderPath);
         }
@@ -169,7 +178,7 @@ public sealed partial class MainWindow
     [Log]
     private void OnClose(AppWindow sender, AppWindowClosingEventArgs args)
     {
-        if (Generic.InRecordState)
+        if (AppProperties.InRecordState)
         {
             File.Delete(ProjectFileUtils.GetOutFilePath());
         }

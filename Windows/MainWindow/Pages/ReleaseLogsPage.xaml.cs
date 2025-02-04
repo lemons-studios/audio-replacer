@@ -1,3 +1,4 @@
+using AudioReplacer.Generic;
 using AudioReplacer.Util;
 using CommunityToolkit.Labs.WinUI.MarkdownTextBlock;
 using CommunityToolkit.WinUI;
@@ -25,7 +26,7 @@ public sealed partial class ReleaseLogsPage
     [Log]
     private async Task SetContent()
     {
-        var markdown = await Generic.GetDataFromGithub("body");
+        var markdown = await AppFunctions.GetDataFromGithub("body");
 
         await MarkdownText.DispatcherQueue.EnqueueAsync(() =>
         {

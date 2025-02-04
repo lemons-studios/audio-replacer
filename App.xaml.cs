@@ -1,4 +1,5 @@
-﻿using AudioReplacer.Util;
+﻿using AudioReplacer.Generic;
+using AudioReplacer.Util;
 using AudioReplacer.Windows.MainWindow;
 using AudioReplacer.Windows.Setup;
 using Config.Net;
@@ -24,29 +25,29 @@ public partial class App // I will admit, code-behind is still pretty useful her
 
     public App()
     {
-        File.WriteAllText(Generic.LogFile, "Log Started!");
+        File.WriteAllText(AppProperties.LogFile, "Log Started!");
         CreateSettingsData();
         CreateJsonData();
-        AppSettings = new ConfigurationBuilder<IAppSettings>().UseJsonFile(Generic.SettingsFile).Build();
+        AppSettings = new ConfigurationBuilder<IAppSettings>().UseJsonFile(AppProperties.SettingsFile).Build();
         InitializeComponent();
         VelopackApp.Build().Run();
-        if (!Directory.Exists(Generic.BinaryPath)) 
-            Directory.CreateDirectory(Generic.BinaryPath);
+        if (!Directory.Exists(AppProperties.BinaryPath)) 
+            Directory.CreateDirectory(AppProperties.BinaryPath);
     }
 
     private void CreateSettingsData()
     {
-        if (!Directory.Exists(Generic.ConfigPath)) 
-            Directory.CreateDirectory(Generic.ConfigPath);
+        if (!Directory.Exists(AppProperties.ConfigPath)) 
+            Directory.CreateDirectory(AppProperties.ConfigPath);
 
-        if (File.Exists(Generic.SettingsFile))
+        if (File.Exists(AppProperties.SettingsFile))
         {
             // Create missing properties in the settings json on updates
-            var existingConfig = JsonSerializer.Deserialize<Dictionary<string, object>>(File.ReadAllText(Generic.SettingsFile));
+            var existingConfig = JsonSerializer.Deserialize<Dictionary<string, object>>(File.ReadAllText(AppProperties.SettingsFile));
             var defaultConfig = new Dictionary<string, object>
             {
                 { "Theme", 0 },
-                { "TransparencyEffect", Generic.GetTransparencyMode() },
+                { "TransparencyEffect", AppFunctions.GetTransparencyMode() },
                 { "EnableUpdateChecks", 1 },
                 { "RecordEndWaitTime", 0 },
                 { "NotificationTimeout", 1750 },
@@ -66,7 +67,7 @@ public partial class App // I will admit, code-behind is still pretty useful her
             }
 
             var updatedJson = JsonSerializer.Serialize(existingConfig, new JsonSerializerOptions { WriteIndented = true });
-            File.WriteAllText(Generic.SettingsFile, updatedJson);
+            File.WriteAllText(AppProperties.SettingsFile, updatedJson);
             return;
         }
 
@@ -74,7 +75,7 @@ public partial class App // I will admit, code-behind is still pretty useful her
         var newConfig = new
         {
             Theme = 0,
-            TransparencyEffect = Generic.GetTransparencyMode(), // Prevents mica being set on Windows 10 devices
+            TransparencyEffect = AppFunctions.GetTransparencyMode(), // Prevents mica being set on Windows 10 devices
             EnableUpdateChecks = 1,
             RecordEndWaitTime = 0,
             NotificationTimeout = 1750,
@@ -88,7 +89,7 @@ public partial class App // I will admit, code-behind is still pretty useful her
         };
 
         var defaultJson = JsonSerializer.Serialize(newConfig, new JsonSerializerOptions { WriteIndented = true });
-        File.WriteAllText(Generic.SettingsFile, defaultJson);
+        File.WriteAllText(AppProperties.SettingsFile, defaultJson);
     }
 
     [Log]
@@ -96,36 +97,36 @@ public partial class App // I will admit, code-behind is still pretty useful her
     {
         // Users will have to import their own data files for this app to work,
         // but create an empty file with the start of a json array (for functionality purposes)
-        if (!File.Exists(Generic.PitchDataFile)) File.WriteAllText(Generic.PitchDataFile, "[\n\n]");
-        if (!File.Exists(Generic.EffectsDataFile)) File.WriteAllText(Generic.EffectsDataFile, "[\n\n]");
+        if (!File.Exists(AppProperties.PitchDataFile)) File.WriteAllText(AppProperties.PitchDataFile, "[\n\n]");
+        if (!File.Exists(AppProperties.EffectsDataFile)) File.WriteAllText(AppProperties.EffectsDataFile, "[\n\n]");
 
         try
         {
-            Generic.PitchData = JsonSerializer.Deserialize<string[][]>(File.ReadAllText(Generic.PitchDataFile));
+            AppProperties.PitchData = JsonSerializer.Deserialize<string[][]>(File.ReadAllText(AppProperties.PitchDataFile));
         }
         catch (JsonException)
         {
-            Generic.PitchData = [];
+            AppProperties.PitchData = [];
         }
         try
         {
-            Generic.EffectData = JsonSerializer.Deserialize<string[][]>(File.ReadAllText(Generic.EffectsDataFile));
+            AppProperties.EffectData = JsonSerializer.Deserialize<string[][]>(File.ReadAllText(AppProperties.EffectsDataFile));
         }
         catch (JsonException)
         {
-            Generic.EffectData = [];
+            AppProperties.EffectData = [];
         }
-        Generic.PopulateCustomData();
+        AppFunctions.PopulateCustomData();
     }
 
     [Log]
     protected override void OnLaunched(LaunchActivatedEventArgs args)
     {
-        switch (File.Exists(Path.Join(Generic.ConfigPath, ".setupCompleted")))
+        switch (File.Exists(Path.Join(AppProperties.ConfigPath, ".setupCompleted")))
         {
             case true:
                 // Only initialize rich presence when app is configured
-                if (Generic.IntToBool(App.AppSettings.EnableRichPresence)) 
+                if (AppFunctions.IntToBool(App.AppSettings.EnableRichPresence)) 
                     DiscordController = new RichPresenceController(1325340097234866297, "On Record Page", "No Project Loaded", "idle", "Idle");
                 MainWindow = new MainWindow();
                 MainWindow.Activate();
@@ -135,7 +136,7 @@ public partial class App // I will admit, code-behind is still pretty useful her
                 SetupWindow.Activate();
                 break;
         }
-        Generic.IsAppLoaded = true;
+        AppProperties.IsAppLoaded = true;
     }
 
     [Log]

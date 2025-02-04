@@ -1,4 +1,4 @@
-﻿using AudioReplacer.Util;
+﻿using AudioReplacer.Generic;
 using DiscordRPC;
 namespace AudioReplacer.Util;
 
@@ -10,7 +10,7 @@ public class RichPresenceController
 
     public RichPresenceController(long clientId, string initialDetails, string initialState, string initialSmallImage, string initialSmallImageText)
     {
-        bool autoCreate = Generic.IntToBool(App.AppSettings.EnableRichPresence);
+        bool autoCreate = AppFunctions.IntToBool(App.AppSettings.EnableRichPresence);
 
         startTimestamp = Timestamps.Now;
         state = initialState;
@@ -34,7 +34,7 @@ public class RichPresenceController
             Assets = new Assets
             {
                 LargeImageKey = "appicon",
-                LargeImageText = $"Version {Generic.GetAppVersion()}",
+                LargeImageText = $"Version {AppFunctions.GetAppVersion()}",
                 SmallImageKey = smallImage,
                 SmallImageText = smallImageText
             }

@@ -1,37 +1,18 @@
-﻿using Microsoft.UI.Composition.SystemBackdrops;
+﻿using AudioReplacer.Util;
+using Microsoft.UI.Composition.SystemBackdrops;
 using Microsoft.Windows.AppLifecycle;
 using Newtonsoft.Json.Linq;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Net.Http;
 using System.Reflection;
 using System.Threading.Tasks;
 
-namespace AudioReplacer.Util;
-public class Generic
+namespace AudioReplacer.Generic;
+
+public static class AppFunctions
 {
-    public static readonly string ExtraApplicationData = Path.Join(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "audio-replacer");
-    public static readonly string BinaryPath = Path.Join(ExtraApplicationData, "bin");
-    public static readonly string FfmpegPath = Path.Combine(BinaryPath, "ffmpeg.exe");
-    public static readonly string WhisperPath = Path.Join(BinaryPath, "whisper.bin");
-    public static readonly string ConfigPath = Path.Join(ExtraApplicationData, "config");
-    public static readonly string SettingsFile = Path.Join(ConfigPath, "AppSettings.json");
-    public static readonly string PitchDataFile = Path.Join(ConfigPath, "PitchData.json");
-    public static readonly string EffectsDataFile = Path.Join(ConfigPath, "EffectsData.json");
-    public static readonly string LogFile = Path.Join(ExtraApplicationData, "log.txt");
-    public static readonly bool IsWhisperInstalled = File.Exists(WhisperPath);
-    public static bool InRecordState = false, IsAppLoaded = false;
-    public static string[][] PitchData, EffectData;
-    public static List<string> PitchTitles, EffectTitles, EffectValues;
-    public static List<float> PitchValues;
-
-    private static readonly HttpClient WebClient = new()
-    {
-        DefaultRequestHeaders = {{ "User-Agent", "Audio Replacer" }}
-    };
-
     [Log]
     public static async Task SpawnProcess(string command, string args, bool autoStart = true)
     {
@@ -79,25 +60,25 @@ public class Generic
 
     public static void PopulateCustomData()
     {
-        PitchTitles = [];
-        PitchValues = [];
-        EffectTitles = [];
-        EffectValues = [];
-        foreach (var data in PitchData)
+        AppProperties.PitchTitles = [];
+        AppProperties.PitchValues = [];
+        AppProperties.EffectTitles = [];
+        AppProperties.EffectValues = [];
+        foreach (var data in AppProperties.PitchData)
         {
-            PitchValues.Add(ParseFloat(data[0])); // Position 0 of each array in the 2d array should have the data
-            PitchTitles.Add(data[1]); // Position 1 of each array in the 2d array should have the name of the property
+            AppProperties.PitchValues.Add(ParseFloat(data[0])); // Position 0 of each array in the 2d array should have the data
+            AppProperties.PitchTitles.Add(data[1]); // Position 1 of each array in the 2d array should have the name of the property
         }
-        foreach (var effects in EffectData)
+        foreach (var effects in AppProperties.EffectData)
         {
-            EffectValues.Add(effects[0]);
-            EffectTitles.Add(effects[1]);
+            AppProperties.EffectValues.Add(effects[0]);
+            AppProperties.EffectTitles.Add(effects[1]);
         }
     }
 
     public static void OpenUrl(string url)
     {
-        Task.Run(async() => await SpawnProcess("cmd", $"/c start {url}"));
+        Task.Run(async () => await SpawnProcess("cmd", $"/c start {url}"));
     }
 
     // Config.NET does not allow boolean types with my setup, So these two boolean converter methods are needed.
@@ -115,7 +96,7 @@ public class Generic
 
     public static void RestartApp()
     {
-       AppInstance.Restart("");
+        AppInstance.Restart("");
     }
 
     public static int GetTransparencyMode()
@@ -141,7 +122,7 @@ public class Generic
         var url = "https://api.github.com/repos/lemons-studios/audio-replacer/releases/latest";
         try
         {
-            var apiResponse = await WebClient.GetAsync(url);
+            var apiResponse = await AppProperties.WebClient.GetAsync(url);
             if (!apiResponse.IsSuccessStatusCode) return "Error Getting Tag Information";
 
             var responseData = await apiResponse.Content.ReadAsStringAsync();
@@ -160,11 +141,14 @@ public class Generic
     {
         try
         {
-            var response = await WebClient.GetAsync(url);
+            var response = await AppProperties.WebClient.GetAsync(url);
             response.EnsureSuccessStatusCode();
             return await response.Content.ReadAsStringAsync();
         }
-        catch (HttpRequestException) { return string.Empty; }
+        catch (HttpRequestException)
+        {
+            return string.Empty;
+        }
     }
 
     [Log]
@@ -172,7 +156,7 @@ public class Generic
     {
         try
         {
-            await using var webStream = await WebClient.GetStreamAsync(url);
+            await using var webStream = await AppProperties.WebClient.GetStreamAsync(url);
             await using var fileStream = new FileStream(outPath, FileMode.OpenOrCreate, FileAccess.Write, FileShare.None);
             await webStream.CopyToAsync(fileStream);
         }
@@ -198,4 +182,5 @@ public class Generic
             return $"{major}.{minor}";
         }
     }
-} 
+}
+

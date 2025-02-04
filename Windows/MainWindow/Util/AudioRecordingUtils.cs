@@ -6,13 +6,14 @@ using Windows.Media;
 using Windows.Media.Capture;
 using Windows.Media.MediaProperties;
 using Windows.Storage;
+using Microsoft.UI.Xaml.Controls;
+using AudioReplacer.Generic;
 
 namespace AudioReplacer.Windows.MainWindow.Util;
 public class AudioRecordingUtils
 {
-    public float pitchChange = 1;
-    public string effectCommand = "";
-    public bool requiresExtraEdits;
+    public float PitchChange = 1;
+    public string EffectCommand = "";
     private MediaCapture recordingCapture;
 
     public AudioRecordingUtils()
@@ -20,6 +21,7 @@ public class AudioRecordingUtils
         Task.Run(InitializeMediaCapture);
     }
 
+    [Log]
     private async Task InitializeMediaCapture()
     {
         recordingCapture = new MediaCapture();
@@ -64,17 +66,22 @@ public class AudioRecordingUtils
     private async Task ApplyFilters(string file)
     {
         var tempOutFile = $"{file}.wav";
-        float validatedPitchChange = MathF.Max(pitchChange, 0.001f);
-        string filter = string.IsNullOrWhiteSpace(effectCommand)
+        float validatedPitchChange = MathF.Max(PitchChange, 0.001f);
+        string filter = string.IsNullOrWhiteSpace(EffectCommand)
             ? $"rubberband=pitch={validatedPitchChange}"
-            : $"rubberband=pitch={validatedPitchChange}, {effectCommand}";
+            : $"rubberband=pitch={validatedPitchChange}, {EffectCommand}";
 
-        await Generic.SpawnProcess(Generic.FfmpegPath, $"-i \"{file}\" -af \"{filter}\" -y {tempOutFile}");
+        await AppFunctions.SpawnProcess(AppProperties.FfmpegPath, $"-i \"{file}\" -af \"{filter}\" -y {tempOutFile}");
 
         if (File.Exists(tempOutFile))
         {
             File.Delete(file);
             File.Move(tempOutFile, file);
+        }
+        else
+        {
+            await App.MainWindow.ShowNotification(InfoBarSeverity.Error, "Error",
+                "FFMpeg command has failed to execute. Output is not modified");
         }
     }
 }

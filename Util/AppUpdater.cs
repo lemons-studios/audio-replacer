@@ -1,14 +1,13 @@
-﻿using System.Diagnostics;
+﻿using AudioReplacer.Generic;
+using System.Diagnostics;
 using System.Threading.Tasks;
-using AudioReplacer.Util;
 using Velopack;
 
 namespace AudioReplacer.Util;
 public static class AppUpdater
 {
     // Velopack will search through the url below for updates
-    // Specifically a json file, link to said json file below:
-    // https://updates.lemon-studios.ca/updates/releases.win.json
+    // Specifically a json file on a remote backblaze server. The address to that server is located in MainWindow
     public static UpdateManager AppUpdateManager;
     public static UpdateInfo AppUpdateInfo;
 
@@ -25,7 +24,7 @@ public static class AppUpdater
     {
         try
         {
-            if (!Debugger.IsAttached && Generic.IntToBool(App.AppSettings.AppUpdateCheck))
+            if (!Debugger.IsAttached && AppFunctions.IntToBool(App.AppSettings.AppUpdateCheck))
             {
                 AppUpdateInfo = await AppUpdateManager.CheckForUpdatesAsync().ConfigureAwait(true);
                 if (AppUpdateInfo != null)

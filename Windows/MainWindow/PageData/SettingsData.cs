@@ -1,4 +1,4 @@
-﻿using AudioReplacer.Util;
+﻿using AudioReplacer.Generic;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.UI.Composition.SystemBackdrops;
@@ -13,8 +13,8 @@ namespace AudioReplacer.Windows.MainWindow.PageData;
 
 public partial class SettingsData : ObservableObject
 {
-    [ObservableProperty] private bool whisperAvailable = Generic.IsWhisperInstalled;
-    [ObservableProperty] private bool whisperInstalled = !Generic.IsWhisperInstalled; // Bad variable name lol. should have just used inverse of whisperAvailable here
+    [ObservableProperty] private bool whisperAvailable = AppProperties.IsWhisperInstalled;
+    [ObservableProperty] private bool whisperInstalled = !AppProperties.IsWhisperInstalled; // Bad variable name lol. should have just used inverse of whisperAvailable here
     [ObservableProperty] private int selectedAppTheme = App.AppSettings.AppThemeSetting;
 
     partial void OnSelectedAppThemeChanged(int value)
@@ -40,28 +40,28 @@ public partial class SettingsData : ObservableObject
         App.AppSettings.AppTransparencySetting = value;
     }
 
-    [ObservableProperty] private bool enableUpdateChecks = Generic.IntToBool(App.AppSettings.AppUpdateCheck);
+    [ObservableProperty] private bool enableUpdateChecks = AppFunctions.IntToBool(App.AppSettings.AppUpdateCheck);
     partial void OnEnableUpdateChecksChanged(bool value)
     {
-        App.AppSettings.AppUpdateCheck = Generic.BoolToInt(value);
+        App.AppSettings.AppUpdateCheck = AppFunctions.BoolToInt(value);
     }
 
-    [ObservableProperty] private bool enableFolderMemory = Generic.IntToBool(App.AppSettings.RememberSelectedFolder);
+    [ObservableProperty] private bool enableFolderMemory = AppFunctions.IntToBool(App.AppSettings.RememberSelectedFolder);
     partial void OnEnableFolderMemoryChanged(bool value)
     {
-        App.AppSettings.RememberSelectedFolder = Generic.BoolToInt(value);
+        App.AppSettings.RememberSelectedFolder = AppFunctions.BoolToInt(value);
     }
 
-    [ObservableProperty] private bool randomizeFiles = Generic.IntToBool(App.AppSettings.InputRandomizationEnabled);
+    [ObservableProperty] private bool randomizeFiles = AppFunctions.IntToBool(App.AppSettings.InputRandomizationEnabled);
     partial void OnRandomizeFilesChanged(bool value)
     {
-        App.AppSettings.InputRandomizationEnabled = Generic.BoolToInt(value);
+        App.AppSettings.InputRandomizationEnabled = AppFunctions.BoolToInt(value);
     }
 
-    [ObservableProperty] private bool enableRpc = Generic.IntToBool(App.AppSettings.EnableRichPresence);
+    [ObservableProperty] private bool enableRpc = AppFunctions.IntToBool(App.AppSettings.EnableRichPresence);
     partial void OnEnableRpcChanged(bool value)
     {
-        App.AppSettings.EnableRichPresence = Generic.BoolToInt(value);
+        App.AppSettings.EnableRichPresence = AppFunctions.BoolToInt(value);
         switch (value)
         {
             case true:
@@ -73,10 +73,10 @@ public partial class SettingsData : ObservableObject
         }
     }
 
-    [ObservableProperty] private bool enableTranscription = Generic.IntToBool(App.AppSettings.EnableTranscription);
+    [ObservableProperty] private bool enableTranscription = AppFunctions.IntToBool(App.AppSettings.EnableTranscription);
     partial void OnEnableTranscriptionChanged(bool value)
     {
-        App.AppSettings.EnableTranscription = Generic.BoolToInt(value);
+        App.AppSettings.EnableTranscription = AppFunctions.BoolToInt(value);
     }
 
     [ObservableProperty] private int notificationStayTime = App.AppSettings.NotificationTimeout;
@@ -100,48 +100,48 @@ public partial class SettingsData : ObservableObject
     [RelayCommand]
     private void OpenOutputFolder()
     {
-        Task.Run(async () => await Generic.SpawnProcess("explorer", Path.Combine(Generic.ExtraApplicationData, "out")));
+        Task.Run(async () => await AppFunctions.SpawnProcess("explorer", Path.Combine(AppProperties.ExtraApplicationData, "out")));
     }
 
     [RelayCommand]
     private void OpenDataFile()
     {
-        if (!Generic.IsAppLoaded) return;
-        Task.Run(async () => await Generic.SpawnProcess("", string.Empty));
+        if (!AppProperties.IsAppLoaded) return;
+        Task.Run(async () => await AppFunctions.SpawnProcess("", string.Empty));
     }
 
     [RelayCommand]
     private void ResetSettings()
     {
-        if (!Generic.IsAppLoaded) return;
-        File.Delete(Generic.SettingsFile);
-        Generic.RestartApp();
+        if (!AppProperties.IsAppLoaded) return;
+        File.Delete(AppProperties.SettingsFile);
+        AppFunctions.RestartApp();
     }
 
     [RelayCommand]
     private void ResetCustomPitch()
     {
-        if (!Generic.IsAppLoaded) return;
-        File.Delete(Generic.PitchDataFile);
-        Generic.RestartApp();
+        if (!AppProperties.IsAppLoaded) return;
+        File.Delete(AppProperties.PitchDataFile);
+        AppFunctions.RestartApp();
     }
 
     [RelayCommand]
     private void ResetCustomEffects()
     {
-        if (!Generic.IsAppLoaded) return;
-        File.Delete(Generic.EffectsDataFile);
-        Generic.RestartApp();
+        if (!AppProperties.IsAppLoaded) return;
+        File.Delete(AppProperties.EffectsDataFile);
+        AppFunctions.RestartApp();
     }
 
     [RelayCommand]
     private void ResetAll()
     {
-        if (!Generic.IsAppLoaded) return;
-        File.Delete(Generic.EffectsDataFile);
-        File.Delete(Generic.PitchDataFile);
-        File.Delete(Generic.SettingsFile);
-        Generic.RestartApp();
+        if (!AppProperties.IsAppLoaded) return;
+        File.Delete(AppProperties.EffectsDataFile);
+        File.Delete(AppProperties.PitchDataFile);
+        File.Delete(AppProperties.SettingsFile);
+        AppFunctions.RestartApp();
     }
 
     [RelayCommand]
@@ -149,8 +149,8 @@ public partial class SettingsData : ObservableObject
     {
         App.MainWindow.ToggleProgressNotification("Downloading Data", "Do not disconnect from the internet. App will restart after download is completed");
         await using var whisperStream = await WhisperGgmlDownloader.GetGgmlModelAsync(GgmlType.Small, QuantizationType.Q5_1);
-        await using var fileWriter = File.OpenWrite(Generic.WhisperPath);
+        await using var fileWriter = File.OpenWrite(AppProperties.WhisperPath);
         await whisperStream.CopyToAsync(fileWriter);
-        Generic.RestartApp();
+        AppFunctions.RestartApp();
     }
 }

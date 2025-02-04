@@ -1,4 +1,5 @@
-﻿using AudioReplacer.Util;
+﻿using AudioReplacer.Generic;
+using AudioReplacer.Util;
 using AudioReplacer.Windows.MainWindow.Util;
 using CommunityToolkit.WinUI;
 using Microsoft.UI.Xaml;
@@ -48,8 +49,8 @@ public sealed partial class RecordPage // This file is among the worst written f
     {
         if (audioRecordingUtils == null) return;
         // For some reason, C# throws ArgumentOutOfRangeExceptions here. I don't know why, because the code works as intended and doesn't cause any issues whatsoever
-        audioRecordingUtils.pitchChange = Generic.PitchValues[PitchMenu.SelectedIndex];
-        audioRecordingUtils.effectCommand = Generic.EffectValues[EffectsMenu.SelectedIndex];
+        audioRecordingUtils.PitchChange = AppProperties.PitchValues[PitchMenu.SelectedIndex];
+        audioRecordingUtils.EffectCommand = AppProperties.EffectValues[EffectsMenu.SelectedIndex];
     }
 
     [Log]
@@ -64,7 +65,7 @@ public sealed partial class RecordPage // This file is among the worst written f
     [Log]
     private async void StartRecordingAudio(object sender, RoutedEventArgs e)
     {
-        Generic.InRecordState = true;
+        AppProperties.InRecordState = true;
         AudioPreview.MediaPlayer.Pause();
 
         if (ProjectFileUtils.IsProjectLoaded)
@@ -100,12 +101,12 @@ public sealed partial class RecordPage // This file is among the worst written f
 
         PitchMenu.DispatcherQueue.TryEnqueue(() =>
         {
-            PitchMenu.ItemsSource = Generic.PitchTitles;
+            PitchMenu.ItemsSource = AppProperties.PitchTitles;
         });
 
         EffectsMenu.DispatcherQueue.TryEnqueue(() =>
         {
-            EffectsMenu.ItemsSource = Generic.EffectTitles;
+            EffectsMenu.ItemsSource = AppProperties.EffectTitles;
         });
 
         FileProgressPanel.DispatcherQueue.TryEnqueue(() =>
@@ -159,7 +160,7 @@ public sealed partial class RecordPage // This file is among the worst written f
             try
             {
                 // Check if the Whisper model path exists
-                if (!Path.Exists(Generic.WhisperPath) || !Generic.IntToBool(App.AppSettings.EnableTranscription))
+                if (!Path.Exists(AppProperties.WhisperPath) || !AppFunctions.IntToBool(App.AppSettings.EnableTranscription))
                 {
                     await dispatcherQueue.EnqueueAsync(() =>
                     {
@@ -180,7 +181,7 @@ public sealed partial class RecordPage // This file is among the worst written f
                 }
 
                 // Initialize Whisper model and processor
-                var whisperFactory = WhisperFactory.FromPath(Generic.WhisperPath);
+                var whisperFactory = WhisperFactory.FromPath(AppProperties.WhisperPath);
 
                 // Determine the best runtime for the model
                 RuntimeOptions.RuntimeLibraryOrder = [RuntimeLibrary.Cuda, RuntimeLibrary.Vulkan, RuntimeLibrary.Cpu, RuntimeLibrary.CpuNoAvx];
@@ -219,7 +220,7 @@ public sealed partial class RecordPage // This file is among the worst written f
 
     private async void CancelCurrentRecording(object sender, RoutedEventArgs e)
     {
-        Generic.InRecordState = false;
+        AppProperties.InRecordState = false;
         await audioRecordingUtils.CancelRecording();
         App.MainWindow.ShowNotification(InfoBarSeverity.Informational, "Recording Cancelled", string.Empty, true, replaceExistingNotifications: true);
     }
@@ -227,7 +228,7 @@ public sealed partial class RecordPage // This file is among the worst written f
     [Log]
     private void AcceptSubmission(object sender, RoutedEventArgs e)
     {
-        Generic.InRecordState = false;
+        AppProperties.InRecordState = false;
 
         ProjectFileUtils.SubmitAudioFile(); // Extra edits get renamed in this method
         App.MainWindow.ShowNotification(InfoBarSeverity.Success, "Recording Accepted", "Moving to next file...", true, replaceExistingNotifications: true);
@@ -237,7 +238,7 @@ public sealed partial class RecordPage // This file is among the worst written f
     [Log]
     private void RejectSubmission(object sender, RoutedEventArgs e)
     {
-        Generic.InRecordState = false;
+        AppProperties.InRecordState = false;
 
         File.Delete(ProjectFileUtils.GetOutFilePath());
         App.MainWindow.ShowNotification(InfoBarSeverity.Informational, "Recording Rejected", "Moving back to current file...", true, replaceExistingNotifications: true);
