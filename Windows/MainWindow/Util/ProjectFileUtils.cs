@@ -61,7 +61,7 @@ public static class ProjectFileUtils
     [Log]
     private static async Task ConvertAudioFiles()
     {
-        List<string> projectFiles = GetAllFiles().Where(IsUndesirableAudioFile).ToList();
+        var projectFiles = GetAllFiles().Where(IsUndesirableAudioFile).ToList();
         if (projectFiles.Count != 0)
         {
             int totalFiles = projectFiles.Count + 1;
@@ -70,8 +70,7 @@ public static class ProjectFileUtils
             {
                 var input = projectFiles[i];
                 var output = $"{input.Split(".")[0]}.wav";
-                await AppFunctions.SpawnProcess("ffmpeg", $"-i \"{projectFiles[i]}\" -ar 16000 -b:a 16k {output}");
-
+                await AppFunctions.FFMPegCommand(projectFiles[i], "-ar 1600 -b:a 16k", output);
                 File.Delete(input);
                 App.MainWindow.SetProgressMessage($"Progress: {MathF.Floor(((float) i / totalFiles) * 100)}%");
             }

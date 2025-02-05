@@ -57,6 +57,10 @@ public static class AppFunctions
         }
     }
 
+    public static async Task FFMPegCommand(string input, string command, string outputPath)
+    {
+        await SpawnProcess(AppProperties.FfmpegPath, $"-i \"{input}\" {command}, \"{outputPath}\"");
+    }
 
     public static void PopulateCustomData()
     {

@@ -66,12 +66,12 @@ public class AudioRecordingUtils
     private async Task ApplyFilters(string file)
     {
         var tempOutFile = $"{file}.wav";
-        float validatedPitchChange = MathF.Max(PitchChange, 0.001f);
-        string filter = string.IsNullOrWhiteSpace(EffectCommand)
+        var validatedPitchChange = MathF.Max(PitchChange, 0.001f);
+        var filter = string.IsNullOrWhiteSpace(EffectCommand)
             ? $"rubberband=pitch={validatedPitchChange}"
             : $"rubberband=pitch={validatedPitchChange}, {EffectCommand}";
 
-        await AppFunctions.SpawnProcess(AppProperties.FfmpegPath, $"-i \"{file}\" -af \"{filter}\" -y {tempOutFile}");
+        await AppFunctions.FFMPegCommand(file, $"-af \"{filter}\" -y", tempOutFile);
 
         if (File.Exists(tempOutFile))
         {
@@ -80,8 +80,7 @@ public class AudioRecordingUtils
         }
         else
         {
-            await App.MainWindow.ShowNotification(InfoBarSeverity.Error, "Error",
-                "FFMpeg command has failed to execute. Output is not modified");
+            await App.MainWindow.ShowNotification(InfoBarSeverity.Error, "Error", "FFMpeg command has failed to execute. Output is not modified");
         }
     }
 }

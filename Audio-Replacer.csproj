@@ -16,6 +16,7 @@
 
 	<ItemGroup>
 	  <None Remove="Views\ReleaseLogsPage.xaml" />
+	  <None Remove="Windows\MainWindow\Pages\OutputConverter.xaml" />
 	  <None Remove="Windows\Setup\FirstTimeSetupWindow.xaml" />
 	  <None Remove="Windows\Setup\Pages\SetupAdvanced.xaml" />
 	  <None Remove="Windows\Setup\Pages\SetupDownloading.xaml" />
@@ -88,6 +89,9 @@
 	    <Pack>True</Pack>
 	    <PackagePath>\</PackagePath>
 	  </None>
+	  <Page Update="Windows\MainWindow\Pages\OutputConverter.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </Page>
 	  <Page Update="Windows\MainWindow\Pages\ProjectImporter.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </Page>

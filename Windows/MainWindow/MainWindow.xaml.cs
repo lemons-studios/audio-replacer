@@ -162,7 +162,8 @@ public sealed partial class MainWindow
                 "Settings" => typeof(SettingsPage),
                 "Data Editor" => typeof(DataEditor),
                 "Update Logs" => typeof(ReleaseLogsPage),
-                // "Project Importer" => typeof(ProjectImporter),
+                "Project Importer" => typeof(ProjectImporter),
+                "Output Converter" => typeof(OutputConverter),
                 _ => pageSwitchType
             };
         }

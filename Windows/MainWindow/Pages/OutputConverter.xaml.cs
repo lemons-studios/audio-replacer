@@ -1,9 +1,9 @@
 namespace AudioReplacer.Windows.MainWindow.Pages;
-
-public sealed partial class ProjectImporter
+public sealed partial class OutputConverter
 {
-    public ProjectImporter()
+    public OutputConverter()
     {
         InitializeComponent();
     }
 }
+
