@@ -39,11 +39,11 @@
                     Description="File format that the project will output"
                     Header="Output Type"
                     HeaderIcon="{Ui:FontIcon Glyph=&#xE835;}">
-                    <ComboBox>
-                        <ComboBoxItem Content="WAV" />
-                        <ComboBoxItem Content="MP3" />
-                        <ComboBoxItem Content="FLAC" />
-                        <ComboBoxItem Content="OGG" />
+                    <ComboBox SelectedIndex="{Binding SelectedOutputType, Mode=TwoWay}">
+                        <ComboBoxItem Content=".wav" />
+                        <ComboBoxItem Content=".mp3" />
+                        <ComboBoxItem Content=".flac" />
+                        <ComboBoxItem Content=".ogg" />
                     </ComboBox>
                 </communityToolkit:SettingsCard>
                 <communityToolkit:SettingsCard
@@ -56,9 +56,9 @@
                 <communityToolkit:SettingsCard
                     Margin="0,0,0,7.5"
                     Description="Convert any audio file to .wav on project load. Audio Replacer prefers this format, turning off will result in some features being disabled"
-                    Header="Convert files on project load"
+                    Header="Auto-Convert files"
                     HeaderIcon="{Ui:FontIcon Glyph=&#xE9F5;}">
-                    <ToggleSwitch />
+                    <ToggleSwitch IsOn="{Binding AutoConvert}" />
                 </communityToolkit:SettingsCard>
                 <communityToolkit:SettingsCard
                     Margin="0,0,0,7.5"

@@ -40,6 +40,29 @@ public partial class SettingsData : ObservableObject
         App.AppSettings.AppTransparencySetting = value;
     }
 
+    [ObservableProperty] private int selectedOutputType = 0;
+    partial void OnSelectedOutputTypeChanged(int value)
+    {
+        string outputType;
+        switch (value)
+        {
+            default:
+                outputType = "wav";
+                break;
+            case 1:
+                outputType = "mp3";
+                break;
+            case 2:
+                outputType = "flac";
+                break;
+            case 3:
+                outputType = "ogg";
+                break;
+        }
+
+        App.AppSettings.OutputFileType = outputType;
+    }
+
     [ObservableProperty] private bool enableUpdateChecks = AppFunctions.IntToBool(App.AppSettings.AppUpdateCheck);
     partial void OnEnableUpdateChecksChanged(bool value)
     {
@@ -48,6 +71,12 @@ public partial class SettingsData : ObservableObject
 
     [ObservableProperty] private bool enableFolderMemory = AppFunctions.IntToBool(App.AppSettings.RememberSelectedFolder);
     partial void OnEnableFolderMemoryChanged(bool value)
+    {
+        App.AppSettings.RememberSelectedFolder = AppFunctions.BoolToInt(value);
+    }
+
+    [ObservableProperty] private bool autoConvert = AppFunctions.IntToBool(App.AppSettings.AutoConvertFiles);
+    partial void OnAutoConvertChanged(bool value)
     {
         App.AppSettings.RememberSelectedFolder = AppFunctions.BoolToInt(value);
     }
