@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Page
+    x:Class="AudioReplacer.MainWindow.Pages.DataEditor"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:Data="using:AudioReplacer.MainWindow.PageData"
+    xmlns:DataEditor="using:WinUIEditor"
+    xmlns:ToolkitControls="using:CommunityToolkit.WinUI.Controls"
+    xmlns:ToolkitUi="using:CommunityToolkit.WinUI"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <Page.DataContext>
+        <Data:DataEditorData />
+    </Page.DataContext>
+
+    <Grid RowDefinitions="Auto, *">
+        <ToolkitControls:TabbedCommandBar Grid.Row="0" VerticalAlignment="Top">
+            <ToolkitControls:TabbedCommandBar.MenuItems>
+                <ToolkitControls:TabbedCommandBarItem Header="File">
+                    <AppBarButton Icon="{ToolkitUi:FontIcon Glyph=&#xE74E;}" Label="Save">
+                        <AppBarButton.Flyout>
+                            <Flyout>
+                                <StackPanel>
+                                    <TextBlock
+                                        Margin="0,0,0,10"
+                                        FontWeight="Medium"
+                                        Text="Reload To Apply Changes?" />
+                                    <Button
+                                        Command="{Binding ReloadCommand}"
+                                        Content="Confirm"
+                                        Style="{StaticResource AccentButtonStyle}" />
+                                </StackPanel>
+                            </Flyout>
+                        </AppBarButton.Flyout>
+                    </AppBarButton>
+                    <AppBarButton Icon="{ToolkitUi:FontIcon Glyph=&#xEA52;}" Label="Import">
+                        <AppBarButton.Flyout>
+                            <MenuFlyout>
+                                <MenuFlyoutItem Command="{Binding ImportPitchCommand}" Text="Pitch" />
+                                <MenuFlyoutItem Command="{Binding ImportEffectsCommand}" Text="Effect" />
+                            </MenuFlyout>
+                        </AppBarButton.Flyout>
+                    </AppBarButton>
+                    <AppBarSeparator />
+                    <AppBarButton
+                        Command="{Binding OpenHelpPageCommand}"
+                        Icon="{ToolkitUi:FontIcon Glyph=&#xE897;}"
+                        Label="Help" />
+                    <AppBarElementContainer>
+                        <ComboBox
+                            x:Name="SelectedFile"
+                            MinWidth="200"
+                            Margin="5,0,0,0"
+                            CornerRadius="4"
+                            SelectedIndex="0"
+                            SelectionChanged="UpdateEditingFile">
+                            <ComboBoxItem Content="Pitch Data" />
+                            <ComboBoxItem Content="Effects Data" />
+                        </ComboBox>
+                    </AppBarElementContainer>
+                </ToolkitControls:TabbedCommandBarItem>
+
+                <ToolkitControls:TabbedCommandBarItem Header="Edit">
+                    <AppBarButton
+                        Command="{Binding UndoCommand}"
+                        Icon="{ToolkitUi:FontIcon Glyph=&#xE7A7;}"
+                        Label="Undo" />
+                    <AppBarButton
+                        Command="{Binding RedoCommand}"
+                        Icon="{ToolkitUi:FontIcon Glyph=&#xE7A6;}"
+                        Label="Redo" />
+                    <AppBarSeparator />
+                    <AppBarButton
+                        Command="{Binding FormatContentCommand}"
+                        Icon="{ToolkitUi:FontIcon Glyph=&#xE8CB;}"
+                        Label="Format" />
+                </ToolkitControls:TabbedCommandBarItem>
+            </ToolkitControls:TabbedCommandBar.MenuItems>
+        </ToolkitControls:TabbedCommandBar>
+        <DataEditor:CodeEditorControl
+            x:Name="CustomDataEditor"
+            Grid.Row="1"
+            HighlightingLanguage="json" />
+    </Grid>
+</Page>

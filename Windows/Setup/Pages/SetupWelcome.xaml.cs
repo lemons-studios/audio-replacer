@@ -1,1 +1,0 @@
-namespace AudioReplacer.Windows.Setup.Pages; public sealed partial class SetupWelcome { public SetupWelcome() { InitializeComponent(); } }

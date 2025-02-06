@@ -11,11 +11,5 @@
     <None Update="App.xaml">
       <SubType>Designer</SubType>
     </None>
-    <Page Update="Windows\MainWindow\Pages\OutputConverter.xaml">
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Update="Windows\MainWindow\Pages\ProjectImporter.xaml">
-      <SubType>Designer</SubType>
-    </Page>
   </ItemGroup>
 </Project>

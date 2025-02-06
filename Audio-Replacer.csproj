@@ -16,13 +16,13 @@
 
 	<ItemGroup>
 	  <None Remove="Views\ReleaseLogsPage.xaml" />
-	  <None Remove="Windows\MainWindow\Pages\OutputConverter.xaml" />
-	  <None Remove="Windows\Setup\FirstTimeSetupWindow.xaml" />
-	  <None Remove="Windows\Setup\Pages\SetupAdvanced.xaml" />
-	  <None Remove="Windows\Setup\Pages\SetupDownloading.xaml" />
-	  <None Remove="Windows\Setup\Pages\SetupSettings.xaml" />
-	  <None Remove="Windows\Setup\Pages\SetupWelcome.xaml" />
-	  <None Remove="Windows\MainWindow\Pages\ProjectImporter.xaml" />
+	  <None Remove="MainWindow\Pages\OutputConverter.xaml" />
+	  <None Remove="Setup\FirstTimeSetupWindow.xaml" />
+	  <None Remove="Setup\Pages\SetupAdvanced.xaml" />
+	  <None Remove="Setup\Pages\SetupDownloading.xaml" />
+	  <None Remove="Setup\Pages\SetupSettings.xaml" />
+	  <None Remove="Setup\Pages\SetupWelcome.xaml" />
+	  <None Remove="MainWindow\Pages\ProjectImporter.xaml" />
 	</ItemGroup>
 
 	<PropertyGroup>
@@ -89,42 +89,6 @@
 	    <Pack>True</Pack>
 	    <PackagePath>\</PackagePath>
 	  </None>
-	  <Page Update="Windows\MainWindow\Pages\OutputConverter.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </Page>
-	  <Page Update="Windows\MainWindow\Pages\ProjectImporter.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </Page>
-	</ItemGroup>
-
-	<ItemGroup>
-	  <Page Update="Windows\FirstTimeSetup\Pages\SetupDownloading.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </Page>
-	</ItemGroup>
-
-	<ItemGroup>
-	  <Page Update="Windows\FirstTimeSetup\Pages\SetupAdvanced.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </Page>
-	</ItemGroup>
-
-	<ItemGroup>
-	  <Page Update="Windows\FirstTimeSetup\Pages\SetupSettings.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </Page>
-	</ItemGroup>
-
-	<ItemGroup>
-	  <Page Update="Windows\FirstTimeSetup\Pages\SetupWelcome.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </Page>
-	</ItemGroup>
-
-	<ItemGroup>
-	  <Page Update="Windows\FirstTimeSetup\FirstTimeSetupWindow.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </Page>
 	</ItemGroup>
 
 	<PropertyGroup Label="Globals">

@@ -1,0 +1,1 @@
+namespace AudioReplacer.Setup.Pages; public sealed partial class SetupSettings { public SetupSettings() { InitializeComponent(); } }

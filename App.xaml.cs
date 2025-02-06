@@ -1,7 +1,7 @@
 ﻿using AudioReplacer.Generic;
 using AudioReplacer.Util;
-using AudioReplacer.Windows.MainWindow;
-using AudioReplacer.Windows.Setup;
+using AudioReplacer.MainWindow;
+using AudioReplacer.Setup;
 using Config.Net;
 using Microsoft.UI;
 using Microsoft.UI.Windowing;
@@ -18,7 +18,7 @@ namespace AudioReplacer;
 public partial class App // I will admit, code-behind is still pretty useful here. Mvvm would overcomplicate things. While this is messier, it gets the job done
 {
     public static AppWindow AppWindow;
-    public static MainWindow MainWindow { get; private set; }
+    public static MainWindow.MainWindow MainWindow { get; private set; }
     public static FirstTimeSetupWindow SetupWindow { get; set; }
     public static IAppSettings AppSettings { get; private set; }
     public static RichPresenceController DiscordController;
@@ -128,7 +128,7 @@ public partial class App // I will admit, code-behind is still pretty useful her
                 // Only initialize rich presence when app is configured
                 if (AppFunctions.IntToBool(App.AppSettings.EnableRichPresence)) 
                     DiscordController = new RichPresenceController(1325340097234866297, "On Record Page", "No Project Loaded", "idle", "Idle");
-                MainWindow = new MainWindow();
+                MainWindow = new MainWindow.MainWindow();
                 MainWindow.Activate();
                 break;
             case false:
