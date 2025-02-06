@@ -28,7 +28,7 @@ public partial class SettingsData : ObservableObject
     private int selectedTransparencyMode = App.AppSettings.AppTransparencySetting;
     partial void OnSelectedTransparencyModeChanged(int value)
     {
-        if (value == 0 && MicaController.IsSupported())
+        if (value == 0 && MicaController.IsSupported()) 
             App.MainWindow.SystemBackdrop = new MicaBackdrop();
         else
         {
@@ -36,31 +36,15 @@ public partial class SettingsData : ObservableObject
             if (value == 0) // Ensure the value is set to 1 only if it was 0
                 SelectedTransparencyMode = 1;
         }
-
         App.AppSettings.AppTransparencySetting = value;
     }
 
-    [ObservableProperty] private int selectedOutputType = 0;
+    private static readonly string[] OutputTypes = ["wav", "mp3", "flac", "ogg"]; // Marking as static allows the property to be used in the line below
+    [ObservableProperty] private int selectedOutputType = Array.IndexOf(OutputTypes, App.AppSettings.OutputFileType);
+
     partial void OnSelectedOutputTypeChanged(int value)
     {
-        string outputType;
-        switch (value)
-        {
-            default:
-                outputType = "wav";
-                break;
-            case 1:
-                outputType = "mp3";
-                break;
-            case 2:
-                outputType = "flac";
-                break;
-            case 3:
-                outputType = "ogg";
-                break;
-        }
-
-        App.AppSettings.OutputFileType = outputType;
+        App.AppSettings.OutputFileType = OutputTypes[value];
     }
 
     [ObservableProperty] private bool enableUpdateChecks = AppFunctions.IntToBool(App.AppSettings.AppUpdateCheck);
