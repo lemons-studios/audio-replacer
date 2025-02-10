@@ -28,10 +28,10 @@ public static class ProjectFileUtils
     public static void SetProjectData(string path)
     {
         projectPath = path;
-        string projectName = projectPath.Split("\\")[^1];
+        var projectName = projectPath.Split("\\")[^1];
         outputFolderPath = Path.Combine(AppProperties.ExtraApplicationData, "out", projectName);
         CreateInitialData();
-        // Task.Run(ConvertAudioFiles);
+        Task.Run(ConvertAudioFiles);
         SetCurrentFile();
         Broadcast();
     }
@@ -61,25 +61,29 @@ public static class ProjectFileUtils
     [Log]
     private static async Task ConvertAudioFiles()
     {
-        var projectFiles = GetAllFiles().Where(IsUndesirableAudioFile).ToList();
-        if (projectFiles.Count != 0)
+        try
         {
-            int totalFiles = projectFiles.Count + 1;
-            App.MainWindow.ToggleProgressNotification("Converting files to .Wav format...", "Progress: 0%");
-            for (int i = 0; i < totalFiles - 1; i++)
+            var unconvertedFiles = GetAllFiles().Where(IsUndesirableAudioFile).ToList();
+            if (unconvertedFiles.Count != 0)
             {
-                var input = projectFiles[i];
-                var output = $"{input.Split(".")[0]}.wav";
-                await AppFunctions.FFMPegCommand(projectFiles[i], "-ar 1600 -b:a 16k", output);
-                File.Delete(input);
-                App.MainWindow.SetProgressMessage($"Progress: {MathF.Floor((float) i / totalFiles * 100)}%");
+                var totalFiles = unconvertedFiles.Count + 1;
+                App.MainWindow.ToggleProgressNotification("Converting files to .Wav format...", "Progress: 0%");
+                for (int i = 0; i < totalFiles - 1; i++)
+                {
+                    var input = unconvertedFiles[i];
+                    var output = $"{input.Split(".")[0]}";
+                    await AppFunctions.FfMpegCommand(unconvertedFiles[i], "-ar 1600 -b:a 16k", output, true); // Force convert to .wav format
+                    File.Delete(input);
+                    App.MainWindow.SetProgressMessage($"Progress: {MathF.Floor((float) i / totalFiles * 100)}%");
+                }
+                App.MainWindow.ShowNotification(InfoBarSeverity.Success, "Success!", "All files converted");
+                return;
             }
-            App.MainWindow.ShowNotification(InfoBarSeverity.Success, "Success!", "All files converted");
-            return;
         }
-
-        App.MainWindow.ShowNotification(InfoBarSeverity.Informational, "File Conversion Skipped",
-            "All files are of preferred type, auto-conversion has been turned off in settings or no valid input files have been found");
+        catch (Exception e)
+        {
+            App.MainWindow.ShowNotification(InfoBarSeverity.Error, "Error", e.Message);
+        }
     }
 
     private static List<string> GetAllFiles()

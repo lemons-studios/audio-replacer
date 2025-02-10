@@ -39,12 +39,16 @@ public partial class SettingsData : ObservableObject
         App.AppSettings.AppTransparencySetting = value;
     }
 
-    private static readonly string[] OutputTypes = ["wav", "mp3", "flac", "ogg"]; // Marking as static allows the property to be used in the line below
-    [ObservableProperty] private int selectedOutputType = Array.IndexOf(OutputTypes, App.AppSettings.OutputFileType);
-
+    [ObservableProperty] private int selectedOutputType = Array.IndexOf(AppProperties.OutputTypes, App.AppSettings.OutputFileType);
     partial void OnSelectedOutputTypeChanged(int value)
     {
-        App.AppSettings.OutputFileType = OutputTypes[value];
+        App.AppSettings.OutputFileType = AppProperties.OutputTypes[value];
+    }
+
+    [ObservableProperty] private int selectedLogMode = (int) App.AppSettings.LogMode;
+    partial void OnSelectedLogModeChanged(int value)
+    {
+        App.AppSettings.LogMode = (AppProperties.LogMode) value;
     }
 
     [ObservableProperty] private bool enableUpdateChecks = AppFunctions.IntToBool(App.AppSettings.AppUpdateCheck);

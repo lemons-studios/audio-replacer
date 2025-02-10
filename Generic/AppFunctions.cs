@@ -57,17 +57,27 @@ public static class AppFunctions
         }
     }
 
-    public static async Task FFMPegCommand(string input, string command, string outputPath)
+    public static async Task FfMpegCommand(string input, string command, string rawOutputPath, bool forceWav = false)
     {
+        var fileName = Path.GetFileNameWithoutExtension(rawOutputPath);
+
+        // forceWav is used for .wav conversion of initial project files
+        string outputPath = forceWav ? $"{fileName}.wav" : $"{fileName}.{App.AppSettings.OutputFileType}";
         await SpawnProcess(AppProperties.FfmpegPath, $"-i \"{input}\" {command}, \"{outputPath}\"");
     }
 
     public static void PopulateCustomData()
     {
+        // Reset values of pitch/effect titles & values or initialize the properties
         AppProperties.PitchTitles = [];
         AppProperties.PitchValues = [];
         AppProperties.EffectTitles = [];
         AppProperties.EffectValues = [];
+
+        // Add data to all the lists
+
+        // AppProperties.PitchData gets automatically populated from the pitch/effect
+        // json file, if the json serializer does not encounter any issues (i.e. invalid json)
         foreach (var data in AppProperties.PitchData)
         {
             AppProperties.PitchValues.Add(ParseFloat(data[0])); // Position 0 of each array in the 2d array should have the data
@@ -94,7 +104,7 @@ public static class AppFunctions
 
     public static bool IntToBool(int value)
     {
-        // If the value is not 1, return a false boolean.
+        // If the value is not 1, return false. Makes sense ngl
         return value == 1;
     }
 

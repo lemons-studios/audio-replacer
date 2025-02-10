@@ -71,7 +71,7 @@ public class AudioRecordingUtils
             ? $"rubberband=pitch={validatedPitchChange}"
             : $"rubberband=pitch={validatedPitchChange}, {EffectCommand}";
 
-        await AppFunctions.FFMPegCommand(file, $"-af \"{filter}\" -y", tempOutFile);
+        await AppFunctions.FfMpegCommand(file, $"-af \"{filter}\" -y", tempOutFile);
 
         if (File.Exists(tempOutFile))
         {

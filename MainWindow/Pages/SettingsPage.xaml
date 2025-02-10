@@ -50,6 +50,16 @@
                 </communityToolkit:SettingsCard>
                 <communityToolkit:SettingsCard
                     Margin="0,0,0,7.5"
+                    Description="Control what gets written to the app logs"
+                    Header="Logging Mode"
+                    HeaderIcon="{Ui:FontIcon Glyph=&#xE736;}">
+                    <ComboBox SelectedIndex="{Binding SelectedLogMode, Mode=TwoWay}">
+                        <ComboBoxItem Content="Errors Only" />
+                        <ComboBoxItem Content="Everything" />
+                    </ComboBox>
+                </communityToolkit:SettingsCard>
+                <communityToolkit:SettingsCard
+                    Margin="0,0,0,7.5"
                     Description="Check is performed each launch by checking GitHub for new releases"
                     Header="Update Checks"
                     HeaderIcon="{Ui:FontIcon Glyph=&#xECC5;}">

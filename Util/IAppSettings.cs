@@ -1,4 +1,5 @@
-﻿using Config.Net;
+﻿using AudioReplacer.Generic;
+using Config.Net;
 
 namespace AudioReplacer.Util;
 public interface IAppSettings
@@ -41,4 +42,7 @@ public interface IAppSettings
 
     [Option(Alias = "OutputFileType", DefaultValue = "wav")]
     string OutputFileType { get; set; }
+
+    [Option(Alias = "LogMode", DefaultValue = AppProperties.LogMode.ErrorsOnly)]
+    AppProperties.LogMode LogMode { get; set; }
 }

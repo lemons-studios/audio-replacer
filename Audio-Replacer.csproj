@@ -2,7 +2,7 @@
 	<PropertyGroup>
 		<OutputType>WinExe</OutputType>
 		<TargetFramework>net9.0-windows10.0.22000.0</TargetFramework>
-		<TargetPlatformMinVersion>10.0.17763.0</TargetPlatformMinVersion>
+		<TargetPlatformMinVersion>10.0.20348.0</TargetPlatformMinVersion>
 		<RootNamespace>AudioReplacer</RootNamespace>
 		<RuntimeIdentifiers>win-x64</RuntimeIdentifiers>
 		<UseWinUI>true</UseWinUI>
@@ -116,6 +116,7 @@
 		<PackageIcon>AppIcon.ico</PackageIcon>
 		<Nullable>disable</Nullable>
 		<NuGetAuditMode>all</NuGetAuditMode>
+		<ImplicitUsings>disable</ImplicitUsings>
 	</PropertyGroup>
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
 		<DebugType>full</DebugType>

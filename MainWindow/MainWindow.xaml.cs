@@ -1,7 +1,7 @@
 using AudioReplacer.Generic;
+using AudioReplacer.MainWindow.Pages;
 using AudioReplacer.MainWindow.Util;
 using AudioReplacer.Util;
-using AudioReplacer.MainWindow.Pages;
 using CommunityToolkit.WinUI;
 using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
@@ -15,7 +15,6 @@ using TitleBarDrag;
 using Velopack;
 using Windows.Storage.Pickers;
 using WinRT.Interop;
-using WinUIEx;
 
 namespace AudioReplacer.MainWindow;
 

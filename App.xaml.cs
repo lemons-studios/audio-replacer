@@ -37,59 +37,38 @@ public partial class App // I will admit, code-behind is still pretty useful her
 
     private void CreateSettingsData()
     {
-        if (!Directory.Exists(AppProperties.ConfigPath)) 
+        if (!Directory.Exists(AppProperties.ConfigPath))
             Directory.CreateDirectory(AppProperties.ConfigPath);
 
-        if (File.Exists(AppProperties.SettingsFile))
+        if (!File.Exists(AppProperties.SettingsFile))
+            File.WriteAllText(AppProperties.SettingsFile, "{\n\n}");
+
+        var existingConfig = JsonSerializer.Deserialize<Dictionary<string, object>>(File.ReadAllText(AppProperties.SettingsFile));
+        var defaultConfig = new Dictionary<string, object>
         {
-            // Create missing properties in the settings json on updates
-            var existingConfig = JsonSerializer.Deserialize<Dictionary<string, object>>(File.ReadAllText(AppProperties.SettingsFile));
-            var defaultConfig = new Dictionary<string, object>
-            {
-                { "Theme", 0 },
-                { "TransparencyEffect", AppFunctions.GetTransparencyMode() },
-                { "EnableUpdateChecks", 1 },
-                { "RecordEndWaitTime", 0 },
-                { "NotificationTimeout", 1750 },
-                { "RememberSelectedFolder", 1 },
-                { "LastSelectedFolder", "" },
-                { "InputRandomizationEnabled", 0 },
-                { "RecordStartWaitTime", 25 },
-                { "EnableTranscription", 1},
-                { "AutoConvertFiles", 1 },
-                { "OutputFileType", "wav"}
-            };
-
-            // Merge existing settings with default settings
-            foreach (string key in defaultConfig.Keys.Where(key => !existingConfig.ContainsKey(key)))
-            {
-                existingConfig[key] = defaultConfig[key];
-            }
-
-            var updatedJson = JsonSerializer.Serialize(existingConfig, new JsonSerializerOptions { WriteIndented = true });
-            File.WriteAllText(AppProperties.SettingsFile, updatedJson);
-            return;
-        }
-
-        // Generate a new configuration file with the default values if the configuration file does not exist
-        var newConfig = new
-        {
-            Theme = 0,
-            TransparencyEffect = AppFunctions.GetTransparencyMode(), // Prevents mica being set on Windows 10 devices
-            EnableUpdateChecks = 1,
-            RecordEndWaitTime = 0,
-            NotificationTimeout = 1750,
-            RememberSelectedFolder = 1,
-            LastSelectedFolder = "",
-            InputRandomizationEnabled = 0,
-            RecordStartWaitTime = 25,
-            EnableTranscription = 1,
-            AutoConvertFiles = 1,
-            OutputFileType = "wav"
+            { "Theme", 0 },
+            { "TransparencyEffect", AppFunctions.GetTransparencyMode() },
+            { "EnableUpdateChecks", 1 },
+            { "RecordEndWaitTime", 0 },
+            { "NotificationTimeout", 1750 },
+            { "RememberSelectedFolder", 1 },
+            { "LastSelectedFolder", "" },
+            { "InputRandomizationEnabled", 0 },
+            { "RecordStartWaitTime", 25 },
+            { "EnableTranscription", 1 },
+            { "AutoConvertFiles", 1 },
+            { "OutputFileType", "wav" },
+            { "LogMode", AppProperties.LogMode.ErrorsOnly }
         };
 
-        var defaultJson = JsonSerializer.Serialize(newConfig, new JsonSerializerOptions { WriteIndented = true });
-        File.WriteAllText(AppProperties.SettingsFile, defaultJson);
+        // Merge existing settings with default settings
+        foreach (string key in defaultConfig.Keys.Where(key => !existingConfig.ContainsKey(key)))
+        {
+            existingConfig[key] = defaultConfig[key];
+        }
+
+        var updatedJson = JsonSerializer.Serialize(existingConfig, new JsonSerializerOptions { WriteIndented = true });
+        File.WriteAllText(AppProperties.SettingsFile, updatedJson);
     }
 
     [Log]
@@ -97,17 +76,22 @@ public partial class App // I will admit, code-behind is still pretty useful her
     {
         // Users will have to import their own data files for this app to work,
         // but create an empty file with the start of a json array (for functionality purposes)
-        if (!File.Exists(AppProperties.PitchDataFile)) File.WriteAllText(AppProperties.PitchDataFile, "[\n\n]");
-        if (!File.Exists(AppProperties.EffectsDataFile)) File.WriteAllText(AppProperties.EffectsDataFile, "[\n\n]");
+        if (!File.Exists(AppProperties.PitchDataFile)) 
+            File.WriteAllText(AppProperties.PitchDataFile, "[\n\n]");
+
+        if (!File.Exists(AppProperties.EffectsDataFile)) 
+            File.WriteAllText(AppProperties.EffectsDataFile, "[\n\n]");
 
         try
         {
-            AppProperties.PitchData = JsonSerializer.Deserialize<string[][]>(File.ReadAllText(AppProperties.PitchDataFile));
+            AppProperties.PitchData =
+                JsonSerializer.Deserialize<string[][]>(File.ReadAllText(AppProperties.PitchDataFile));
         }
         catch (JsonException)
         {
             AppProperties.PitchData = [];
         }
+
         try
         {
             AppProperties.EffectData = JsonSerializer.Deserialize<string[][]>(File.ReadAllText(AppProperties.EffectsDataFile));
