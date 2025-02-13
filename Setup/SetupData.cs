@@ -1,6 +1,6 @@
 ﻿using AudioReplacer.Generic;
-using AudioReplacer.Util;
 using AudioReplacer.Setup.Pages;
+using AudioReplacer.Util;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.UI.Xaml;
