@@ -131,9 +131,8 @@ public static class AppFunctions
     }
 
     [Log]
-    public static async Task<string> GetDataFromGithub(string tagName)
+    public static async Task<string> GetDataFromGithub(string url, string tagName)
     {
-        var url = "https://api.github.com/repos/lemons-studios/audio-replacer/releases/latest";
         try
         {
             var apiResponse = await AppProperties.WebClient.GetAsync(url);
