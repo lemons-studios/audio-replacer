@@ -7,8 +7,9 @@ public class RichPresenceController
     private readonly string details, smallImage, smallImageText, state;
     private readonly DiscordRpcClient client;
     private readonly Timestamps startTimestamp;
+    private readonly long clientId = 1325340097234866297;
 
-    public RichPresenceController(long clientId, string initialDetails, string initialState, string initialSmallImage, string initialSmallImageText)
+    public RichPresenceController(string initialDetails, string initialState, string initialSmallImage, string initialSmallImageText)
     {
         bool autoCreate = AppFunctions.IntToBool(App.AppSettings.EnableRichPresence);
 

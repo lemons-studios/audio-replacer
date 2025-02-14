@@ -57,8 +57,7 @@ public partial class App // I will admit, code-behind is still pretty useful her
             { "RecordStartWaitTime", 25 },
             { "EnableTranscription", 1 },
             { "AutoConvertFiles", 1 },
-            { "OutputFileType", "wav" },
-            { "LogMode", AppProperties.LogMode.ErrorsOnly }
+            { "OutputFileType", "wav" }
         };
 
         // Merge existing settings with default settings
@@ -111,7 +110,7 @@ public partial class App // I will admit, code-behind is still pretty useful her
             case true:
                 // Only initialize rich presence when app is configured
                 if (AppFunctions.IntToBool(App.AppSettings.EnableRichPresence)) 
-                    DiscordController = new RichPresenceController(1325340097234866297, "On Record Page", "No Project Loaded", "idle", "Idle");
+                    DiscordController = new RichPresenceController("On Record Page", "No Project Loaded", "idle", "Idle");
                 MainWindow = new MainWindow.MainWindow();
                 MainWindow.Activate();
                 break;

@@ -2,9 +2,11 @@
 using Microsoft.UI.Composition.SystemBackdrops;
 using Microsoft.Windows.AppLifecycle;
 using Newtonsoft.Json.Linq;
+using SevenZipExtractor;
 using System;
 using System.Diagnostics;
 using System.IO;
+using System.IO.Compression;
 using System.Net.Http;
 using System.Reflection;
 using System.Threading.Tasks;
@@ -13,6 +15,35 @@ namespace AudioReplacer.Generic;
 
 public static class AppFunctions
 {
+    public static async Task DownloadDeps()
+    {
+        // Download FFmpeg
+        var latestVersion = await GetWebData("https://www.gyan.dev/ffmpeg/builds/release-version");
+        var ffmpegUrl = $"https://www.gyan.dev/ffmpeg/builds/packages/ffmpeg-{latestVersion}-full_build.7z";
+        var outPath = Path.Join(AppProperties.ExtraApplicationData, "ffmpeg");
+        await DownloadFileAsync(ffmpegUrl, $@"{AppProperties.ExtraApplicationData}\ffmpeg.7z");
+
+        // Extract FFmpeg
+        using (var ffmpegExtractor = new ArchiveFile($"{outPath}.7z")) ffmpegExtractor.Extract(outPath);
+
+        // Move FFmpeg executable (ffmpeg.exe ONLY, ffprobe.exe and ffplay.exe are not needed) to the application's binary folder
+        var info = new DirectoryInfo(outPath);
+        foreach (var exe in info.GetFiles("ffmpeg.exe", SearchOption.AllDirectories))
+        {
+            File.Move(exe.FullName, Path.Combine(AppProperties.BinaryPath, exe.Name));
+        }
+
+        Directory.Delete(outPath, true);
+        File.Delete($"{outPath}.7z");
+
+        // Download VgmStream
+        var latestVgmStream = await GetDataFromGithub("https://api.github.com/repos/vgmstream/vgmstream/releases/latest", "tag_name");
+        var fullUrl = $"https://github.com/vgmstream/vgmstream/releases/download/{latestVgmStream}/vgmstream-win64.zip";
+        await DownloadFileAsync(fullUrl, AppProperties.BinaryPath);
+        ZipFile.ExtractToDirectory(Path.Join(AppProperties.BinaryPath, "vgmstream-win64.zip"), AppProperties.BinaryPath);
+    }
+
+
     [Log]
     public static async Task SpawnProcess(string command, string args, bool autoStart = true)
     {
@@ -75,7 +106,6 @@ public static class AppFunctions
         AppProperties.EffectValues = [];
 
         // Add data to all the lists
-
         // AppProperties.PitchData gets automatically populated from the pitch/effect
         // json file, if the json serializer does not encounter any issues (i.e. invalid json)
         foreach (var data in AppProperties.PitchData)
@@ -85,6 +115,7 @@ public static class AppFunctions
         }
         foreach (var effects in AppProperties.EffectData)
         {
+            // Same thing as pitch for effects
             AppProperties.EffectValues.Add(effects[0]);
             AppProperties.EffectTitles.Add(effects[1]);
         }

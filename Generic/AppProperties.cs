@@ -9,6 +9,7 @@ public class AppProperties
     public static readonly string ExtraApplicationData = Path.Join(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "audio-replacer");
     public static readonly string BinaryPath = Path.Join(ExtraApplicationData, "bin");
     public static readonly string FfmpegPath = Path.Combine(BinaryPath, "ffmpeg.exe");
+    public static readonly string VgmStreamPath = Path.Join(BinaryPath, "vgmstream.exe");
     public static readonly string WhisperPath = Path.Join(BinaryPath, "whisper.bin");
     public static readonly string ConfigPath = Path.Join(ExtraApplicationData, "config");
     public static readonly string SettingsFile = Path.Join(ConfigPath, "AppSettings.json");
@@ -21,15 +22,5 @@ public class AppProperties
     public static List<string> PitchTitles, EffectTitles, EffectValues;
     public static List<float> PitchValues;
     public static readonly string[] OutputTypes = ["wav", "mp3", "flac", "ogg"]; // Marking as static allows the property to be used in the line below
-
-    public static readonly HttpClient WebClient = new()
-    {
-        DefaultRequestHeaders = { { "User-Agent", "Audio Replacer" } }
-    };
-
-    public enum LogMode
-    {
-        ErrorsOnly,
-        Everything
-    }
+    public static readonly HttpClient WebClient = new() { DefaultRequestHeaders = { { "User-Agent", "Audio Replacer" } } };
 }

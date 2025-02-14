@@ -7,7 +7,9 @@ using Microsoft.UI.Xaml.Controls;
 using NAudio.Wave;
 using NAudio.Wave.SampleProviders;
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using Whisper.net;
 using Whisper.net.LibraryLoader;
@@ -32,7 +34,6 @@ public sealed partial class RecordPage // This file is among the worst written f
         AudioPreview.MediaPlayer.Pause(); // Needed to fix an issue where audio would play after second navigation to the page after launch
     }
 
-    [Log]
     private void OnLoaded(object sender, RoutedEventArgs e)
     {
         // Looping needs to be on to work around a bug in which the audio gets cut off for a split second after the first play.
@@ -56,10 +57,15 @@ public sealed partial class RecordPage // This file is among the worst written f
     [Log]
     private void SkipCurrentAudioFile(object sender, RoutedEventArgs e)
     {
+        // Hide popup regardless of if a project is loaded
         SkipFileFlyout.Hide();
-        ProjectFileUtils.SkipAudioTrack();
-        UpdateFileElements();
-        App.MainWindow.ShowNotification(InfoBarSeverity.Success, "File Skipped!", string.Empty, true);
+
+        if (ProjectFileUtils.IsProjectLoaded)
+        {
+            ProjectFileUtils.SkipAudioTrack();
+            UpdateFileElements();
+            App.MainWindow.ShowNotification(InfoBarSeverity.Success, "File Skipped!", string.Empty, true);
+        }
     }
 
     [Log]
@@ -98,6 +104,11 @@ public sealed partial class RecordPage // This file is among the worst written f
     {
         var progressPercentage = ProjectFileUtils.CalculatePercentageComplete();
         var projectPath = ProjectFileUtils.GetProjectPath();
+
+        PitchSearch.DispatcherQueue.TryEnqueue(() =>
+        {
+            PitchSearch.ItemsSource = AppProperties.PitchTitles;
+        });
 
         PitchMenu.DispatcherQueue.TryEnqueue(() =>
         {
@@ -245,10 +256,35 @@ public sealed partial class RecordPage // This file is among the worst written f
         UpdateFileElements(false); // To prevent transcription when it's not needed
     }
 
-    [Log]
     private void OnUnloaded(object sender, RoutedEventArgs e)
     {
         // Prevent audio from playing on other pages if the media player is left playing
         AudioPreview.MediaPlayer.Pause();
+    }
+
+    private void OnPitchSearchChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)
+    {
+        if (args.Reason == AutoSuggestionBoxTextChangeReason.UserInput)
+        {
+            var suitableItems = new List<string>();
+            var splitText = sender.Text.ToLower().Split(" ");
+            foreach (var pitchTitle in AppProperties.PitchTitles)
+            {
+                var foundItems = splitText.All((key) =>
+                {
+                    return pitchTitle.ToLower().Contains(key);
+                });
+                if (foundItems)
+                {
+                    suitableItems.Add(pitchTitle);
+                }
+            }
+
+            if (suitableItems.Count == 0)
+            {
+                suitableItems.Add("No results found");
+                sender.ItemsSource = suitableItems;
+            }
+        }
     }
 }

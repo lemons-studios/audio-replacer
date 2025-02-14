@@ -6,6 +6,7 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Media;
 using System;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using Whisper.net.Ggml;
 
@@ -43,12 +44,6 @@ public partial class SettingsData : ObservableObject
     partial void OnSelectedOutputTypeChanged(int value)
     {
         App.AppSettings.OutputFileType = AppProperties.OutputTypes[value];
-    }
-
-    [ObservableProperty] private int selectedLogMode = (int) App.AppSettings.LogMode;
-    partial void OnSelectedLogModeChanged(int value)
-    {
-        App.AppSettings.LogMode = (AppProperties.LogMode) value;
     }
 
     [ObservableProperty] private bool enableUpdateChecks = AppFunctions.IntToBool(App.AppSettings.AppUpdateCheck);
@@ -169,5 +164,17 @@ public partial class SettingsData : ObservableObject
         await using var fileWriter = File.OpenWrite(AppProperties.WhisperPath);
         await whisperStream.CopyToAsync(fileWriter);
         AppFunctions.RestartApp();
+    }
+
+    [RelayCommand]
+    private async Task RepairDependencies()
+    {
+        var filesToDelete = Directory.GetFiles(AppProperties.BinaryPath).Where(file =>
+            !string.Equals(Path.GetFileName(file), "whisper.bin", StringComparison.OrdinalIgnoreCase));
+        foreach (var file in filesToDelete)
+        {
+            File.Delete(file);
+        }
+        await AppFunctions.DownloadDeps();
     }
 }

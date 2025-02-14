@@ -1,9 +1,9 @@
 # Contributing to Audio Replacer
-Have you come across this project and want to contribute it? Here are the simple steps to start contributing!!
-
+I am a pretty bad developer. If you aren't and would like to contribute to this project to make it better, please do by following the steps below:
 ## Requirements
 In order to contribute to this application, You should have the following:
 - [FFMpeg](https://ffmpeg.org)
+- [Vgmstream](https://github.com/vgmstream/vgmstream/releases/latest)
 - [Visual Studio 2022](https://visualstudio.microsoft.com/vs/) with the following components/workloads
      - Windows Application Development workload
      - .NET desktop development workload
@@ -20,8 +20,8 @@ dotnet nuget add source https://pkgs.dev.azure.com/dotnet/CommunityToolkit/_pack
 ```
 
 ## How to contribute:
-1. Fork the repo!
-2. Make your changes!
-3. Submit a pull request and fix any merge conflicts!
+1. Fork the repo
+2. Make your changes
+3. Submit a pull request and fix any merge conflicts
 
 This isn't some ultra serious project, I probably won't have ultra serious pull request standards for the time being.

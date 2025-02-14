@@ -42,7 +42,5 @@ public interface IAppSettings
 
     [Option(Alias = "OutputFileType", DefaultValue = "wav")]
     string OutputFileType { get; set; }
-
-    [Option(Alias = "LogMode", DefaultValue = AppProperties.LogMode.ErrorsOnly)]
-    AppProperties.LogMode LogMode { get; set; }
+    
 }

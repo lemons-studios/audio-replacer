@@ -131,7 +131,6 @@
                         IsEnabled="{Binding IsRecording}"
                         Style="{StaticResource OperationButton}"
                         Visibility="{Binding IsRecording, Converter={StaticResource VisibilityConverter}}" />
-                    <!--  Do not delete the name of the next button even if your ide says it's not used. it very much is in use  -->
                     <Button
                         Click="AcceptSubmission"
                         Command="{Binding SwitchButtonStatesCommand}"
@@ -155,6 +154,12 @@
                         Margin="0,0,0,15"
                         Style="{StaticResource TitleText}"
                         Text="Pitch Tuning:" />
+                    <AutoSuggestBox
+                        x:Name="PitchSearch"
+                        MaxWidth="250"
+                        Margin="0,0,0,50"
+                        PlaceholderText="Search For Pitch..."
+                        TextChanged="OnPitchSearchChanged" />
                     <ComboBox
                         x:Name="PitchMenu"
                         Margin="0,0,0,50"
