@@ -43,7 +43,6 @@ public static class AppFunctions
         ZipFile.ExtractToDirectory(Path.Join(AppProperties.BinaryPath, "vgmstream-win64.zip"), AppProperties.BinaryPath);
     }
 
-
     [Log]
     public static async Task SpawnProcess(string command, string args, bool autoStart = true)
     {
@@ -90,11 +89,13 @@ public static class AppFunctions
 
     public static async Task FfMpegCommand(string input, string command, string rawOutputPath, bool forceWav = false)
     {
-        var fileName = Path.GetFileNameWithoutExtension(rawOutputPath);
+        // TODO: Fix to make sure this works with different file types
 
+        var fileName = Path.GetFileNameWithoutExtension(rawOutputPath);
+        var pathToFile = Path.GetFullPath(rawOutputPath);
         // forceWav is used for .wav conversion of initial project files
         string outputPath = forceWav ? $"{fileName}.wav" : $"{fileName}.{App.AppSettings.OutputFileType}";
-        await SpawnProcess(AppProperties.FfmpegPath, $"-i \"{input}\" {command}, \"{outputPath}\"");
+        await SpawnProcess(AppProperties.FfmpegPath, $"-i \"{input}\" {command} \"{rawOutputPath}\"");
     }
 
     public static void PopulateCustomData()

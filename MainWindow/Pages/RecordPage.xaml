@@ -155,17 +155,12 @@
                         Style="{StaticResource TitleText}"
                         Text="Pitch Tuning:" />
                     <AutoSuggestBox
-                        x:Name="PitchSearch"
                         MaxWidth="250"
                         Margin="0,0,0,50"
+                        GotFocus="OnPitchFocus"
                         PlaceholderText="Search For Pitch..."
+                        QuerySubmitted="PitchQuerySubmitted"
                         TextChanged="OnPitchSearchChanged" />
-                    <ComboBox
-                        x:Name="PitchMenu"
-                        Margin="0,0,0,50"
-                        PlaceholderText="Pick Character"
-                        SelectionChanged="UpdateRecordingValues"
-                        Style="{StaticResource DropdownMenu}" />
                 </StackPanel>
                 <StackPanel>
                     <TextBlock
@@ -174,12 +169,14 @@
                         Style="{StaticResource TitleText}"
                         Text="Extra Effects:"
                         TextWrapping="WrapWholeWords" />
-                    <ComboBox
-                        x:Name="EffectsMenu"
-                        Margin="0,0,0,10"
-                        PlaceholderText="Select Effect"
-                        SelectionChanged="UpdateRecordingValues"
-                        Style="{StaticResource DropdownMenu}" />
+
+                    <AutoSuggestBox
+                        MaxWidth="250"
+                        Margin="0,0,0,50"
+                        GotFocus="OnEffectFocus"
+                        PlaceholderText="Search For Effects..."
+                        QuerySubmitted="EffectQuerySubmitted"
+                        TextChanged="OnEffectSearchChanged" />
                     <CheckBox
                         HorizontalAlignment="Center"
                         Command="{Binding FlagExtraEditsCommand}"

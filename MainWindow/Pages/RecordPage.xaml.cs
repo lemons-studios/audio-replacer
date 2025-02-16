@@ -14,6 +14,7 @@ using System.Threading.Tasks;
 using Whisper.net;
 using Whisper.net.LibraryLoader;
 using Windows.Media.Core;
+using Windows.System;
 
 namespace AudioReplacer.MainWindow.Pages;
 
@@ -43,15 +44,6 @@ public sealed partial class RecordPage // This file is among the worst written f
         App.DiscordController.SetDetails("On Record Page");
         if (ProjectFileUtils.IsProjectLoaded)
             App.DiscordController.SetState($"{ProjectFileUtils.CalculatePercentageComplete()}% Complete");
-    }
-
-    [Log]
-    private void UpdateRecordingValues(object sender, object args)
-    {
-        if (audioRecordingUtils == null) return;
-        // For some reason, C# throws ArgumentOutOfRangeExceptions here. I don't know why, because the code works as intended and doesn't cause any issues whatsoever
-        audioRecordingUtils.PitchChange = AppProperties.PitchValues[PitchMenu.SelectedIndex];
-        audioRecordingUtils.EffectCommand = AppProperties.EffectValues[EffectsMenu.SelectedIndex];
     }
 
     [Log]
@@ -104,21 +96,6 @@ public sealed partial class RecordPage // This file is among the worst written f
     {
         var progressPercentage = ProjectFileUtils.CalculatePercentageComplete();
         var projectPath = ProjectFileUtils.GetProjectPath();
-
-        PitchSearch.DispatcherQueue.TryEnqueue(() =>
-        {
-            PitchSearch.ItemsSource = AppProperties.PitchTitles;
-        });
-
-        PitchMenu.DispatcherQueue.TryEnqueue(() =>
-        {
-            PitchMenu.ItemsSource = AppProperties.PitchTitles;
-        });
-
-        EffectsMenu.DispatcherQueue.TryEnqueue(() =>
-        {
-            EffectsMenu.ItemsSource = AppProperties.EffectTitles;
-        });
 
         FileProgressPanel.DispatcherQueue.TryEnqueue(() =>
         {
@@ -262,29 +239,76 @@ public sealed partial class RecordPage // This file is among the worst written f
         AudioPreview.MediaPlayer.Pause();
     }
 
+    [Log]
     private void OnPitchSearchChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)
     {
         if (args.Reason == AutoSuggestionBoxTextChangeReason.UserInput)
         {
-            var suitableItems = new List<string>();
-            var splitText = sender.Text.ToLower().Split(" ");
-            foreach (var pitchTitle in AppProperties.PitchTitles)
+            var suggestions = AppProperties.PitchTitles
+                .Where(item => item.StartsWith(sender.Text, StringComparison.CurrentCultureIgnoreCase))
+                .ToList();
+            if (!string.IsNullOrEmpty(sender.Text))
             {
-                var foundItems = splitText.All((key) =>
-                {
-                    return pitchTitle.ToLower().Contains(key);
-                });
-                if (foundItems)
-                {
-                    suitableItems.Add(pitchTitle);
-                }
-            }
-
-            if (suitableItems.Count == 0)
-            {
-                suitableItems.Add("No results found");
-                sender.ItemsSource = suitableItems;
+                sender.ItemsSource = suggestions;
             }
         }
+    }
+
+    [Log]
+    private void OnPitchFocus(object sender, RoutedEventArgs e)
+    {
+        var suggestionBox = (AutoSuggestBox) sender;
+        suggestionBox.ItemsSource = AppProperties.PitchTitles;
+        suggestionBox.IsSuggestionListOpen = true;
+        OnPitchSearchChanged(suggestionBox, new AutoSuggestBoxTextChangedEventArgs() { Reason = AutoSuggestionBoxTextChangeReason.UserInput });
+    }
+
+    [Log]
+    private void PitchQuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs args)
+    {
+        var selectedText = args.ChosenSuggestion?.ToString() ?? args.QueryText;
+        int selectedPitchPosition = GetPositionOfElementInData(selectedText, false);
+        audioRecordingUtils.PitchChange = AppProperties.PitchValues[selectedPitchPosition];
+    }
+
+    [Log]
+    private void EffectQuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs args)
+    {
+        var selectedText = args.ChosenSuggestion?.ToString() ?? args.QueryText;
+        int selectedEffectPosition = GetPositionOfElementInData(selectedText, true);
+        audioRecordingUtils.EffectCommand = AppProperties.EffectValues[selectedEffectPosition];
+    }
+
+    [Log]
+    private void OnEffectSearchChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)
+    {
+        var suggestions = AppProperties.EffectTitles
+            .Where(item => item.StartsWith(sender.Text, StringComparison.CurrentCultureIgnoreCase))
+            .ToList();
+        if (!string.IsNullOrEmpty(sender.Text))
+        {
+            sender.ItemsSource = suggestions;
+        }
+    }
+
+    [Log]
+    private void OnEffectFocus(object sender, RoutedEventArgs e)
+    {
+        var suggestionBox = (AutoSuggestBox) sender;
+        suggestionBox.ItemsSource = AppProperties.EffectTitles;
+        suggestionBox.IsSuggestionListOpen = true;
+        OnEffectSearchChanged(suggestionBox, new AutoSuggestBoxTextChangedEventArgs() { Reason = AutoSuggestionBoxTextChangeReason.UserInput });
+    }
+
+    [Log]
+    public int GetPositionOfElementInData(string x, bool effectsData)
+    {
+        var dataList = effectsData ? AppProperties.EffectTitles : AppProperties.PitchTitles;
+        for (int i = 0; i < dataList.Count; i++)
+        {
+            if (x == dataList[i])
+                return i;
+        }
+        throw new Exception(); 
     }
 }

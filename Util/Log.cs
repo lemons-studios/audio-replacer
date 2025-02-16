@@ -11,13 +11,13 @@ public class Log : OverrideMethodAspect
         // Get method information
         string methodName = meta.Target.Method.ToDisplayString();
 
-        File.AppendAllText(AppProperties.LogFile, $"\n{DateTime.Now:HH:mm:ss}: ENTERING {methodName}");
+        // File.AppendAllText(AppProperties.LogFile, $"\n{DateTime.Now:HH:mm:ss}: ENTERING {methodName}");
         try
         {
             // Execute original method
             dynamic? result = meta.Proceed();
 
-            File.AppendAllText(AppProperties.LogFile ,$"\n{DateTime.Now:HH:mm:ss}: EXITING {methodName}");
+            // File.AppendAllText(AppProperties.LogFile ,$"\n{DateTime.Now:HH:mm:ss}: EXITING {methodName}");
             return result;
         }
         catch (Exception e)
