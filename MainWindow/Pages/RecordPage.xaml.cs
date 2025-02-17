@@ -7,20 +7,19 @@ using Microsoft.UI.Xaml.Controls;
 using NAudio.Wave;
 using NAudio.Wave.SampleProviders;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Whisper.net;
 using Whisper.net.LibraryLoader;
 using Windows.Media.Core;
-using Windows.System;
+using Windows.Media.Playback;
 
 namespace AudioReplacer.MainWindow.Pages;
-
 public sealed partial class RecordPage // This file is among the worst written files in the project. It works though so I won't be changing it until I'm bored
 {
     private AudioRecordingUtils audioRecordingUtils;
+    private bool viewingOriginal = false;
 
     public RecordPage()
     {
@@ -63,15 +62,14 @@ public sealed partial class RecordPage // This file is among the worst written f
     [Log]
     private async void StartRecordingAudio(object sender, RoutedEventArgs e)
     {
-        AppProperties.InRecordState = true;
-        AudioPreview.MediaPlayer.Pause();
-
         if (ProjectFileUtils.IsProjectLoaded)
         {
+            AppProperties.InRecordState = true;
+            AudioPreview.MediaPlayer.Pause();
             await audioRecordingUtils.StartRecordingAudio();
             App.DiscordController.SetSmallAsset("recording", "Recording Audio");
+            App.MainWindow.ToggleProgressNotification("Recording In Progress", string.Empty);
         }
-        App.MainWindow.ToggleProgressNotification("Recording In Progress", string.Empty);
     }
 
     [Log]
@@ -97,29 +95,13 @@ public sealed partial class RecordPage // This file is among the worst written f
         var progressPercentage = ProjectFileUtils.CalculatePercentageComplete();
         var projectPath = ProjectFileUtils.GetProjectPath();
 
-        FileProgressPanel.DispatcherQueue.TryEnqueue(() =>
+        DispatcherQueue.TryEnqueue(() =>
         {
             FileProgressPanel.Visibility = Visibility.Visible;
-        });
-
-        CurrentFile.DispatcherQueue.TryEnqueue(() =>
-        {
             CurrentFile.Text = ProjectFileUtils.GetCurrentFile().Replace(@"\", "/");
-
-        });
-
-        RemainingFiles.DispatcherQueue.TryEnqueue(() =>
-        {
             RemainingFiles.Text = $"Files Remaining: {ProjectFileUtils.GetFileCount(projectPath):N0} ({progressPercentage}%)";
-        });
-
-        RemainingFiles.DispatcherQueue.TryEnqueue(() =>
-        {
             RemainingFilesProgress.Value = progressPercentage;
-        });
 
-        AudioPreview.DispatcherQueue.TryEnqueue(() =>
-        {
             AudioPreview.Source = MediaSource.CreateFromUri(new Uri(ProjectFileUtils.GetCurrentFile(false)));
             AudioPreview.TransportControls.IsEnabled = true;
         });
@@ -127,7 +109,7 @@ public sealed partial class RecordPage // This file is among the worst written f
         App.DiscordController.SetState($"{progressPercentage}% Complete");
         App.DiscordController.SetSmallAsset("idle", "Idle");
         App.DiscordController.SetLargeAsset("appicon", $"Current File: {ProjectFileUtils.GetCurrentFileName()}");
-        if(transcribeAudio) TranscribeAudio();
+
         if (firstLoad)
         {
             AudioPreview.DispatcherQueue.TryEnqueue(() =>
@@ -135,6 +117,9 @@ public sealed partial class RecordPage // This file is among the worst written f
                 AudioPreview.MediaPlayer.Pause();
             });
         }
+
+        if (transcribeAudio)
+            TranscribeAudio();
     }
 
     // Should probably move this into its own file in the future due to the sheer length of this thing
@@ -217,6 +202,7 @@ public sealed partial class RecordPage // This file is among the worst written f
     private void AcceptSubmission(object sender, RoutedEventArgs e)
     {
         AppProperties.InRecordState = false;
+        viewingOriginal = false;
 
         ProjectFileUtils.SubmitAudioFile(); // Extra edits get renamed in this method
         App.MainWindow.ShowNotification(InfoBarSeverity.Success, "Recording Accepted", "Moving to next file...", true, replaceExistingNotifications: true);
@@ -227,6 +213,7 @@ public sealed partial class RecordPage // This file is among the worst written f
     private void RejectSubmission(object sender, RoutedEventArgs e)
     {
         AppProperties.InRecordState = false;
+        viewingOriginal = false;
 
         File.Delete(ProjectFileUtils.GetOutFilePath());
         App.MainWindow.ShowNotification(InfoBarSeverity.Informational, "Recording Rejected", "Moving back to current file...", true, replaceExistingNotifications: true);
@@ -238,6 +225,8 @@ public sealed partial class RecordPage // This file is among the worst written f
         // Prevent audio from playing on other pages if the media player is left playing
         AudioPreview.MediaPlayer.Pause();
     }
+
+    // TODO: Maybe reduce how much boilerplate and reused code this uses
 
     [Log]
     private void OnPitchSearchChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)
@@ -310,5 +299,13 @@ public sealed partial class RecordPage // This file is among the worst written f
                 return i;
         }
         throw new Exception(); 
+    }
+
+    // Sometimes the best solution to a problem is the easiest one
+    [Log]
+    private void SwitchViewingAudio(object sender, RoutedEventArgs e)
+    {
+        viewingOriginal = !viewingOriginal;
+        AudioPreview.MediaPlayer.Source = MediaSource.CreateFromUri(new Uri(viewingOriginal ? ProjectFileUtils.GetOutFilePath() : ProjectFileUtils.GetCurrentFile(false)));
     }
 }

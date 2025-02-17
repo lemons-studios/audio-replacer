@@ -123,14 +123,22 @@
                         Content="Record"
                         IsEnabled="{Binding IsIdle}"
                         Style="{StaticResource OperationButton}"
-                        Visibility="{Binding IsIdle, Converter={StaticResource VisibilityConverter}}" />
+                        Visibility="{Binding IsIdle, Converter={StaticResource VisibilityConverter}}">
+                        <Button.KeyboardAccelerators>
+                            <KeyboardAccelerator Key="R" Modifiers="Control" />
+                        </Button.KeyboardAccelerators>
+                    </Button>
                     <Button
                         Click="StopRecordingAudio"
                         Command="{Binding SwitchButtonStatesCommand}"
                         Content="End Recording"
                         IsEnabled="{Binding IsRecording}"
                         Style="{StaticResource OperationButton}"
-                        Visibility="{Binding IsRecording, Converter={StaticResource VisibilityConverter}}" />
+                        Visibility="{Binding IsRecording, Converter={StaticResource VisibilityConverter}}">
+                        <Button.KeyboardAccelerators>
+                            <KeyboardAccelerator Key="R" Modifiers="Control" />
+                        </Button.KeyboardAccelerators>
+                    </Button>
                     <Button
                         Click="AcceptSubmission"
                         Command="{Binding SwitchButtonStatesCommand}"
@@ -139,6 +147,15 @@
                         Style="{StaticResource OperationButton}"
                         Visibility="{Binding IsReviewing, Converter={StaticResource VisibilityConverter}}" />
                 </StackPanel>
+                <Button
+                    MinWidth="110"
+                    Margin="0,15,0,0"
+                    HorizontalAlignment="Center"
+                    Click="SwitchViewingAudio"
+                    Content="Switch"
+                    CornerRadius="4"
+                    IsEnabled="{Binding IsReviewing}"
+                    Visibility="{Binding IsReviewing, Converter={StaticResource VisibilityConverter}}" />
             </StackPanel>
         </Border>
         <Border
