@@ -11,7 +11,7 @@ using Windows.Storage;
 namespace AudioReplacer.MainWindow.Util;
 public static class ProjectFileUtils
 {
-    private static string currentFile, truncatedCurrentFile, currentOutFile, currentFileName, directoryName;
+    private static string currentFile, truncatedCurrentFile, currentOutFile, currentFileName, directoryName, currentFileLocalPath;
     private static string outputFolderPath, projectPath;
     public static bool IsProjectLoaded, ExtraEditsFlagged = false;
 
@@ -51,9 +51,16 @@ public static class ProjectFileUtils
         else
         {
             truncatedCurrentFile = TruncateDirectory(currentFile, 2);
-            currentOutFile = Path.Join(outputFolderPath, truncatedCurrentFile);
             currentFileName = Path.GetFileName(currentFile);
             directoryName = TruncateDirectory(Path.GetDirectoryName(currentFile)!, 1);
+
+            // This essentially gets the path to the file but removes the path from the root. useful for setting the output file
+            // C:\path\to\project\then\file.wav will be split with C:\path\to\project\, creating an array with then\to\file at position 1
+
+            // We can then combine the output directory (%appdata%\audio-replacer\out\[project-name]) with the split directory from the above variable
+            // To get the absolute path to the output. This fixes an issue where audio-replacer only worked with files from only 2 subdirectories in
+            currentFileLocalPath = currentFile.Split(projectPath)[1]; 
+            currentOutFile = Path.Join(outputFolderPath, currentFileLocalPath);
         }
     }
 

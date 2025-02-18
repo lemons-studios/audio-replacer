@@ -153,7 +153,8 @@
                     Command="{Binding RepairDependenciesCommand}"
                     Description="Re-downloads all dependencies to fix any issues"
                     Header="Repair Dependencies"
-                    HeaderIcon="{Ui:FontIcon Glyph=&#xECAA;}" />
+                    HeaderIcon="{Ui:FontIcon Glyph=&#xECAA;}"
+                    IsClickEnabled="True" />
                 <communityToolkit:SettingsExpander
                     Margin="0,0,0,7.5"
                     Description="App will restart if anything is reset"

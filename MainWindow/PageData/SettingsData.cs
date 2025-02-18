@@ -8,6 +8,7 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using AudioReplacer.Util;
 using Whisper.net.Ggml;
 
 namespace AudioReplacer.MainWindow.PageData;
@@ -167,6 +168,7 @@ public partial class SettingsData : ObservableObject
     }
 
     [RelayCommand]
+    [Log]
     private async Task RepairDependencies()
     {
         var filesToDelete = Directory.GetFiles(AppProperties.BinaryPath).Where(file =>
@@ -175,6 +177,8 @@ public partial class SettingsData : ObservableObject
         {
             File.Delete(file);
         }
+        App.MainWindow.ToggleProgressNotification("Repairing Dependencies..", "App Will Restart after complete");
         await AppFunctions.DownloadDeps();
+        AppFunctions.RestartApp();
     }
 }
