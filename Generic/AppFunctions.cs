@@ -39,8 +39,11 @@ public static class AppFunctions
         // Download VgmStream
         var latestVgmStream = await GetDataFromGithub("https://api.github.com/repos/vgmstream/vgmstream/releases/latest", "tag_name");
         var fullUrl = $"https://github.com/vgmstream/vgmstream/releases/download/{latestVgmStream}/vgmstream-win64.zip";
-        await DownloadFileAsync(fullUrl, AppProperties.BinaryPath);
-        ZipFile.ExtractToDirectory(Path.Join(AppProperties.BinaryPath, "vgmstream-win64.zip"), AppProperties.BinaryPath);
+        await DownloadFileAsync(fullUrl, @$"{AppProperties.BinaryPath}\vgmstream.zip");
+
+        var vgmStreamArchive = Path.Join(AppProperties.BinaryPath, "vgmstream.zip");
+        ZipFile.ExtractToDirectory(vgmStreamArchive, AppProperties.BinaryPath);
+        File.Delete(vgmStreamArchive);
     }
 
     [Log]
