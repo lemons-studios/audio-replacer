@@ -50,7 +50,6 @@
                     <StackPanel>
                         <MediaPlayerElement
                             x:Name="AudioPreview"
-                            AutoPlay="True"
                             Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
                             Style="{StaticResource AudioPlayer}"
                             Visibility="Visible">
@@ -148,13 +147,11 @@
                         Visibility="{Binding IsReviewing, Converter={StaticResource VisibilityConverter}}" />
                 </StackPanel>
                 <Button
-                    MinWidth="110"
                     Margin="0,15,0,0"
-                    HorizontalAlignment="Center"
                     Click="SwitchViewingAudio"
                     Content="Switch"
-                    CornerRadius="4"
                     IsEnabled="{Binding IsReviewing}"
+                    Style="{StaticResource OperationButton}"
                     Visibility="{Binding IsReviewing, Converter={StaticResource VisibilityConverter}}" />
             </StackPanel>
         </Border>

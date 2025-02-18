@@ -305,7 +305,7 @@ public sealed partial class RecordPage // This file is among the worst written f
     [Log]
     private void SwitchViewingAudio(object sender, RoutedEventArgs e)
     {
-        viewingOriginal = !viewingOriginal;
         AudioPreview.MediaPlayer.Source = MediaSource.CreateFromUri(new Uri(viewingOriginal ? ProjectFileUtils.GetOutFilePath() : ProjectFileUtils.GetCurrentFile(false)));
+        viewingOriginal = !viewingOriginal;
     }
 }

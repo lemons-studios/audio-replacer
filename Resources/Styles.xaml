@@ -21,19 +21,27 @@
     </Style>
 
     <Style
-        x:Key="ButtonStyle"
+        x:Key="AccentedButton"
         BasedOn="{StaticResource AccentButtonStyle}"
         TargetType="Button">
         <Setter Property="HorizontalAlignment" Value="Center" />
         <Setter Property="CornerRadius" Value="4" />
-        <Setter Property="MinWidth" Value="110"></Setter>
+        <Setter Property="MinWidth" Value="110" />
     </Style>
 
     <Style
         x:Key="OperationButton"
-        BasedOn="{StaticResource ButtonStyle}"
+        BasedOn="{StaticResource AccentedButton}"
         TargetType="Button">
         <Setter Property="Margin" Value="20,0" />
+    </Style>
+
+    <Style
+        x:Key="RegularButton"
+        BasedOn="{StaticResource DefaultButtonStyle}"
+        TargetType="Button">
+        <Setter Property="CornerRadius" Value="4" />
+        <Setter Property="MinWidth" Value="110" />
     </Style>
 
     <Style x:Key="AudioPlayer" TargetType="MediaPlayerElement">
