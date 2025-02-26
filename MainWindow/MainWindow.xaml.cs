@@ -79,6 +79,10 @@ public sealed partial class MainWindow
                     {
                         InProgressNotification.IsOpen = false;
                     });
+                    await CompletionNotification.DispatcherQueue.EnqueueAsync(() =>
+                    {
+                        CompletionNotification.IsOpen = false;
+                    });
                 }
 
                 await GeneralNotificationPopup.DispatcherQueue.EnqueueAsync(() =>
@@ -131,6 +135,33 @@ public sealed partial class MainWindow
         InProgressNotification.DispatcherQueue.TryEnqueue(() =>
         {
             InProgressNotification.Message = message;
+        });
+    }
+
+    public void ToggleCompletionNotification(string title, string message, float percentage = 0f)
+    {
+        CompletionNotification.DispatcherQueue.TryEnqueue(() =>
+        {
+            CompletionNotification.Title = title;
+            CompletionNotification.Message = message;
+
+            CompletionNotification.IsOpen = !CompletionNotification.IsOpen;
+        });
+        CompletionProgressBar.DispatcherQueue.TryEnqueue(() =>
+        {
+            CompletionProgressBar.Value = percentage;
+        });
+    }
+
+    public void SetCompletionMessage(string message, float percentage)
+    {
+        CompletionNotification.DispatcherQueue.TryEnqueue(() =>
+        {
+            CompletionNotification.Message = message;
+        });
+        CompletionProgressBar.DispatcherQueue.TryEnqueue(() =>
+        {
+            CompletionProgressBar.Value = percentage;
         });
     }
 

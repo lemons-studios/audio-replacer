@@ -72,23 +72,39 @@ public static class ProjectFileUtils
             var unconvertedFiles = GetAllFiles().Where(IsUndesirableAudioFile).ToList();
             if (unconvertedFiles.Count != 0)
             {
+                bool isNotificationOpen = false;
                 var totalFiles = unconvertedFiles.Count + 1;
-                App.MainWindow.ToggleProgressNotification("Converting files to .Wav format...", "Progress: 0%");
+
                 for (int i = 0; i < totalFiles - 1; i++)
                 {
+
                     var input = unconvertedFiles[i];
                     var output = $"{input.Split(".")[0]}";
-                    await AppFunctions.FfMpegCommand(unconvertedFiles[i], "-ar 1600 -b:a 16k", output, true); // Force convert to .wav format
+                    await AppFunctions.FfMpegCommand(unconvertedFiles[i], "-ar 1600 -b:a 16k -y", $"{output}.wav", true); // Force convert to .wav format}
                     File.Delete(input);
-                    App.MainWindow.SetProgressMessage($"Progress: {MathF.Floor((float) i / totalFiles * 100)}%");
+
+                    if (App.MainWindow != null)
+                    {
+                        float progress = MathF.Floor(((float) i / totalFiles) * 100);
+                        if (!isNotificationOpen)
+                        {
+                            App.MainWindow.ToggleCompletionNotification("Converting files to .wav format...", $"Progress: {progress}%", progress);
+                            isNotificationOpen = true;
+                        }
+                        else
+                        {
+                            App.MainWindow.SetCompletionMessage($"Progress: {progress}%", progress);
+                        }
+                    }
                 }
-                App.MainWindow.ShowNotification(InfoBarSeverity.Success, "Success!", "All files converted");
-                return;
+                if(App.MainWindow != null)
+                    App.MainWindow.ShowNotification(InfoBarSeverity.Success, "Success!", "All files converted");
             }
         }
         catch (Exception e)
         {
-            App.MainWindow.ShowNotification(InfoBarSeverity.Error, "Error", e.Message);
+            if (App.MainWindow != null)
+                App.MainWindow.ShowNotification(InfoBarSeverity.Error, "Error", e.Message);
         }
     }
 

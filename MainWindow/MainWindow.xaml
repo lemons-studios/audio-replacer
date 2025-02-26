@@ -70,11 +70,13 @@
                     Content="Data Editor"
                     Icon="{Ui:FontIcon Glyph=&#xE70F;}"
                     Tag="Data Editor" />
+            </NavigationView.MenuItems>
+            <NavigationView.FooterMenuItems>
                 <NavigationViewItem
                     Content="What's New"
                     Icon="{Ui:FontIcon Glyph=&#xE789;}"
                     Tag="What's New" />
-            </NavigationView.MenuItems>
+            </NavigationView.FooterMenuItems>
             <Frame
                 x:Name="MainFrame"
                 Padding="10"
@@ -109,6 +111,19 @@
                 </InfoBar.Content>
                 <InfoBar.Transitions>
                     <PopupThemeTransition />
+                </InfoBar.Transitions>
+            </InfoBar>
+            <InfoBar 
+                x:Name="CompletionNotification" 
+                Margin=" 0 0 0 -75" 
+                Background="{ThemeResource SystemFillColorSolidAttentionBackgroundBrush}" 
+                IsClosable="False"
+                Severity="Informational" Style="{StaticResource ToastNotification}">
+                <InfoBar.Content>
+                    <ProgressBar x:Name="CompletionProgressBar" IsIndeterminate="False" />
+                </InfoBar.Content>
+                <InfoBar.Transitions>
+                    <PopupThemeTransition/>
                 </InfoBar.Transitions>
             </InfoBar>
         </StackPanel>
