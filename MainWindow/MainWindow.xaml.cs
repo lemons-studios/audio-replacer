@@ -160,9 +160,7 @@ public sealed partial class MainWindow
                 "Record" => typeof(RecordPage),
                 "Settings" => typeof(SettingsPage),
                 "Data Editor" => typeof(DataEditor),
-                "Update Logs" => typeof(ReleaseLogsPage),
-                "Project Importer" => typeof(ProjectImporter),
-                "Output Converter" => typeof(OutputConverter),
+                "What's New" => typeof(ReleaseLogsPage),
                 _ => pageSwitchType
             };
         }

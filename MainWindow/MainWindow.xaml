@@ -71,17 +71,9 @@
                     Icon="{Ui:FontIcon Glyph=&#xE70F;}"
                     Tag="Data Editor" />
                 <NavigationViewItem
-                    Content="Project Importer"
-                    Icon="{Ui:FontIcon Glyph=&#xE8B6;}"
-                    Tag="Project Importer" />
-                <NavigationViewItem
-                    Content="Output Converter"
-                    Icon="{Ui:FontIcon Glyph=&#xE74C;}"
-                    Tag="Output Converter" />
-                <NavigationViewItem
-                    Content="Release Notes"
-                    Icon="{Ui:FontIcon Glyph=&#xE777;}"
-                    Tag="Update Logs" />
+                    Content="What's New"
+                    Icon="{Ui:FontIcon Glyph=&#xE789;}"
+                    Tag="What's New" />
             </NavigationView.MenuItems>
             <Frame
                 x:Name="MainFrame"

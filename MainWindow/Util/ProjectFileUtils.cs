@@ -47,21 +47,20 @@ public static class ProjectFileUtils
             currentOutFile = string.Empty;
             currentFileName = string.Empty;
             directoryName = string.Empty;
+            return;
         }
-        else
-        {
-            truncatedCurrentFile = TruncateDirectory(currentFile, 2);
-            currentFileName = Path.GetFileName(currentFile);
-            directoryName = TruncateDirectory(Path.GetDirectoryName(currentFile)!, 1);
 
-            // This essentially gets the path to the file but removes the path from the root. useful for setting the output file
-            // C:\path\to\project\then\file.wav will be split with C:\path\to\project\, creating an array with then\to\file at position 1
+        truncatedCurrentFile = TruncateDirectory(currentFile, 2);
+        currentFileName = Path.GetFileName(currentFile);
+        directoryName = TruncateDirectory(Path.GetDirectoryName(currentFile)!, 1);
 
-            // We can then combine the output directory (%appdata%\audio-replacer\out\[project-name]) with the split directory from the above variable
-            // To get the absolute path to the output. This fixes an issue where audio-replacer only worked with files from only 2 subdirectories in
-            currentFileLocalPath = currentFile.Split(projectPath)[1]; 
-            currentOutFile = Path.Join(outputFolderPath, currentFileLocalPath);
-        }
+        // This essentially gets the path to the file but removes the path from the root. useful for setting the output file
+        // C:\path\to\project\then\file.wav will be split with C:\path\to\project\, creating an array with then\to\file at position 1
+
+        // We can then combine the output directory (%appdata%\audio-replacer\out\[project-name]) with the split directory from the above variable
+        // To get the absolute path to the output. This fixes an issue where audio-replacer only worked with files from only 2 subdirectories in
+        currentFileLocalPath = currentFile.Split(projectPath)[1];
+        currentOutFile = Path.Join(outputFolderPath, currentFileLocalPath);
     }
 
     // The application prefers that all input files are of the .wav format
@@ -185,23 +184,21 @@ public static class ProjectFileUtils
         SetCurrentFile();
     }
 
+    private static readonly string[] SupportedFileTypes = [".mp3", ".wav", ".wma", ".aac", ".m4a", ".flac", ".ogg", ".amr", ".aiff", ".3gp", ".asf", ".pcm"];
     private static bool IsAudioFile(string path)
     {
-        // I should PROBABLY rewrite this method in a way that includes all audio file types, but this list already contains the popular audio formats
-        string[] supportedFileTypes = [".mp3", ".wav", ".wma", ".aac", ".m4a", ".flac", ".ogg", ".amr", ".aiff", ".3gp", ".asf", ".pcm"];
-        return supportedFileTypes.Any(fileType => path.EndsWith(fileType, StringComparison.OrdinalIgnoreCase));
+        return SupportedFileTypes.Any(fileType => path.EndsWith(fileType, StringComparison.OrdinalIgnoreCase));
     }
 
     private static bool IsUndesirableAudioFile(string path)
     {
-        // I am a GENIUS
-        string[] supportedFileTypes = [".mp3", ".wma", ".aac", ".m4a", ".flac", ".ogg", ".amr", ".aiff", ".3gp", ".asf", ".pcm"];
-        return supportedFileTypes.Any(fileType => path.EndsWith(fileType, StringComparison.OrdinalIgnoreCase));
+        return SupportedFileTypes.Any(fileType => path.EndsWith(fileType, StringComparison.OrdinalIgnoreCase))
+               && !path.EndsWith(".wav", StringComparison.OrdinalIgnoreCase);
     }
 
     private static string[] GetSubdirectories(string path)
     {
-        return Directory.GetDirectories(path, "*", SearchOption.TopDirectoryOnly);
+        return Directory.GetDirectories(path, "*", SearchOption.AllDirectories);
     }
 
     public static string GetCurrentFile(bool truncate = true)
