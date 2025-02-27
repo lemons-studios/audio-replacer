@@ -242,8 +242,9 @@ public static class ProjectFileUtils
         return Directory.EnumerateFiles(path, "*", SearchOption.AllDirectories).Count();
     }
 
+    [Log]
     public static async Task<StorageFolder> GetDirectoryAsStorageFolder()
     {
-        return await StorageFolder.GetFolderFromPathAsync(Path.Join(outputFolderPath, directoryName));
+        return await StorageFolder.GetFolderFromPathAsync(Path.GetDirectoryName(currentOutFile));
     }
 }

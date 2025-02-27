@@ -167,8 +167,8 @@ public partial class SettingsData : ObservableObject
         AppFunctions.RestartApp();
     }
 
-    [RelayCommand]
     [Log]
+    [RelayCommand]
     private async Task RepairDependencies()
     {
         var filesToDelete = Directory.GetFiles(AppProperties.BinaryPath).Where(file =>

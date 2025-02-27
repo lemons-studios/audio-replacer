@@ -12,8 +12,8 @@ using AudioReplacer.Generic;
 namespace AudioReplacer.MainWindow.Util;
 public class AudioRecordingUtils
 {
-    public float PitchChange = 1;
-    public string EffectCommand = "";
+    public float pitchChange = 1;
+    public string effectCommand = "";
     private MediaCapture recordingCapture;
 
     public AudioRecordingUtils()
@@ -66,10 +66,10 @@ public class AudioRecordingUtils
     private async Task ApplyFilters(string file)
     {
         var tempOutFile = $"{file}.wav";
-        var validatedPitchChange = MathF.Max(PitchChange, 0.001f);
-        var filter = string.IsNullOrWhiteSpace(EffectCommand)
+        var validatedPitchChange = MathF.Max(pitchChange, 0.001f);
+        var filter = string.IsNullOrWhiteSpace(effectCommand)
             ? $"rubberband=pitch={validatedPitchChange}"
-            : $"rubberband=pitch={validatedPitchChange}, {EffectCommand}";
+            : $"rubberband=pitch={validatedPitchChange}, {effectCommand}";
 
         await AppFunctions.FfMpegCommand(file, $"-af \"{filter}\" -y", tempOutFile);
 

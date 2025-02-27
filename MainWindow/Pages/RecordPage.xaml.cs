@@ -257,7 +257,7 @@ public sealed partial class RecordPage // This file is among the worst written f
     {
         var selectedText = args.ChosenSuggestion?.ToString() ?? args.QueryText;
         int selectedPitchPosition = GetPositionOfElementInData(selectedText, false);
-        audioRecordingUtils.PitchChange = AppProperties.PitchValues[selectedPitchPosition];
+        audioRecordingUtils.pitchChange = AppProperties.PitchValues[selectedPitchPosition];
     }
 
     [Log]
@@ -265,7 +265,7 @@ public sealed partial class RecordPage // This file is among the worst written f
     {
         var selectedText = args.ChosenSuggestion?.ToString() ?? args.QueryText;
         int selectedEffectPosition = GetPositionOfElementInData(selectedText, true);
-        audioRecordingUtils.EffectCommand = AppProperties.EffectValues[selectedEffectPosition];
+        audioRecordingUtils.effectCommand = AppProperties.EffectValues[selectedEffectPosition];
     }
 
     [Log]
