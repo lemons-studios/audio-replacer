@@ -51,6 +51,7 @@ public sealed partial class MainWindow
         AppUpdater.AppUpdateManager = new UpdateManager(url);
         Task.Run(AppUpdater.UpdateApplication);
         AppUpdater.OnUpdateFound += OnUpdateFound;
+        App.AppWindow.SetIcon(@"Assets\AppIcon.ico");
     }
 
     private void OnUpdateFound()

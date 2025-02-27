@@ -80,7 +80,9 @@ public static class ProjectFileUtils
 
                     var input = unconvertedFiles[i];
                     var output = $"{input.Split(".")[0]}";
-                    await AppFunctions.FfMpegCommand(unconvertedFiles[i], "-ar 1600 -b:a 16k -y", $"{output}.wav", true); // Force convert to .wav format}
+                    if (File.Exists(unconvertedFiles[i])) // Just in case....
+                        await AppFunctions.FfMpegCommand(unconvertedFiles[i], "-y", $"{output}.wav", true); // Force convert to .wav format
+
                     File.Delete(input);
 
                     if (App.MainWindow != null)
