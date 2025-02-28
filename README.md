@@ -6,6 +6,7 @@
 <p align="center">
   <img src="https://img.shields.io/badge/c%23-%23239120.svg?style=for-the-badge&logo=csharp&logoColor=white" alt="C# Badge">
   <img src="https://img.shields.io/badge/.NET-5C2D91?style=for-the-badge&logo=.net&logoColor=white" alt=".NET Badge">
+  <img src="https://img.shields.io/badge/MIT-green?style=for-the-badge" alt="MIT License Badge">
 </p>
 
 This application was created to streamline the dubbing process when making mods for video games. In addition to dubbing, custom pitch and audio filter json files can be created to apply ffmpeg audio filters when dubbing.
