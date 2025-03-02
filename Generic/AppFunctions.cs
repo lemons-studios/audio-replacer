@@ -6,7 +6,6 @@ using SevenZipExtractor;
 using System;
 using System.Diagnostics;
 using System.IO;
-using System.IO.Compression;
 using System.Net.Http;
 using System.Reflection;
 using System.Threading.Tasks;
@@ -81,15 +80,13 @@ public static class AppFunctions
         }
     }
 
+    [Log]
     public static async Task FfMpegCommand(string input, string command, string rawOutputPath, bool forceWav = false)
     {
-        // TODO: Fix to make sure this works with different file types
+        var fileType = forceWav ? ".wav" : App.AppSettings.OutputFileType;
+        var outFile = Path.ChangeExtension(rawOutputPath, fileType);
 
-        var fileName = Path.GetFileNameWithoutExtension(rawOutputPath);
-        var pathToFile = Path.GetFullPath(rawOutputPath);
-        // forceWav is used for .wav conversion of initial project files
-        string outputPath = forceWav ? $"{fileName}.wav" : $"{fileName}.{App.AppSettings.OutputFileType}";
-        await SpawnProcess(AppProperties.FfmpegPath, $"-i \"{input}\" {command} \"{rawOutputPath}\"");
+        await SpawnProcess(AppProperties.FfmpegPath, $"-i \"{input}\" {command} \"{outFile}\"");
     }
 
     public static void PopulateCustomData()
@@ -222,4 +219,3 @@ public static class AppFunctions
         }
     }
 }
-
