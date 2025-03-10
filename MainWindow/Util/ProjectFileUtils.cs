@@ -60,7 +60,6 @@ public static class ProjectFileUtils
         // To get the absolute path to the output. This fixes an issue where audio-replacer only worked with files from only 2 subdirectories in
         currentFileLocalPath = currentFile.Split(projectPath)[1];
         currentOutFile = Path.Join(outputFolderPath, currentFileLocalPath);
-        File.WriteAllText(Path.Join(AppProperties.ExtraApplicationData, "g.txt"), currentOutFile + $"\n {currentFileName}");
     }
 
     // The application prefers that all input files are of the .wav format
@@ -111,7 +110,7 @@ public static class ProjectFileUtils
 
     private static List<string> GetAllFiles()
     {
-        return Directory.EnumerateFiles(projectPath, "*.*", SearchOption.AllDirectories).ToList();
+        return Directory.EnumerateFiles(projectPath, "*", SearchOption.AllDirectories).ToList();
     }
 
     private static void CreateInitialData()
@@ -152,13 +151,6 @@ public static class ProjectFileUtils
         var audioFiles = GetAllFiles()
             .OrderBy(f => f, StringComparer.OrdinalIgnoreCase)
             .ToList();
-
-        string data = "";
-        foreach (var file in audioFiles)
-        {
-            data += $"\n {file}";
-            File.AppendAllText(Path.Join(AppProperties.ExtraApplicationData, "ggggggggggggggggg.txt"), file);
-        }
 
         if (!audioFiles.Any()) return string.Empty;
 
