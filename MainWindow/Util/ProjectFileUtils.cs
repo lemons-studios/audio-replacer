@@ -148,10 +148,12 @@ public static class ProjectFileUtils
     private static readonly Random rng = new();
     private static string GetNextAudioFile()
     {
-        var audioFiles = GetAllFiles()
-            .OrderBy(f => f, StringComparer.OrdinalIgnoreCase)
-            .ToList();
-
+        var audioFiles = GetAllFiles().ToList();
+        audioFiles.Sort();
+        foreach (var file in audioFiles)
+        {
+            File.AppendAllText(Path.Join(AppProperties.ExtraApplicationData, "test.txt"), $"\n{file}");
+        }
         if (!audioFiles.Any()) return string.Empty;
 
         if (AppFunctions.IntToBool(App.AppSettings.InputRandomizationEnabled))
@@ -168,6 +170,7 @@ public static class ProjectFileUtils
         int outputFileCount = GetFileCount(outputFolderPath);
         return inputFileCount + outputFileCount == 0 ? 100 : (float) Math.Round(outputFileCount / (double) (inputFileCount + outputFileCount) * 100, 2);
     }
+
     public static void SkipAudioTrack()
     {
         if (!string.IsNullOrEmpty(currentFile) && !string.IsNullOrEmpty(currentOutFile))
