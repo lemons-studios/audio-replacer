@@ -29,9 +29,8 @@ public static class ProjectFileUtils
     {
         projectPath = path;
         var projectName = projectPath.Split("\\")[^1];
-        outputFolderPath = Path.Combine(AppProperties.ExtraApplicationData, "out", projectName);
+        outputFolderPath = Path.Join(AppProperties.ExtraApplicationData, "out", projectName);
         CreateInitialData();
-        Task.Run(ConvertAudioFiles);
         SetCurrentFile();
         Broadcast();
     }
@@ -39,7 +38,7 @@ public static class ProjectFileUtils
     [Log]
     private static void SetCurrentFile()
     {
-        currentFile = GetNextAudioFile(projectPath);
+        currentFile = GetNextAudioFile();
 
         if (string.IsNullOrEmpty(currentFile))
         {
@@ -61,6 +60,7 @@ public static class ProjectFileUtils
         // To get the absolute path to the output. This fixes an issue where audio-replacer only worked with files from only 2 subdirectories in
         currentFileLocalPath = currentFile.Split(projectPath)[1];
         currentOutFile = Path.Join(outputFolderPath, currentFileLocalPath);
+        File.WriteAllText(Path.Join(AppProperties.ExtraApplicationData, "g.txt"), currentOutFile + $"\n {currentFileName}");
     }
 
     // The application prefers that all input files are of the .wav format
@@ -81,10 +81,9 @@ public static class ProjectFileUtils
                     var input = unconvertedFiles[i];
                     var output = $"{input.Split(".")[0]}";
                     if (File.Exists(unconvertedFiles[i])) // Just in case....
-                        await AppFunctions.FfMpegCommand(unconvertedFiles[i], "-y", $"{output}.wav", true); // Force convert to .wav format
+                        await AppFunctions.FfMpegCommand(unconvertedFiles[i], "-y", $"{output}.wav"); // Force convert to .wav format
 
                     File.Delete(input);
-
                     if (App.MainWindow != null)
                     {
                         float progress = MathF.Floor(((float) i / totalFiles) * 100);
@@ -112,7 +111,7 @@ public static class ProjectFileUtils
 
     private static List<string> GetAllFiles()
     {
-        return Directory.EnumerateFiles(projectPath, "*", SearchOption.AllDirectories).ToList();
+        return Directory.EnumerateFiles(projectPath, "*.*", SearchOption.AllDirectories).ToList();
     }
 
     private static void CreateInitialData()
@@ -120,11 +119,8 @@ public static class ProjectFileUtils
         if (!Directory.Exists(outputFolderPath))
             Directory.CreateDirectory(outputFolderPath);
 
-        var inputDirectories = GetSubdirectories(projectPath);
-        var outputDirectories = GetSubdirectories(outputFolderPath);
-
-        inputDirectories = inputDirectories.Select(d => Path.GetFullPath(d).TrimEnd(Path.DirectorySeparatorChar)).ToArray();
-        outputDirectories = outputDirectories.Select(d => Path.GetFullPath(d).TrimEnd(Path.DirectorySeparatorChar)).ToArray();
+        var inputDirectories = GetSubdirectories(projectPath).Select(d => Path.GetFullPath(d).TrimEnd(Path.DirectorySeparatorChar)).ToArray();
+        var outputDirectories = GetSubdirectories(outputFolderPath).Select(d => Path.GetFullPath(d).TrimEnd(Path.DirectorySeparatorChar)).ToArray();
 
         if (inputDirectories.SequenceEqual(outputDirectories, StringComparer.OrdinalIgnoreCase))
             return;
@@ -137,6 +133,8 @@ public static class ProjectFileUtils
             if (!Directory.Exists(outputDir))
                 Directory.CreateDirectory(outputDir);
         }
+
+        Task.Run(ConvertAudioFiles);
     }
 
     private static string TruncateDirectory(string inputPath, int dirLevels, string delimiter = "\\")
@@ -148,18 +146,27 @@ public static class ProjectFileUtils
         return string.Join(delimiter, splitDir[^dirLevels..]);
     }
 
-    private static string GetNextAudioFile(string path)
+    private static readonly Random rng = new();
+    private static string GetNextAudioFile()
     {
-        var audioFiles = Directory.EnumerateFiles(path, "*.*", SearchOption.AllDirectories).Where(IsAudioFile).ToList();
+        var audioFiles = GetAllFiles()
+            .OrderBy(f => f, StringComparer.OrdinalIgnoreCase)
+            .ToList();
+
+        string data = "";
+        foreach (var file in audioFiles)
+        {
+            data += $"\n {file}";
+            File.AppendAllText(Path.Join(AppProperties.ExtraApplicationData, "ggggggggggggggggg.txt"), file);
+        }
+
         if (!audioFiles.Any()) return string.Empty;
 
         if (AppFunctions.IntToBool(App.AppSettings.InputRandomizationEnabled))
         {
             // Pick random file from current project files if input randomization is enabled
-            var rng = new Random();
             return audioFiles[rng.Next(audioFiles.Count)];
         }
-
         return audioFiles.First();
     }
 
@@ -173,7 +180,6 @@ public static class ProjectFileUtils
     {
         if (!string.IsNullOrEmpty(currentFile) && !string.IsNullOrEmpty(currentOutFile))
         {
-            Directory.CreateDirectory(Path.GetDirectoryName(currentOutFile)!);
             File.Move(currentFile, currentOutFile);
             SetCurrentFile();
         }
@@ -202,7 +208,7 @@ public static class ProjectFileUtils
         SetCurrentFile();
     }
 
-    private static readonly string[] SupportedFileTypes = [".mp3", ".wav", ".wma", ".aac", ".m4a", ".flac", ".ogg", ".amr", ".aiff", ".3gp", ".asf", ".pcm"];
+    private static readonly string[] SupportedFileTypes = [".mp3", ".wav", ".wma", ".aac", ".m4a", ".flac", ".ogg", ".aiff"];
     private static bool IsAudioFile(string path)
     {
         return SupportedFileTypes.Any(fileType => path.EndsWith(fileType, StringComparison.OrdinalIgnoreCase));

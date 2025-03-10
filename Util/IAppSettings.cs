@@ -1,5 +1,4 @@
-﻿using AudioReplacer.Generic;
-using Config.Net;
+﻿using Config.Net;
 
 namespace AudioReplacer.Util;
 public interface IAppSettings
@@ -39,8 +38,4 @@ public interface IAppSettings
 
     [Option(Alias = "AutoConvertFiles", DefaultValue = 1)]
     int AutoConvertFiles { get; set; }
-
-    [Option(Alias = "OutputFileType", DefaultValue = "wav")]
-    string OutputFileType { get; set; }
-    
 }

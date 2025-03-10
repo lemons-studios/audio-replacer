@@ -56,8 +56,7 @@ public partial class App // I will admit, code-behind is still pretty useful her
             { "InputRandomizationEnabled", 0 },
             { "RecordStartWaitTime", 25 },
             { "EnableTranscription", 1 },
-            { "AutoConvertFiles", 1 },
-            { "OutputFileType", "wav" }
+            { "AutoConvertFiles", 1 }
         };
 
         // Merge existing settings with default settings

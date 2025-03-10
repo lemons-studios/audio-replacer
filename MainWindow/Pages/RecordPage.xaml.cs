@@ -53,6 +53,7 @@ public sealed partial class RecordPage // This file is among the worst written f
 
         if (ProjectFileUtils.IsProjectLoaded)
         {
+            
             ProjectFileUtils.SkipAudioTrack();
             UpdateFileElements();
             App.MainWindow.ShowNotification(InfoBarSeverity.Success, "File Skipped!", string.Empty, true);

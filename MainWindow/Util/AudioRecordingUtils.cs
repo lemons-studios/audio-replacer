@@ -65,7 +65,7 @@ public class AudioRecordingUtils
     [Log]
     private async Task ApplyFilters(string file)
     {
-        var tempOutFile = $"{file}.{App.AppSettings.OutputFileType}";
+        var tempOutFile = $"{file}.wav";
         var validatedPitchChange = MathF.Max(pitchChange, 0.001f);
         var filter = string.IsNullOrWhiteSpace(effectCommand)
             ? $"rubberband=pitch={validatedPitchChange}"

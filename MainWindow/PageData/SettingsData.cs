@@ -41,12 +41,6 @@ public partial class SettingsData : ObservableObject
         App.AppSettings.AppTransparencySetting = value;
     }
 
-    [ObservableProperty] private int selectedOutputType = Array.IndexOf(AppProperties.OutputTypes, App.AppSettings.OutputFileType);
-    partial void OnSelectedOutputTypeChanged(int value)
-    {
-        App.AppSettings.OutputFileType = AppProperties.OutputTypes[value];
-    }
-
     [ObservableProperty] private bool enableUpdateChecks = AppFunctions.IntToBool(App.AppSettings.AppUpdateCheck);
     partial void OnEnableUpdateChecksChanged(bool value)
     {

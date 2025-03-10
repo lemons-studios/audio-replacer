@@ -81,12 +81,9 @@ public static class AppFunctions
     }
 
     [Log]
-    public static async Task FfMpegCommand(string input, string command, string rawOutputPath, bool forceWav = false)
+    public static async Task FfMpegCommand(string input, string command, string outPath)
     {
-        var fileType = forceWav ? ".wav" : App.AppSettings.OutputFileType;
-        var outFile = Path.ChangeExtension(rawOutputPath, fileType);
-
-        await SpawnProcess(AppProperties.FfmpegPath, $"-i \"{input}\" {command} \"{outFile}\"");
+        await SpawnProcess(AppProperties.FfmpegPath, $"-i \"{input}\" {command} -y \"{outPath}\"");
     }
 
     public static void PopulateCustomData()

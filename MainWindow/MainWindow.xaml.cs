@@ -111,7 +111,7 @@ public sealed partial class MainWindow
                     }
                 }
             }
-            catch (NullReferenceException e)
+            catch (NullReferenceException)
             {
                 return;
             }

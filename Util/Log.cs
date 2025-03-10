@@ -6,7 +6,7 @@ using System.IO;
 namespace AudioReplacer.Util;
 public class Log : OverrideMethodAspect
 {
-    public override dynamic? OverrideMethod()
+    public override dynamic OverrideMethod()
     {
         // Get method information
         string methodName = meta.Target.Method.ToDisplayString();
@@ -15,7 +15,7 @@ public class Log : OverrideMethodAspect
         try
         {
             // Execute original method
-            dynamic? result = meta.Proceed();
+            dynamic result = meta.Proceed();
 
             // File.AppendAllText(AppProperties.LogFile ,$"\n{DateTime.Now:HH:mm:ss}: EXITING {methodName}");
             return result;
