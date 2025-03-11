@@ -25,14 +25,19 @@ public partial class App // I will admit, code-behind is still pretty useful her
 
     public App()
     {
+        if (!Directory.Exists(AppProperties.ExtraApplicationData))
+            Directory.CreateDirectory(AppProperties.ExtraApplicationData);
+
+        if (!Directory.Exists(AppProperties.BinaryPath))
+            Directory.CreateDirectory(AppProperties.BinaryPath);
+
         File.WriteAllText(AppProperties.LogFile, "Log Started!");
         CreateSettingsData();
         CreateJsonData();
+
         AppSettings = new ConfigurationBuilder<IAppSettings>().UseJsonFile(AppProperties.SettingsFile).Build();
         InitializeComponent();
         VelopackApp.Build().Run();
-        if (!Directory.Exists(AppProperties.BinaryPath)) 
-            Directory.CreateDirectory(AppProperties.BinaryPath);
     }
 
     private void CreateSettingsData()
