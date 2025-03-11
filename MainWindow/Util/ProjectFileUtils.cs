@@ -148,11 +148,17 @@ public static class ProjectFileUtils
     private static readonly Random rng = new();
     private static string GetNextAudioFile()
     {
-        var audioFiles = GetAllFiles().ToList();
+        var audioFiles = GetAllFiles()
+            .OrderByDescending(p =>
+                (Path.GetDirectoryName(p) ?? String.Empty).Count(c => c == Path.DirectorySeparatorChar))
+            .ThenBy(p => Path.GetDirectoryName(p))
+            .ThenBy(p => Path.GetFileName(p))
+            .ToList();
+
         audioFiles.Sort();
         foreach (var file in audioFiles)
         {
-            File.AppendAllText(Path.Join(AppProperties.ExtraApplicationData, "test.txt"), $"\n{file}");
+            File.AppendAllText(Path.Join(AppProperties.ExtraApplicationData, "test.txt"), $"\n{Path.GetFileName(file)}");
         }
         if (!audioFiles.Any()) return string.Empty;
 
