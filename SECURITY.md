@@ -1,8 +1,10 @@
 # Security Policy
 
 ## Supported Versions
-This is a very small project that I decided to make public. If vulnerabilities are found, I will push out a hotfix for the latest version after fixing the issues as soon as I am able to.
-In other words, only the latest version of the appplication will ever be supported. Furthermore, I will only be supporting the latest versions of both Windows 10 and 11 until Windows 10 22H2 enters end of life. After that date, security issues that **ONLY** affect users on Windows 10 will not be accepted
+Audio Replacer only has one supported version at any given time, so if there's a security issue that's affecting older versions but not the latest one, I will not fix it as I do not have the time to work on it. 
+
+### Windows
+Security issues that only affect Windows 11 insider builds will not be addressed. Similarly, Issues that only affect Windows 10 after end of life will not be addressed.
 
 ## Reporting a Vulnerability
 If a vulnerability with the code in this project is found (**NOT** with project dependencies, that's not my responsibility to keep safe (UNLESS the dependency is abandoned and has issues)), Please let me know as soon as possible through any of the following means:
