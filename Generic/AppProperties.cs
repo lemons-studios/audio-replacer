@@ -11,6 +11,7 @@ public class AppProperties
     public static readonly string FfmpegPath = Path.Combine(BinaryPath, "ffmpeg.exe");
     public static readonly string WhisperPath = Path.Join(BinaryPath, "whisper.bin");
     public static readonly string ConfigPath = Path.Join(ExtraApplicationData, "config");
+    public static readonly string OutputPath = Path.Join(ExtraApplicationData, "out");
     public static readonly string SettingsFile = Path.Join(ConfigPath, "AppSettings.json");
     public static readonly string PitchDataFile = Path.Join(ConfigPath, "PitchData.json");
     public static readonly string EffectsDataFile = Path.Join(ConfigPath, "EffectsData.json");

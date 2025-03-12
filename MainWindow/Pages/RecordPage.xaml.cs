@@ -1,4 +1,8 @@
-﻿using AudioReplacer.Generic;
+﻿using System;
+using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
+using AudioReplacer.Generic;
 using AudioReplacer.MainWindow.Util;
 using AudioReplacer.Util;
 using CommunityToolkit.WinUI;
@@ -6,20 +10,15 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using NAudio.Wave;
 using NAudio.Wave.SampleProviders;
-using System;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
 using Whisper.net;
 using Whisper.net.LibraryLoader;
 using Windows.Media.Core;
-using Windows.Media.Playback;
 
 namespace AudioReplacer.MainWindow.Pages;
 public sealed partial class RecordPage // This file is among the worst written files in the project. It works though so I won't be changing it until I'm bored
 {
     private AudioRecordingUtils audioRecordingUtils;
-    private bool viewingOriginal = false;
+    private bool viewingOriginal;
 
     public RecordPage()
     {
@@ -192,11 +191,14 @@ public sealed partial class RecordPage // This file is among the worst written f
         });
     }
 
-    private async void CancelCurrentRecording(object sender, RoutedEventArgs e)
+    private void CancelCurrentRecording(object sender, RoutedEventArgs e)
     {
-        AppProperties.InRecordState = false;
-        await audioRecordingUtils.CancelRecording();
-        App.MainWindow.ShowNotification(InfoBarSeverity.Informational, "Recording Cancelled", string.Empty, true, replaceExistingNotifications: true);
+        Task.Run(async () =>
+        {
+            AppProperties.InRecordState = false;
+            await audioRecordingUtils.CancelRecording();
+            App.MainWindow.ShowNotification(InfoBarSeverity.Informational, "Recording Cancelled", string.Empty, true, replaceExistingNotifications: true);
+        });
     }
 
     [Log]
@@ -220,7 +222,7 @@ public sealed partial class RecordPage // This file is among the worst written f
         App.MainWindow.ShowNotification(InfoBarSeverity.Informational, "Recording Rejected", "Moving back to current file...", true, replaceExistingNotifications: true);
         UpdateFileElements(false); // To prevent transcription when it's not needed
     }
-
+    
     private void OnUnloaded(object sender, RoutedEventArgs e)
     {
         // Prevent audio from playing on other pages if the media player is left playing

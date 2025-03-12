@@ -9,10 +9,17 @@ using System.Threading.Tasks;
 using Windows.Storage;
 
 namespace AudioReplacer.MainWindow.Util;
+
+/// <summary>
+/// Manages paths to files in an AudioReplacer project
+/// </summary>
+
 public static class ProjectFileUtils
 {
-    private static string currentFile, truncatedCurrentFile, currentOutFile, currentFileName, directoryName, currentFileLocalPath;
+    private static string currentFile, truncatedCurrentFile, currentOutFile, currentFileName, currentFileLocalPath;
     private static string outputFolderPath, projectPath;
+
+    private static readonly string[] SupportedFileTypes = [".mp3", ".wav", ".wma", ".aac", ".m4a", ".flac", ".ogg", ".aiff"]; // TODO: Switch to some way to check for all audio file types
     public static bool IsProjectLoaded, ExtraEditsFlagged = false;
 
     public delegate void BroadcastEventHandler();
@@ -29,7 +36,7 @@ public static class ProjectFileUtils
     {
         projectPath = path;
         var projectName = projectPath.Split("\\")[^1];
-        outputFolderPath = Path.Join(AppProperties.ExtraApplicationData, "out", projectName);
+        outputFolderPath = Path.Join(AppProperties.OutputPath, projectName);
         CreateInitialData();
         SetCurrentFile();
         Broadcast();
@@ -45,24 +52,18 @@ public static class ProjectFileUtils
             truncatedCurrentFile = "YOU ARE DONE!";
             currentOutFile = string.Empty;
             currentFileName = string.Empty;
-            directoryName = string.Empty;
             return;
         }
 
         truncatedCurrentFile = TruncateDirectory(currentFile, 2);
         currentFileName = Path.GetFileName(currentFile);
-        directoryName = TruncateDirectory(Path.GetDirectoryName(currentFile)!, 1);
 
-        // This essentially gets the path to the file but removes the path from the root. useful for setting the output file
-        // C:\path\to\project\then\file.wav will be split with C:\path\to\project\, creating an array with then\to\file at position 1
-
-        // We can then combine the output directory (%appdata%\audio-replacer\out\[project-name]) with the split directory from the above variable
-        // To get the absolute path to the output. This fixes an issue where audio-replacer only worked with files from only 2 subdirectories in
+        // Path manipulation trickery
+        // tldr: split the path to the current file with the path to the project folder, then combine the split path with the path to the output folder
         currentFileLocalPath = currentFile.Split(projectPath)[1];
         currentOutFile = Path.Join(outputFolderPath, currentFileLocalPath);
     }
 
-    // The application prefers that all input files are of the .wav format
     [Log]
     private static async Task ConvertAudioFiles()
     {
@@ -85,15 +86,15 @@ public static class ProjectFileUtils
                     File.Delete(input);
                     if (App.MainWindow != null)
                     {
-                        float progress = MathF.Floor(((float) i / totalFiles) * 100);
+                        var percentage = MathF.Floor(((float) i / totalFiles) * 100);
                         if (!isNotificationOpen)
                         {
-                            App.MainWindow.ToggleCompletionNotification("Converting files to .wav format...", $"Progress: {progress}%", progress);
+                            App.MainWindow.ToggleCompletionNotification("Converting files to .wav format", $"Progress: {percentage}%", percentage);
                             isNotificationOpen = true;
                         }
                         else
                         {
-                            App.MainWindow.SetCompletionMessage($"Progress: {progress}%", progress);
+                            App.MainWindow.SetCompletionMessage($"Progress: {percentage}%", percentage);
                         }
                     }
                 }
@@ -108,25 +109,19 @@ public static class ProjectFileUtils
         }
     }
 
-    private static List<string> GetAllFiles()
-    {
-        return Directory.EnumerateFiles(projectPath, "*", SearchOption.AllDirectories).ToList();
-    }
-
     private static void CreateInitialData()
     {
-        if (!Directory.Exists(outputFolderPath))
-            Directory.CreateDirectory(outputFolderPath);
-
         var inputDirectories = GetSubdirectories(projectPath).Select(d => Path.GetFullPath(d).TrimEnd(Path.DirectorySeparatorChar)).ToArray();
         var outputDirectories = GetSubdirectories(outputFolderPath).Select(d => Path.GetFullPath(d).TrimEnd(Path.DirectorySeparatorChar)).ToArray();
 
         if (inputDirectories.SequenceEqual(outputDirectories, StringComparer.OrdinalIgnoreCase))
             return;
 
-        foreach (var dir in inputDirectories)
+
+        // Create a mirrored directory layout in the output folder
+        foreach (var d in inputDirectories)
         {
-            var relativePath = Path.GetRelativePath(projectPath, dir);
+            var relativePath = Path.GetRelativePath(projectPath, d);
             var outputDir = Path.Combine(outputFolderPath, relativePath);
 
             if (!Directory.Exists(outputDir))
@@ -145,14 +140,14 @@ public static class ProjectFileUtils
         return string.Join(delimiter, splitDir[^dirLevels..]);
     }
 
-    private static readonly Random rng = new();
+    private static readonly Random Rng = new();
     private static string GetNextAudioFile()
     {
         var audioFiles = GetAllFiles()
-            .OrderByDescending(p =>
-                (Path.GetDirectoryName(p) ?? String.Empty).Count(c => c == Path.DirectorySeparatorChar))
-            .ThenBy(p => Path.GetDirectoryName(p))
-            .ThenBy(p => Path.GetFileName(p))
+            .Where(IsAudioFile)
+            .OrderByDescending(p => Path.GetDirectoryName(p)?.Count(c => c == Path.DirectorySeparatorChar) ?? 0)
+            .ThenBy(Path.GetDirectoryName)
+            .ThenBy(Path.GetFileName)
             .ToList();
 
         audioFiles.Sort();
@@ -160,21 +155,23 @@ public static class ProjectFileUtils
         {
             File.AppendAllText(Path.Join(AppProperties.ExtraApplicationData, "test.txt"), $"\n{Path.GetFileName(file)}");
         }
-        if (!audioFiles.Any()) return string.Empty;
-
-        if (AppFunctions.IntToBool(App.AppSettings.InputRandomizationEnabled))
-        {
-            // Pick random file from current project files if input randomization is enabled
-            return audioFiles[rng.Next(audioFiles.Count)];
-        }
-        return audioFiles.First();
+        return audioFiles.Any() ? string.Empty 
+            : AppFunctions.IntToBool(App.AppSettings.InputRandomizationEnabled)
+            ? audioFiles[Rng.Next(audioFiles.Count)] : audioFiles.First();
     }
 
+    /// <summary>
+    /// Calculates completion of an AudioReplacer project by dividing the # of files in the output folder with
+    /// the # of files in the input folder + the # of files in the output folder, multiplied by 100
+    /// </summary>
+    /// <returns> Project Completion percentage </returns>
     public static float CalculatePercentageComplete()
     {
-        int inputFileCount = GetFileCount(projectPath);
-        int outputFileCount = GetFileCount(outputFolderPath);
-        return inputFileCount + outputFileCount == 0 ? 100 : (float) Math.Round(outputFileCount / (double) (inputFileCount + outputFileCount) * 100, 2);
+        var inCount = GetFileCount(projectPath);
+        var outCount = GetFileCount(outputFolderPath);
+        return inCount + outCount == 0 
+            ? 100 // Edge case
+            : (float) Math.Round(outCount / (double) (inCount + outCount) * 100, 2);
     }
 
     public static void SkipAudioTrack()
@@ -196,9 +193,9 @@ public static class ProjectFileUtils
 
         if (ExtraEditsFlagged)
         {
-            string dir = Path.GetDirectoryName(currentOutFile);
-            string file = $"ExtraEditsRequired-{Path.GetFileName(currentOutFile)}";
-            string joinedPath = Path.Join(dir, file);
+            var dir = Path.GetDirectoryName(currentOutFile);
+            var file = $"ExtraEditsRequired-{Path.GetFileName(currentOutFile)}";
+            var joinedPath = Path.Join(dir, file);
             File.Move(currentOutFile!, joinedPath);
         }
         // Loop through all folders in input and delete any empty files
@@ -209,7 +206,6 @@ public static class ProjectFileUtils
         SetCurrentFile();
     }
 
-    private static readonly string[] SupportedFileTypes = [".mp3", ".wav", ".wma", ".aac", ".m4a", ".flac", ".ogg", ".aiff"];
     private static bool IsAudioFile(string path)
     {
         return SupportedFileTypes.Any(fileType => path.EndsWith(fileType, StringComparison.OrdinalIgnoreCase));
@@ -217,8 +213,7 @@ public static class ProjectFileUtils
 
     private static bool IsUndesirableAudioFile(string path)
     {
-        return SupportedFileTypes.Any(fileType => path.EndsWith(fileType, StringComparison.OrdinalIgnoreCase))
-               && !path.EndsWith(".wav", StringComparison.OrdinalIgnoreCase);
+        return SupportedFileTypes.Any(fileType => path.EndsWith(fileType, StringComparison.OrdinalIgnoreCase)) && !path.EndsWith(".wav", StringComparison.OrdinalIgnoreCase);
     }
 
     private static string[] GetSubdirectories(string path)
@@ -255,5 +250,10 @@ public static class ProjectFileUtils
     public static async Task<StorageFolder> GetDirectoryAsStorageFolder()
     {
         return await StorageFolder.GetFolderFromPathAsync(Path.GetDirectoryName(currentOutFile));
+    } 
+    
+    private static List<string> GetAllFiles()
+    {
+        return Directory.EnumerateFiles(projectPath, "*", SearchOption.AllDirectories).ToList();
     }
 }

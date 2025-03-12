@@ -15,7 +15,7 @@ using WinRT.Interop;
 
 namespace AudioReplacer;
 
-public partial class App // I will admit, code-behind is still pretty useful here. Mvvm would overcomplicate things. While this is messier, it gets the job done
+public partial class App
 {
     public static AppWindow AppWindow;
     public static MainWindow.MainWindow MainWindow { get; private set; }
@@ -25,11 +25,7 @@ public partial class App // I will admit, code-behind is still pretty useful her
 
     public App()
     {
-        if (!Directory.Exists(AppProperties.ExtraApplicationData))
-            Directory.CreateDirectory(AppProperties.ExtraApplicationData);
-
-        if (!Directory.Exists(AppProperties.BinaryPath))
-            Directory.CreateDirectory(AppProperties.BinaryPath);
+        CreateAdditionalData();
 
         File.WriteAllText(AppProperties.LogFile, "Log Started!");
         CreateSettingsData();
@@ -42,12 +38,6 @@ public partial class App // I will admit, code-behind is still pretty useful her
 
     private void CreateSettingsData()
     {
-        if (!Directory.Exists(AppProperties.ConfigPath))
-            Directory.CreateDirectory(AppProperties.ConfigPath);
-
-        if (!File.Exists(AppProperties.SettingsFile))
-            File.WriteAllText(AppProperties.SettingsFile, "{\n\n}");
-
         var existingConfig = JsonSerializer.Deserialize<Dictionary<string, object>>(File.ReadAllText(AppProperties.SettingsFile));
         var defaultConfig = new Dictionary<string, object>
         {
@@ -77,14 +67,6 @@ public partial class App // I will admit, code-behind is still pretty useful her
     [Log]
     private void CreateJsonData()
     {
-        // Users will have to import their own data files for this app to work,
-        // but create an empty file with the start of a json array (for functionality purposes)
-        if (!File.Exists(AppProperties.PitchDataFile)) 
-            File.WriteAllText(AppProperties.PitchDataFile, "[\n\n]");
-
-        if (!File.Exists(AppProperties.EffectsDataFile)) 
-            File.WriteAllText(AppProperties.EffectsDataFile, "[\n\n]");
-
         try
         {
             AppProperties.PitchData =
@@ -94,7 +76,6 @@ public partial class App // I will admit, code-behind is still pretty useful her
         {
             AppProperties.PitchData = [];
         }
-
         try
         {
             AppProperties.EffectData = JsonSerializer.Deserialize<string[][]>(File.ReadAllText(AppProperties.EffectsDataFile));
@@ -132,5 +113,24 @@ public partial class App // I will admit, code-behind is still pretty useful her
         var hWnd = WindowNative.GetWindowHandle(window);
         var currentWndId = Win32Interop.GetWindowIdFromWindow(hWnd);
         return AppWindow.GetFromWindowId(currentWndId);
+    }
+
+    private void CreateAdditionalData()
+    {
+        string[] directories = [AppProperties.ExtraApplicationData, AppProperties.ConfigPath, AppProperties.BinaryPath, AppProperties.OutputPath];
+        string[] files = [AppProperties.SettingsFile, AppProperties.PitchDataFile, AppProperties.EffectsDataFile];
+
+        foreach (var d in directories)
+        {
+            if (!Directory.Exists(d))
+                Directory.CreateDirectory(d!);
+        }
+
+        foreach (var f in files)
+        {
+            // All additional files use the json format, so I will just have this method create a file with the square brackets
+            if(!File.Exists(f))
+                File.WriteAllText(f, "[\n\n]");
+        }
     }
 }
