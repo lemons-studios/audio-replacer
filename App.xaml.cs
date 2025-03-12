@@ -1,15 +1,14 @@
-﻿using AudioReplacer.Generic;
-using AudioReplacer.Util;
-using AudioReplacer.MainWindow;
+﻿using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Text.Json;
+using AudioReplacer.Generic;
 using AudioReplacer.Setup;
+using AudioReplacer.Util;
 using Config.Net;
 using Microsoft.UI;
 using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text.Json;
 using Velopack;
 using WinRT.Interop;
 
@@ -26,11 +25,10 @@ public partial class App
     public App()
     {
         CreateAdditionalData();
-
-        File.WriteAllText(AppProperties.LogFile, "Log Started!");
         CreateSettingsData();
         CreateJsonData();
 
+        File.WriteAllText(AppProperties.LogFile, "Log Started!");
         AppSettings = new ConfigurationBuilder<IAppSettings>().UseJsonFile(AppProperties.SettingsFile).Build();
         InitializeComponent();
         VelopackApp.Build().Run();
@@ -38,7 +36,19 @@ public partial class App
 
     private void CreateSettingsData()
     {
-        var existingConfig = JsonSerializer.Deserialize<Dictionary<string, object>>(File.ReadAllText(AppProperties.SettingsFile));
+        Dictionary<string, object> existingConfig;
+        try
+        {
+            existingConfig = JsonSerializer.Deserialize<Dictionary<string, object>>(File.ReadAllText(AppProperties.SettingsFile));
+        }
+        catch (JsonException)
+        {
+            existingConfig = new Dictionary<string, object>
+            {
+                // Create a dummy dictionary with no properties in it
+            };
+        }
+
         var defaultConfig = new Dictionary<string, object>
         {
             { "Theme", 0 },
@@ -55,9 +65,9 @@ public partial class App
         };
 
         // Merge existing settings with default settings
-        foreach (string key in defaultConfig.Keys.Where(key => !existingConfig.ContainsKey(key)))
+        foreach (var k in defaultConfig.Keys.Where(e => !existingConfig.ContainsKey(e)))
         {
-            existingConfig[key] = defaultConfig[key];
+            existingConfig[k] = defaultConfig[k];
         }
 
         var updatedJson = JsonSerializer.Serialize(existingConfig, new JsonSerializerOptions { WriteIndented = true });
@@ -94,7 +104,7 @@ public partial class App
         {
             case true:
                 // Only initialize rich presence when app is configured
-                if (AppFunctions.IntToBool(App.AppSettings.EnableRichPresence)) 
+                if (AppFunctions.IntToBool(AppSettings.EnableRichPresence)) 
                     DiscordController = new RichPresenceController("On Record Page", "No Project Loaded", "idle", "Idle");
                 MainWindow = new MainWindow.MainWindow();
                 MainWindow.Activate();
@@ -130,7 +140,7 @@ public partial class App
         {
             // All additional files use the json format, so I will just have this method create a file with the square brackets
             if(!File.Exists(f))
-                File.WriteAllText(f, "[\n\n]");
+                File.WriteAllText(f!, "[\n\n]");
         }
     }
 }

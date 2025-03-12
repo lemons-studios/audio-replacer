@@ -101,7 +101,6 @@ public sealed partial class RecordPage // This file is among the worst written f
             CurrentFile.Text = ProjectFileUtils.GetCurrentFile().Replace(@"\", "/");
             RemainingFiles.Text = $"Files Remaining: {ProjectFileUtils.GetFileCount(projectPath):N0} ({progressPercentage}%)";
             RemainingFilesProgress.Value = progressPercentage;
-
             AudioPreview.Source = MediaSource.CreateFromUri(new Uri(ProjectFileUtils.GetCurrentFile(false)));
             AudioPreview.TransportControls.IsEnabled = true;
         });

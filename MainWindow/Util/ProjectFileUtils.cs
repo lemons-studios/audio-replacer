@@ -37,6 +37,8 @@ public static class ProjectFileUtils
         projectPath = path;
         var projectName = projectPath.Split("\\")[^1];
         outputFolderPath = Path.Join(AppProperties.OutputPath, projectName);
+        if (!Directory.Exists(outputFolderPath))
+            Directory.CreateDirectory(outputFolderPath);
         CreateInitialData();
         SetCurrentFile();
         Broadcast();
@@ -155,16 +157,20 @@ public static class ProjectFileUtils
         {
             File.AppendAllText(Path.Join(AppProperties.ExtraApplicationData, "test.txt"), $"\n{Path.GetFileName(file)}");
         }
-        return audioFiles.Any() ? string.Empty 
-            : AppFunctions.IntToBool(App.AppSettings.InputRandomizationEnabled)
-            ? audioFiles[Rng.Next(audioFiles.Count)] : audioFiles.First();
+        try
+        {
+            return audioFiles.Any() ? string.Empty
+                : AppFunctions.IntToBool(App.AppSettings.InputRandomizationEnabled)
+                    ? audioFiles[Rng.Next(audioFiles.Count)] : audioFiles.First();
+        }
+        catch (InvalidOperationException)
+        {
+            return string.Empty;
+        }
     }
 
-    /// <summary>
-    /// Calculates completion of an AudioReplacer project by dividing the # of files in the output folder with
-    /// the # of files in the input folder + the # of files in the output folder, multiplied by 100
-    /// </summary>
-    /// <returns> Project Completion percentage </returns>
+    /// <summary>Calculates how many files the user has completed in the current project</summary>
+    /// <returns>Project Completion percentage</returns>
     public static float CalculatePercentageComplete()
     {
         var inCount = GetFileCount(projectPath);
@@ -218,7 +224,7 @@ public static class ProjectFileUtils
 
     private static string[] GetSubdirectories(string path)
     {
-        return Directory.GetDirectories(path, "*", SearchOption.AllDirectories);
+        return Directory.GetDirectories(path, "*", SearchOption.AllDirectories) ?? [];
     }
 
     public static string GetCurrentFile(bool truncate = true)
