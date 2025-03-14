@@ -13,21 +13,21 @@ where dotnet >nul 2>&1 || (
 )
 
 :: Ensure that Labs-Windows source is added to project
-echo (1/5) Adding Labs-Windows to the nuget package sources
+echo (1/5) Adding Windows Community Toolkit Labs NuGet package source
 dotnet nuget add source https://pkgs.dev.azure.com/dotnet/CommunityToolkit/_packaging/CommunityToolkit-Labs/nuget/v3/index.json --name Labs-Windows > nul 2> nul
 
 :: Update vpk before build
-echo (2/5) Updating Velopack cli...
+echo (2/5) Updating Velopack CLI
 dotnet tool update -g vpk > nul 2> nul
 
 :: Publish release build before packaging application
 echo (3/5) Creating Release Build
 dotnet publish -c Release --self-contained -r win-x64 -o .\
 
-:: For whatever reason, dotnet publish doesn't include the Assets/ folder. Copy it over to publish before packaging
-echo (4/5) Copying Assets..
-mkdir Publish\Assets\
-copy /y Assets Publish\Assets\
+:: For whatever reason, dotnet publish doesn't copy over the assets folder. Let's copy it over manually here
+echo (4/5) Copying Assets
+mkdir Publish\Assets\ > nul 2> nul
+copy /y Assets Publish\Assets\ > nul 2> nul
 
 :: Build app installer with vpk
 echo (5/5) Building app installer with vpk...
