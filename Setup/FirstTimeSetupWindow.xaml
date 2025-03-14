@@ -1,14 +1,14 @@
 <WinUiEx:WindowEx
+    MinHeight="450"
+    MinWidth="750"
+    Title="First Time Setup"
+    mc:Ignorable="d"
     x:Class="AudioReplacer.Setup.FirstTimeSetupWindow"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:WinUiEx="using:WinUIEx"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    Title="First Time Setup"
-    MinWidth="750"
-    MinHeight="450"
-    mc:Ignorable="d">
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <Grid VerticalAlignment="Stretch">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -16,27 +16,24 @@
         </Grid.RowDefinitions>
 
         <Border
-            x:Name="AppTitleBar"
+            BorderThickness="0,0,0,1"
             Grid.Row="0"
             Padding="10"
             VerticalAlignment="Top"
-            BorderThickness="0,0,0,1">
+            x:Name="AppTitleBar">
             <StackPanel Orientation="Horizontal">
                 <FontIcon Glyph="&#xE9F5;" Style="{StaticResource TitleBarIcon}" />
                 <StackPanel Orientation="Horizontal">
-                    <TextBlock
-                        x:Name="AppTitle"
-                        Style="{StaticResource TitleBarText}"
-                        Text="Audio Replacer Setup" />
+                    <TextBlock Style="{StaticResource TitleBarText}" Text="Audio Replacer Setup" />
                 </StackPanel>
             </StackPanel>
         </Border>
 
         <Frame
-            x:Name="MainFrame"
             Grid.Row="1"
-            Padding="15"
             HorizontalAlignment="Stretch"
-            VerticalAlignment="Stretch" />
+            Padding="15"
+            VerticalAlignment="Stretch"
+            x:Name="MainFrame" />
     </Grid>
 </WinUiEx:WindowEx>

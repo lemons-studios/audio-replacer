@@ -16,13 +16,14 @@ namespace AudioReplacer.MainWindow.PageData;
 public partial class SettingsData : ObservableObject
 {
     [ObservableProperty] private bool whisperAvailable = AppProperties.IsWhisperInstalled;
-    [ObservableProperty] private bool whisperInstalled = !AppProperties.IsWhisperInstalled; // Bad variable name lol. should have just used inverse of whisperAvailable here
+    [ObservableProperty] private bool whisperInstalled = !AppProperties.IsWhisperInstalled;
     [ObservableProperty] private int selectedAppTheme = App.AppSettings.AppThemeSetting;
 
     partial void OnSelectedAppThemeChanged(int value)
     {
         if (App.MainWindow.Content is FrameworkElement rootElement)
             rootElement.RequestedTheme = (ElementTheme) value;
+        
         App.AppSettings.AppThemeSetting = value;
     }
 
@@ -105,13 +106,13 @@ public partial class SettingsData : ObservableObject
     }
 
     [RelayCommand]
-    private void OpenOutputFolder()
+    private static void OpenOutputFolder()
     {
-        Task.Run(async () => await AppFunctions.SpawnProcess("explorer", Path.Combine(AppProperties.ExtraApplicationData, "out")));
+        Task.Run(async () => await AppFunctions.SpawnProcess("explorer", AppProperties.OutputPath));
     }
 
     [RelayCommand]
-    private void OpenDataFile()
+    private static void OpenDataFile()
     {
         if (!AppProperties.IsAppLoaded) return;
         Task.Run(async () => await AppFunctions.SpawnProcess("", string.Empty));

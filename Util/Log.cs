@@ -4,18 +4,21 @@ using System;
 using System.IO;
 
 namespace AudioReplacer.Util;
+/// <summary>
+/// Method Exception/Error logger built with PostSharp MetaLama
+/// </summary>
 public class Log : OverrideMethodAspect
 {
     public override dynamic OverrideMethod()
     {
         // Get method information
-        string methodName = meta.Target.Method.ToDisplayString();
+        var methodName = meta.Target.Method.ToDisplayString();
 
         // File.AppendAllText(AppProperties.LogFile, $"\n{DateTime.Now:HH:mm:ss}: ENTERING {methodName}");
         try
         {
             // Execute original method
-            dynamic result = meta.Proceed();
+            var result = meta.Proceed();
 
             // File.AppendAllText(AppProperties.LogFile ,$"\n{DateTime.Now:HH:mm:ss}: EXITING {methodName}");
             return result;

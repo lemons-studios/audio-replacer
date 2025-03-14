@@ -132,7 +132,7 @@ public static class ProjectFileUtils
 
         Task.Run(ConvertAudioFiles);
     }
-
+    
     private static string TruncateDirectory(string inputPath, int dirLevels, string delimiter = "\\")
     {
         if (string.IsNullOrEmpty(inputPath) || dirLevels <= 0) return inputPath;
@@ -143,29 +143,33 @@ public static class ProjectFileUtils
     }
 
     private static readonly Random Rng = new();
+    [Log]
     private static string GetNextAudioFile()
     {
+        // This array should hopefully order by directory name and make subdirectories of directories appear with them
+        // So a/b/c.wav will come before a/c2.wav
         var audioFiles = GetAllFiles()
             .Where(IsAudioFile)
-            .OrderByDescending(p => Path.GetDirectoryName(p)?.Count(c => c == Path.DirectorySeparatorChar) ?? 0)
-            .ThenBy(Path.GetDirectoryName)
+            .OrderBy(Path.GetDirectoryName)
             .ThenBy(Path.GetFileName)
+            .ThenBy(p => p.Split(Path.DirectorySeparatorChar).Length)
             .ToList();
-
-        audioFiles.Sort();
+        
+        // Remove after debugging
         foreach (var file in audioFiles)
         {
             File.AppendAllText(Path.Join(AppProperties.ExtraApplicationData, "test.txt"), $"\n{Path.GetFileName(file)}");
         }
         try
         {
+            // Incredible double ternary expression. reduced line count in this method by maybe 10-15
             return audioFiles.Any() ? string.Empty
                 : AppFunctions.IntToBool(App.AppSettings.InputRandomizationEnabled)
                     ? audioFiles[Rng.Next(audioFiles.Count)] : audioFiles.First();
         }
-        catch (InvalidOperationException)
+        catch (Exception) // If anything goes wrong, return an empty string
         {
-            return string.Empty;
+            return string.Empty; 
         }
     }
 
@@ -182,21 +186,19 @@ public static class ProjectFileUtils
 
     public static void SkipAudioTrack()
     {
-        if (!string.IsNullOrEmpty(currentFile) && !string.IsNullOrEmpty(currentOutFile))
-        {
-            File.Move(currentFile, currentOutFile);
-            SetCurrentFile();
-        }
+        if (string.IsNullOrEmpty(currentFile) || string.IsNullOrEmpty(currentOutFile)) 
+            return;
+        
+        File.Move(currentFile, currentOutFile);
+        SetCurrentFile();
     }
 
     [Log]
     public static void SubmitAudioFile()
     {
-        if (!string.IsNullOrEmpty(currentFile))
-        {
+        if (!string.IsNullOrEmpty(currentFile)) 
             File.Delete(currentFile);
-        }
-
+        
         if (ExtraEditsFlagged)
         {
             var dir = Path.GetDirectoryName(currentOutFile);
@@ -207,7 +209,8 @@ public static class ProjectFileUtils
         // Loop through all folders in input and delete any empty files
         foreach (var dir in Directory.GetDirectories(projectPath, "*", SearchOption.AllDirectories))
         {
-            if (!Directory.EnumerateFileSystemEntries(dir).Any()) Directory.Delete(dir);
+            if (!Directory.EnumerateFileSystemEntries(dir).Any()) 
+                Directory.Delete(dir);
         }
         SetCurrentFile();
     }
@@ -224,7 +227,7 @@ public static class ProjectFileUtils
 
     private static string[] GetSubdirectories(string path)
     {
-        return Directory.GetDirectories(path, "*", SearchOption.AllDirectories) ?? [];
+        return Directory.GetDirectories(path, "*", SearchOption.AllDirectories);
     }
 
     public static string GetCurrentFile(bool truncate = true)

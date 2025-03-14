@@ -1,4 +1,5 @@
-﻿using AudioReplacer.Generic;
+﻿using System;
+using AudioReplacer.Generic;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using Velopack;
@@ -9,7 +10,7 @@ public static class AppUpdater
     // Velopack will search through the url below for updates
     // Specifically a json file on a remote backblaze server. The address to that server is located in MainWindow
     public static UpdateManager AppUpdateManager;
-    public static UpdateInfo AppUpdateInfo;
+    private static UpdateInfo AppUpdateInfo;
 
     public delegate void BroadcastEventHandler();
     public static event BroadcastEventHandler OnUpdateFound;
@@ -35,9 +36,9 @@ public static class AppUpdater
                 }
             }
         }
-        catch
+        catch (Exception e)
         {
-            return;
+            throw new Exception(e.Message);
         }
     }
 }

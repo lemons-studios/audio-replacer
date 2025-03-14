@@ -14,6 +14,9 @@ using WinRT.Interop;
 
 namespace AudioReplacer;
 
+/// <summary>
+/// App Entry Point. Also stores commonly used elements from the app
+/// </summary>
 public partial class App
 {
     public static AppWindow AppWindow;
@@ -43,10 +46,7 @@ public partial class App
         }
         catch (JsonException)
         {
-            existingConfig = new Dictionary<string, object>
-            {
-                // Create a dummy dictionary with no properties in it
-            };
+            existingConfig = new Dictionary<string, object>(); // Create a dummy dictionary if the json serializer fails (Usually when the file is empty or just being created)
         }
 
         var defaultConfig = new Dictionary<string, object>
@@ -77,26 +77,23 @@ public partial class App
     [Log]
     private void CreateJsonData()
     {
-        try
-        {
-            AppProperties.PitchData =
-                JsonSerializer.Deserialize<string[][]>(File.ReadAllText(AppProperties.PitchDataFile));
-        }
-        catch (JsonException)
-        {
-            AppProperties.PitchData = [];
-        }
-        try
-        {
-            AppProperties.EffectData = JsonSerializer.Deserialize<string[][]>(File.ReadAllText(AppProperties.EffectsDataFile));
-        }
-        catch (JsonException)
-        {
-            AppProperties.EffectData = [];
-        }
+        AppProperties.PitchData = LoadJsonData(AppProperties.PitchDataFile);
+        AppProperties.EffectData = LoadJsonData(AppProperties.EffectsDataFile);
         AppFunctions.PopulateCustomData();
     }
 
+    private string[][] LoadJsonData(string path)
+    {
+        try
+        {
+            return JsonSerializer.Deserialize<string[][]>(File.ReadAllText(path));
+        }
+        catch (JsonException)
+        {
+            return [];
+        }
+    }
+    
     [Log]
     protected override void OnLaunched(LaunchActivatedEventArgs args)
     {
@@ -125,6 +122,8 @@ public partial class App
         return AppWindow.GetFromWindowId(currentWndId);
     }
 
+    
+    [Log]
     private void CreateAdditionalData()
     {
         string[] directories = [AppProperties.ExtraApplicationData, AppProperties.ConfigPath, AppProperties.BinaryPath, AppProperties.OutputPath];

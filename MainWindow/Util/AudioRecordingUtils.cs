@@ -10,10 +10,14 @@ using Microsoft.UI.Xaml.Controls;
 using AudioReplacer.Generic;
 
 namespace AudioReplacer.MainWindow.Util;
+
+/// <summary>
+/// Utilities to record and process audio for Audio Replacer projects
+/// </summary>
 public class AudioRecordingUtils
 {
-    public float pitchChange = 1;
-    public string effectCommand = "";
+    public float PitchChange = 1;
+    public string EffectCommand = "";
     private MediaCapture recordingCapture;
 
     public AudioRecordingUtils()
@@ -24,15 +28,20 @@ public class AudioRecordingUtils
     [Log]
     private async Task InitializeMediaCapture()
     {
+        // Set up Audio recording class
         recordingCapture = new MediaCapture();
         var captureSettings = new MediaCaptureInitializationSettings
         {
             StreamingCaptureMode = StreamingCaptureMode.Audio,
-            AudioProcessing = AudioProcessing.Raw
+            // I have tried the other AudioProcessing modes, but they always seem to screw up the audio in some way
+            AudioProcessing = AudioProcessing.Raw 
         };
         await recordingCapture.InitializeAsync(captureSettings);
     }
 
+    /// <summary>
+    /// Begin writing audio from a microphone to an output file (determined by ProjectFilesUtils)
+    /// </summary>
     [Log]
     public async Task StartRecordingAudio()
     {
@@ -45,8 +54,11 @@ public class AudioRecordingUtils
         await recordingCapture.StartRecordToStorageFileAsync(encodingProfile, fileSaveLocation);
     }
 
+    /// <summary>
+    /// Stop Recording and apply audio filters
+    /// </summary>
     [Log]
-    public async Task StopRecordingAudio(bool discarding = false)
+    public async Task StopRecordingAudio()
     {
         var file = ProjectFileUtils.GetOutFilePath();
 
@@ -54,7 +66,10 @@ public class AudioRecordingUtils
         await recordingCapture.StopRecordAsync();
         await ApplyFilters(file);
     }
-
+    
+    /// <summary>
+    /// Stop recording and delete the output file
+    /// </summary>
     [Log]
     public async Task CancelRecording()
     {
@@ -65,18 +80,18 @@ public class AudioRecordingUtils
     [Log]
     private async Task ApplyFilters(string file)
     {
+        // FFMpeg cannot write over a file that it is using as its input, so we will create a temporary output file to apply filters onto
         var tempOutFile = $"{file}.wav";
-        var validatedPitchChange = MathF.Max(pitchChange, 0.001f);
-        var filter = string.IsNullOrWhiteSpace(effectCommand)
+        var validatedPitchChange = MathF.Max(PitchChange, 0.001f);
+        var filter = string.IsNullOrWhiteSpace(EffectCommand)
             ? $"rubberband=pitch={validatedPitchChange}"
-            : $"rubberband=pitch={validatedPitchChange}, {effectCommand}";
-
+            : $"rubberband=pitch={validatedPitchChange}, {EffectCommand}";
+        
         await AppFunctions.FfMpegCommand(file, $"-af \"{filter}\" -y", tempOutFile);
-
         if (File.Exists(tempOutFile))
         {
-            File.Delete(file);
-            File.Move(tempOutFile, file);
+            // Move the file with filters applied to the intended location (if audio filters applied properly)
+            File.Move(tempOutFile, file, true); 
         }
         else
         {

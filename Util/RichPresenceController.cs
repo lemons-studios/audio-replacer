@@ -7,7 +7,7 @@ public class RichPresenceController
     private readonly string details, smallImage, smallImageText, state;
     private readonly DiscordRpcClient client;
     private readonly Timestamps startTimestamp;
-    private readonly long clientId = 1325340097234866297; // Change this to use your own rich presence client
+    private const long ClientId = 1325340097234866297; // Change this to use your own rich presence client
 
     public RichPresenceController(string initialDetails, string initialState, string initialSmallImage, string initialSmallImageText)
     {
@@ -19,7 +19,7 @@ public class RichPresenceController
         smallImage = initialSmallImage;
         smallImageText = initialSmallImageText;
 
-        client = new DiscordRpcClient(clientId.ToString());
+        client = new DiscordRpcClient(ClientId.ToString());
         if (autoCreate) CreateRichPresence();
     }
 

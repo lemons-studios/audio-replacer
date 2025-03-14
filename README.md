@@ -10,19 +10,37 @@
   <img src="https://img.shields.io/badge/MIT-green?style=for-the-badge" alt="MIT License Badge">
 </p>
 
-This application was created to streamline the dubbing process when making mods for video games. In addition to dubbing, custom pitch and audio filter json files can be created to apply ffmpeg audio filters when dubbing.
+## ❓ About
+If you need to dub voice files for your game modification, this application is for you. Many convenient features have been integrated into this application to streamline the dubbing process
 
-Audio Replacer is intended to run on Windows 11, but it should run perfectly fine on Windows 10. After 22H2 reaches end of life on [October 24th, 2025](https://learn.microsoft.com/en-us/lifecycle/products/windows-10-home-and-pro), This application will stop accepting issues from Windows 10.
-## Install
+## 🖥️ Features
+- Data-driven pitch and effect filters powered by FFMpeg (in other words; you can create these filters yourself!)
+- Built-in pitch/effect data file editor
+- Optional support for Discord Rich presence
+- Optional support for speech-to-text transcription with Whisper (Additional download required, recommended only for those with an NPU or Nvidia GPU)
+- Automatic app updates
+- View Update notes directly inside the app
+- Turn anything you do not like/want through the settings page
+### Upcoming
+- Hotkeys for common tasks
+- Optional automatic conversion to .wav when any non-wav files are detected in your project
+- Compare your recording to the original after recording
+- Search bar for custom pitch and effect filters
+
+## 💾 Install
 You can download the latest release [**here**](https://github.com/lemons-studios/audio-replacer-2/releases/latest).
+### Requirements:
+- Windows 11 (Windows 10 works but will not be supported after end of life)
+- 500mb of storage space
+#### Additional Requirements If Installing Whisper
+- An additional 800mb of storage space
+- One Of:
+  - (Recommended, near-instant processing time) an Nvidia GPU with the [Cuda Toolkit](https://developer.nvidia.com/cuda-downloads) installed (~2gb extra space)
+  - (Not-So Recommended, processing time of around 5-10s) the [Vulkan Runtime](https://vulkan.lunarg.com/sdk/home)
+  - (Absolutely not recommended, > 30s processing time) A CPU with the AVX instruction set
+  - If more than one of these requirements are met, Audio Replacer will automatically pick the fastest option for your system
 
-> [!IMPORTANT]
->
-> As of version 4.0, the certificate install method is no longer used. 
->
-> Those with pre-4.0 versions should uninstall any old versions before installing this new version. All app data should be safe when migrating applications 
-
-## Build From Source
+## ⚙️ Build From Source
 If you want to develop for this application, you'll need a few things installed on your computer:
 - [FFMpeg](https://ffmpeg.org)
 - [Visual Studio 2022](https://visualstudio.microsoft.com/vs/) with the following components/workloads
@@ -31,16 +49,13 @@ If you want to develop for this application, you'll need a few things installed 
      - Windows App SDK C# Templates component
      - Windows 11 SDK (10.0.22621.0) component
 - [.NET SDK 9.0](https://dotnet.microsoft.com/en-us/download)
-> [!TIP]
->
-> All development tools should use up around 15-30Gb of system storage once installed
 
 Once the software needed for development are both installed, you can run the following to clone and build the application:
-```batch
+```cmd
 git clone https://github.com/lemons-studios/audio-replacer.git
 cd audio-replacer 
 .\GenerateReleaseBuild.bat [Major].[Minor].[Build]
 ```
 
-## Contributing
+## ➡️ Contributing
 See [CONTRIBUTING](https://github.com/lemons-studios/audio-replacer/blob/main/CONTRIBUTING.md)

@@ -1,17 +1,15 @@
-﻿using AudioReplacer.Generic;
+﻿using System;
+using System.IO;
+using System.Threading.Tasks;
+using Windows.Storage.Pickers;
+using AudioReplacer.Generic;
 using AudioReplacer.Setup.Pages;
 using AudioReplacer.Util;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Media.Animation;
-using SevenZipExtractor;
-using System;
-using System.IO;
-using System.IO.Compression;
-using System.Threading.Tasks;
 using Whisper.net.Ggml;
-using Windows.Storage.Pickers;
 using WinRT.Interop;
 
 namespace AudioReplacer.Setup;

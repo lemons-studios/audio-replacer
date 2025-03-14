@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="utf-8" ?>
 
-<WinUiEx:WindowEx
-    x:Class="AudioReplacer.MainWindow.MainWindow"
-    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:Ui="using:CommunityToolkit.WinUI"
-    xmlns:WinUiEx="using:WinUIEx"
-    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+<ex:WindowEx
+    Height="700"
+    MinHeight="700"
+    MinWidth="1500"
     Title="Audio Replacer"
     Width="1500"
-    Height="700"
-    MinWidth="1500"
-    MinHeight="700"
-    mc:Ignorable="d">
+    mc:Ignorable="d"
+    x:Class="AudioReplacer.MainWindow.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:ex="using:WinUIEx"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:ui="using:CommunityToolkit.WinUI"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
     <Grid>
         <Grid.RowDefinitions>
@@ -22,34 +22,34 @@
         </Grid.RowDefinitions>
 
         <Border
-            x:Name="AppTitleBar"
+            BorderThickness="5"
             Grid.Row="0"
             Height="65"
             Padding="5"
             VerticalAlignment="Top"
-            BorderThickness="5">
+            x:Name="AppTitleBar">
             <StackPanel>
                 <Grid ColumnDefinitions="Auto, *" RowDefinitions="Auto">
                     <FontIcon Glyph="&#xEC71;" Style="{StaticResource TitleBarIcon}" />
                     <StackPanel Grid.Column="1" Orientation="Horizontal">
                         <TextBlock
-                            x:Name="AppTitle"
                             Style="{StaticResource TitleBarText}"
-                            Text="Audio Replacer" />
+                            Text="Audio Replacer"
+                            x:Name="AppTitle" />
                         <AppBarButton
-                            x:Name="FolderChanger"
-                            Width="145"
-                            Height="45"
-                            Margin="35,0,0,5"
-                            VerticalAlignment="Center"
-                            HorizontalContentAlignment="Center"
-                            VerticalContentAlignment="Center"
                             Background="{ThemeResource ControlFillColorSecondaryBrush}"
                             Click="ChangeProjectFolder"
                             Content="Change Project Folder"
                             CornerRadius="4"
                             FontSize="17"
-                            FontWeight="Medium" />
+                            FontWeight="Medium"
+                            Height="45"
+                            HorizontalContentAlignment="Center"
+                            Margin="35,0,0,5"
+                            VerticalAlignment="Center"
+                            VerticalContentAlignment="Center"
+                            Width="145"
+                            x:Name="FolderChanger" />
                     </StackPanel>
                 </Grid>
             </StackPanel>
@@ -64,24 +64,24 @@
             <NavigationView.MenuItems>
                 <NavigationViewItem
                     Content="Record"
-                    Icon="{Ui:FontIcon Glyph=&#xE720;}"
+                    Icon="{ui:FontIcon Glyph=&#xE720;}"
                     Tag="Record" />
                 <NavigationViewItem
                     Content="Data Editor"
-                    Icon="{Ui:FontIcon Glyph=&#xE70F;}"
+                    Icon="{ui:FontIcon Glyph=&#xE70F;}"
                     Tag="Data Editor" />
             </NavigationView.MenuItems>
             <NavigationView.FooterMenuItems>
                 <NavigationViewItem
                     Content="What's New"
-                    Icon="{Ui:FontIcon Glyph=&#xE789;}"
+                    Icon="{ui:FontIcon Glyph=&#xE789;}"
                     Tag="What's New" />
             </NavigationView.FooterMenuItems>
             <Frame
-                x:Name="MainFrame"
-                Padding="10"
                 HorizontalAlignment="Stretch"
-                VerticalAlignment="Stretch">
+                Padding="10"
+                VerticalAlignment="Stretch"
+                x:Name="MainFrame">
                 <Frame.ContentTransitions>
                     <TransitionCollection>
                         <EntranceThemeTransition />
@@ -92,20 +92,20 @@
 
         <StackPanel Grid.Row="1">
             <InfoBar
-                x:Name="GeneralNotificationPopup"
                 Margin="0,0,0,-75"
-                Style="{StaticResource ToastNotification}">
+                Style="{StaticResource ToastNotification}"
+                x:Name="GeneralNotificationPopup">
                 <InfoBar.Transitions>
                     <PopupThemeTransition />
                 </InfoBar.Transitions>
             </InfoBar>
             <InfoBar
-                x:Name="InProgressNotification"
-                Margin="0,0,0,-75"
                 Background="{ThemeResource SystemFillColorSolidAttentionBackgroundBrush}"
                 IsClosable="False"
+                Margin="0,0,0,-75"
                 Severity="Informational"
-                Style="{StaticResource ToastNotification}">
+                Style="{StaticResource ToastNotification}"
+                x:Name="InProgressNotification">
                 <InfoBar.Content>
                     <ProgressBar IsIndeterminate="True" />
                 </InfoBar.Content>
@@ -113,19 +113,20 @@
                     <PopupThemeTransition />
                 </InfoBar.Transitions>
             </InfoBar>
-            <InfoBar 
-                x:Name="CompletionNotification" 
-                Margin=" 0 0 0 -75" 
-                Background="{ThemeResource SystemFillColorSolidAttentionBackgroundBrush}" 
+            <InfoBar
+                Background="{ThemeResource SystemFillColorSolidAttentionBackgroundBrush}"
                 IsClosable="False"
-                Severity="Informational" Style="{StaticResource ToastNotification}">
+                Margin="0,0,0,-75"
+                Severity="Informational"
+                Style="{StaticResource ToastNotification}"
+                x:Name="CompletionNotification">
                 <InfoBar.Content>
-                    <ProgressBar x:Name="CompletionProgressBar" IsIndeterminate="False" />
+                    <ProgressBar IsIndeterminate="False" x:Name="CompletionProgressBar" />
                 </InfoBar.Content>
                 <InfoBar.Transitions>
-                    <PopupThemeTransition/>
+                    <PopupThemeTransition />
                 </InfoBar.Transitions>
             </InfoBar>
         </StackPanel>
     </Grid>
-</WinUiEx:WindowEx>
+</ex:WindowEx>

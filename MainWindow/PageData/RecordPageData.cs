@@ -1,5 +1,4 @@
 ﻿using AudioReplacer.MainWindow.Util;
-using AudioReplacer.MainWindow.Util;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 
