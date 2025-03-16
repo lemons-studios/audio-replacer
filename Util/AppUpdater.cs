@@ -1,7 +1,4 @@
-﻿using System;
-using AudioReplacer.Generic;
-using System.Diagnostics;
-using System.Threading.Tasks;
+﻿using System.Diagnostics;
 using Velopack;
 
 namespace AudioReplacer.Util;
@@ -36,9 +33,9 @@ public static class AppUpdater
                 }
             }
         }
-        catch (Exception e)
+        catch (Exception)
         {
-            throw new Exception(e.Message);
+            return;
         }
     }
 }

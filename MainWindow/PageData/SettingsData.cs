@@ -1,14 +1,8 @@
-﻿using AudioReplacer.Generic;
-using CommunityToolkit.Mvvm.ComponentModel;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.UI.Composition.SystemBackdrops;
-using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Media;
-using System;
-using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
-using AudioReplacer.Util;
 using Whisper.net.Ggml;
 
 namespace AudioReplacer.MainWindow.PageData;
@@ -106,13 +100,13 @@ public partial class SettingsData : ObservableObject
     }
 
     [RelayCommand]
-    private static void OpenOutputFolder()
+    private void OpenOutputFolder()
     {
         Task.Run(async () => await AppFunctions.SpawnProcess("explorer", AppProperties.OutputPath));
     }
 
     [RelayCommand]
-    private static void OpenDataFile()
+    private void OpenDataFile()
     {
         if (!AppProperties.IsAppLoaded) return;
         Task.Run(async () => await AppFunctions.SpawnProcess("", string.Empty));
@@ -166,12 +160,13 @@ public partial class SettingsData : ObservableObject
     [RelayCommand]
     private async Task RepairDependencies()
     {
-        var filesToDelete = Directory.GetFiles(AppProperties.BinaryPath).Where(file =>
-            !string.Equals(Path.GetFileName(file), "whisper.bin", StringComparison.OrdinalIgnoreCase));
+        var filesToDelete = Directory.GetFiles(AppProperties.BinaryPath).Where(f =>
+            !string.Equals(Path.GetFileName(f), "whisper.bin", StringComparison.OrdinalIgnoreCase));
         foreach (var file in filesToDelete)
         {
             File.Delete(file);
         }
+        
         App.MainWindow.ToggleProgressNotification("Repairing Dependencies..", "App Will Restart after complete");
         await AppFunctions.DownloadDeps();
         AppFunctions.RestartApp();

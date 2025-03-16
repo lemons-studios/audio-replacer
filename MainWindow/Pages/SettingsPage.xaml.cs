@@ -1,7 +1,4 @@
-﻿using AudioReplacer.Util;
-using Microsoft.UI.Xaml;
-
-namespace AudioReplacer.MainWindow.Pages;
+﻿namespace AudioReplacer.MainWindow.Pages;
 
 public sealed partial class SettingsPage
 {

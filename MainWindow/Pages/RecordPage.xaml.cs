@@ -1,12 +1,6 @@
-﻿using System;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
-using AudioReplacer.Generic;
+﻿using System.Linq;
 using AudioReplacer.MainWindow.Util;
-using AudioReplacer.Util;
 using CommunityToolkit.WinUI;
-using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using NAudio.Wave;
 using NAudio.Wave.SampleProviders;
@@ -103,12 +97,20 @@ public sealed partial class RecordPage // This file is among the worst written f
 
         DispatcherQueue.TryEnqueue(() =>
         {
+            
             FileProgressPanel.Visibility = Visibility.Visible;
             CurrentFile.Text = ProjectFileUtils.GetCurrentFile().Replace(@"\", "/");
             RemainingFiles.Text = $"Files Remaining: {ProjectFileUtils.GetFileCount(projectPath):N0} ({progressPercentage}%)";
             RemainingFilesProgress.Value = progressPercentage;
-            AudioPreview.Source = MediaSource.CreateFromUri(new Uri(ProjectFileUtils.GetCurrentFile(false)));
-            AudioPreview.TransportControls.IsEnabled = true;
+            try
+            {
+                AudioPreview.Source = MediaSource.CreateFromUri(new Uri(ProjectFileUtils.GetCurrentFile(false)));
+                AudioPreview.TransportControls.IsEnabled = true;
+            }
+            catch (UriFormatException) // This happens when project directories are empty
+            {
+                AudioPreview.Source = null;
+            }
         });
 
         App.DiscordController.SetState($"{progressPercentage}% Complete");

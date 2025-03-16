@@ -1,5 +1,4 @@
-﻿using AudioReplacer.Generic;
-using DiscordRPC;
+﻿using DiscordRPC;
 namespace AudioReplacer.Util;
 
 public class RichPresenceController
@@ -11,7 +10,7 @@ public class RichPresenceController
 
     public RichPresenceController(string initialDetails, string initialState, string initialSmallImage, string initialSmallImageText)
     {
-        bool autoCreate = AppFunctions.IntToBool(App.AppSettings.EnableRichPresence);
+        var autoCreate = AppFunctions.IntToBool(App.AppSettings.EnableRichPresence);
 
         startTimestamp = Timestamps.Now;
         state = initialState;

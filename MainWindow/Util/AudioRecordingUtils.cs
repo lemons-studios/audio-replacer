@@ -1,13 +1,8 @@
-﻿using AudioReplacer.Util;
-using System;
-using System.IO;
-using System.Threading.Tasks;
-using Windows.Media;
+﻿using Windows.Media;
 using Windows.Media.Capture;
 using Windows.Media.MediaProperties;
 using Windows.Storage;
 using Microsoft.UI.Xaml.Controls;
-using AudioReplacer.Generic;
 
 namespace AudioReplacer.MainWindow.Util;
 

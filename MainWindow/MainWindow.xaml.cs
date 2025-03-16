@@ -1,16 +1,10 @@
-using AudioReplacer.Generic;
 using AudioReplacer.MainWindow.Pages;
 using AudioReplacer.MainWindow.Util;
-using AudioReplacer.Util;
 using CommunityToolkit.WinUI;
 using Microsoft.UI.Windowing;
-using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
-using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Threading.Tasks;
 using TitleBarDrag;
 using Velopack;
 using Windows.Storage.Pickers;

@@ -1,14 +1,10 @@
 ﻿using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Text.Json;
-using AudioReplacer.Generic;
 using AudioReplacer.Setup;
-using AudioReplacer.Util;
 using Config.Net;
 using Microsoft.UI;
 using Microsoft.UI.Windowing;
-using Microsoft.UI.Xaml;
 using Velopack;
 using WinRT.Interop;
 
@@ -70,7 +66,11 @@ public partial class App
             existingConfig[k] = defaultConfig[k];
         }
 
+        // This method only gets called on app launch, so I'm not too worried about it being "inefficient"
+#pragma warning disable CA1869
         var updatedJson = JsonSerializer.Serialize(existingConfig, new JsonSerializerOptions { WriteIndented = true });
+#pragma warning restore CA1869
+        
         File.WriteAllText(AppProperties.SettingsFile, updatedJson);
     }
 
@@ -121,7 +121,6 @@ public partial class App
         var currentWndId = Win32Interop.GetWindowIdFromWindow(hWnd);
         return AppWindow.GetFromWindowId(currentWndId);
     }
-
     
     [Log]
     private void CreateAdditionalData()

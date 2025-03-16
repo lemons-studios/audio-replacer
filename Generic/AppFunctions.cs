@@ -1,14 +1,10 @@
-﻿using AudioReplacer.Util;
-using Microsoft.UI.Composition.SystemBackdrops;
+﻿using Microsoft.UI.Composition.SystemBackdrops;
 using Microsoft.Windows.AppLifecycle;
 using Newtonsoft.Json.Linq;
 using SevenZipExtractor;
-using System;
 using System.Diagnostics;
-using System.IO;
 using System.Net.Http;
 using System.Reflection;
-using System.Threading.Tasks;
 
 namespace AudioReplacer.Generic;
 

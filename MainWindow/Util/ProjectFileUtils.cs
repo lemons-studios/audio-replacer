@@ -1,11 +1,6 @@
-﻿using AudioReplacer.Generic;
-using AudioReplacer.Util;
-using Microsoft.UI.Xaml.Controls;
-using System;
+﻿using Microsoft.UI.Xaml.Controls;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
 using Windows.Storage;
 
 namespace AudioReplacer.MainWindow.Util;
@@ -154,7 +149,7 @@ public static class ProjectFileUtils
             .ThenBy(Path.GetFileName)
             .ThenBy(p => p.Split(Path.DirectorySeparatorChar).Length)
             .ToList();
-        
+
         // Remove after debugging
         foreach (var file in audioFiles)
         {
@@ -163,9 +158,11 @@ public static class ProjectFileUtils
         try
         {
             // Incredible double ternary expression. reduced line count in this method by maybe 10-15
-            return audioFiles.Any() ? string.Empty
-                : AppFunctions.IntToBool(App.AppSettings.InputRandomizationEnabled)
-                    ? audioFiles[Rng.Next(audioFiles.Count)] : audioFiles.First();
+            return audioFiles.Any()
+                ? AppFunctions.IntToBool(App.AppSettings.InputRandomizationEnabled)
+                    ? audioFiles[Rng.Next(audioFiles.Count)]
+                    : audioFiles.First()
+                : string.Empty;
         }
         catch (Exception) // If anything goes wrong, return an empty string
         {

@@ -1,9 +1,5 @@
-using AudioReplacer.Generic;
-using AudioReplacer.Util;
 using CommunityToolkit.Labs.WinUI.MarkdownTextBlock;
 using CommunityToolkit.WinUI;
-using Microsoft.UI.Xaml;
-using System.Threading.Tasks;
 
 namespace AudioReplacer.MainWindow.Pages;
 
