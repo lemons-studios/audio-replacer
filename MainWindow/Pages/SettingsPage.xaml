@@ -187,7 +187,6 @@
                                     Padding="0,0,0,0"
                                     Text="External Dependencies Credits:"
                                     TextAlignment="Left" />
-                                <HyperlinkButton Content="7ZipExtractor" NavigateUri="https://github.com/adoconnection/SevenZipExtractor?tab=MIT-1-ov-file" />
                                 <HyperlinkButton Content="Config.NET" NavigateUri="https://github.com/aloneguid/config?tab=MIT-1-ov-file" />
                                 <HyperlinkButton Content="Discord-Rpc-Csharp" NavigateUri="https://github.com/Lachee/discord-rpc-csharp?tab=MIT-1-ov-file" />
                                 <HyperlinkButton Content="NAudio" NavigateUri="https://github.com/naudio/NAudio?tab=MIT-1-ov-file" />
