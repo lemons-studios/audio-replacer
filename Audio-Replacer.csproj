@@ -13,12 +13,6 @@
 		<EnableMsixTooling>true</EnableMsixTooling>
 		<PublishProfile>win-$(Platform).pubxml</PublishProfile>
 	</PropertyGroup>
-	<ItemGroup>
-	  <Compile Remove="runtimes\**" />
-	  <EmbeddedResource Remove="runtimes\**" />
-	  <None Remove="runtimes\**" />
-	  <Page Remove="runtimes\**" />
-	</ItemGroup>
 
 	<ItemGroup>
 	  <None Remove="Views\ReleaseLogsPage.xaml" />
@@ -135,7 +129,7 @@
 	  <Content Remove="C:\Users\Shob3r\.nuget\packages\microsoft.web.webview2\1.0.2651.64\build\\..\runtimes\win-x64\native\WebView2Loader.dll" />
 	</ItemGroup>
 	<ItemGroup>
-	  <PRIResource Remove="runtimes\**" />
+	  <Content Remove="C:\Users\Shob3r\.nuget\packages\microsoft.web.webview2\1.0.2651.64\build\\..\runtimes\win-x64\native\WebView2Loader.dll" />
 	</ItemGroup>
 	<ItemGroup>
 	  <Content Remove="C:\Users\Shob3r\.nuget\packages\microsoft.web.webview2\1.0.2651.64\build\\..\runtimes\win-x64\native\WebView2Loader.dll" />
