@@ -1,8 +1,8 @@
 ﻿using Microsoft.UI.Composition.SystemBackdrops;
 using Microsoft.Windows.AppLifecycle;
 using Newtonsoft.Json.Linq;
-using SevenZipExtractor;
 using System.Diagnostics;
+using System.IO.Compression;
 using System.Net.Http;
 using System.Reflection;
 
@@ -13,14 +13,13 @@ public static class AppFunctions
     public static async Task DownloadDeps()
     {
         // Download FFmpeg
-        var latestVersion = await GetWebData("https://www.gyan.dev/ffmpeg/builds/release-version");
-        var ffmpegUrl = $"https://www.gyan.dev/ffmpeg/builds/packages/ffmpeg-{latestVersion}-full_build.7z";
+        const string url = $"https://www.gyan.dev/ffmpeg/builds/ffmpeg-release-essentials.zip";
         var outPath = Path.Join(AppProperties.ExtraApplicationData, "ffmpeg");
-        await DownloadFileAsync(ffmpegUrl, $@"{AppProperties.ExtraApplicationData}\ffmpeg.7z");
+        await DownloadFileAsync(url, $@"{AppProperties.ExtraApplicationData}\ffmpeg.zip");
 
         // Extract FFmpeg
-        using (var ffmpegExtractor = new ArchiveFile($"{outPath}.7z")) ffmpegExtractor.Extract(outPath);
-
+        ZipFile.ExtractToDirectory($"{outPath}.zip", outPath);
+        
         // Move FFmpeg executable (ffmpeg.exe ONLY, ffprobe.exe and ffplay.exe are not needed) to the application's binary folder
         var info = new DirectoryInfo(outPath);
         foreach (var exe in info.GetFiles("ffmpeg.exe", SearchOption.AllDirectories))
@@ -29,7 +28,7 @@ public static class AppFunctions
         }
 
         Directory.Delete(outPath, true);
-        File.Delete($"{outPath}.7z");
+        File.Delete($"{outPath}.zip");
     }
 
     [Log]

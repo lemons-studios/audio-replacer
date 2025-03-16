@@ -51,7 +51,6 @@
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
 		<PackageReference Include="Metalama.Framework" Version="2025.0.8" />
 		<PackageReference Include="NAudio" Version="2.2.1" />
-		<PackageReference Include="SevenZipExtractor" Version="1.0.19" />
 		<PackageReference Include="WinUIEdit" Version="0.0.3-prerelease" />
 		<PackageReference Include="DiscordRichPresence" Version="1.2.1.24" />
 

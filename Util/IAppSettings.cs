@@ -1,6 +1,7 @@
 ﻿using Config.Net;
 
 namespace AudioReplacer.Util;
+
 public interface IAppSettings
 {
     [Option(Alias = "Theme", DefaultValue = 0)]

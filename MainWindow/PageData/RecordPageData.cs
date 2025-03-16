@@ -11,10 +11,8 @@ public partial class RecordPageData : ObservableObject
     private void SwitchButtonStates()
     {
         if (!ProjectFileUtils.IsProjectLoaded) return;
-        (IsIdle, IsRecording, IsReviewing) =
-            IsIdle ? (false, true, false)
-            : IsRecording ? (false, false, true)
-            : (true, false, false);
+        // Toggle between button states when performing actions that change the state of the record page
+        (IsIdle, IsRecording, IsReviewing) = IsIdle ? (false, true, false) : IsRecording ? (false, false, true) : (true, false, false);
     }
 
     [RelayCommand]

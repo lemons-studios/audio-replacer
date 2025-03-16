@@ -5,7 +5,7 @@ namespace AudioReplacer.Util;
 public static class AppUpdater
 {
     // Velopack will search through the url below for updates
-    // Specifically a json file on a remote backblaze server. The address to that server is located in MainWindow
+    // Specifically a json file on a remote BackBlaze server. The address to that server is located in MainWindow (because I want updated to be checked AFTEr the application launches)
     public static UpdateManager AppUpdateManager;
     private static UpdateInfo AppUpdateInfo;
 
