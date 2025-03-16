@@ -13,9 +13,14 @@
 		<EnableMsixTooling>true</EnableMsixTooling>
 		<PublishProfile>win-$(Platform).pubxml</PublishProfile>
 	</PropertyGroup>
+	<ItemGroup>
+	  <Compile Remove="runtimes\**" />
+	  <EmbeddedResource Remove="runtimes\**" />
+	  <None Remove="runtimes\**" />
+	  <Page Remove="runtimes\**" />
+	</ItemGroup>
 
 	<ItemGroup>
-	  <None Remove="Accessibility.dll" />
 	  <None Remove="Views\ReleaseLogsPage.xaml" />
 	  <None Remove="Setup\FirstTimeSetupWindow.xaml" />
 	  <None Remove="Setup\Pages\SetupAdvanced.xaml" />
@@ -126,4 +131,13 @@
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='LamaDebug|x64'">
 	  <DebugType>full</DebugType>
 	</PropertyGroup>
+	<ItemGroup>
+	  <Content Remove="C:\Users\Shob3r\.nuget\packages\microsoft.web.webview2\1.0.2651.64\build\\..\runtimes\win-x64\native\WebView2Loader.dll" />
+	</ItemGroup>
+	<ItemGroup>
+	  <PRIResource Remove="runtimes\**" />
+	</ItemGroup>
+	<ItemGroup>
+	  <Content Remove="C:\Users\Shob3r\.nuget\packages\microsoft.web.webview2\1.0.2651.64\build\\..\runtimes\win-x64\native\WebView2Loader.dll" />
+	</ItemGroup>
 </Project>
