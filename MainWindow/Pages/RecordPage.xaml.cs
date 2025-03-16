@@ -233,16 +233,14 @@ public sealed partial class RecordPage // This file is among the worst written f
     [Log]
     private void OnPitchSearchChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)
     {
-        if (args.Reason == AutoSuggestionBoxTextChangeReason.UserInput)
-        {
-            var suggestions = AppProperties.PitchTitles
-                .Where(item => item.StartsWith(sender.Text, StringComparison.CurrentCultureIgnoreCase))
-                .ToList();
-            if (!string.IsNullOrEmpty(sender.Text))
-            {
-                sender.ItemsSource = suggestions;
-            }
-        }
+        if (args.Reason != AutoSuggestionBoxTextChangeReason.UserInput)
+            return;
+        
+        var suggestions = AppProperties.PitchTitles
+            .Where(item => item.StartsWith(sender.Text, StringComparison.CurrentCultureIgnoreCase))
+            .ToList();
+        if (!string.IsNullOrEmpty(sender.Text))
+            sender.ItemsSource = suggestions;
     }
 
     [Log]
@@ -258,7 +256,7 @@ public sealed partial class RecordPage // This file is among the worst written f
     private void PitchQuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs args)
     {
         var selectedText = args.ChosenSuggestion?.ToString() ?? args.QueryText;
-        int selectedPitchPosition = GetPositionOfElementInData(selectedText, false);
+        var selectedPitchPosition = GetPositionOfElementInData(selectedText, false);
         audioRecordingUtils.PitchChange = AppProperties.PitchValues[selectedPitchPosition];
     }
 
@@ -266,7 +264,7 @@ public sealed partial class RecordPage // This file is among the worst written f
     private void EffectQuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs args)
     {
         var selectedText = args.ChosenSuggestion?.ToString() ?? args.QueryText;
-        int selectedEffectPosition = GetPositionOfElementInData(selectedText, true);
+        var selectedEffectPosition = GetPositionOfElementInData(selectedText, true);
         audioRecordingUtils.EffectCommand = AppProperties.EffectValues[selectedEffectPosition];
     }
 
@@ -295,7 +293,7 @@ public sealed partial class RecordPage // This file is among the worst written f
     private int GetPositionOfElementInData(string x, bool effectsData)
     {
         var dataList = effectsData ? AppProperties.EffectTitles : AppProperties.PitchTitles;
-        for (int i = 0; i < dataList.Count; i++)
+        for (var i = 0; i < dataList.Count; i++)
         {
             if (x == dataList[i])
                 return i;

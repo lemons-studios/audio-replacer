@@ -40,9 +40,9 @@ public static class ProjectFileUtils
         // I'm trying my best to maKe a LINQ query that sorts subdirectories first. Doesn't work at the moment :(
         projectFiles = GetAllFiles()
             .Where(IsAudioFile)
-            .OrderBy(Path.GetDirectoryName)
+            .OrderBy(p => p.Split(Path.DirectorySeparatorChar).Length)
+            .ThenBy(Path.GetDirectoryName)
             .ThenBy(Path.GetFileName)
-            .ThenBy(p => p.Split(Path.DirectorySeparatorChar).Length)
             .ToList();
 
         outputFolderPath = Path.Join(AppProperties.OutputPath, projectName);

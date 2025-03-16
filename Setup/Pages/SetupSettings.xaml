@@ -59,7 +59,7 @@
                         <controls:SettingsCard
                             Margin="0,0,0,5"
                             Header="App Theme"
-                            HeaderIcon="{ui:FontIcon Glyph=&#xECC5;}">
+                            HeaderIcon="{ui:FontIcon Glyph=&#xE790;}">
                             <ComboBox SelectedIndex="{Binding AppTheme, Mode=TwoWay}">
                                 <ComboBoxItem Content="System" />
                                 <ComboBoxItem Content="Light" />
@@ -72,6 +72,9 @@
                             Header="Check for updates"
                             HeaderIcon="{ui:FontIcon Glyph=&#xECC5;}">
                             <ToggleSwitch IsOn="{Binding CheckForUpdates, Mode=TwoWay}" />
+                        </controls:SettingsCard>
+                        <controls:SettingsCard>
+                            <ToggleSwitch/>
                         </controls:SettingsCard>
                         <controls:SettingsCard
                             Margin="0,0,0,5"
