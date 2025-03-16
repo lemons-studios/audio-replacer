@@ -15,6 +15,7 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+	  <None Remove="Accessibility.dll" />
 	  <None Remove="Views\ReleaseLogsPage.xaml" />
 	  <None Remove="Setup\FirstTimeSetupWindow.xaml" />
 	  <None Remove="Setup\Pages\SetupAdvanced.xaml" />
