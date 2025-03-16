@@ -44,13 +44,6 @@
                     <ToggleSwitch IsOn="{Binding EnableUpdateChecks, Mode=TwoWay}" />
                 </controls:SettingsCard>
                 <controls:SettingsCard
-                    Description="Convert any audio file to .wav on project load. Audio Replacer prefers this format, turning off will result in some features being disabled"
-                    Header="Auto-Convert files"
-                    HeaderIcon="{tk:FontIcon Glyph=&#xE9F5;}"
-                    Margin="0,0,0,7.5">
-                    <ToggleSwitch IsOn="{Binding AutoConvert}" />
-                </controls:SettingsCard>
-                <controls:SettingsCard
                     Description="When off, the next file will be first file in an alphabetical list"
                     Header="Randomize Current File"
                     HeaderIcon="{tk:FontIcon Glyph=&#xE8AB;}"
