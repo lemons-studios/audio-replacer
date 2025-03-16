@@ -1,8 +1,10 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Net.Http;
 
 namespace AudioReplacer.Generic;
-public class AppProperties
+[SuppressMessage("Usage", "CA2211:Non-constant fields should not be visible")]
+public static class AppProperties
 {
     public static readonly string ExtraApplicationData = Path.Join(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "audio-replacer");
     public static readonly string BinaryPath = Path.Join(ExtraApplicationData, "bin");
@@ -21,6 +23,5 @@ public class AppProperties
     public static List<string> PitchTitles, EffectTitles, EffectValues;
     public static List<float> PitchValues;
 
-    public static readonly string[] OutputTypes = ["wav", "mp3", "flac", "ogg"];
     public static readonly HttpClient WebClient = new() { DefaultRequestHeaders = { { "User-Agent", "Audio Replacer" } } };
 }

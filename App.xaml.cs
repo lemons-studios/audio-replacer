@@ -17,9 +17,11 @@ public partial class App
 {
     public static AppWindow AppWindow;
     public static MainWindow.MainWindow MainWindow { get; private set; }
-    public static FirstTimeSetupWindow SetupWindow { get; set; }
+    public static FirstTimeSetupWindow SetupWindow { get; private set; }
     public static IAppSettings AppSettings { get; private set; }
+#pragma warning disable CA2211
     public static RichPresenceController DiscordController;
+#pragma warning restore CA2211
 
     public App()
     {

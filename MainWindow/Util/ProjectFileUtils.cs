@@ -1,5 +1,6 @@
 ﻿using Microsoft.UI.Xaml.Controls;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Windows.Storage;
 
@@ -9,6 +10,7 @@ namespace AudioReplacer.MainWindow.Util;
 /// Manages paths to files in an AudioReplacer project
 /// </summary>
 
+[SuppressMessage("Usage", "CA2211:Non-constant fields should not be visible")]
 public static class ProjectFileUtils
 {
     private static string currentFile, truncatedCurrentFile, currentOutFile, currentFileName, currentFileLocalPath;
@@ -22,6 +24,7 @@ public static class ProjectFileUtils
 
     private static List<string> projectFiles;
 
+    // ReSharper disable once MemberCanBePrivate.Global
     public static void Broadcast()
     {
         OnProjectLoaded?.Invoke();

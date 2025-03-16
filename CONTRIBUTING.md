@@ -3,7 +3,6 @@ I am a pretty bad developer. If you aren't and would like to contribute to this 
 ## Requirements
 In order to contribute to this application, You should have the following:
 - [FFMpeg](https://ffmpeg.org)
-- [Vgmstream](https://github.com/vgmstream/vgmstream/releases/latest)
 - [Visual Studio 2022](https://visualstudio.microsoft.com/vs/) with the following components/workloads
      - Windows Application Development workload
      - .NET desktop development workload

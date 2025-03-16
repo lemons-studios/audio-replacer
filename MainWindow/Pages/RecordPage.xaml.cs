@@ -8,6 +8,7 @@ using Whisper.net;
 using Whisper.net.LibraryLoader;
 using Windows.Media.Core;
 
+// ReSharper disable AsyncVoidMethod
 namespace AudioReplacer.MainWindow.Pages;
 public sealed partial class RecordPage // This file is among the worst written files in the project. It works though so I won't be changing it until I'm bored
 {
@@ -291,7 +292,7 @@ public sealed partial class RecordPage // This file is among the worst written f
     }
 
     [Log]
-    public int GetPositionOfElementInData(string x, bool effectsData)
+    private int GetPositionOfElementInData(string x, bool effectsData)
     {
         var dataList = effectsData ? AppProperties.EffectTitles : AppProperties.PitchTitles;
         for (int i = 0; i < dataList.Count; i++)

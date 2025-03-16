@@ -1,6 +1,8 @@
-﻿using DiscordRPC;
+﻿using System.Diagnostics.CodeAnalysis;
+using DiscordRPC;
 namespace AudioReplacer.Util;
 
+[SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
 public class RichPresenceController
 {
     private readonly string details, smallImage, smallImageText, state;

@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.IO.Compression;
 using System.Net.Http;
 using System.Reflection;
+// ReSharper disable MemberCanBePrivate.Global
 
 namespace AudioReplacer.Generic;
 

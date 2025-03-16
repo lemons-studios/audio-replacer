@@ -1,11 +1,11 @@
-<WinUiEx:WindowEx
+<uiEx:WindowEx
     MinHeight="450"
     MinWidth="750"
     Title="First Time Setup"
     mc:Ignorable="d"
     x:Class="AudioReplacer.Setup.FirstTimeSetupWindow"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:WinUiEx="using:WinUIEx"
+    xmlns:uiEx="using:WinUIEx"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
@@ -36,4 +36,4 @@
             VerticalAlignment="Stretch"
             x:Name="MainFrame" />
     </Grid>
-</WinUiEx:WindowEx>
+</uiEx:WindowEx>

@@ -1,4 +1,5 @@
 @echo off
+
 if "%~1"=="" (
     echo Missing version number.
     echo Usage: GenerateRelease.bat [build number]
@@ -39,5 +40,9 @@ vpk pack -u AudioReplacer -v %~1 -p .\Publish -e AudioReplacer.exe --splashImage
 
 echo (6/6) Cleanup
 del /s /q Publish\ > nul 2> nul
+
+cls
+echo Done! Setup files are located in the Releases directory!
+pause
 
 exit /b 0

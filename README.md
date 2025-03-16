@@ -1,3 +1,4 @@
+<!--suppress ALL -->
 <h1 align="center">Audio Replacer</h1>
 
 <p align="center">

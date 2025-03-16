@@ -31,6 +31,7 @@ public sealed partial class MainWindow
 
         // dragRegions uses a small package that abstracts the official Microsoft code for creating non-drag regions
         // If problems come out from this in the future, I will rewrite the package myself
+        // ReSharper disable once UnusedVariable
         var dragRegions = new DragRegions(this, AppTitleBar)
         {
             NonDragElements = [FolderChanger]
