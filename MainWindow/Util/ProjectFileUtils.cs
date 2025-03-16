@@ -20,6 +20,8 @@ public static class ProjectFileUtils
     public delegate void BroadcastEventHandler();
     public static event BroadcastEventHandler OnProjectLoaded;
 
+    private static List<string> projectFiles;
+
     public static void Broadcast()
     {
         OnProjectLoaded?.Invoke();
@@ -30,12 +32,21 @@ public static class ProjectFileUtils
     public static void SetProjectData(string path)
     {
         projectPath = path;
-        var projectName = projectPath.Split("\\")[^1];
+        var projectName = projectPath.Split(Path.DirectorySeparatorChar)[^1];
+
+        projectFiles = GetAllFiles()
+            .Where(IsAudioFile)
+            .OrderBy(Path.GetDirectoryName)
+            .ThenBy(Path.GetFileName)
+            .ThenBy(p => p.Split(Path.DirectorySeparatorChar).Length)
+            .ToList();
+
         outputFolderPath = Path.Join(AppProperties.OutputPath, projectName);
         if (!Directory.Exists(outputFolderPath))
             Directory.CreateDirectory(outputFolderPath);
         CreateInitialData();
         SetCurrentFile();
+
         Broadcast();
     }
 
@@ -69,7 +80,7 @@ public static class ProjectFileUtils
             var unconvertedFiles = GetAllFiles().Where(IsUndesirableAudioFile).ToList();
             if (unconvertedFiles.Count != 0)
             {
-                bool isNotificationOpen = false;
+                var isNotificationOpen = false;
                 var totalFiles = unconvertedFiles.Count + 1;
 
                 for (int i = 0; i < totalFiles - 1; i++)
@@ -114,7 +125,6 @@ public static class ProjectFileUtils
         if (inputDirectories.SequenceEqual(outputDirectories, StringComparer.OrdinalIgnoreCase))
             return;
 
-
         // Create a mirrored directory layout in the output folder
         foreach (var d in inputDirectories)
         {
@@ -143,25 +153,14 @@ public static class ProjectFileUtils
     {
         // This array should hopefully order by directory name and make subdirectories of directories appear with them
         // So a/b/c.wav will come before a/c2.wav
-        var audioFiles = GetAllFiles()
-            .Where(IsAudioFile)
-            .OrderBy(Path.GetDirectoryName)
-            .ThenBy(Path.GetFileName)
-            .ThenBy(p => p.Split(Path.DirectorySeparatorChar).Length)
-            .ToList();
 
-        // Remove after debugging
-        foreach (var file in audioFiles)
-        {
-            File.AppendAllText(Path.Join(AppProperties.ExtraApplicationData, "test.txt"), $"\n{Path.GetFileName(file)}");
-        }
         try
         {
             // Incredible double ternary expression. reduced line count in this method by maybe 10-15
-            return audioFiles.Any()
+            return projectFiles.Any()
                 ? AppFunctions.IntToBool(App.AppSettings.InputRandomizationEnabled)
-                    ? audioFiles[Rng.Next(audioFiles.Count)]
-                    : audioFiles.First()
+                    ? projectFiles[Rng.Next(projectFiles.Count)]
+                    : projectFiles.First()
                 : string.Empty;
         }
         catch (Exception) // If anything goes wrong, return an empty string
@@ -187,6 +186,7 @@ public static class ProjectFileUtils
             return;
         
         File.Move(currentFile, currentOutFile);
+        projectFiles.RemoveAt(0);
         SetCurrentFile();
     }
 
@@ -209,6 +209,7 @@ public static class ProjectFileUtils
             if (!Directory.EnumerateFileSystemEntries(dir).Any()) 
                 Directory.Delete(dir);
         }
+        projectFiles.RemoveAt(0);
         SetCurrentFile();
     }
 
