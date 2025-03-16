@@ -54,39 +54,33 @@ public sealed partial class RecordPage // This file is among the worst written f
     }
 
     [Log]
-    private void StartRecordingAudio(object sender, RoutedEventArgs e)
+    private async void StartRecordingAudio(object sender, RoutedEventArgs e)
     {
         if (!ProjectFileUtils.IsProjectLoaded) 
             return;
-        
-        Task.Run(async () =>
-        {
-            AppProperties.InRecordState = true;
-            AudioPreview.MediaPlayer.Pause();
-            await audioRecordingUtils.StartRecordingAudio();
-            App.DiscordController.SetSmallAsset("recording", "Recording Audio");
-            App.MainWindow.ToggleProgressNotification("Recording In Progress", string.Empty);
-        });
+
+        AppProperties.InRecordState = true;
+        AudioPreview.MediaPlayer.Pause();
+        await audioRecordingUtils.StartRecordingAudio();
+        App.DiscordController.SetSmallAsset("recording", "Recording Audio");
+        App.MainWindow.ToggleProgressNotification("Recording In Progress", string.Empty);
     }
 
     [Log]
-    private void StopRecordingAudio(object sender, RoutedEventArgs e)
+    private async void StopRecordingAudio(object sender, RoutedEventArgs e)
     {
-        Task.Run(async () =>
+        await audioRecordingUtils.StopRecordingAudio();
+
+        // Update source of audio player and the title manually
+        CurrentFile.Text = "Review your recording...";
+        App.DiscordController.SetSmallAsset("reviewing", "In review phase");
+        await AudioPreview.DispatcherQueue.EnqueueAsync(() =>
         {
-            await audioRecordingUtils.StopRecordingAudio();
-
-            // Update source of audio player and the title manually
-            CurrentFile.Text = "Review your recording...";
-            App.DiscordController.SetSmallAsset("reviewing", "In review phase");
-            await AudioPreview.DispatcherQueue.EnqueueAsync(() =>
-            {
-                AudioPreview.Source = MediaSource.CreateFromUri(new Uri(ProjectFileUtils.GetOutFilePath()));
-                AudioPreview.MediaPlayer.Play();
-            });
-
-            App.MainWindow.ShowNotification(InfoBarSeverity.Informational, "Recording Stopped", "Entering Review Phase", true, replaceExistingNotifications: true);
+            AudioPreview.Source = MediaSource.CreateFromUri(new Uri(ProjectFileUtils.GetOutFilePath()));
+            AudioPreview.MediaPlayer.Play();
         });
+
+        App.MainWindow.ShowNotification(InfoBarSeverity.Informational, "Recording Stopped", "Entering Review Phase", true, replaceExistingNotifications: true);
     }
 
     [Log]
@@ -198,14 +192,11 @@ public sealed partial class RecordPage // This file is among the worst written f
         });
     }
 
-    private void CancelCurrentRecording(object sender, RoutedEventArgs e)
+    private async void CancelCurrentRecording(object sender, RoutedEventArgs e)
     {
-        Task.Run(async () =>
-        {
-            AppProperties.InRecordState = false;
-            await audioRecordingUtils.CancelRecording();
-            App.MainWindow.ShowNotification(InfoBarSeverity.Informational, "Recording Cancelled", string.Empty, true, replaceExistingNotifications: true);
-        });
+        AppProperties.InRecordState = false;
+        await audioRecordingUtils.CancelRecording();
+        App.MainWindow.ShowNotification(InfoBarSeverity.Informational, "Recording Cancelled", string.Empty, true, replaceExistingNotifications: true);
     }
 
     [Log]

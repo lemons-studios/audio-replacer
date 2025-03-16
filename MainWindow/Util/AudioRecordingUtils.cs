@@ -23,13 +23,11 @@ public class AudioRecordingUtils
     [Log]
     private async Task InitializeMediaCapture()
     {
-        // Set up Audio recording class
         recordingCapture = new MediaCapture();
         var captureSettings = new MediaCaptureInitializationSettings
         {
             StreamingCaptureMode = StreamingCaptureMode.Audio,
-            // I have tried the other AudioProcessing modes, but they always seem to screw up the audio in some way
-            AudioProcessing = AudioProcessing.Raw 
+            AudioProcessing = AudioProcessing.Raw // I have tried the other AudioProcessing modes, but they always seem to screw up the audio in some way
         };
         await recordingCapture.InitializeAsync(captureSettings);
     }
@@ -86,11 +84,10 @@ public class AudioRecordingUtils
         if (File.Exists(tempOutFile))
         {
             // Move the file with filters applied to the intended location (if audio filters applied properly)
-            File.Move(tempOutFile, file, true); 
+            File.Move(tempOutFile, file, true);
+            return;
         }
-        else
-        {
-            await App.MainWindow.ShowNotification(InfoBarSeverity.Error, "Error", "FFMpeg command has failed to execute. Output is not modified");
-        }
+
+        await App.MainWindow.ShowNotification(InfoBarSeverity.Error, "Error", "FFMpeg command failed. Output is not modified");
     }
 }

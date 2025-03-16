@@ -34,6 +34,7 @@ public static class ProjectFileUtils
         projectPath = path;
         var projectName = projectPath.Split(Path.DirectorySeparatorChar)[^1];
 
+        // I'm trying my best to maKe a LINQ query that sorts subdirectories first. Doesn't work at the moment :(
         projectFiles = GetAllFiles()
             .Where(IsAudioFile)
             .OrderBy(Path.GetDirectoryName)
