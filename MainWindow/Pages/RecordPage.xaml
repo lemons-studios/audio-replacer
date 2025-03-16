@@ -97,7 +97,11 @@
                                     <Button
                                         Click="SkipCurrentAudioFile"
                                         Content="Confirm"
-                                        Style="{StaticResource AccentButtonStyle}" />
+                                        Style="{StaticResource AccentButtonStyle}">
+                                        <Button.KeyboardAccelerators>
+                                            <KeyboardAccelerator Key="Q" Modifiers="Control" />
+                                        </Button.KeyboardAccelerators>
+                                    </Button>
                                 </StackPanel>
                             </Flyout>
                         </Button.Flyout>
@@ -108,14 +112,22 @@
                         Content="Cancel"
                         IsEnabled="{Binding IsRecording}"
                         Style="{StaticResource OperationButton}"
-                        Visibility="{Binding IsRecording, Converter={StaticResource VisibilityConverter}}" />
+                        Visibility="{Binding IsRecording, Converter={StaticResource VisibilityConverter}}" >
+                        <Button.KeyboardAccelerators>
+                            <KeyboardAccelerator Key="Q" Modifiers="Control" />
+                        </Button.KeyboardAccelerators>
+                    </Button>
                     <Button
                         Click="RejectSubmission"
                         Command="{Binding SwitchButtonStatesCommand}"
                         Content="Reject"
                         IsEnabled="{Binding IsReviewing}"
                         Style="{StaticResource OperationButton}"
-                        Visibility="{Binding IsReviewing, Converter={StaticResource VisibilityConverter}}" />
+                        Visibility="{Binding IsReviewing, Converter={StaticResource VisibilityConverter}}" >
+                        <Button.KeyboardAccelerators>
+                            <KeyboardAccelerator Key="Q" Modifiers="Control" />
+                        </Button.KeyboardAccelerators>
+                    </Button>
                     <Button
                         Click="StartRecordingAudio"
                         Command="{Binding SwitchButtonStatesCommand}"
@@ -144,7 +156,11 @@
                         Content="Submit"
                         IsEnabled="{Binding IsReviewing}"
                         Style="{StaticResource OperationButton}"
-                        Visibility="{Binding IsReviewing, Converter={StaticResource VisibilityConverter}}" />
+                        Visibility="{Binding IsReviewing, Converter={StaticResource VisibilityConverter}}">
+                        <Button.KeyboardAccelerators>
+                            <KeyboardAccelerator Key="R" Modifiers="Control" />
+                        </Button.KeyboardAccelerators>
+                    </Button>
                 </StackPanel>
                 <Button
                     Click="SwitchViewingAudio"
@@ -152,7 +168,11 @@
                     IsEnabled="{Binding IsReviewing}"
                     Margin="0,15,0,0"
                     Style="{StaticResource OperationButton}"
-                    Visibility="{Binding IsReviewing, Converter={StaticResource VisibilityConverter}}" />
+                    Visibility="{Binding IsReviewing, Converter={StaticResource VisibilityConverter}}">
+                    <Button.KeyboardAccelerators>
+                        <KeyboardAccelerator Key="E" Modifiers="Control" />
+                    </Button.KeyboardAccelerators>
+                </Button>
             </StackPanel>
         </Border>
         <Border
@@ -183,7 +203,6 @@
                         Text="Extra Effects:"
                         TextWrapping="WrapWholeWords"
                         Width="275" />
-
                     <AutoSuggestBox
                         GotFocus="OnEffectFocus"
                         Margin="0,0,0,50"
@@ -195,7 +214,11 @@
                         Command="{Binding FlagExtraEditsCommand}"
                         Content="Further Edits Required?"
                         HorizontalAlignment="Center"
-                        IsChecked="False" />
+                        IsChecked="False" >
+                        <CheckBox.KeyboardAccelerators>
+                            <KeyboardAccelerator Modifiers="Control" Key="F"/>
+                        </CheckBox.KeyboardAccelerators>
+                    </CheckBox>
                 </StackPanel>
             </StackPanel>
         </Border>
