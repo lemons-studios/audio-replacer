@@ -1,6 +1,6 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+﻿using System.Text.Json;
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using Newtonsoft.Json;
 using Windows.Storage.Pickers;
 using WinRT.Interop;
 using WinUIEditor;
@@ -45,7 +45,9 @@ public partial class DataEditorData : ObservableObject
     private void FormatContent()
     {
         var currentEditorText = CodeEditor.Editor.GetText(CodeEditor.Editor.TextLength);
-        CodeEditor.Editor.SetText(JsonConvert.SerializeObject(JsonConvert.DeserializeObject(currentEditorText), Formatting.Indented));
+        var formattedText = JsonSerializer.Serialize(JsonSerializer.Deserialize<object>(currentEditorText),
+            new JsonSerializerOptions { WriteIndented = true });
+        CodeEditor.Editor.SetText(formattedText);
     }
 
     [RelayCommand]

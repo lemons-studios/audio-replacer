@@ -1,10 +1,11 @@
 ﻿using Microsoft.UI.Composition.SystemBackdrops;
 using Microsoft.Windows.AppLifecycle;
-using Newtonsoft.Json.Linq;
 using System.Diagnostics;
 using System.IO.Compression;
 using System.Net.Http;
 using System.Reflection;
+using System.Text.Json;
+
 // ReSharper disable MemberCanBePrivate.Global
 
 namespace AudioReplacer.Generic;
@@ -147,7 +148,7 @@ public static class AppFunctions
     }
 
     [Log]
-    public static async Task<string> GetDataFromGithub(string url, string tagName)
+    public static async Task<string> GetJsonFromUrl(string url, string tagName)
     {
         try
         {
@@ -155,9 +156,11 @@ public static class AppFunctions
             if (!apiResponse.IsSuccessStatusCode) return "Error Getting Tag Information";
 
             var responseData = await apiResponse.Content.ReadAsStringAsync();
-            var json = JObject.Parse(responseData);
-            var tagInfo = json[tagName]?.ToString();
-            return string.IsNullOrEmpty(tagInfo) ? "Error Getting Tag Information" : tagInfo;
+            using var document = JsonDocument.Parse(responseData);
+            if (document.RootElement.TryGetProperty(tagName, out var tagInfo))
+                return tagInfo.ToString();
+
+            return $"Error Getting Tag Information: {apiResponse.StatusCode}";
         }
         catch
         {

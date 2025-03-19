@@ -22,7 +22,7 @@ public sealed partial class ReleaseLogsPage
     [Log]
     private async Task SetContent()
     {
-        var markdown = await AppFunctions.GetDataFromGithub("https://api.github.com/repos/lemons-studios/audio-replacer/releases/latest", "body");
+        var markdown = await AppFunctions.GetJsonFromUrl("https://api.github.com/repos/lemons-studios/audio-replacer/releases/latest", "body");
 
         await MarkdownText.DispatcherQueue.EnqueueAsync(() =>
         {

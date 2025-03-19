@@ -37,7 +37,7 @@
         <PackageReference Include="CommunityToolkit.WinUI.Media" Version="8.1.240916" />
         <PackageReference Include="Config.Net" Version="5.2.1" />
         <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.26100.1742" />
-        <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.6.250205002" />
+        <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.7.250310001" />
         <PackageReference Include="Velopack" Version="0.0.1053" />
         <PackageReference Include="Whisper.net" Version="1.7.4" />
         <PackageReference Include="Whisper.net.Runtime" Version="1.7.4" />
@@ -48,8 +48,7 @@
         
         <!--TODO: Remove (Or look into removing) the following packages and re-implement the features needed myself -->
         <PackageReference Include="WinUI.TitleBarDragRegions" Version="1.0.0" />
-        <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-        <PackageReference Include="Metalama.Framework" Version="2025.0.8" />
+        <PackageReference Include="Metalama.Framework" Version="2025.0.9" />
         <PackageReference Include="NAudio" Version="2.2.1" />
         <PackageReference Include="WinUIEdit" Version="0.0.3-prerelease" />
         <PackageReference Include="DiscordRichPresence" Version="1.2.1.24" />
