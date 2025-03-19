@@ -29,7 +29,7 @@
 
     <ItemGroup>
         <PackageReference Include="CommunityToolkit.Labs.WinUI.Controls.MarkdownTextBlock" Version="0.1.250305-build.2058" />
-        <PackageReference Include="CommunityToolkit.Mvvm" Version="8.3.2" /> <!--Do Not Upgrade-->
+        <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" /> <!--Do Not Upgrade-->
         <PackageReference Include="CommunityToolkit.WinUI.Behaviors" Version="8.1.240916" />
         <PackageReference Include="CommunityToolkit.WinUI.Controls.Primitives" Version="8.1.240916" />
         <PackageReference Include="CommunityToolkit.WinUI.Controls.SettingsControls" Version="8.1.240916" />
