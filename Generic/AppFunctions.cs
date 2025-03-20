@@ -12,7 +12,7 @@ namespace AudioReplacer.Generic;
 
 public static class AppFunctions
 {
-    public static async Task DownloadDeps()
+    public static async Task DownloadDependencies()
     {
         // Download FFmpeg
         const string url = $"https://www.gyan.dev/ffmpeg/builds/ffmpeg-release-essentials.zip";

@@ -168,7 +168,7 @@ public partial class SettingsData : ObservableObject
         }
         
         App.MainWindow.ToggleProgressNotification("Repairing Dependencies..", "App Will Restart after complete");
-        await AppFunctions.DownloadDeps();
+        await AppFunctions.DownloadDependencies();
         AppFunctions.RestartApp();
     }
 }

@@ -5,7 +5,6 @@ using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
 using System.Collections.Generic;
-using TitleBarDrag;
 using Velopack;
 using Windows.Storage.Pickers;
 using WinRT.Interop;
@@ -28,14 +27,8 @@ public sealed partial class MainWindow
         SystemBackdrop = new MicaBackdrop();
         MainFrame.Navigate(typeof(RecordPage));
 
-
-        // dragRegions uses a small package that abstracts the official Microsoft code for creating non-drag regions
-        // If problems come out from this in the future, I will rewrite the package myself
         // ReSharper disable once UnusedVariable
-        var dragRegions = new DragRegions(this, AppTitleBar)
-        {
-            NonDragElements = [FolderChanger]
-        };
+        var dragRegions = new DragRegions(this, AppTitleBar) { NonDragElements = [FolderChanger] };
         
         var lastSelectedFolder = App.AppSettings.LastSelectedFolder;
         if (App.AppSettings.RememberSelectedFolder == 1 && lastSelectedFolder != string.Empty)

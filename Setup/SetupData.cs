@@ -46,7 +46,7 @@ public partial class SetupData : ObservableObject
             File.Copy(EffectSettingsPath, AppProperties.EffectsDataFile, overwrite: true);
 
         // Download Required Dependencies
-        await AppFunctions.DownloadDeps();
+        await AppFunctions.DownloadDependencies();
 
         // Download Whisper model if enabled
         if (DownloadWhisper)

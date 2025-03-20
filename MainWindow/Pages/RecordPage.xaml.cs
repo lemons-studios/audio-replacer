@@ -10,7 +10,7 @@ using Windows.Media.Core;
 
 // ReSharper disable AsyncVoidMethod
 namespace AudioReplacer.MainWindow.Pages;
-public sealed partial class RecordPage // This file is among the worst written files in the project. It works though so I won't be changing it until I'm bored
+public sealed partial class RecordPage
 {
     private AudioRecordingUtils audioRecordingUtils;
     private bool viewingOriginal;
