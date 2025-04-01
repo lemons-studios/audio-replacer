@@ -1,4 +1,5 @@
-﻿using System.Text.Json;
+﻿using System.Net.Http;
+using System.Text.Json;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Windows.Storage.Pickers;
@@ -10,6 +11,8 @@ namespace AudioReplacer.MainWindow.PageData;
 public partial class DataEditorData : ObservableObject
 {
     public static CodeEditorControl CodeEditor;
+
+    [ObservableProperty] private string url;
     
     [RelayCommand]
     private void OpenHelpPage()
@@ -54,6 +57,36 @@ public partial class DataEditorData : ObservableObject
     private void Reload()
     {
         AppFunctions.RestartApp();
+    }
+
+    [RelayCommand]
+    [Log]
+    private async Task ImportWebPitch()
+    {
+        try
+        {
+            var data = await AppFunctions.GetWebData(Url);
+            await File.WriteAllTextAsync(AppProperties.PitchDataFile, data);
+        }
+        catch (HttpRequestException)
+        {
+            return;
+        }
+    }
+
+    [RelayCommand]
+    [Log]
+    private async Task ImportWebEffects()
+    {
+        try
+        {
+            var data = await AppFunctions.GetWebData(Url);
+            await File.WriteAllTextAsync(AppProperties.EffectsDataFile, data);
+        }
+        catch (HttpRequestException)
+        {
+            return;
+        }
     }
 
     [Log]

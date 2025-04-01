@@ -11,7 +11,7 @@ using WinRT.Interop;
 namespace AudioReplacer;
 
 /// <summary>
-/// App Entry Point. Also stores commonly used elements from the app
+/// App Entry Point. Also stores some commonly used elements from the app that don't make sense being placed in AppProperties
 /// </summary>
 public partial class App
 {
@@ -19,6 +19,7 @@ public partial class App
     public static MainWindow.MainWindow MainWindow { get; private set; }
     public static FirstTimeSetupWindow SetupWindow { get; private set; }
     public static IAppSettings AppSettings { get; private set; }
+    
 #pragma warning disable CA2211
     public static RichPresenceController DiscordController;
 #pragma warning restore CA2211
@@ -28,7 +29,6 @@ public partial class App
         CreateAdditionalData();
         CreateSettingsData();
         CreateJsonData();
-
         File.WriteAllText(AppProperties.LogFile, "Log Started!");
         AppSettings = new ConfigurationBuilder<IAppSettings>().UseJsonFile(AppProperties.SettingsFile).Build();
         InitializeComponent();
@@ -113,6 +113,7 @@ public partial class App
                 SetupWindow.Activate();
                 break;
         }
+        
         AppProperties.IsAppLoaded = true;
     }
 
@@ -127,10 +128,10 @@ public partial class App
     [Log]
     private void CreateAdditionalData()
     {
-        string[] directories = [AppProperties.ExtraApplicationData, AppProperties.ConfigPath, AppProperties.BinaryPath, AppProperties.OutputPath];
-        string[] files = [AppProperties.SettingsFile, AppProperties.PitchDataFile, AppProperties.EffectsDataFile];
+        string[] dirs = [ AppProperties.ExtraApplicationData, AppProperties.ConfigPath, AppProperties.BinaryPath, AppProperties.OutputPath, AppProperties.TranscriptionsPath ];
+        string[] files = [ AppProperties.SettingsFile, AppProperties.PitchDataFile, AppProperties.EffectsDataFile ];
 
-        foreach (var d in directories)
+        foreach (var d in dirs)
         {
             if (!Directory.Exists(d))
                 Directory.CreateDirectory(d!);
