@@ -150,7 +150,7 @@ public partial class SettingsData : ObservableObject
     private async Task DownloadWhisper()
     {
         App.MainWindow.ToggleProgressNotification("Downloading Data", "Do not disconnect from the internet. App will restart after download is completed");
-        await using var whisperStream = await WhisperGgmlDownloader.GetGgmlModelAsync(GgmlType.Small, QuantizationType.Q5_1);
+        await using var whisperStream = await WhisperGgmlDownloader.Default.GetGgmlModelAsync(GgmlType.Small, QuantizationType.Q5_1);
         await using var fileWriter = File.OpenWrite(AppProperties.WhisperPath);
         await whisperStream.CopyToAsync(fileWriter);
         AppFunctions.RestartApp();
@@ -160,8 +160,8 @@ public partial class SettingsData : ObservableObject
     [RelayCommand]
     private async Task RepairDependencies()
     {
-        var filesToDelete = Directory.GetFiles(AppProperties.BinaryPath).Where(f =>
-            !string.Equals(Path.GetFileName(f), "whisper.bin", StringComparison.OrdinalIgnoreCase));
+        var filesToDelete = Directory.GetFiles(AppProperties.BinaryPath).Where(f => !string.Equals(Path.GetFileName(f), "whisper.bin", StringComparison.OrdinalIgnoreCase));
+        
         foreach (var file in filesToDelete)
         {
             File.Delete(file);
