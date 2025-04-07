@@ -106,4 +106,5 @@
         <Setter Property="VerticalScrollMode" Value="Enabled" />
         <Setter Property="VerticalScrollBarVisibility" Value="Hidden" />
     </Style>
+
 </ResourceDictionary>

@@ -62,6 +62,10 @@
             ItemInvoked="Navigate"
             PaneDisplayMode="Left">
             <NavigationView.MenuItems>
+                <NavigationViewItem 
+                    Content="Home" 
+                    Icon="{ui:FontIcon Glyph=&#xE80F;}"
+                    Tag="Home"/>
                 <NavigationViewItem
                     Content="Record"
                     Icon="{ui:FontIcon Glyph=&#xE720;}"
@@ -71,12 +75,6 @@
                     Icon="{ui:FontIcon Glyph=&#xE70F;}"
                     Tag="Data Editor" />
             </NavigationView.MenuItems>
-            <NavigationView.FooterMenuItems>
-                <NavigationViewItem
-                    Content="What's New"
-                    Icon="{ui:FontIcon Glyph=&#xE789;}"
-                    Tag="What's New" />
-            </NavigationView.FooterMenuItems>
             <Frame
                 HorizontalAlignment="Stretch"
                 Padding="10"

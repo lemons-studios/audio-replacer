@@ -25,7 +25,7 @@ public sealed partial class MainWindow
         SetTitleBar(AppTitleBar);
 
         SystemBackdrop = new MicaBackdrop();
-        MainFrame.Navigate(typeof(RecordPage));
+        MainFrame.Navigate(typeof(HomePage));
 
         // ReSharper disable once UnusedVariable
         var dragRegions = new DragRegions(this, AppTitleBar) { NonDragElements = [FolderChanger] };
@@ -170,7 +170,7 @@ public sealed partial class MainWindow
     [Log]
     private void Navigate(NavigationView sender, NavigationViewItemInvokedEventArgs args)
     {
-        var pageSwitchType = typeof(RecordPage); // Default page of project
+        var pageSwitchType = typeof(HomePage); // Default page of application
         if (args.InvokedItemContainer != null && args.InvokedItemContainer.Tag is string tag)
         {
             pageSwitchType = tag switch
@@ -178,7 +178,7 @@ public sealed partial class MainWindow
                 "Record" => typeof(RecordPage),
                 "Settings" => typeof(SettingsPage),
                 "Data Editor" => typeof(DataEditor),
-                "What's New" => typeof(ReleaseLogsPage),
+                "Home" => typeof(HomePage),
                 _ => pageSwitchType
             };
         }

@@ -15,6 +15,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <None Remove="MainWindow\Pages\HomePage.xaml" />
       <None Remove="Views\ReleaseLogsPage.xaml" />
       <None Remove="Setup\FirstTimeSetupWindow.xaml" />
       <None Remove="Setup\Pages\SetupAdvanced.xaml" />
@@ -48,7 +49,7 @@
         <PackageReference Include="WinUIEx" Version="2.5.1" />
         
         <!--TODO: Remove (Or look into removing) the following packages and re-implement the features needed myself -->
-        <PackageReference Include="Metalama.Framework" Version="2025.0.9" />
+        <PackageReference Include="Metalama.Framework" Version="2025.0.10" />
         <PackageReference Include="WinUIEdit" Version="0.0.4-prerelease" />
         <PackageReference Include="DiscordRichPresence" Version="1.2.1.24" />
     </ItemGroup>
@@ -84,6 +85,9 @@
         <Pack>True</Pack>
         <PackagePath>\</PackagePath>
       </None>
+      <Page Update="MainWindow\Pages\HomePage.xaml">
+        <Generator>MSBuild:Compile</Generator>
+      </Page>
     </ItemGroup>
 
     <PropertyGroup Label="Globals">
