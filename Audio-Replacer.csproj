@@ -40,16 +40,16 @@
         <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.7.250310001" />
         <PackageReference Include="NAudio" Version="2.2.1" />
 		<PackageReference Include="Velopack" Version="0.0.1053" />
-        <PackageReference Include="Whisper.net" Version="1.7.4" />
-        <PackageReference Include="Whisper.net.Runtime" Version="1.7.4" />
-        <PackageReference Include="Whisper.net.Runtime.Cuda.Windows" Version="1.7.4" />
-        <PackageReference Include="Whisper.net.Runtime.NoAvx" Version="1.7.4" />
-        <PackageReference Include="Whisper.net.Runtime.Vulkan" Version="1.7.4" />
+        <PackageReference Include="Whisper.net" Version="1.8.1" />
+        <PackageReference Include="Whisper.net.Runtime" Version="1.8.1" />
+        <PackageReference Include="Whisper.net.Runtime.Cuda.Windows" Version="1.8.1" />
+        <PackageReference Include="Whisper.net.Runtime.NoAvx" Version="1.8.1" />
+        <PackageReference Include="Whisper.net.Runtime.Vulkan" Version="1.8.1" />
         <PackageReference Include="WinUIEx" Version="2.5.1" />
         
         <!--TODO: Remove (Or look into removing) the following packages and re-implement the features needed myself -->
         <PackageReference Include="Metalama.Framework" Version="2025.0.9" />
-        <PackageReference Include="WinUIEdit" Version="0.0.3-prerelease" />
+        <PackageReference Include="WinUIEdit" Version="0.0.4-prerelease" />
         <PackageReference Include="DiscordRichPresence" Version="1.2.1.24" />
     </ItemGroup>
 
