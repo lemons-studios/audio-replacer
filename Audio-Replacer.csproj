@@ -38,7 +38,7 @@
         <PackageReference Include="CommunityToolkit.WinUI.Media" Version="8.2.250402" />
         <PackageReference Include="Config.Net" Version="5.2.1" />
         <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.26100.1742" />
-        <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.7.250310001" />
+        <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.7.250401001" />
         <PackageReference Include="NAudio" Version="2.2.1" />
 		<PackageReference Include="Velopack" Version="0.0.1053" />
         <PackageReference Include="Whisper.net" Version="1.8.1" />
@@ -106,8 +106,8 @@
         <StartupObject>AudioReplacer.Program</StartupObject>
         <NuGetAuditLevel>low</NuGetAuditLevel>
         <GenerateDocumentationFile>False</GenerateDocumentationFile>
-        <AssemblyVersion>4.2.0</AssemblyVersion>
-        <FileVersion>4.2.0</FileVersion>
+        <AssemblyVersion>4.3.0</AssemblyVersion>
+        <FileVersion>4.3.0</FileVersion>
         <Title>Audio Replacer</Title>
         <NeutralLanguage>en-CA</NeutralLanguage>
         <ApplicationIcon>Assets\AppIcon.ico</ApplicationIcon>

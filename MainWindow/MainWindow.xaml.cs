@@ -27,9 +27,6 @@ public sealed partial class MainWindow
         SystemBackdrop = new MicaBackdrop();
         MainFrame.Navigate(typeof(HomePage));
 
-        // ReSharper disable once UnusedVariable
-        var dragRegions = new DragRegions(this, AppTitleBar) { NonDragElements = [FolderChanger] };
-        
         var lastSelectedFolder = App.AppSettings.LastSelectedFolder;
         if (App.AppSettings.RememberSelectedFolder == 1 && lastSelectedFolder != string.Empty)
             ProjectFileUtils.SetProjectData(App.AppSettings.LastSelectedFolder);

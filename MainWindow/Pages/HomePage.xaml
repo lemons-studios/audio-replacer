@@ -23,21 +23,38 @@
                 Style="{StaticResource PanelCard}">
                 <StackPanel>
                     <TextBlock
-                        FontSize="40"
+                        Margin="0,0,0,10"
                         Style="{StaticResource TitleText}"
                         Text="Projects" />
-                    <StackPanel Orientation="Horizontal">
-                        <Border Margin="0,0,50,0">
+                    <Grid
+                        Padding="20"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        ColumnDefinitions="Auto, Auto">
+                        <Border
+                            Grid.Column="0"
+                            Margin="0,0,25,0"
+                            Style="{StaticResource HomePageActionCard}">
                             <StackPanel HorizontalAlignment="Center">
-                                <TextBlock Text="Load Last Project" />
+                                <TextBlock Style="{StaticResource ActionCardTitle}" Text="Load Previous Project" />
+                                <TextBlock
+                                    Margin="0,0,0,15"
+                                    HorizontalAlignment="Center"
+                                    Text="FolderName"
+                                    TextAlignment="Center" />
+                                <Button HorizontalAlignment="Center" Content="Load..." />
                             </StackPanel>
                         </Border>
-                        <Border Margin="0,0,50,0" HorizontalAlignment="Center">
-                            <StackPanel>
-                                <TextBlock Text="Select Folder" />
+                        <Border
+                            Grid.Column="1"
+                            Margin="25,0,0,0"
+                            Style="{StaticResource HomePageActionCard}">
+                            <StackPanel HorizontalAlignment="Center">
+                                <TextBlock Style="{StaticResource ActionCardTitle}" Text="Open Other Project" />
+                                <Button HorizontalAlignment="Center" Content="Select Folder" />
                             </StackPanel>
                         </Border>
-                    </StackPanel>
+                    </Grid>
                 </StackPanel>
             </Border>
             <Border
@@ -49,7 +66,6 @@
                     <TextBlock
                         Margin="0,0,0,15"
                         VerticalAlignment="Top"
-                        FontSize="40"
                         Style="{StaticResource TitleText}"
                         Text="Tips" />
                     <FlipView
@@ -69,15 +85,27 @@
                 Margin="10"
                 Padding="15"
                 Style="{StaticResource PanelCard}">
-                <StackPanel>
+                <Grid RowDefinitions="Auto, Auto">
                     <TextBlock
+                        Grid.Row="0"
                         Margin="0,0,0,10"
-                        FontSize="40"
                         Style="{StaticResource TitleText}"
                         Text="Latest Changes:" />
-                    <TextBlock Text="Test" />
-                    <md:MarkdownTextBlock Text="# No Recent Changes Found." />
-                </StackPanel>
+                    <ScrollViewer
+                        Grid.Row="1"
+                        HorizontalScrollMode="Disabled"
+                        VerticalScrollMode="Enabled">
+                        <md:MarkdownTextBlock
+                            x:Name="MarkdownText"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Top"
+                            AllowFocusOnInteraction="False"
+                            FontSize="20"
+                            FontWeight="Medium"
+                            IsFocusEngagementEnabled="False"
+                            Text="# No Recent Changes Found." />
+                    </ScrollViewer>
+                </Grid>
             </Border>
         </Grid>
     </Grid>

@@ -84,7 +84,7 @@
         <Setter Property="CornerRadius" Value="4" />
     </Style>
 
-    <Style x:Key="ToastNotification" TargetType="InfoBar">
+    <Style x:Key="Notification" TargetType="InfoBar">
         <Setter Property="HorizontalAlignment" Value="Center" />
         <Setter Property="VerticalAlignment" Value="Top" />
         <Setter Property="Margin" Value="0,20,0,15" />
@@ -105,6 +105,24 @@
         <Setter Property="HorizontalScrollBarVisibility" Value="Disabled" />
         <Setter Property="VerticalScrollMode" Value="Enabled" />
         <Setter Property="VerticalScrollBarVisibility" Value="Hidden" />
+    </Style>
+
+
+    <Style x:Key="HomePageActionCard" TargetType="Border">
+        <Setter Property="MinWidth" Value="170"/>
+        <Setter Property="MinHeight" Value="200"/>
+        <Setter Property="Padding" Value="7"/>
+        <Setter Property="HorizontalAlignment" Value="Center"/>
+        <Setter Property="CornerRadius" Value="6"/>
+        <Setter Property="Background" Value="{ThemeResource LayerOnMicaBaseAltFillColorDefaultBrush}"/>
+    </Style>
+
+    <Style x:Key="ActionCardTitle" TargetType="TextBlock">
+        <Setter Property="Margin" Value="0 0 0 10"/>
+        <Setter Property="HorizontalAlignment" Value="Center"/>
+        <Setter Property="TextAlignment" Value="Center"/>
+        <Setter Property="FontWeight" Value="Light"/>
+        <Setter Property="FontSize" Value="15"/>
     </Style>
 
 </ResourceDictionary>
