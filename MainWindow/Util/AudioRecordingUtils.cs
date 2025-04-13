@@ -88,6 +88,6 @@ public class AudioRecordingUtils
             return;
         }
 
-        await App.MainWindow.ShowNotification(InfoBarSeverity.Error, "Error", "FFMpeg command failed. Output is not modified");
+        await App.MainWindow.ShowNotification(InfoBarSeverity.Error, "Error", "Failed to apply custom filters. Output is not modified");
     }
 }

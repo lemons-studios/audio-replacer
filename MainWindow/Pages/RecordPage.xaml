@@ -1,12 +1,12 @@
 ﻿<Page
-    mc:Ignorable="d"
     x:Class="AudioReplacer.MainWindow.Pages.RecordPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:converters="using:AudioReplacer.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:data="using:AudioReplacer.MainWindow.PageData"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    mc:Ignorable="d">
 
     <Page.DataContext>
         <data:RecordPageData />
@@ -16,69 +16,69 @@
     </Page.Resources>
 
     <Grid
+        VerticalAlignment="Stretch"
         ColumnDefinitions="3*, 2*"
-        RowDefinitions="*"
-        VerticalAlignment="Stretch">
+        RowDefinitions="*">
         <Border
+            Grid.Row="0"
+            Grid.Column="0"
+            Margin="10"
             Background="{ThemeResource LayerFillColorAltBrush}"
             BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
-            CornerRadius="8"
-            Grid.Column="0"
-            Grid.Row="0"
-            Margin="10">
+            CornerRadius="8">
             <StackPanel VerticalAlignment="Center">
                 <StackPanel>
                     <TextBlock
+                        x:Name="CurrentFile"
                         Margin="0,7.5"
                         Style="{StaticResource TitleText}"
-                        Text="Select a folder to begin."
-                        x:Name="CurrentFile">
+                        Text="Select a folder to begin.">
                         <TextBlock.Transitions>
                             <ContentThemeTransition />
                         </TextBlock.Transitions>
                     </TextBlock>
-                    <StackPanel Visibility="Collapsed" x:Name="FileProgressPanel">
-                        <TextBlock Style="{StaticResource FileCounter}" x:Name="RemainingFiles" />
+                    <StackPanel x:Name="FileProgressPanel" Visibility="Collapsed">
+                        <TextBlock x:Name="RemainingFiles" Style="{StaticResource FileCounter}" />
                         <ProgressBar
-                            Height="20"
-                            Value="32"
+                            x:Name="RemainingFilesProgress"
                             Width="275"
-                            x:Name="RemainingFilesProgress" />
+                            Height="20"
+                            Value="32" />
                     </StackPanel>
                 </StackPanel>
                 <StackPanel>
                     <StackPanel>
                         <MediaPlayerElement
+                            x:Name="AudioPreview"
                             Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
                             Style="{StaticResource AudioPlayer}"
-                            Visibility="Visible"
-                            x:Name="AudioPreview">
+                            Visibility="Visible">
                             <MediaPlayerElement.TransportControls>
                                 <MediaTransportControls
+                                    VerticalAlignment="Center"
                                     IsCompact="True"
                                     IsEnabled="False"
                                     IsSeekBarVisible="True"
                                     IsZoomButtonVisible="False"
-                                    ShowAndHideAutomatically="False"
-                                    VerticalAlignment="Center" />
+                                    ShowAndHideAutomatically="False" />
                             </MediaPlayerElement.TransportControls>
                         </MediaPlayerElement>
                         <TextBlock
+                            x:Name="Transcription"
+                            HorizontalAlignment="Center"
                             FontSize="15"
                             FontWeight="Medium"
-                            HorizontalAlignment="Center"
                             Text=""
                             TextAlignment="Center"
-                            TextWrapping="Wrap"
-                            x:Name="Transcription">
+                            TextWrapping="Wrap">
                             <TextBlock.Transitions>
                                 <ContentThemeTransition />
                             </TextBlock.Transitions>
                         </TextBlock>
                     </StackPanel>
                     <StackPanel
-                        HorizontalAlignment="Center"
                         Margin="0,15,0,0"
+                        HorizontalAlignment="Center"
                         Orientation="Horizontal" />
                 </StackPanel>
                 <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
@@ -91,8 +91,8 @@
                             <Flyout x:Name="SkipFileFlyout">
                                 <StackPanel MinWidth="150">
                                     <TextBlock
-                                        FontWeight="Medium"
                                         Margin="0,0,0,10"
+                                        FontWeight="Medium"
                                         Text="Confirm Skip?" />
                                     <Button
                                         Click="SkipCurrentAudioFile"
@@ -112,7 +112,7 @@
                         Content="Cancel"
                         IsEnabled="{Binding IsRecording}"
                         Style="{StaticResource OperationButton}"
-                        Visibility="{Binding IsRecording, Converter={StaticResource VisibilityConverter}}" >
+                        Visibility="{Binding IsRecording, Converter={StaticResource VisibilityConverter}}">
                         <Button.KeyboardAccelerators>
                             <KeyboardAccelerator Key="Q" Modifiers="Control" />
                         </Button.KeyboardAccelerators>
@@ -123,7 +123,7 @@
                         Content="Reject"
                         IsEnabled="{Binding IsReviewing}"
                         Style="{StaticResource OperationButton}"
-                        Visibility="{Binding IsReviewing, Converter={StaticResource VisibilityConverter}}" >
+                        Visibility="{Binding IsReviewing, Converter={StaticResource VisibilityConverter}}">
                         <Button.KeyboardAccelerators>
                             <KeyboardAccelerator Key="Q" Modifiers="Control" />
                         </Button.KeyboardAccelerators>
@@ -163,11 +163,12 @@
                     </Button>
                 </StackPanel>
                 <Button
+                    Margin="0,10,0,0"
                     Click="SwitchViewingAudio"
                     Content="Switch"
+                    HorizontalAlignment="Center"
                     IsEnabled="{Binding IsReviewing}"
-                    Margin="0,15,0,0"
-                    Style="{StaticResource OperationButton}"
+                    Style="{StaticResource RegularButton}"
                     Visibility="{Binding IsReviewing, Converter={StaticResource VisibilityConverter}}">
                     <Button.KeyboardAccelerators>
                         <KeyboardAccelerator Key="E" Modifiers="Control" />
@@ -176,12 +177,12 @@
             </StackPanel>
         </Border>
         <Border
+            Grid.Row="0"
+            Grid.Column="1"
+            Margin="10"
             Background="{ThemeResource LayerFillColorAltBrush}"
             BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
-            CornerRadius="8"
-            Grid.Column="1"
-            Grid.Row="0"
-            Margin="10">
+            CornerRadius="8">
             <StackPanel VerticalAlignment="Center">
                 <StackPanel>
                     <TextBlock
@@ -189,34 +190,34 @@
                         Style="{StaticResource TitleText}"
                         Text="Pitch Tuning:" />
                     <AutoSuggestBox
-                        GotFocus="OnPitchFocus"
-                        Margin="0,0,0,50"
                         MaxWidth="250"
+                        Margin="0,0,0,50"
+                        GotFocus="OnPitchFocus"
                         PlaceholderText="Search For Pitch..."
                         QuerySubmitted="PitchQuerySubmitted"
                         TextChanged="OnPitchSearchChanged" />
                 </StackPanel>
                 <StackPanel>
                     <TextBlock
+                        Width="275"
                         Margin="0,0,0,15"
                         Style="{StaticResource TitleText}"
                         Text="Extra Effects:"
-                        TextWrapping="WrapWholeWords"
-                        Width="275" />
+                        TextWrapping="WrapWholeWords" />
                     <AutoSuggestBox
-                        GotFocus="OnEffectFocus"
-                        Margin="0,0,0,50"
                         MaxWidth="250"
+                        Margin="0,0,0,50"
+                        GotFocus="OnEffectFocus"
                         PlaceholderText="Search For Effects..."
                         QuerySubmitted="EffectQuerySubmitted"
                         TextChanged="OnEffectSearchChanged" />
                     <CheckBox
+                        HorizontalAlignment="Center"
                         Command="{Binding FlagExtraEditsCommand}"
                         Content="Further Edits Required?"
-                        HorizontalAlignment="Center"
-                        IsChecked="False" >
+                        IsChecked="False">
                         <CheckBox.KeyboardAccelerators>
-                            <KeyboardAccelerator Modifiers="Control" Key="F"/>
+                            <KeyboardAccelerator Key="F" Modifiers="Control" />
                         </CheckBox.KeyboardAccelerators>
                     </CheckBox>
                 </StackPanel>

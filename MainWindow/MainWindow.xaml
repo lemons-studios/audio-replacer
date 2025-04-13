@@ -24,12 +24,11 @@
         <Border
             x:Name="AppTitleBar"
             Grid.Row="0"
-            Height="45"
-            Padding="5"
-            VerticalAlignment="Top"
-            BorderThickness="5">
+            Height="50"
+            Padding="15"
+            VerticalAlignment="Top">
             <StackPanel>
-                <Grid ColumnDefinitions="Auto, *" RowDefinitions="Auto">
+                <Grid ColumnDefinitions="Auto, *">
                     <FontIcon Glyph="&#xEC71;" Style="{StaticResource TitleBarIcon}" />
                     <TextBlock
                         x:Name="AppTitle"
