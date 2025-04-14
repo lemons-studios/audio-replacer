@@ -1,5 +1,6 @@
 # Contributing to Audio Replacer
 I am a pretty bad developer. If you aren't and would like to contribute to this project to make it better, please do by following the steps below:
+
 ## Requirements
 In order to contribute to this application, You should have the following:
 - [FFMpeg](https://ffmpeg.org)
@@ -7,11 +8,11 @@ In order to contribute to this application, You should have the following:
      - Windows Application Development workload
      - .NET desktop development workload
      - Windows App SDK C# Templates component
-     - Windows 11 SDK (10.0.22621.0) component
-- [.NET SDK 9.0](https://dotnet.microsoft.com/en-us/download)
+     - A Windows 10/11 SDK component (preferrably a newer version like 10.0.22621.0)
+- [.NET SDK 9.0](https://dotnet.microsoft.com/en-us/download) (This might get automatically installed with Visual studio, but just in case, I added the download link here)
 > [!TIP]
 >
-> All development tools should use up around 15-30Gb of system storage once installed
+> All development tools should use up ~15-30Gb of system storage once installed
 
 After you clone your repo, you must run the following command before opening the solution (Or add the custom source to the nuget package manager window after opening the solution)
 ```
