@@ -5,6 +5,7 @@ using System.IO.Compression;
 using System.Net.Http;
 using System.Reflection;
 using System.Text.Json;
+using Windows.Storage.Pickers;
 
 // ReSharper disable MemberCanBePrivate.Global
 

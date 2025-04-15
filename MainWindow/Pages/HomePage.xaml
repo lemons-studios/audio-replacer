@@ -9,6 +9,9 @@
     xmlns:md="using:CommunityToolkit.Labs.WinUI.MarkdownTextBlock"
     xmlns:ui="using:CommunityToolkit.WinUI"
     mc:Ignorable="d">
+    <Page.DataContext>
+        <data:HomePageData />
+    </Page.DataContext>
 
     <Grid VerticalAlignment="Stretch" ColumnDefinitions="*, *">
         <Grid
@@ -40,9 +43,14 @@
                                 <TextBlock
                                     Margin="0,0,0,15"
                                     HorizontalAlignment="Center"
-                                    Text="FolderName"
-                                    TextAlignment="Center" />
-                                <Button HorizontalAlignment="Center" Content="Load..." />
+                                    Text="{Binding FolderName}"
+                                    TextAlignment="Center"
+                                    TextWrapping="Wrap" />
+                                <Button
+                                    HorizontalAlignment="Center"
+                                    Command="{Binding LoadPreviousProjectCommand}"
+                                    Content="Load..."
+                                    IsEnabled="{Binding PreviousProjectExists}" />
                             </StackPanel>
                         </Border>
                         <Border
@@ -51,7 +59,10 @@
                             Style="{StaticResource HomePageActionCard}">
                             <StackPanel HorizontalAlignment="Center">
                                 <TextBlock Style="{StaticResource ActionCardTitle}" Text="Open Other Project" />
-                                <Button HorizontalAlignment="Center" Content="Select Folder" />
+                                <Button
+                                    HorizontalAlignment="Center"
+                                    Command="{Binding OpenNewProjectCommand}"
+                                    Content="Select Folder" />
                             </StackPanel>
                         </Border>
                     </Grid>
@@ -96,8 +107,8 @@
                         VerticalScrollBarVisibility="Visible"
                         VerticalScrollMode="Enabled">
                         <md:MarkdownTextBlock
-                            Padding="5"
                             x:Name="MarkdownText"
+                            Padding="5"
                             AllowFocusOnInteraction="False"
                             FontSize="20"
                             FontWeight="Medium"

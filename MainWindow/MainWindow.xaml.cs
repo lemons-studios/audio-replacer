@@ -188,6 +188,18 @@ public sealed partial class MainWindow
         MainFrame.Content = page;
     }
 
+    public void OpenRecordPage()
+    {
+        var pageType = typeof(RecordPage);
+        if (!pageCache.TryGetValue(pageType, out var page))
+        {
+            page = (Page) Activator.CreateInstance(pageType);
+            pageCache[pageType] = page;
+        }
+
+        MainFrame.Content = page;
+    }
+
     [Log]
     private void OnClose(AppWindow sender, AppWindowClosingEventArgs args)
     {
