@@ -27,10 +27,6 @@ public sealed partial class MainWindow
         SystemBackdrop = new MicaBackdrop();
         MainFrame.Navigate(typeof(HomePage));
 
-        var lastSelectedFolder = App.AppSettings.LastSelectedFolder;
-        if (App.AppSettings.RememberSelectedFolder == 1 && lastSelectedFolder != string.Empty)
-            ProjectFileUtils.SetProjectData(App.AppSettings.LastSelectedFolder);
-        
         const string url = "https://f004.backblazeb2.com/file/audio-replacer-updates/";
         AppUpdater.AppUpdateManager = new UpdateManager(url);
         Task.Run(AppUpdater.UpdateApplication);
@@ -143,24 +139,6 @@ public sealed partial class MainWindow
         CompletionProgressBar.DispatcherQueue.TryEnqueue(() =>
         {
             CompletionProgressBar.Value = percentage;
-        });
-    }
-
-    [Log]
-    private void ChangeProjectFolder(object sender, RoutedEventArgs e)
-    {
-        Task.Run(async () =>
-        {
-            var folderPicker = new FolderPicker { FileTypeFilter = { "*" } };
-            InitializeWithWindow.Initialize(folderPicker, WindowNative.GetWindowHandle(this));
-            var folder = await folderPicker.PickSingleFolderAsync();
-            if (folder != null && !string.IsNullOrEmpty(folder.Path))
-            {
-                var folderPath = folder.Path;
-                if (AppFunctions.IntToBool(App.AppSettings.RememberSelectedFolder))
-                    App.AppSettings.LastSelectedFolder = folderPath;
-                ProjectFileUtils.SetProjectData(folderPath);
-            }
         });
     }
 
