@@ -5,6 +5,12 @@ using System.IO.Compression;
 using System.Net.Http;
 using System.Reflection;
 using System.Text.Json;
+using AudioReplacer.MainWindow.Util;
+using NAudio.Wave;
+using NAudio.Wave.SampleProviders;
+using Whisper.net;
+using Whisper.net.LibraryLoader;
+using System.Threading;
 
 // ReSharper disable MemberCanBePrivate.Global
 namespace AudioReplacer.Generic;
@@ -77,6 +83,50 @@ public static class AppFunctions
     }
 
     [Log]
+    public static async Task<string> TranscribeFile(string path)
+    {
+        var output = string.Empty;
+        var cts = new CancellationTokenSource(15000);
+        try
+        {
+            // Initialize Whisper model and processor
+            var whisperFactory = WhisperFactory.FromPath(AppProperties.WhisperPath);
+
+            // Determine the best runtime for the model
+            RuntimeOptions.RuntimeLibraryOrder =
+                [RuntimeLibrary.Cuda, RuntimeLibrary.Vulkan, RuntimeLibrary.Cpu, RuntimeLibrary.CpuNoAvx];
+            var whisperProcessor = whisperFactory.CreateBuilder()
+                .WithLanguage("auto")
+                .WithTranslate() // Why the hell not
+                .Build();
+
+            // Do some funky wizardry to make the file work with Whisper.NET
+            await using var fileStream = File.OpenRead(path);
+            using var wavStream = new MemoryStream();
+            await using var reader = new WaveFileReader(fileStream);
+            var resamplingProcessor = new WdlResamplingSampleProvider(reader.ToSampleProvider(), 16000);
+            WaveFileWriter.WriteWavFileToStream(wavStream, resamplingProcessor.ToWaveProvider16());
+            wavStream.Seek(0, SeekOrigin.Begin);
+
+            // Process audio file
+            await foreach (var result in whisperProcessor.ProcessAsync(wavStream, cts.Token))
+            {
+                output = result.Text;
+            }
+            return output;
+        }
+        catch (OperationCanceledException)
+        {
+            // This sometimes happens on shorter files. Time out after 30s
+            return "Transcription Timed out";
+        }
+        catch (Exception)
+        {
+            return "Could Not Transcribe Contents";
+        }
+    }
+
+    [Log]
     public static async Task FfMpegCommand(string input, string command, string outPath)
     {
         await SpawnProcess(AppProperties.FfmpegPath, $"-i \"{input}\" {command} -y \"{outPath}\"");
@@ -111,7 +161,7 @@ public static class AppFunctions
         Task.Run(async () => await SpawnProcess("cmd", $"/c start {url}"));
     }
 
-    // Config.NET does not allow boolean types with my setup, So these two boolean converter methods are needed.
+    // Config.NET does not allow boolean types whatsoever, So The following two boolean converter methods are needed
     public static int BoolToInt(bool value)
     {
         // true = 1, false = 0.
@@ -120,7 +170,6 @@ public static class AppFunctions
 
     public static bool IntToBool(int value)
     {
-        // If the value is not 1, return false. Makes sense ngl
         return value == 1;
     }
 
@@ -142,7 +191,7 @@ public static class AppFunctions
         }
         catch
         {
-            return 1;
+            return 0f;
         }
     }
 
@@ -156,10 +205,9 @@ public static class AppFunctions
 
             var responseData = await apiResponse.Content.ReadAsStringAsync();
             using var document = JsonDocument.Parse(responseData);
-            if (document.RootElement.TryGetProperty(tagName, out var tagInfo))
-                return tagInfo.ToString();
-
-            return $"Error Getting Tag Information: {apiResponse.StatusCode}";
+            return document.RootElement.TryGetProperty(tagName, out var tagInfo) 
+                ? tagInfo.ToString() 
+                : $"Error Getting Tag Information: {apiResponse.StatusCode}";
         }
         catch
         {
@@ -204,13 +252,8 @@ public static class AppFunctions
         var minor = splitVer[1];
         var build = splitVer[2];
 
-        if (forceBuildNumber || build != "0")
-        {
-            return $"{major}.{minor}.{build}";
-        }
-        else
-        {
-            return $"{major}.{minor}";
-        }
+        return (forceBuildNumber || build != "0") 
+            ? $"{major}.{minor}.{build}" 
+            : $"{major}.{minor}";
     }
 }
