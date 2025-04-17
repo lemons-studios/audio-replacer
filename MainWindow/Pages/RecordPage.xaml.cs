@@ -60,7 +60,7 @@ public sealed partial class RecordPage
         AudioPreview.MediaPlayer.Pause();
         await audioRecordingUtils.StartRecordingAudio();
         App.DiscordController.SetSmallAsset("recording", "Recording Audio");
-        App.MainWindow.ToggleProgressNotification("Recording In Progress", string.Empty);
+        App.MainWindow.ShowProgressNotification("Recording In Progress", string.Empty);
     }
 
     [Log]

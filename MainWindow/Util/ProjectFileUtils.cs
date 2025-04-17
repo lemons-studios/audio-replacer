@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using System.Text.Json;
 using Windows.Storage;
 
 namespace AudioReplacer.MainWindow.Util;
@@ -15,6 +16,8 @@ public static class ProjectFileUtils
 {
     private static string currentFile, truncatedCurrentFile, currentOutFile, currentFileName, currentFileLocalPath;
     private static string outputFolderPath, projectPath;
+    public static string transcriptionJson;
+
 
     private static readonly string[] SupportedFileTypes = [".mp3", ".wav", ".wma", ".aac", ".m4a", ".flac", ".ogg", ".aiff"]; // TODO: Switch to some way to check for all audio file types
     public static bool IsProjectLoaded, ExtraEditsFlagged = false;
@@ -46,8 +49,11 @@ public static class ProjectFileUtils
             .ToList();
 
         outputFolderPath = Path.Join(AppProperties.OutputPath, projectName);
+        transcriptionJson = Path.Join(outputFolderPath, "fileTranscription.json");
+
         if (!Directory.Exists(outputFolderPath))
             Directory.CreateDirectory(outputFolderPath);
+
         CreateInitialData();
         SetCurrentFile();
 
@@ -77,17 +83,16 @@ public static class ProjectFileUtils
     }
 
     [Log]
-    private static async Task ConvertAudioFiles()
+    private static async Task CreateProjectData()
     {
         try
         {
             var unconvertedFiles = GetAllFiles().Where(IsUndesirableAudioFile).ToList();
             if (unconvertedFiles.Count != 0)
             {
-                var isNotificationOpen = false;
                 var totalFiles = unconvertedFiles.Count + 1;
 
-                for (int i = 0; i < totalFiles - 1; i++)
+                for (var i = 0; i - 1 < totalFiles; i++) // My gut tells me that I shouldn't remove the + 1 and - 1 from these two lines , even though it makes sense. Test later
                 {
 
                     var input = unconvertedFiles[i];
@@ -99,20 +104,47 @@ public static class ProjectFileUtils
                     if (App.MainWindow != null)
                     {
                         var percentage = MathF.Floor(((float) i / totalFiles) * 100);
-                        if (!isNotificationOpen)
-                        {
-                            App.MainWindow.ToggleCompletionNotification("Converting files to .wav format", $"Progress: {percentage}%", percentage);
-                            isNotificationOpen = true;
-                        }
-                        else
-                        {
-                            App.MainWindow.SetCompletionMessage($"Progress: {percentage}%", percentage);
-                        }
+                        if (!App.MainWindow.IsCompletionNotificationOpen()) 
+                            App.MainWindow.ShowCompletionNotification("Converting files to .wav format", $"{percentage}%", percentage);
+                        else App.MainWindow.SetCompletionMessage($"{percentage}%", percentage);
                     }
                 }
-                if(App.MainWindow != null)
-                    App.MainWindow.ShowNotification(InfoBarSeverity.Success, "Success!", "All files converted");
             }
+
+            App.MainWindow?.HideCompletionNotification();
+            // Next, let's transcribe all files and store them in a json
+            var serializerOptions = new JsonSerializerOptions { WriteIndented = true };
+            if (AppFunctions.IntToBool(App.AppSettings.EnableTranscription) && File.Exists(AppProperties.WhisperPath))
+            {
+                if (!File.Exists(transcriptionJson)) File.Create(transcriptionJson);
+                var allFiles = GetAllFiles().Where(IsAudioFile).ToList();
+                List<List<string>> transcribedFiles = [];
+
+                for (var i = 0; i < allFiles.Count; i++) // CPU/GPU Usage: 100%. This is why Whisper is optional
+                {
+
+                    if (App.MainWindow != null)
+                    {
+                        var percentage = MathF.Floor(((float) i / allFiles.Count) * 100));
+
+                        if (!App.MainWindow.IsCompletionNotificationOpen())
+                            App.MainWindow.ShowCompletionNotification("Transcribing files", $"{percentage}% Complete");
+                        else App.MainWindow.SetCompletionMessage($"{percentage}% Complete", percentage);
+
+                    }
+                    var file = allFiles[i];
+                    var transcription = await AppFunctions.TranscribeFile(file);
+                    
+                    List<string> transcriptionData = [allFiles[i], transcription];
+                    transcribedFiles.Add(transcriptionData);
+                }
+
+                var fullTranscriptionData = JsonSerializer.Serialize(transcribedFiles, serializerOptions);
+                await File.WriteAllTextAsync(transcriptionJson, fullTranscriptionData);
+            }
+            
+            if (App.MainWindow != null) App.MainWindow.ShowNotification(InfoBarSeverity.Success, "Success!", "Pre-Project Task(s) completed");
+
         }
         catch (Exception e)
         {
@@ -139,7 +171,7 @@ public static class ProjectFileUtils
                 Directory.CreateDirectory(outputDir);
         }
 
-        Task.Run(ConvertAudioFiles);
+        Task.Run(CreateProjectData);
     }
     
     private static string TruncateDirectory(string inputPath, int dirLevels, string delimiter = "\\")

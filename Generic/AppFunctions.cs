@@ -86,15 +86,24 @@ public static class AppFunctions
     public static async Task<string> TranscribeFile(string path)
     {
         var output = string.Empty;
-        var cts = new CancellationTokenSource(15000);
+        // Determine the best runtime for transcription
+        RuntimeOptions.RuntimeLibraryOrder = [RuntimeLibrary.Cuda, RuntimeLibrary.Vulkan, RuntimeLibrary.Cpu, RuntimeLibrary.CpuNoAvx];
+        var loadedLib = RuntimeOptions.LoadedLibrary;
+
+        var timeout = loadedLib switch
+        {
+            RuntimeLibrary.Cuda => 2500,
+            RuntimeLibrary.Vulkan => 8000,
+            RuntimeLibrary.Cpu => 15000,
+            _ => 35000
+        };
+
+        var cts = new CancellationTokenSource(timeout);
         try
         {
             // Initialize Whisper model and processor
             var whisperFactory = WhisperFactory.FromPath(AppProperties.WhisperPath);
 
-            // Determine the best runtime for the model
-            RuntimeOptions.RuntimeLibraryOrder =
-                [RuntimeLibrary.Cuda, RuntimeLibrary.Vulkan, RuntimeLibrary.Cpu, RuntimeLibrary.CpuNoAvx];
             var whisperProcessor = whisperFactory.CreateBuilder()
                 .WithLanguage("auto")
                 .WithTranslate() // Why the hell not

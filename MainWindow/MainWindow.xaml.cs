@@ -36,7 +36,7 @@ public sealed partial class MainWindow
 
     private void OnUpdateFound()
     {
-        ToggleProgressNotification("Updates found", "App will restart once updates are downloaded");
+        ShowProgressNotification("Updates found", "App will restart once updates are downloaded");
     }
 
     [Log]
@@ -95,15 +95,28 @@ public sealed partial class MainWindow
     }
 
     [Log]
-    public void ToggleProgressNotification(string title, string message)
+    public void ShowProgressNotification(string title, string message)
     {
         InProgressNotification.DispatcherQueue.TryEnqueue(() =>
         {
             InProgressNotification.Title = title;
             InProgressNotification.Message = message;
 
-            InProgressNotification.IsOpen = !InProgressNotification.IsOpen;
+            InProgressNotification.IsOpen = true;
         });
+    }
+
+    public void HideProgressNotification()
+    {
+        InProgressNotification.DispatcherQueue.TryEnqueue(() =>
+        {
+            InProgressNotification.IsOpen = false;
+        });
+    }
+
+    public bool IsProgressNotificationOpen()
+    {
+        return InProgressNotification.IsOpen;
     }
 
     // For a future part of the app
@@ -115,7 +128,7 @@ public sealed partial class MainWindow
         });
     }
 
-    public void ToggleCompletionNotification(string title, string message, float percentage = 0f)
+    public void ShowCompletionNotification(string title, string message, float percentage = 0f)
     {
         CompletionNotification.DispatcherQueue.TryEnqueue(() =>
         {
@@ -128,6 +141,19 @@ public sealed partial class MainWindow
         {
             CompletionProgressBar.Value = percentage;
         });
+    }
+
+    public void HideCompletionNotification()
+    {
+        CompletionNotification.DispatcherQueue.TryEnqueue(() =>
+        {
+            CompletionNotification.IsOpen = false;
+        });
+    }
+
+    public bool IsCompletionNotificationOpen()
+    {
+        return CompletionNotification.IsOpen
     }
 
     public void SetCompletionMessage(string message, float percentage)
