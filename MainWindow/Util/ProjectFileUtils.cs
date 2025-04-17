@@ -125,7 +125,7 @@ public static class ProjectFileUtils
 
                     if (App.MainWindow != null)
                     {
-                        var percentage = MathF.Floor(((float) i / allFiles.Count) * 100));
+                        var percentage = MathF.Floor(((float) i / allFiles.Count) * 100);
 
                         if (!App.MainWindow.IsCompletionNotificationOpen())
                             App.MainWindow.ShowCompletionNotification("Transcribing files", $"{percentage}% Complete");
