@@ -24,49 +24,57 @@
                 Margin="10"
                 Padding="10,20"
                 Style="{StaticResource PanelCard}">
-                <StackPanel>
+                <Grid RowDefinitions="Auto, *">
                     <TextBlock
-                        Margin="0,0,0,10"
+                        Grid.Row="0"
                         Style="{StaticResource TitleText}"
                         Text="Projects" />
                     <Grid
                         Padding="20"
                         HorizontalAlignment="Center"
                         VerticalAlignment="Center"
-                        ColumnDefinitions="Auto, Auto">
+                        ColumnDefinitions="Auto, Auto"
+                        Row="1">
                         <Border
                             Grid.Column="0"
                             Margin="0,0,25,0"
                             Style="{StaticResource HomePageActionCard}">
                             <StackPanel HorizontalAlignment="Center">
-                                <TextBlock Style="{StaticResource ActionCardTitle}" Text="Load Previous Project" />
                                 <TextBlock
-                                    Margin="0,0,0,15"
+                                    Margin="0,15,0,5"
+                                    Style="{StaticResource ActionCardTitle}"
+                                    Text="Load Previous Project" />
+                                <TextBlock
+                                    Margin="0,-5,0,10"
                                     HorizontalAlignment="Center"
+                                    Foreground="Gray"
                                     Text="{Binding FolderName}"
                                     TextAlignment="Center"
                                     TextWrapping="Wrap" />
                                 <Button
-                                    HorizontalAlignment="Center"
+                                    MinWidth="100"
                                     Command="{Binding LoadPreviousProjectCommand}"
-                                    Content="Load..."
-                                    IsEnabled="{Binding PreviousProjectExists}" />
+                                    Content="Load"
+                                    IsEnabled="{Binding PreviousProjectExists}"
+                                    Style="{StaticResource AccentedButton}" />
                             </StackPanel>
                         </Border>
                         <Border
                             Grid.Column="1"
                             Margin="25,0,0,0"
                             Style="{StaticResource HomePageActionCard}">
-                            <StackPanel HorizontalAlignment="Center">
+                            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
                                 <TextBlock Style="{StaticResource ActionCardTitle}" Text="Open Other Project" />
                                 <Button
-                                    HorizontalAlignment="Center"
+                                    MinWidth="100"
+                                    Margin="0,13,0,0"
                                     Command="{Binding OpenNewProjectCommand}"
-                                    Content="Select Folder" />
+                                    Content="Select Folder"
+                                    Style="{StaticResource AccentedButton}" />
                             </StackPanel>
                         </Border>
                     </Grid>
-                </StackPanel>
+                </Grid>
             </Border>
             <Border
                 Grid.Row="1"
@@ -112,7 +120,12 @@
                             AllowFocusOnInteraction="False"
                             FontSize="20"
                             FontWeight="Medium"
-                            Text="# No Recent Changes Found." />
+                            Text="# No Recent Changes Found."
+                            UseAutoLinks="True"
+                            UseEmphasisExtras="True"
+                            UseListExtras="True"
+                            UsePipeTables="True"
+                            UseTaskLists="True" />
                     </ScrollViewer>
                 </Grid>
             </Border>

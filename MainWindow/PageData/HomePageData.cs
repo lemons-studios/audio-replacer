@@ -8,9 +8,8 @@ namespace AudioReplacer.MainWindow.PageData;
 partial class HomePageData : ObservableObject
 {
     [ObservableProperty] private bool previousProjectExists = !string.IsNullOrEmpty(App.AppSettings.LastSelectedFolder) && Path.Exists(App.AppSettings.LastSelectedFolder);
-
     [ObservableProperty] private string folderName = !string.IsNullOrEmpty(App.AppSettings.LastSelectedFolder)
-        ? Path.GetDirectoryName(App.AppSettings.LastSelectedFolder)
+        ? Path.GetFileName(App.AppSettings.LastSelectedFolder)
         : "No Previous Project In Memory";
 
     [RelayCommand]

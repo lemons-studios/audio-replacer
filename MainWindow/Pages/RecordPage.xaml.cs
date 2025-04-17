@@ -44,21 +44,17 @@ public sealed partial class RecordPage
     {
         // Hide popup regardless of if a project is loaded
         SkipFileFlyout.Hide();
-
-        if (ProjectFileUtils.IsProjectLoaded)
-        {
-            
-            ProjectFileUtils.SkipAudioTrack();
-            UpdateFileElements();
-            App.MainWindow.ShowNotification(InfoBarSeverity.Success, "File Skipped!", string.Empty, true);
-        }
+        if (!ProjectFileUtils.IsProjectLoaded) return;
+        
+        ProjectFileUtils.SkipAudioTrack();
+        UpdateFileElements();
+        App.MainWindow.ShowNotification(InfoBarSeverity.Success, "File Skipped!", string.Empty, true);
     }
 
     [Log]
     private async void StartRecordingAudio(object sender, RoutedEventArgs e)
     {
-        if (!ProjectFileUtils.IsProjectLoaded) 
-            return;
+        if (!ProjectFileUtils.IsProjectLoaded) return;
 
         AppProperties.InRecordState = true;
         AudioPreview.MediaPlayer.Pause();
@@ -228,8 +224,6 @@ public sealed partial class RecordPage
         AudioPreview.MediaPlayer.Pause();
     }
 
-    // TODO: Maybe reduce how much boilerplate and reused code this uses
-
     [Log]
     private void OnPitchSearchChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)
     {
@@ -295,8 +289,7 @@ public sealed partial class RecordPage
         var dataList = effectsData ? AppProperties.EffectTitles : AppProperties.PitchTitles;
         for (var i = 0; i < dataList.Count; i++)
         {
-            if (x == dataList[i])
-                return i;
+            if (x == dataList[i]) return i;
         }
         throw new Exception(); 
     }

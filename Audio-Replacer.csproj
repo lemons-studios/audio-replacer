@@ -101,7 +101,7 @@
         <PublishTrimmed Condition="'$(Configuration)' == 'Debug'">True</PublishTrimmed>
         <PublishTrimmed Condition="'$(Configuration)' != 'Debug'">False</PublishTrimmed>
         <SupportedOSPlatformVersion>10.0.20348.0</SupportedOSPlatformVersion>
-        <AssemblyName>AudioReplacer</AssemblyName>
+        <AssemblyName>Audio Replacer</AssemblyName>
         <ErrorReport>none</ErrorReport>
         <StartupObject>AudioReplacer.Program</StartupObject>
         <NuGetAuditLevel>low</NuGetAuditLevel>
