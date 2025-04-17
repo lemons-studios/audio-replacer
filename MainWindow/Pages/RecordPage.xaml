@@ -164,9 +164,9 @@
                 </StackPanel>
                 <Button
                     Margin="0,10,0,0"
+                    HorizontalAlignment="Center"
                     Click="SwitchViewingAudio"
                     Content="Switch"
-                    HorizontalAlignment="Center"
                     IsEnabled="{Binding IsReviewing}"
                     Style="{StaticResource RegularButton}"
                     Visibility="{Binding IsReviewing, Converter={StaticResource VisibilityConverter}}">

@@ -7,7 +7,6 @@
     xmlns:data="using:AudioReplacer.MainWindow.PageData"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:md="using:CommunityToolkit.Labs.WinUI.MarkdownTextBlock"
-    xmlns:ui="using:CommunityToolkit.WinUI"
     mc:Ignorable="d">
     <Page.DataContext>
         <data:HomePageData />
