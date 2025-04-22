@@ -153,7 +153,7 @@ public sealed partial class MainWindow
 
     public bool IsCompletionNotificationOpen()
     {
-        return CompletionNotification.IsOpen
+        return CompletionNotification.IsOpen;
     }
 
     public void SetCompletionMessage(string message, float percentage)

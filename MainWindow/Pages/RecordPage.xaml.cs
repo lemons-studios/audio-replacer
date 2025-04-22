@@ -81,17 +81,18 @@ public sealed partial class RecordPage
     }
 
     [Log]
-    private void UpdateFileElements(bool transcribeAudio = true, bool firstLoad = false)
+    private void UpdateFileElements(bool firstLoad = false)
     {
         var progressPercentage = ProjectFileUtils.CalculatePercentageComplete();
         var projectPath = ProjectFileUtils.GetProjectPath();
 
         DispatcherQueue.TryEnqueue(() =>
         {
-            
+
             FileProgressPanel.Visibility = Visibility.Visible;
             CurrentFile.Text = ProjectFileUtils.GetCurrentFile().Replace(@"\", "/");
-            RemainingFiles.Text = $"Files Remaining: {ProjectFileUtils.GetFileCount(projectPath):N0} ({progressPercentage}%)";
+            RemainingFiles.Text =
+                $"Files Remaining: {ProjectFileUtils.GetFileCount(projectPath):N0} ({progressPercentage}%)";
             RemainingFilesProgress.Value = progressPercentage;
             try
             {
@@ -116,77 +117,16 @@ public sealed partial class RecordPage
             });
         }
 
-        if (transcribeAudio)
-            TranscribeAudio();
-    }
-
-    // Should probably move this into its own file in the future due to the sheer length of this thing
-    [Log]
-    private void TranscribeAudio()
-    {
-        var dispatcherQueue = Transcription.DispatcherQueue;
-        Transcription.Text = "Now Processing....";
-        Task.Run(async () =>
+        if (AppFunctions.IntToBool(App.AppSettings.EnableTranscription))
         {
-            try
+            var dispatcherQueue = Transcription.DispatcherQueue;
+            Transcription.Text = "Now Processing....";
+            Task.Run(async () =>
             {
-                // Check if the Whisper model path exists
-                if (!Path.Exists(AppProperties.WhisperPath) || !AppFunctions.IntToBool(App.AppSettings.EnableTranscription))
-                {
-                    await dispatcherQueue.EnqueueAsync(() =>
-                    {
-                        Transcription.Text = string.Empty;
-                    });
-                    return;
-                }
-
-                // Validate the current file format
-                var currentFile = ProjectFileUtils.GetCurrentFile(false);
-                if (!currentFile.EndsWith(".wav", StringComparison.OrdinalIgnoreCase))
-                {
-                    await dispatcherQueue.EnqueueAsync(() =>
-                    {
-                        Transcription.Text = "Only .wav files support transcription.";
-                    });
-                    return;
-                }
-
-                // Initialize Whisper model and processor
-                var whisperFactory = WhisperFactory.FromPath(AppProperties.WhisperPath);
-
-                // Determine the best runtime for the model
-                RuntimeOptions.RuntimeLibraryOrder = [RuntimeLibrary.Cuda, RuntimeLibrary.Vulkan, RuntimeLibrary.Cpu, RuntimeLibrary.CpuNoAvx];
-                var whisperProcessor = whisperFactory.CreateBuilder()
-                    .WithLanguage("auto")
-                    .WithTranslate()
-                    .Build();
-
-                // Do some funky wizardry to make the file work with Whisper.NET
-                await using var fileStream = File.OpenRead(currentFile);
-                using var wavStream = new MemoryStream();
-                await using var reader = new WaveFileReader(fileStream);
-                var resamplingProcessor = new WdlResamplingSampleProvider(reader.ToSampleProvider(), 16000);
-                WaveFileWriter.WriteWavFileToStream(wavStream, resamplingProcessor.ToWaveProvider16());
-                wavStream.Seek(0, SeekOrigin.Begin);
-
-                // Process audio file
-                await foreach (var result in whisperProcessor.ProcessAsync(wavStream))
-                {
-                    await dispatcherQueue.EnqueueAsync(() =>
-                    {
-                        Transcription.Text = $"Transcription:\n{result.Text}";
-                    });
-                }
-            }
-            catch (Exception ex)
-            {
-                await dispatcherQueue.EnqueueAsync(() =>
-                {
-                    Transcription.Text = $"Error: {ex.Message}";
-                });
-                Console.WriteLine($"Error during transcription: {ex}");
-            }
-        });
+                var transcription = await AppFunctions.TranscribeFile(ProjectFileUtils.GetCurrentFile(false));
+                await dispatcherQueue.EnqueueAsync(() => { Transcription.Text = transcription; });
+            });
+        }
     }
 
     private async void CancelCurrentRecording(object sender, RoutedEventArgs e)

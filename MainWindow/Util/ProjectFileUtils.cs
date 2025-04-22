@@ -112,37 +112,6 @@ public static class ProjectFileUtils
             }
 
             App.MainWindow?.HideCompletionNotification();
-            // Next, let's transcribe all files and store them in a json
-            var serializerOptions = new JsonSerializerOptions { WriteIndented = true };
-            if (AppFunctions.IntToBool(App.AppSettings.EnableTranscription) && File.Exists(AppProperties.WhisperPath))
-            {
-                if (!File.Exists(transcriptionJson)) File.Create(transcriptionJson);
-                var allFiles = GetAllFiles().Where(IsAudioFile).ToList();
-                List<List<string>> transcribedFiles = [];
-
-                for (var i = 0; i < allFiles.Count; i++) // CPU/GPU Usage: 100%. This is why Whisper is optional
-                {
-
-                    if (App.MainWindow != null)
-                    {
-                        var percentage = MathF.Floor(((float) i / allFiles.Count) * 100));
-
-                        if (!App.MainWindow.IsCompletionNotificationOpen())
-                            App.MainWindow.ShowCompletionNotification("Transcribing files", $"{percentage}% Complete");
-                        else App.MainWindow.SetCompletionMessage($"{percentage}% Complete", percentage);
-
-                    }
-                    var file = allFiles[i];
-                    var transcription = await AppFunctions.TranscribeFile(file);
-                    
-                    List<string> transcriptionData = [allFiles[i], transcription];
-                    transcribedFiles.Add(transcriptionData);
-                }
-
-                var fullTranscriptionData = JsonSerializer.Serialize(transcribedFiles, serializerOptions);
-                await File.WriteAllTextAsync(transcriptionJson, fullTranscriptionData);
-            }
-            
             if (App.MainWindow != null) App.MainWindow.ShowNotification(InfoBarSeverity.Success, "Success!", "Pre-Project Task(s) completed");
 
         }

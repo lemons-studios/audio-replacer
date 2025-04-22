@@ -98,6 +98,8 @@ public static class AppFunctions
             _ => 35000
         };
 
+        await File.WriteAllTextAsync(Path.Join(AppProperties.ExtraApplicationData, "timeout.txt"), timeout.ToString());
+
         var cts = new CancellationTokenSource(timeout);
         try
         {
