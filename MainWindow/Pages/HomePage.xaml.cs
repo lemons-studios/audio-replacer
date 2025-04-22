@@ -1,7 +1,5 @@
 using CommunityToolkit.Labs.WinUI.MarkdownTextBlock;
 using CommunityToolkit.WinUI;
-using Microsoft.UI.Xaml.Controls;
-
 namespace AudioReplacer.MainWindow.Pages;
 
 public sealed partial class HomePage

@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
+﻿using System.Diagnostics.CodeAnalysis;
 using System.Net.Http;
+using Whisper.net;
 
 namespace AudioReplacer.Generic;
 [SuppressMessage("Usage", "CA2211:Non-constant fields should not be visible")]
@@ -24,4 +24,10 @@ public static class AppProperties
     public static List<float> PitchValues;
 
     public static readonly HttpClient WebClient = new() { DefaultRequestHeaders = { { "User-Agent", "Audio Replacer" } } };
+
+    public static readonly WhisperFactory WhisperFactory = WhisperFactory.FromPath(WhisperPath);
+    public static WhisperProcessor TranscriptionProcessor = WhisperFactory.CreateBuilder()
+        .WithLanguage("auto")
+        .WithTranslate() // Why the hell not
+        .Build();
 }

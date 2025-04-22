@@ -2,10 +2,6 @@
 using AudioReplacer.MainWindow.Util;
 using CommunityToolkit.WinUI;
 using Microsoft.UI.Xaml.Controls;
-using NAudio.Wave;
-using NAudio.Wave.SampleProviders;
-using Whisper.net;
-using Whisper.net.LibraryLoader;
 using Windows.Media.Core;
 
 // ReSharper disable AsyncVoidMethod

@@ -5,10 +5,8 @@ using System.IO.Compression;
 using System.Net.Http;
 using System.Reflection;
 using System.Text.Json;
-using AudioReplacer.MainWindow.Util;
 using NAudio.Wave;
 using NAudio.Wave.SampleProviders;
-using Whisper.net;
 using Whisper.net.LibraryLoader;
 using System.Threading;
 
@@ -92,25 +90,15 @@ public static class AppFunctions
 
         var timeout = loadedLib switch
         {
-            RuntimeLibrary.Cuda => 2500,
-            RuntimeLibrary.Vulkan => 8000,
-            RuntimeLibrary.Cpu => 15000,
+            RuntimeLibrary.Cuda => 3000,
+            RuntimeLibrary.Vulkan => 12500,
+            RuntimeLibrary.Cpu => 20000,
             _ => 35000
         };
-
-        await File.WriteAllTextAsync(Path.Join(AppProperties.ExtraApplicationData, "timeout.txt"), timeout.ToString());
 
         var cts = new CancellationTokenSource(timeout);
         try
         {
-            // Initialize Whisper model and processor
-            var whisperFactory = WhisperFactory.FromPath(AppProperties.WhisperPath);
-
-            var whisperProcessor = whisperFactory.CreateBuilder()
-                .WithLanguage("auto")
-                .WithTranslate() // Why the hell not
-                .Build();
-
             // Do some funky wizardry to make the file work with Whisper.NET
             await using var fileStream = File.OpenRead(path);
             using var wavStream = new MemoryStream();
@@ -120,7 +108,7 @@ public static class AppFunctions
             wavStream.Seek(0, SeekOrigin.Begin);
 
             // Process audio file
-            await foreach (var result in whisperProcessor.ProcessAsync(wavStream, cts.Token))
+            await foreach (var result in AppProperties.TranscriptionProcessor.ProcessAsync(wavStream, cts.Token))
             {
                 output = result.Text;
             }

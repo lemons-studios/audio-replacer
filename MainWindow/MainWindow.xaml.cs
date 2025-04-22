@@ -4,10 +4,7 @@ using CommunityToolkit.WinUI;
 using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
-using System.Collections.Generic;
 using Velopack;
-using Windows.Storage.Pickers;
-using WinRT.Interop;
 
 namespace AudioReplacer.MainWindow;
 
