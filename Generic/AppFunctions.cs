@@ -124,7 +124,7 @@ public static class AppFunctions
             {
                 output = result.Text;
             }
-            return output;
+            return $"Transcription: {output}";
         }
         catch (OperationCanceledException)
         {

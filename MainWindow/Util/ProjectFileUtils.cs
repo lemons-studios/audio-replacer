@@ -16,8 +16,6 @@ public static class ProjectFileUtils
 {
     private static string currentFile, truncatedCurrentFile, currentOutFile, currentFileName, currentFileLocalPath;
     private static string outputFolderPath, projectPath;
-    public static string transcriptionJson;
-
 
     private static readonly string[] SupportedFileTypes = [".mp3", ".wav", ".wma", ".aac", ".m4a", ".flac", ".ogg", ".aiff"]; // TODO: Switch to some way to check for all audio file types
     public static bool IsProjectLoaded, ExtraEditsFlagged = false;
@@ -40,7 +38,7 @@ public static class ProjectFileUtils
         projectPath = path;
         var projectName = projectPath.Split(Path.DirectorySeparatorChar)[^1];
 
-        // I'm trying my best to maKe a LINQ query that sorts subdirectories first. Doesn't work at the moment :(
+        // This STILL doesn't sort the paths how I want them to
         projectFiles = GetAllFiles()
             .Where(IsAudioFile)
             .OrderBy(p => p.Split(Path.DirectorySeparatorChar).Length)
@@ -49,7 +47,6 @@ public static class ProjectFileUtils
             .ToList();
 
         outputFolderPath = Path.Join(AppProperties.OutputPath, projectName);
-        transcriptionJson = Path.Join(outputFolderPath, "fileTranscription.json");
 
         if (!Directory.Exists(outputFolderPath))
             Directory.CreateDirectory(outputFolderPath);
@@ -70,16 +67,16 @@ public static class ProjectFileUtils
             truncatedCurrentFile = "YOU ARE DONE!";
             currentOutFile = string.Empty;
             currentFileName = string.Empty;
-            return;
         }
+        else
+        {
+            truncatedCurrentFile = TruncateDirectory(currentFile, 2);
+            currentFileName = Path.GetFileName(currentFile);
 
-        truncatedCurrentFile = TruncateDirectory(currentFile, 2);
-        currentFileName = Path.GetFileName(currentFile);
-
-        // Path manipulation trickery
-        // tldr: split the path to the current file with the path to the project folder, then combine the split path with the path to the output folder
-        currentFileLocalPath = currentFile.Split(projectPath)[1];
-        currentOutFile = Path.Join(outputFolderPath, currentFileLocalPath);
+            // Path manipulation trickery
+            currentFileLocalPath = currentFile.Split(projectPath)[1];
+            currentOutFile = Path.Join(outputFolderPath, currentFileLocalPath);
+        }
     }
 
     [Log]
@@ -109,11 +106,9 @@ public static class ProjectFileUtils
                         else App.MainWindow.SetCompletionMessage($"{percentage}%", percentage);
                     }
                 }
+                App.MainWindow?.HideCompletionNotification();
+                if (App.MainWindow != null) App.MainWindow.ShowNotification(InfoBarSeverity.Success, "Success!", "Pre-Project Task(s) completed");
             }
-
-            App.MainWindow?.HideCompletionNotification();
-            if (App.MainWindow != null) App.MainWindow.ShowNotification(InfoBarSeverity.Success, "Success!", "Pre-Project Task(s) completed");
-
         }
         catch (Exception e)
         {
