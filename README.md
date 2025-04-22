@@ -31,15 +31,14 @@ If you need to dub voice files for your game modification, this application is f
 ## 💾 Install
 You can download the latest release [**here**](https://github.com/lemons-studios/audio-replacer-2/releases/latest).
 ### Requirements:
-- Windows 11 (Windows 10 works but will not be supported after end of life)
-- 500mb of storage space
+- Windows 11 
+    - Windows 10 does work but will not be supported after end of life. Furthermore, You will want to install the [Segoe Fluent Icons](https://aka.ms/SegoeFluentIcons) font as some icons will be missing
+- 200-500mb of storage space (depending on if you install the Nvidia version or the non-Nvidia version)
 #### Additional Requirements If Installing Whisper
 - An additional 800mb of storage space
 - One Of:
-  - (Recommended, near-instant processing time) an Nvidia GPU with the [Cuda Toolkit](https://developer.nvidia.com/cuda-downloads) installed (~2gb extra space)
+  - (Recommended, near-instant processing time) an Nvidia GPU with the [Cuda Toolkit](https://developer.nvidia.com/cuda-downloads) installed (An extra 2gb is needed for the cuda toolkit)
   - (Not-So Recommended, processing time of around 5-10s) the [Vulkan Runtime](https://vulkan.lunarg.com/sdk/home)
-  - (Absolutely not recommended, > 30s processing time) A CPU with the AVX instruction set
-  - If more than one of these requirements are met, Audio Replacer will automatically pick the fastest option for your system
 
 ## ⚙️ Build From Source
 If you want to develop for this application, you'll need a few things installed on your computer:
