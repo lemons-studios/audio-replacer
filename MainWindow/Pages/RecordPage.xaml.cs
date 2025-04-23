@@ -36,7 +36,7 @@ public sealed partial class RecordPage
 
         App.DiscordController.SetDetails("On Record Page");
         if (ProjectFileUtils.IsProjectLoaded)
-            App.DiscordController.SetState($"{ProjectFileUtils.CalculatePercentageComplete()}% Complete");
+            App.DiscordController.SetState($"{ProjectFileUtils.CalculateCompletion()}% Complete");
     }
 
     [Log]
@@ -46,7 +46,7 @@ public sealed partial class RecordPage
         SkipFileFlyout.Hide();
         if (!ProjectFileUtils.IsProjectLoaded) return;
         
-        ProjectFileUtils.SkipAudioTrack();
+        ProjectFileUtils.SkipFile();
         UpdateFileElements();
         App.MainWindow.ShowNotification(InfoBarSeverity.Success, "File Skipped!", string.Empty, true);
     }
@@ -83,7 +83,7 @@ public sealed partial class RecordPage
     [Log]
     private void UpdateFileElements(bool firstLoad = false)
     {
-        var progressPercentage = ProjectFileUtils.CalculatePercentageComplete();
+        var progressPercentage = ProjectFileUtils.CalculateCompletion();
         var projectPath = ProjectFileUtils.GetProjectPath();
 
         DispatcherQueue.TryEnqueue(() =>
@@ -142,7 +142,7 @@ public sealed partial class RecordPage
         AppProperties.InRecordState = false;
         viewingOriginal = false;
 
-        ProjectFileUtils.SubmitAudioFile(); // Extra edits get renamed in this method
+        ProjectFileUtils.SubmitFile(); // Extra edits get renamed in this method
         App.MainWindow.ShowNotification(InfoBarSeverity.Success, "Recording Accepted", "Moving to next file...", true, replaceExistingNotifications: true);
         UpdateFileElements();
     }
