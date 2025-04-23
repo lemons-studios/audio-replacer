@@ -15,13 +15,15 @@ public static class ProjectFileUtils
     private static string currentFile, truncatedCurrentFile, currentOutFile, currentFileName, currentFileLocalPath;
     private static string outputFolderPath, projectPath;
 
-    private static readonly string[] SupportedFileTypes = [".mp3", ".wav", ".wma", ".aac", ".m4a", ".flac", ".ogg", ".aiff"]; // TODO: Switch to some way to check for all audio file types
+    private static readonly string[] SupportedFileTypes = [".mp3", ".wav", ".wma", ".aac", ".m4a", ".flac", ".ogg", ".aiff"];
     public static bool IsProjectLoaded, ExtraEditsFlagged = false;
 
     public delegate void BroadcastEventHandler();
     public static event BroadcastEventHandler OnProjectLoaded;
 
     private static List<string> projectFiles;
+    private static readonly Random Rng = new();
+
 
     // ReSharper disable once MemberCanBePrivate.Global
     public static void Broadcast()
@@ -51,14 +53,13 @@ public static class ProjectFileUtils
 
         CreateInitialData();
         SetCurrentFile();
-
         Broadcast();
     }
 
     [Log]
     private static void SetCurrentFile()
     {
-        currentFile = GetNextAudioFile();
+        currentFile = GetNextFile();
 
         if (string.IsNullOrEmpty(currentFile))
         {
@@ -110,8 +111,7 @@ public static class ProjectFileUtils
         }
         catch (Exception e)
         {
-            if (App.MainWindow != null)
-                App.MainWindow.ShowNotification(InfoBarSeverity.Error, "Error", e.Message);
+            if (App.MainWindow != null) App.MainWindow.ShowNotification(InfoBarSeverity.Error, "Error", e.Message);
         }
     }
 
@@ -136,8 +136,10 @@ public static class ProjectFileUtils
         Task.Run(CreateProjectData);
     }
     
-    private static string TruncateDirectory(string inputPath, int dirLevels, string delimiter = "\\")
+    private static string TruncateDirectory(string inputPath, int dirLevels)
     {
+        var delimiter = Path.DirectorySeparatorChar;
+
         if (string.IsNullOrEmpty(inputPath) || dirLevels <= 0) return inputPath;
         var splitDir = inputPath.Split(delimiter);
 
@@ -145,9 +147,8 @@ public static class ProjectFileUtils
         return string.Join(delimiter, splitDir[^dirLevels..]);
     }
 
-    private static readonly Random Rng = new();
     [Log]
-    private static string GetNextAudioFile()
+    private static string GetNextFile()
     {
         try
         {
@@ -166,16 +167,16 @@ public static class ProjectFileUtils
 
     /// <summary>Calculates how many files the user has completed in the current project</summary>
     /// <returns>Project Completion percentage</returns>
-    public static float CalculatePercentageComplete()
+    public static float CalculateCompletion()
     {
         var inCount = GetFileCount(projectPath);
         var outCount = GetFileCount(outputFolderPath);
         return inCount + outCount == 0 
             ? 100 // Edge case
-            : (float) Math.Round(outCount / (double) (inCount + outCount) * 100, 3);
+            : MathF.Round(outCount / (float) (inCount + outCount) * 100, 3);
     }
 
-    public static void SkipAudioTrack()
+    public static void SkipFile()
     {
         if (string.IsNullOrEmpty(currentFile) || string.IsNullOrEmpty(currentOutFile)) return;
         
@@ -185,10 +186,9 @@ public static class ProjectFileUtils
     }
 
     [Log]
-    public static void SubmitAudioFile()
+    public static void SubmitFile()
     {
-        if (!string.IsNullOrEmpty(currentFile)) 
-            File.Delete(currentFile);
+        if (!string.IsNullOrEmpty(currentFile)) File.Delete(currentFile);
         
         if (ExtraEditsFlagged)
         {
@@ -200,8 +200,7 @@ public static class ProjectFileUtils
         // Loop through all folders in input and delete any empty files
         foreach (var dir in Directory.GetDirectories(projectPath, "*", SearchOption.AllDirectories))
         {
-            if (!Directory.EnumerateFileSystemEntries(dir).Any()) 
-                Directory.Delete(dir);
+            if (!Directory.EnumerateFileSystemEntries(dir).Any()) Directory.Delete(dir);
         }
         projectFiles.RemoveAt(0);
         SetCurrentFile();
@@ -247,7 +246,6 @@ public static class ProjectFileUtils
         return Directory.EnumerateFiles(path, "*", SearchOption.AllDirectories).Count();
     }
 
-    [Log]
     public static async Task<StorageFolder> GetDirectoryAsStorageFolder()
     {
         return await StorageFolder.GetFolderFromPathAsync(Path.GetDirectoryName(currentOutFile));
