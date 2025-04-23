@@ -32,7 +32,7 @@
                         x:Name="CurrentFile"
                         Margin="0,7.5"
                         Style="{StaticResource TitleText}"
-                        Text="Select a folder to begin.">
+                        Text="Open a project to begin">
                         <TextBlock.Transitions>
                             <ContentThemeTransition />
                         </TextBlock.Transitions>

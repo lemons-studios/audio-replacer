@@ -26,7 +26,6 @@ public static class AppUpdater
         {
             await AppUpdateManager.DownloadUpdatesAsync(appUpdateInfo).ConfigureAwait(true);
             AppUpdateManager.ApplyUpdatesAndRestart(appUpdateInfo);
-            
         }
         catch (Exception)
         {

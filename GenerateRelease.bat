@@ -28,14 +28,14 @@ mkdir Publish\Assets\ > nul 2> nul
 copy /y Assets Publish\Assets\ > nul 2> nul
 
 echo (4/6) Build Installer (stable-nvidia)
-vpk pack -u AudioReplacer -v %~1 -p .\Publish -e AudioReplacer.exe --splashImage .\Assets\SplashScreen.gif -i .\Assets\AppIcon.ico --noPortable --skipVeloAppCheck --signSkipDll --packTitle "Audio Replacer" --packAuthors "Lemon Studios" --delta BestSize --channel stable-nvidia || (
+vpk pack -u AudioReplacer -v %~1 -p .\Publish -e "Audio Replacer.exe" --splashImage .\Assets\SplashScreen.gif -i .\Assets\AppIcon.ico --noPortable --skipVeloAppCheck --signSkipDll --packTitle "Audio Replacer" --packAuthors "Lemon Studios" --delta BestSize --channel stable-nvidia || (
     echo Error: vpk build failed!
     exit /b 1
 )
 
 echo (5/6) Build Installer (stable)
 del /s /q Publish\runtimes\cuda > nul 2> nul
-vpk pack -u AudioReplacer -v %~1 -p .\Publish -e AudioReplacer.exe --splashImage .\Assets\SplashScreen.gif -i .\Assets\AppIcon.ico --noPortable --skipVeloAppCheck --signSkipDll --packTitle "Audio Replacer" --packAuthors "Lemon Studios" --delta BestSize --channel stable || (
+vpk pack -u AudioReplacer -v %~1 -p .\Publish -e "Audio Replacer.exe" --splashImage .\Assets\SplashScreen.gif -i .\Assets\AppIcon.ico --noPortable --skipVeloAppCheck --signSkipDll --packTitle "Audio Replacer" --packAuthors "Lemon Studios" --delta BestSize --channel stable || (
     echo Error: vpk build failed!
     exit /b 1
 )

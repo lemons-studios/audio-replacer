@@ -214,7 +214,7 @@ public sealed partial class MainWindow
         }
     }
 
-    private void DownloadUpdate(object sender, RoutedEventArgs e)
+    private async void DownloadUpdate(object sender, RoutedEventArgs e)
     {
         UpdateAvailableNotification.DispatcherQueue.TryEnqueue(() =>
         {
@@ -222,5 +222,6 @@ public sealed partial class MainWindow
         });
 
         ShowProgressNotification("Downloading Updates", "App will restart once updates are downloaded");
+        await AppUpdater.UpdateApplication();
     }
 }

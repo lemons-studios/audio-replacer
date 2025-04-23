@@ -113,16 +113,22 @@
             <InfoBar
                 x:Name="UpdateAvailableNotification"
                 Title="An Update Is Available"
+                MinWidth="250"
                 Margin="0,0,0,-75"
+                Background="{ThemeResource SystemFillColorSolidAttentionBackgroundBrush}"
                 IsClosable="True"
                 Severity="Informational"
                 Style="{StaticResource Notification}">
-                <InfoBar.Content>
-                    <Button
-                        Padding="4"
+                <InfoBar.ActionButton>
+                    <HyperlinkButton
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Center"
                         Click="DownloadUpdate"
                         Content="Download Update" />
-                </InfoBar.Content>
+                </InfoBar.ActionButton>
+                <InfoBar.Transitions>
+                    <PopupThemeTransition />
+                </InfoBar.Transitions>
             </InfoBar>
         </StackPanel>
     </Grid>
