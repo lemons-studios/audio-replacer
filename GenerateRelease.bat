@@ -22,7 +22,7 @@ echo (2/6) Create Release Build
 dotnet publish -c Release --self-contained -r win-x64 -o .\Publish
 del /s /q Publish\WinUIEditor.pdb > nul 2> nul
 
-:: For whatever reason, dotnet publish doesn't copy over the assets folder. Let's copy it over manually before packaging
+:: dotnet publish doesn't copy over the assets folder. Let's copy it over manually before packaging
 echo (3/6) Copy Assets
 mkdir Publish\Assets\ > nul 2> nul
 copy /y Assets Publish\Assets\ > nul 2> nul

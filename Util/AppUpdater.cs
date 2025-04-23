@@ -24,20 +24,32 @@ public static class AppUpdater
     {
         try
         {
+            await AppUpdateManager.DownloadUpdatesAsync(appUpdateInfo).ConfigureAwait(true);
+            AppUpdateManager.ApplyUpdatesAndRestart(appUpdateInfo);
+            
+        }
+        catch (Exception)
+        {
+            // ReSharper disable once RedundantJumpStatement
+            return;
+        }
+    }
+
+    public static async Task SearchForUpdates()
+    {
+        try
+        {
             if (!Debugger.IsAttached && AppFunctions.IntToBool(App.AppSettings.AppUpdateCheck))
             {
                 appUpdateInfo = await AppUpdateManager.CheckForUpdatesAsync().ConfigureAwait(true);
                 if (appUpdateInfo != null)
                 {
                     Broadcast();
-                    await AppUpdateManager.DownloadUpdatesAsync(appUpdateInfo).ConfigureAwait(true);
-                    AppUpdateManager.ApplyUpdatesAndRestart(appUpdateInfo);
                 }
             }
         }
         catch (Exception)
         {
-            // ReSharper disable once RedundantJumpStatement
             return;
         }
     }

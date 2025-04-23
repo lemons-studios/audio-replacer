@@ -109,6 +109,21 @@
                     <PopupThemeTransition />
                 </InfoBar.Transitions>
             </InfoBar>
+
+            <InfoBar
+                x:Name="UpdateAvailableNotification"
+                Title="An Update Is Available"
+                Margin="0,0,0,-75"
+                IsClosable="True"
+                Severity="Informational"
+                Style="{StaticResource Notification}">
+                <InfoBar.Content>
+                    <Button
+                        Padding="4"
+                        Click="DownloadUpdate"
+                        Content="Download Update" />
+                </InfoBar.Content>
+            </InfoBar>
         </StackPanel>
     </Grid>
 </ex:WindowEx>

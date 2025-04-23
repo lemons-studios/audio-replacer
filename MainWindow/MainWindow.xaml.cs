@@ -26,14 +26,18 @@ public sealed partial class MainWindow
 
         const string url = "https://f004.backblazeb2.com/file/audio-replacer-updates/";
         AppUpdater.AppUpdateManager = new UpdateManager(url);
-        Task.Run(AppUpdater.UpdateApplication);
         AppUpdater.OnUpdateFound += OnUpdateFound;
+        Task.Run(AppUpdater.SearchForUpdates);
+
         App.AppWindow.SetIcon(@"Assets\AppIcon.ico");
     }
 
     private void OnUpdateFound()
     {
-        ShowProgressNotification("Updates found", "App will restart once updates are downloaded");
+        UpdateAvailableNotification.DispatcherQueue.TryEnqueue(() =>
+        {
+            UpdateAvailableNotification.IsOpen = true;
+        });
     }
 
     [Log]
@@ -168,7 +172,7 @@ public sealed partial class MainWindow
     [Log]
     private void Navigate(NavigationView sender, NavigationViewItemInvokedEventArgs args)
     {
-        var pageSwitchType = typeof(HomePage); // Default page of application
+        var pageSwitchType = typeof(HomePage); // Default page
         if (args.InvokedItemContainer != null && args.InvokedItemContainer.Tag is string tag)
         {
             pageSwitchType = tag switch
@@ -208,5 +212,15 @@ public sealed partial class MainWindow
         {
             File.Delete(ProjectFileUtils.GetOutFilePath());
         }
+    }
+
+    private void DownloadUpdate(object sender, RoutedEventArgs e)
+    {
+        UpdateAvailableNotification.DispatcherQueue.TryEnqueue(() =>
+        {
+            UpdateAvailableNotification.IsOpen = false;
+        });
+
+        ShowProgressNotification("Downloading Updates", "App will restart once updates are downloaded");
     }
 }
