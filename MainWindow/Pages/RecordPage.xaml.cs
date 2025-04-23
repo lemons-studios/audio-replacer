@@ -6,8 +6,12 @@ using Windows.Media.Core;
 
 // ReSharper disable AsyncVoidMethod
 namespace AudioReplacer.MainWindow.Pages;
+/// <summary>
+/// Record Page Functions
+/// </summary>
 public sealed partial class RecordPage
 {
+    // Least clean class in audio replacer, but it works, so I am NOT complaining
     private AudioRecordingUtils audioRecordingUtils;
     private bool viewingOriginal;
 

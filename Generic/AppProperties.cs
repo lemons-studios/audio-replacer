@@ -26,8 +26,5 @@ public static class AppProperties
     public static readonly HttpClient WebClient = new() { DefaultRequestHeaders = { { "User-Agent", "Audio Replacer" } } };
 
     // Only here because now it doesn't need to be defined each time. Only used in one spot, although I just want to keep it here since all other startup properties are here
-    public static WhisperProcessor TranscriptionProcessor = WhisperFactory.FromPath(WhisperPath).CreateBuilder()
-        .WithLanguage("auto")
-        .WithTranslate() // Why the hell not
-        .Build();
+    public static WhisperProcessor TranscriptionProcessor;
 }

@@ -1,11 +1,9 @@
 @echo off
-
 if "%~1"=="" (
     echo Missing version number.
     echo Usage: GenerateRelease.bat [build number]
     exit /b 1
 )
-
 where dotnet >nul 2>&1 || (
     echo The .NET SDK is not installed.
     echo Please install the .NET sdk from https://dotnet.microsoft.com/en-us/download
@@ -22,7 +20,7 @@ echo (2/6) Create Release Build
 dotnet publish -c Release --self-contained -r win-x64 -o .\Publish
 del /s /q Publish\WinUIEditor.pdb > nul 2> nul
 
-:: dotnet publish doesn't copy over the assets folder. Let's copy it over manually before packaging
+:: dotnet publish doesn't copy over the assets folder. Copy it over manually before packaging
 echo (3/6) Copy Assets
 mkdir Publish\Assets\ > nul 2> nul
 copy /y Assets Publish\Assets\ > nul 2> nul

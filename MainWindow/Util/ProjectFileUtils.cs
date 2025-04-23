@@ -149,12 +149,9 @@ public static class ProjectFileUtils
     [Log]
     private static string GetNextAudioFile()
     {
-        // This array should hopefully order by directory name and make subdirectories of directories appear with them
-        // So a/b/c.wav will come before a/c2.wav
-
         try
         {
-            // Incredible double ternary expression. reduced line count in this method by maybe 10-15
+            // Incredible double ternary expression
             return projectFiles.Any()
                 ? AppFunctions.IntToBool(App.AppSettings.InputRandomizationEnabled)
                     ? projectFiles[Rng.Next(projectFiles.Count)]
@@ -175,13 +172,12 @@ public static class ProjectFileUtils
         var outCount = GetFileCount(outputFolderPath);
         return inCount + outCount == 0 
             ? 100 // Edge case
-            : (float) Math.Round(outCount / (double) (inCount + outCount) * 100, 2);
+            : (float) Math.Round(outCount / (double) (inCount + outCount) * 100, 3);
     }
 
     public static void SkipAudioTrack()
     {
-        if (string.IsNullOrEmpty(currentFile) || string.IsNullOrEmpty(currentOutFile)) 
-            return;
+        if (string.IsNullOrEmpty(currentFile) || string.IsNullOrEmpty(currentOutFile)) return;
         
         File.Move(currentFile, currentOutFile);
         projectFiles.RemoveAt(0);

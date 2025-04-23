@@ -9,6 +9,7 @@ using NAudio.Wave;
 using NAudio.Wave.SampleProviders;
 using Whisper.net.LibraryLoader;
 using System.Threading;
+using Whisper.net;
 
 // ReSharper disable MemberCanBePrivate.Global
 namespace AudioReplacer.Generic;
@@ -83,6 +84,15 @@ public static class AppFunctions
     [Log]
     public static async Task<string> TranscribeFile(string path)
     {
+        if (AppProperties.TranscriptionProcessor == null)
+        {
+            // Initializing this at startup would crash the app if whisper wasn't present. This will initialize it on the first transcription on each app launch
+            AppProperties.TranscriptionProcessor = WhisperFactory.FromPath(AppProperties.WhisperPath).CreateBuilder()
+                .WithLanguage("auto")
+                .WithTranslate() // Why the hell not
+                .Build();
+        }
+
         var output = string.Empty;
         // Determine the best runtime for transcription
         RuntimeOptions.RuntimeLibraryOrder = [RuntimeLibrary.Cuda, RuntimeLibrary.Vulkan, RuntimeLibrary.Cpu, RuntimeLibrary.CpuNoAvx];
