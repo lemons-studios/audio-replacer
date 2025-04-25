@@ -5,6 +5,7 @@ using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
 using Velopack;
+// ReSharper disable RedundantJumpStatement
 
 namespace AudioReplacer.MainWindow;
 
@@ -120,7 +121,6 @@ public sealed partial class MainWindow
         return InProgressNotification.IsOpen;
     }
 
-    // For a future part of the app
     public void SetProgressMessage(string message)
     {
         InProgressNotification.DispatcherQueue.TryEnqueue(() =>

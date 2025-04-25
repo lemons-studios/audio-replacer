@@ -5,6 +5,7 @@ using CommunityToolkit.Mvvm.Input;
 using Microsoft.UI.Xaml.Media.Animation;
 using Whisper.net.Ggml;
 using WinRT.Interop;
+#pragma warning disable MVVMTK0045
 
 namespace AudioReplacer.Setup;
 public partial class SetupData : ObservableObject

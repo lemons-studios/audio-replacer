@@ -98,7 +98,7 @@
                                     <Button
                                         Click="SkipCurrentAudioFile"
                                         Content="Confirm"
-                                        Style="{StaticResource AccentButtonStyle}">
+                                        Style="{StaticResource AccentedButton}">
                                         <Button.KeyboardAccelerators>
                                             <KeyboardAccelerator Key="Q" Modifiers="Control" />
                                         </Button.KeyboardAccelerators>

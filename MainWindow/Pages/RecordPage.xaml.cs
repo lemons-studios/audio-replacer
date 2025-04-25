@@ -164,7 +164,7 @@ public sealed partial class RecordPage
 
         File.Delete(ProjectFileUtils.GetOutFilePath());
         App.MainWindow.ShowNotification(InfoBarSeverity.Informational, "Recording Rejected", "Moving back to current file...", true, replaceExistingNotifications: true);
-        UpdateFileElements(false); // To prevent transcription when it's not needed
+        UpdateFileElements();
     }
     
     private void OnUnloaded(object sender, RoutedEventArgs e)

@@ -30,7 +30,7 @@
                                     <Button
                                         Command="{Binding ReloadCommand}"
                                         Content="Confirm"
-                                        Style="{StaticResource AccentButtonStyle}" />
+                                        Style="{StaticResource AccentedButton}" />
                                 </StackPanel>
                             </Flyout>
                         </AppBarButton.Flyout>

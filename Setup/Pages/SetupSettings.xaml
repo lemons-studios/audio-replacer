@@ -102,7 +102,7 @@
                     HorizontalAlignment="Right"
                     VerticalAlignment="Bottom"
                     Command="{Binding NextPageCommand}"
-                    Style="{StaticResource AccentButtonStyle}">
+                    Style="{StaticResource AccentedButton}">
                     <AppBarButton.Content>
                         <TextBlock
                             Padding="5"

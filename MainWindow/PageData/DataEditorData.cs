@@ -5,6 +5,7 @@ using Windows.Storage.Pickers;
 using WinRT.Interop;
 using WinUIEditor;
 
+#pragma warning disable MVVMTK0045
 namespace AudioReplacer.MainWindow.PageData;
 
 public partial class DataEditorData : ObservableObject

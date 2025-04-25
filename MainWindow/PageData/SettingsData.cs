@@ -5,8 +5,8 @@ using Microsoft.UI.Xaml.Media;
 using System.Linq;
 using Whisper.net.Ggml;
 
+#pragma warning disable MVVMTK0045
 namespace AudioReplacer.MainWindow.PageData;
-
 public partial class SettingsData : ObservableObject
 {
     [ObservableProperty] private bool whisperAvailable = AppProperties.IsWhisperInstalled;

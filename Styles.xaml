@@ -20,6 +20,7 @@
         <Setter Property="FontWeight" Value="Normal" />
     </Style>
 
+    <!--  ReSharper disable two Xaml.StaticResourceNotResolved  -->
     <Style
         x:Key="AccentedButton"
         BasedOn="{StaticResource AccentButtonStyle}"

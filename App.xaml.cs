@@ -29,7 +29,10 @@ public partial class App
         CreateJsonData();
 
         File.WriteAllText(AppProperties.LogFile, "Log Started!");
-        AppSettings = new ConfigurationBuilder<IAppSettings>().UseJsonFile(AppProperties.SettingsFile).Build();
+        AppSettings = new ConfigurationBuilder<IAppSettings>()
+            .UseJsonFile(AppProperties.SettingsFile)
+            .Build();
+
         InitializeComponent();
         VelopackApp.Build().Run();
     }

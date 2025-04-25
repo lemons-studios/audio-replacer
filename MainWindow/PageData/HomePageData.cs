@@ -3,6 +3,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Windows.Storage.Pickers;
 using WinRT.Interop;
+#pragma warning disable MVVMTK0045
 
 namespace AudioReplacer.MainWindow.PageData;
 partial class HomePageData : ObservableObject

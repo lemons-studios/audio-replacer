@@ -49,6 +49,7 @@ public static class AppUpdater
         }
         catch (Exception)
         {
+            // ReSharper disable once RedundantJumpStatement
             return;
         }
     }
