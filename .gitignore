@@ -5,7 +5,7 @@
 # 5. Output from dotnet publish
 # 6. Output from Velopack. LFS storage costs a LOOOOT of money
 # 7. Per-User Project Options File (.csproj.user)
-
+# 8. .editorconfig file
 [Bb]in/
 [Oo]bj/
 .vs/
@@ -13,3 +13,4 @@
 [Pp]ublish/
 [Rr]eleases/
 Audio-Replacer.csproj.user
+*.editorconfig
