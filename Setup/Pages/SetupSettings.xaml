@@ -68,13 +68,6 @@
                         </controls:SettingsCard>
                         <controls:SettingsCard
                             Margin="0,0,0,5"
-                            Description="Updates are checked every app launch by checking GitHub for new releases"
-                            Header="Check for updates"
-                            HeaderIcon="{ui:FontIcon Glyph=&#xECC5;}">
-                            <ToggleSwitch IsOn="{Binding CheckForUpdates, Mode=TwoWay}" />
-                        </controls:SettingsCard>
-                        <controls:SettingsCard
-                            Margin="0,0,0,5"
                             Description="Pick a random file from the input folder each time. When off, the next file will be picked based on what comes first in your project alphabetically"
                             Header="File randomization"
                             HeaderIcon="{ui:FontIcon Glyph=&#xE8AB;}">

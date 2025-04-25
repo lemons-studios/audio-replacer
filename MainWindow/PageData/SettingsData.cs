@@ -36,24 +36,6 @@ public partial class SettingsData : ObservableObject
         App.AppSettings.AppTransparencySetting = value;
     }
 
-    [ObservableProperty] private bool enableUpdateChecks = AppFunctions.IntToBool(App.AppSettings.AppUpdateCheck);
-    partial void OnEnableUpdateChecksChanged(bool value)
-    {
-        App.AppSettings.AppUpdateCheck = AppFunctions.BoolToInt(value);
-    }
-
-    [ObservableProperty] private bool enableFolderMemory = AppFunctions.IntToBool(App.AppSettings.RememberSelectedFolder);
-    partial void OnEnableFolderMemoryChanged(bool value)
-    {
-        App.AppSettings.RememberSelectedFolder = AppFunctions.BoolToInt(value);
-    }
-
-    [ObservableProperty] private bool autoConvert = AppFunctions.IntToBool(App.AppSettings.AutoConvertFiles);
-    partial void OnAutoConvertChanged(bool value)
-    {
-        App.AppSettings.RememberSelectedFolder = AppFunctions.BoolToInt(value);
-    }
-
     [ObservableProperty] private bool randomizeFiles = AppFunctions.IntToBool(App.AppSettings.InputRandomizationEnabled);
     partial void OnRandomizeFilesChanged(bool value)
     {

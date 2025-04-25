@@ -10,17 +10,11 @@ public interface IAppSettings
     [Option(Alias = "TransparencyEffect", DefaultValue = 0)]
     int AppTransparencySetting { get; set; }
 
-    [Option(Alias = "EnableUpdateChecks", DefaultValue = 1)]
-    int AppUpdateCheck { get; set; }
-
     [Option(Alias = "RecordEndWaitTime", DefaultValue = 75)]
     int RecordEndWaitTime { get; set; }
 
     [Option(Alias = "NotificationTimeout", DefaultValue = 1750)]
     int NotificationTimeout { get; set; }
-
-    [Option(Alias = "RememberSelectedFolder", DefaultValue = 1)]
-    int RememberSelectedFolder { get; set; }
 
     [Option(Alias = "LastSelectedFolder", DefaultValue = "")]
     string LastSelectedFolder { get; set; }
@@ -36,7 +30,4 @@ public interface IAppSettings
 
     [Option(Alias = "EnableTranscription", DefaultValue = 1)]
     int EnableTranscription { get; set; }
-
-    [Option(Alias = "AutoConvertFiles", DefaultValue = 1)]
-    int AutoConvertFiles { get; set; }
 }

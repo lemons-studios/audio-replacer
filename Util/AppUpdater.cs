@@ -38,7 +38,7 @@ public static class AppUpdater
     {
         try
         {
-            if (!Debugger.IsAttached && AppFunctions.IntToBool(App.AppSettings.AppUpdateCheck))
+            if (!Debugger.IsAttached)
             {
                 appUpdateInfo = await AppUpdateManager.CheckForUpdatesAsync().ConfigureAwait(true);
                 if (appUpdateInfo != null)

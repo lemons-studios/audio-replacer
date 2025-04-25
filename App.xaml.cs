@@ -50,15 +50,12 @@ public partial class App
         {
             { "Theme", 0 },
             { "TransparencyEffect", AppFunctions.GetTransparencyMode() },
-            { "EnableUpdateChecks", 1 },
             { "RecordEndWaitTime", 0 },
             { "NotificationTimeout", 1750 },
-            { "RememberSelectedFolder", 1 },
             { "LastSelectedFolder", "" },
             { "InputRandomizationEnabled", 0 },
             { "RecordStartWaitTime", 25 },
-            { "EnableTranscription", 1 },
-            { "AutoConvertFiles", 1 }
+            { "EnableTranscription", 1 }
         };
 
         // Merge existing settings with default settings

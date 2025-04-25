@@ -28,8 +28,7 @@ partial class HomePageData : ObservableObject
         if (folder != null && !string.IsNullOrEmpty(folder.Path))
         {
             var folderPath = folder.Path;
-            if (AppFunctions.IntToBool(App.AppSettings.RememberSelectedFolder))
-                App.AppSettings.LastSelectedFolder = folderPath;
+            App.AppSettings.LastSelectedFolder = folderPath;
 
             ProjectFileUtils.SetProjectData(folderPath);
             App.MainWindow.OpenRecordPage();

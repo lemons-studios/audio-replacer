@@ -116,9 +116,9 @@ public static class AppFunctions
             // This sometimes happens on shorter files. Time out after 30s
             return "Transcription Timed out";
         }
-        catch (Exception)
+        catch (Exception e)
         {
-            return "Could Not Transcribe Contents";
+            return $"Could Not Transcribe Contents: {e.Message}. Please open an issue on the project repository";
         }
     }
 

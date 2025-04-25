@@ -38,13 +38,6 @@
                 </controls:SettingsCard>
                 <controls:SettingsCard
                     Margin="0,0,0,7.5"
-                    Description="Check is performed each launch by checking GitHub for new releases"
-                    Header="Update Checks"
-                    HeaderIcon="{tk:FontIcon Glyph=&#xECC5;}">
-                    <ToggleSwitch IsOn="{Binding EnableUpdateChecks, Mode=TwoWay}" />
-                </controls:SettingsCard>
-                <controls:SettingsCard
-                    Margin="0,0,0,7.5"
                     Description="When off, the next file will be first file in an alphabetical list"
                     Header="Randomize Current File"
                     HeaderIcon="{tk:FontIcon Glyph=&#xE8AB;}">
@@ -64,13 +57,6 @@
                     Header="Discord Rich Presence"
                     HeaderIcon="{tk:FontIcon Glyph=&#xE8F2;}">
                     <ToggleSwitch IsOn="{Binding EnableRpc, Mode=TwoWay}" />
-                </controls:SettingsCard>
-                <controls:SettingsCard
-                    Margin="0,0,0,7.5"
-                    Description="Automatically loads last selected folder from previous launch"
-                    Header="Remember Selected Folder"
-                    HeaderIcon="{tk:FontIcon Glyph=&#xE8F7;}">
-                    <ToggleSwitch IsOn="{Binding EnableFolderMemory, Mode=TwoWay}" />
                 </controls:SettingsCard>
                 <controls:SettingsCard
                     Margin="0,0,0,7.5"
@@ -191,13 +177,11 @@
                                 <HyperlinkButton Content="Discord-Rpc-Csharp" NavigateUri="https://github.com/Lachee/discord-rpc-csharp?tab=MIT-1-ov-file" />
                                 <HyperlinkButton Content="NAudio" NavigateUri="https://github.com/naudio/NAudio?tab=MIT-1-ov-file" />
                                 <HyperlinkButton Content="PostSharp MetaLama" NavigateUri="https://www.nuget.org/packages/Metalama.Framework/2025.0.8/license" />
-                                <HyperlinkButton Content="Newtonsoft.JSON" NavigateUri="https://github.com/JamesNK/Newtonsoft.Json?tab=MIT-1-ov-file" />
                                 <HyperlinkButton Content="Windows App SDK" NavigateUri="https://github.com/microsoft/windowsappsdk?tab=MIT-1-ov-file" />
                                 <HyperlinkButton Content="WinUIEx" NavigateUri="https://github.com/dotMorten/WinUIEx" />
                                 <HyperlinkButton Content="Windows Community Toolkit" NavigateUri="https://github.com/CommunityToolkit/Windows?tab=License-1-ov-file" />
                                 <HyperlinkButton Content="WinUiEdit" NavigateUri="https://github.com/BreeceW/WinUIEdit" />
                                 <HyperlinkButton Content="FFMpeg" NavigateUri="https://github.com/FFmpeg/FFmpeg?tab=License-1-ov-file" />
-                                <HyperlinkButton Content="TitleBarDragRegions" NavigateUri="https://github.com/raphaelkabir/TitleBarDragRegions?tab=MIT-1-ov-file" />
                                 <HyperlinkButton Content="Velopack" NavigateUri="https://github.com/velopack/velopack?tab=MIT-1-ov-file" />
                                 <HyperlinkButton Content="Whisper.NET" NavigateUri="https://github.com/sandrohanea/whisper.net?tab=MIT-1-ov-file" />
                                 <TextBlock

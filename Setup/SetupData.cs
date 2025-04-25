@@ -103,12 +103,6 @@ public partial class SetupData : ObservableObject
         App.AppSettings.RecordEndWaitTime = value;
     }
 
-    [ObservableProperty] private static bool checkForUpdates = true;
-    partial void OnCheckForUpdatesChanged(bool value)
-    {
-        App.AppSettings.AppUpdateCheck = AppFunctions.BoolToInt(value);
-    }
-
     [ObservableProperty] private static bool richPresenceEnabled = true;
     partial void OnRichPresenceEnabledChanged(bool value)
     {
