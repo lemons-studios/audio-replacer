@@ -1,3 +1,4 @@
+title audio-replacer-setup-generator
 @echo off
 if "%~1"=="" (
     echo Missing version number.

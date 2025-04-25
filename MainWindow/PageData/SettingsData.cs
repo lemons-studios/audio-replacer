@@ -150,7 +150,7 @@ public partial class SettingsData : ObservableObject
     private async Task DownloadWhisper()
     {
         App.MainWindow.ShowProgressNotification("Downloading Data", "Do not disconnect from the internet. App will restart after download is completed");
-        await using var whisperStream = await WhisperGgmlDownloader.Default.GetGgmlModelAsync(GgmlType.Tiny);
+        await using var whisperStream = await WhisperGgmlDownloader.Default.GetGgmlModelAsync(GgmlType.Small, QuantizationType.Q4_0);
         await using var fileWriter = File.OpenWrite(AppProperties.WhisperPath);
         await whisperStream.CopyToAsync(fileWriter);
         AppFunctions.RestartApp();
@@ -168,7 +168,7 @@ public partial class SettingsData : ObservableObject
         }
         
         App.MainWindow.ShowProgressNotification("Repairing Dependencies..", "App Will Restart after complete");
-        await AppFunctions.DownloadDependencies();
+        await AppFunctions.DownloadFfmpeg();
         AppFunctions.RestartApp();
     }
 }

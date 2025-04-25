@@ -1,7 +1,6 @@
 ﻿using Microsoft.UI.Composition.SystemBackdrops;
 using Microsoft.Windows.AppLifecycle;
 using System.Diagnostics;
-using System.IO.Compression;
 using System.Net.Http;
 using System.Reflection;
 using System.Text.Json;
@@ -16,25 +15,13 @@ namespace AudioReplacer.Generic;
 
 public static class AppFunctions
 {
-    public static async Task DownloadDependencies()
+    public static async Task DownloadFfmpeg()
     {
-        // Download FFmpeg
-        const string url = $"https://www.gyan.dev/ffmpeg/builds/ffmpeg-release-essentials.zip";
-        var outPath = Path.Join(AppProperties.ExtraApplicationData, "ffmpeg");
-        await DownloadFileAsync(url, $@"{AppProperties.ExtraApplicationData}\ffmpeg.zip");
-
-        // Extract FFmpeg
-        ZipFile.ExtractToDirectory($"{outPath}.zip", outPath);
-        
-        // Move FFmpeg executable (ffmpeg.exe ONLY, ffprobe.exe and ffplay.exe are not needed) to the application's binary folder
-        var info = new DirectoryInfo(outPath);
-        foreach (var exe in info.GetFiles("ffmpeg.exe", SearchOption.AllDirectories))
-        {
-            File.Move(exe.FullName, Path.Combine(AppProperties.BinaryPath, exe.Name));
-        }
-
-        Directory.Delete(outPath, true);
-        File.Delete($"{outPath}.zip");
+        // Download FFmpeg (using my custom ffmpeg build)
+        const string url = $"https://github.com/lemons-studios/audio-replacer-ffmpeg/releases/latest/download/ffmpeg.exe";
+        var executable = Path.Join(AppProperties.ExtraApplicationData, "ffmpeg.exe");
+        await DownloadFileAsync(url, Path.Join(AppProperties.ExtraApplicationData, executable));
+        File.Move(executable, AppProperties.FfmpegPath);
     }
 
     [Log]

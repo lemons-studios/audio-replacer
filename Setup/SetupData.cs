@@ -46,12 +46,12 @@ public partial class SetupData : ObservableObject
             File.Copy(EffectSettingsPath, AppProperties.EffectsDataFile, overwrite: true);
 
         // Download Required Dependencies
-        await AppFunctions.DownloadDependencies();
+        await AppFunctions.DownloadFfmpeg();
 
         // Download Whisper model if enabled
         if (DownloadWhisper)
         {
-            await using var whisperStream = await WhisperGgmlDownloader.Default.GetGgmlModelAsync(GgmlType.Tiny);
+            await using var whisperStream = await WhisperGgmlDownloader.Default.GetGgmlModelAsync(GgmlType.Small, QuantizationType.Q4_0);
             await using var fileWriter = File.OpenWrite(AppProperties.WhisperPath);
             await whisperStream.CopyToAsync(fileWriter);
         }
