@@ -1,7 +1,7 @@
-title audio-replacer-setup-generator
+title Audio Replacer Setup Generator
 @echo off
 if "%~1"=="" (
-    echo Missing version number.
+    echo Error: Missing version number.
     echo Usage: GenerateRelease.bat [build number]
     exit /b 1
 )
