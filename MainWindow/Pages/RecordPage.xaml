@@ -65,6 +65,7 @@
                         </MediaPlayerElement>
                         <TextBlock
                             x:Name="Transcription"
+                            MaxWidth="450"
                             HorizontalAlignment="Center"
                             FontSize="15"
                             FontWeight="Medium"

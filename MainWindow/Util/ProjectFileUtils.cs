@@ -173,9 +173,10 @@ public static class ProjectFileUtils
         var outCount = GetFileCount(outputFolderPath);
         return inCount + outCount == 0 
             ? 100 // Edge case
-            : MathF.Round(outCount / (float) (inCount + outCount) * 100, 3);
+            : MathF.Round(outCount / (float) (inCount + outCount) * 100, 2);
     }
 
+    /// <summary> Skips current file and loads next one </summary>
     public static void SkipFile()
     {
         if (string.IsNullOrEmpty(currentFile) || string.IsNullOrEmpty(currentOutFile)) return;

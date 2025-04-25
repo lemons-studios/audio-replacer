@@ -88,11 +88,13 @@ public sealed partial class RecordPage
 
         DispatcherQueue.TryEnqueue(() =>
         {
+            Transcription.Visibility = AppFunctions.IntToBool(App.AppSettings.EnableTranscription) 
+                ? Visibility.Visible 
+                : Visibility.Collapsed;
 
             FileProgressPanel.Visibility = Visibility.Visible;
             CurrentFile.Text = ProjectFileUtils.GetCurrentFile().Replace(@"\", "/");
-            RemainingFiles.Text =
-                $"Files Remaining: {ProjectFileUtils.GetFileCount(projectPath):N0} ({progressPercentage}%)";
+            RemainingFiles.Text = $"Files Remaining: {ProjectFileUtils.GetFileCount(projectPath):N0} ({progressPercentage}%)";
             RemainingFilesProgress.Value = progressPercentage;
             try
             {
@@ -120,11 +122,18 @@ public sealed partial class RecordPage
         if (AppFunctions.IntToBool(App.AppSettings.EnableTranscription))
         {
             var dispatcherQueue = Transcription.DispatcherQueue;
-            Transcription.Text = "Now Processing....";
+            Transcription.DispatcherQueue.TryEnqueue(() =>
+            {
+                Transcription.Text = "Now Processing....";
+            });
+
             Task.Run(async () =>
             {
                 var transcription = await AppFunctions.TranscribeFile(ProjectFileUtils.GetCurrentFile(false));
-                await dispatcherQueue.EnqueueAsync(() => { Transcription.Text = transcription; });
+                await dispatcherQueue.EnqueueAsync(() =>
+                {
+                    Transcription.Text = transcription;
+                });
             });
         }
     }

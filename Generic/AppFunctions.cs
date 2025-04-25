@@ -20,8 +20,8 @@ public static class AppFunctions
         // Download FFmpeg (using my custom ffmpeg build)
         const string url = $"https://github.com/lemons-studios/audio-replacer-ffmpeg/releases/latest/download/ffmpeg.exe";
         var executable = Path.Join(AppProperties.ExtraApplicationData, "ffmpeg.exe");
-        await DownloadFileAsync(url, Path.Join(AppProperties.ExtraApplicationData, executable));
-        File.Move(executable, AppProperties.FfmpegPath);
+        await DownloadFileAsync(url, executable);
+        File.Move(executable, AppProperties.FfmpegPath, overwrite: true);
     }
 
     [Log]
