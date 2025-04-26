@@ -3,6 +3,7 @@ using AudioReplacer.MainWindow.Util;
 using CommunityToolkit.WinUI;
 using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Velopack;
 // ReSharper disable RedundantJumpStatement
@@ -175,6 +176,12 @@ public sealed partial class MainWindow
         var pageSwitchType = typeof(HomePage); // Default page
         if (args.InvokedItemContainer != null && args.InvokedItemContainer.Tag is string tag)
         {
+            if (tag.Equals("Wiki"))
+            {
+                AppFunctions.OpenUrl("https://github.com/lemons-studios/audio-replacer/wiki");
+                WikiLink.IsSelected = false;
+                return;
+            }
             pageSwitchType = tag switch
             {
                 "Record" => typeof(RecordPage),

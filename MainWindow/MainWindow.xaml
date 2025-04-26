@@ -49,6 +49,7 @@
                 <NavigationViewItem
                     Content="Home"
                     Icon="{ui:FontIcon Glyph=&#xE80F;}"
+                    IsSelected="True"
                     Tag="Home" />
                 <NavigationViewItem
                     Content="Record"
@@ -59,6 +60,13 @@
                     Icon="{ui:FontIcon Glyph=&#xE70F;}"
                     Tag="Data Editor" />
             </NavigationView.MenuItems>
+            <NavigationView.FooterMenuItems>
+                <NavigationViewItem
+                    x:Name="WikiLink"
+                    Content="Wiki"
+                    Icon="{ui:FontIcon Glyph=&#xF000;}"
+                    Tag="Wiki" />
+            </NavigationView.FooterMenuItems>
             <Frame
                 x:Name="MainFrame"
                 Padding="10"
