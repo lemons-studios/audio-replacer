@@ -33,14 +33,8 @@ public partial class SettingsData : ObservableObject
                 App.MainWindow.SystemBackdrop = new MicaBackdrop();
                 break;
             case 0 when !MicaController.IsSupported():
-            case 1:
+            default:
                 App.MainWindow.SystemBackdrop = new DesktopAcrylicBackdrop();
-                break;
-            case 2 when SelectedAppTheme == 1:
-                SelectedTransparencyMode = 0;
-                break;
-            case 2:
-                App.MainWindow.SystemBackdrop = null;
                 break;
         }
         App.AppSettings.AppTransparencySetting = value;

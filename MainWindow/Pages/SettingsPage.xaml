@@ -34,7 +34,6 @@
                     <ComboBox SelectedIndex="{Binding SelectedTransparencyMode, Mode=TwoWay}">
                         <ComboBoxItem Content="Mica" />
                         <ComboBoxItem Content="Acrylic" />
-                        <ComboBoxItem Content="None" />
                     </ComboBox>
                 </controls:SettingsCard>
                 <controls:SettingsCard
