@@ -103,7 +103,7 @@ public partial class App
             case true:
                 // Only initialize rich presence when app is configured
                 if (AppFunctions.IntToBool(AppSettings.EnableRichPresence)) 
-                    DiscordController = new RichPresenceController("On Record Page", "No Project Loaded", "idle", "Idle");
+                    DiscordController = new RichPresenceController("Home Page", "No Project Loaded", "idle", "Idle");
                 MainWindow = new MainWindow.MainWindow();
                 MainWindow.Activate();
                 break;
