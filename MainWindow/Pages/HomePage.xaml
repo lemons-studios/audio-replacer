@@ -80,22 +80,66 @@
                 Margin="10,10,10,0"
                 Padding="10"
                 Style="{StaticResource PanelCard}">
-                <StackPanel>
+                <Grid RowDefinitions="Auto, *">
                     <TextBlock
+                        Grid.Row="0"
                         Margin="0,0,0,15"
                         VerticalAlignment="Top"
                         Style="{StaticResource TitleText}"
                         Text="Tips" />
                     <FlipView
+                        Grid.Row="1"
                         Padding="10"
                         Background="Transparent "
-                        CornerRadius="4">
-                        <TextBlock FontSize="50" Text="Ex1" />
-                        <TextBlock Text="Ex2" />
-                        <TextBlock Text="Ex3" />
-                        <TextBlock Text="Ex4" />
+                        CornerRadius="4"
+                        FlowDirection="LeftToRight">
+                        <StackPanel VerticalAlignment="Center">
+                            <TextBlock
+                                Margin="0,0,0,5"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                FontSize="18"
+                                FontWeight="Medium"
+                                Text="You can create custom audio filters with FFMpeg"
+                                TextWrapping="Wrap" />
+                            <HyperlinkButton
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                Content="More about custom pitch and effect filters"
+                                NavigateUri="https://github.com/lemons-studios/audio-replacer/wiki/Custom-Data" />
+                        </StackPanel>
+                        <StackPanel VerticalAlignment="Center">
+                            <TextBlock
+                                Margin="0,0,0,5"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                FontSize="18"
+                                FontWeight="Medium"
+                                Text="The record page has hotkeys for common tasks"
+                                TextWrapping="Wrap" />
+                            <HyperlinkButton
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                Content="List of hotkeys available"
+                                NavigateUri="https://github.com/lemons-studios/audio-replacer/wiki/Record-Page-Hotkeys" />
+                        </StackPanel>
+                        <StackPanel VerticalAlignment="Center">
+                            <TextBlock
+                                Margin="0,0,0,5"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                FontSize="18"
+                                FontWeight="Medium"
+                                Text="You can speed up audio transcription with Vulkan or CUDA"
+                                TextWrapping="Wrap" />
+                            <HyperlinkButton
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                Content="Read more"
+                                NavigateUri="https://github.com/lemons-studios/audio-replacer/wiki/Speed-Up-Speech-Transcription" />
+                        </StackPanel>
                     </FlipView>
-                </StackPanel>
+                </Grid>
             </Border>
         </Grid>
         <Grid Column="1" RowDefinitions="*">
