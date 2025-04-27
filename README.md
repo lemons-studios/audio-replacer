@@ -33,11 +33,11 @@ You can download the latest release [**here**](https://github.com/lemons-studios
 ### Requirements:
 - Windows 11 
     - Windows 10 does work but will not be supported after end of life. Furthermore, You will want to install the [Segoe Fluent Icons](https://aka.ms/SegoeFluentIcons) font as some icons will be missing
-- 200-500mb of storage space (depending on if you install the Nvidia version or the non-Nvidia version)
-#### Additional Requirements If Installing Whisper
-- An additional 800mb of storage space
+- 120-250mb of storage space (depending on if you install the Nvidia version or the non-Nvidia version)
+#### Additional Requirements If Installing Speech-To-Text Transcription Data
+- An additional 140mb of storage space
 - One Of:
-  - (Recommended, near-instant processing time) an Nvidia GPU with the [Cuda Toolkit](https://developer.nvidia.com/cuda-downloads) installed (An extra 2gb is needed for the cuda toolkit)
+  - (Recommended, near-instant processing time) an Nvidia GPU with the [Cuda Toolkit](https://developer.nvidia.com/cuda-downloads) installed (Around a few hundred extra megabytes)
   - (Not-So Recommended, processing time of around 5-10s) the [Vulkan Runtime](https://vulkan.lunarg.com/sdk/home)
 
 ## ⚙️ Build From Source

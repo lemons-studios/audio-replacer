@@ -39,6 +39,7 @@ public partial class App
 
     private void CreateSettingsData()
     {
+        var hasSetupCompleted = File.Exists(Path.Join(AppProperties.ConfigPath, ".setupCompleted")) ? 1 : 0; // So users upgrading from versions before 4.3.1 don't have to go through setup again
         Dictionary<string, object> existingConfig;
         try
         {
@@ -58,7 +59,8 @@ public partial class App
             { "LastSelectedFolder", "" },
             { "InputRandomizationEnabled", 0 },
             { "RecordStartWaitTime", 25 },
-            { "EnableTranscription", 1 }
+            { "EnableTranscription", 1 },
+            { "SetupCompleted", hasSetupCompleted}
         };
 
         // Merge existing settings with default settings
@@ -98,16 +100,17 @@ public partial class App
     [Log]
     protected override void OnLaunched(LaunchActivatedEventArgs args)
     {
-        switch (File.Exists(Path.Join(AppProperties.ConfigPath, ".setupCompleted")))
+        switch (AppFunctions.IntToBool(AppSettings.SetupCompleted))
         {
             case true:
                 // Only initialize rich presence when app is configured
-                if (AppFunctions.IntToBool(AppSettings.EnableRichPresence)) 
-                    DiscordController = new RichPresenceController("Home Page", "No Project Loaded", "idle", "Idle");
+                if (AppFunctions.IntToBool(AppSettings.EnableRichPresence)) DiscordController = new RichPresenceController("Home Page", "", "", "");
+                
                 MainWindow = new MainWindow.MainWindow();
                 MainWindow.Activate();
                 break;
             case false:
+                // No rich presence since it's unknown weather the user wants rich presence or not
                 SetupWindow = new FirstTimeSetupWindow();
                 SetupWindow.Activate();
                 break;

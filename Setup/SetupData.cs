@@ -57,9 +57,7 @@ public partial class SetupData : ObservableObject
             await whisperStream.CopyToAsync(fileWriter);
         }
 
-        // Mark the app as "set up" and restart the application
-        // I have no clue I decided to write a file instead of creating a property inside the settings file, but I guess it works
-        File.Create(Path.Join(AppProperties.ConfigPath, ".setupCompleted"));
+        App.AppSettings.SetupCompleted = 1;
         AppFunctions.RestartApp();
     }
 

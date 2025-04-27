@@ -1,4 +1,3 @@
-title Audio Replacer Setup Generator
 @echo off
 if "%~1"=="" (
     echo Error: Missing version number.
@@ -43,4 +42,5 @@ echo (6/6) Cleanup
 del /s /q Publish\ > nul 2> nul
 
 echo Done! Setup files are located in the Releases folder
+title %ORIG_TITLE%
 exit /b 0

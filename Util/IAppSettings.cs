@@ -30,4 +30,7 @@ public interface IAppSettings
 
     [Option(Alias = "EnableTranscription", DefaultValue = 1)]
     int EnableTranscription { get; set; }
+
+    [Option(Alias = "SetupCompleted", DefaultValue = 0)]
+    int SetupCompleted { get; set; }
 }
