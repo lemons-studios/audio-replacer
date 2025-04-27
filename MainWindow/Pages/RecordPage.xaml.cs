@@ -34,7 +34,7 @@ public sealed partial class RecordPage
         AudioPreview.MediaPlayer.IsLoopingEnabled = true;
         audioRecordingUtils = new AudioRecordingUtils();
 
-        App.DiscordController.SetDetails("On Record Page");
+        App.DiscordController.SetDetails("Record Page");
         if (ProjectFileUtils.IsProjectLoaded)
             App.DiscordController.SetState($"{ProjectFileUtils.CalculateCompletion()}% Complete");
     }

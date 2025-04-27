@@ -29,7 +29,7 @@
             VerticalAlignment="Top">
             <StackPanel>
                 <Grid ColumnDefinitions="Auto, *">
-                    <FontIcon Glyph="&#xEC71;" Style="{StaticResource TitleBarIcon}" />
+                    <Image Width="25" Source="/Assets/AppIcon.png" />
                     <TextBlock
                         x:Name="AppTitle"
                         Grid.Column="1"

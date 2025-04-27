@@ -3,7 +3,6 @@ using AudioReplacer.MainWindow.Util;
 using CommunityToolkit.WinUI;
 using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Velopack;
 // ReSharper disable RedundantJumpStatement
@@ -25,9 +24,8 @@ public sealed partial class MainWindow
 
         SystemBackdrop = new MicaBackdrop();
         MainFrame.Navigate(typeof(HomePage));
-
-        const string url = "https://f004.backblazeb2.com/file/audio-replacer-updates/";
-        AppUpdater.AppUpdateManager = new UpdateManager(url);
+        
+        AppUpdater.AppUpdateManager = new UpdateManager("https://f004.backblazeb2.com/file/audio-replacer-updates/"); // Has to be initialized after the window opens or else things will freak out
         AppUpdater.OnUpdateFound += OnUpdateFound;
         Task.Run(AppUpdater.SearchForUpdates);
 
@@ -106,27 +104,6 @@ public sealed partial class MainWindow
             InProgressNotification.Message = message;
 
             InProgressNotification.IsOpen = true;
-        });
-    }
-
-    public void HideProgressNotification()
-    {
-        InProgressNotification.DispatcherQueue.TryEnqueue(() =>
-        {
-            InProgressNotification.IsOpen = false;
-        });
-    }
-
-    public bool IsProgressNotificationOpen()
-    {
-        return InProgressNotification.IsOpen;
-    }
-
-    public void SetProgressMessage(string message)
-    {
-        InProgressNotification.DispatcherQueue.TryEnqueue(() =>
-        {
-            InProgressNotification.Message = message;
         });
     }
 
@@ -221,7 +198,7 @@ public sealed partial class MainWindow
         }
     }
 
-    private async void DownloadUpdate(object sender, RoutedEventArgs e)
+    private void DownloadUpdate(object sender, RoutedEventArgs e)
     {
         UpdateAvailableNotification.DispatcherQueue.TryEnqueue(() =>
         {
@@ -229,6 +206,6 @@ public sealed partial class MainWindow
         });
 
         ShowProgressNotification("Downloading Updates", "App will restart once updates are downloaded");
-        await AppUpdater.UpdateApplication();
+        Task.Run(AppUpdater.UpdateApplication);
     }
 }

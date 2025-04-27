@@ -17,7 +17,7 @@ public sealed partial class DataEditor
     private void OnLoaded(object sender, RoutedEventArgs e)
     {
         CustomDataEditor.Editor.SetText(File.ReadAllText(GetEditingFilePath()));
-        App.DiscordController.SetDetails("In the data editor");
+        App.DiscordController.SetDetails("Data Editor");
         App.DiscordController.SetState("");
         App.DiscordController.SetSmallImage("");
 

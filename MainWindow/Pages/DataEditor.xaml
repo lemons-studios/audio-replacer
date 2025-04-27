@@ -19,7 +19,7 @@
         <controls:TabbedCommandBar Grid.Row="0" VerticalAlignment="Top">
             <controls:TabbedCommandBar.MenuItems>
                 <controls:TabbedCommandBarItem Header="File">
-                    <AppBarButton Icon="{ui:FontIcon Glyph=&#xE74E;}" Label="Save">
+                    <AppBarButton Icon="{ui:FontIcon Glyph=&#xE74E;}" Label="Apply">
                         <AppBarButton.Flyout>
                             <Flyout>
                                 <StackPanel>

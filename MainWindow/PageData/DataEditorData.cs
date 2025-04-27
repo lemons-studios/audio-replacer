@@ -15,7 +15,7 @@ public partial class DataEditorData : ObservableObject
     [RelayCommand]
     private void OpenHelpPage()
     {
-        AppFunctions.OpenUrl("https://github.com/lemons-studios/audio-replacer/wiki");
+        AppFunctions.OpenUrl("https://github.com/lemons-studios/audio-replacer/wiki/Custom-Data");
     }
 
     [RelayCommand] 

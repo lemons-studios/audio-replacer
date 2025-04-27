@@ -112,7 +112,7 @@
         <NeutralLanguage>en-CA</NeutralLanguage>
         <ApplicationIcon>Assets\AppIcon.ico</ApplicationIcon>
         <PublishAot>False</PublishAot>
-        <PackageIcon>AppIcon.ico</PackageIcon>
+        <PackageIcon>Assets\AppIcon.ico</PackageIcon>
         <Nullable>disable</Nullable>
         <NuGetAuditMode>all</NuGetAuditMode>
         <ImplicitUsings>disable</ImplicitUsings>
@@ -134,5 +134,10 @@
     </ItemGroup>
     <ItemGroup>
       <Content Remove="C:\Users\Shob3r\.nuget\packages\microsoft.web.webview2\1.0.2651.64\build\\..\runtimes\win-x64\native\WebView2Loader.dll" />
+    </ItemGroup>
+    <ItemGroup>
+      <Content Update="Assets\AppIcon.ico">
+        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      </Content>
     </ItemGroup>
 </Project>

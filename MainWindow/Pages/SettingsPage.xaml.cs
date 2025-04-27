@@ -11,7 +11,7 @@ public sealed partial class SettingsPage
     [Log]
     private void OnLoaded(object sender, RoutedEventArgs e)
     {
-        App.DiscordController.SetDetails("In Settings Page");
+        App.DiscordController.SetDetails("Settings Page");
         App.DiscordController.SetState("");
     }
 }
