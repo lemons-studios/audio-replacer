@@ -39,7 +39,10 @@ public partial class App
 
     private void CreateSettingsData()
     {
-        var hasSetupCompleted = File.Exists(Path.Join(AppProperties.ConfigPath, ".setupCompleted")) ? 1 : 0; // So users upgrading from versions before 4.3.1 don't have to go through setup again
+        var legacySetupCompleteCheck = Path.Join(AppProperties.ConfigPath, ".setupCompleted");
+        var hasSetupCompleted = File.Exists(legacySetupCompleteCheck) ? 1 : 0; // So users upgrading from versions before 4.3.1 don't have to go through setup again
+        if(File.Exists(legacySetupCompleteCheck)) File.Delete(legacySetupCompleteCheck);
+
         Dictionary<string, object> existingConfig;
         try
         {
@@ -105,7 +108,7 @@ public partial class App
             case true:
                 // Only initialize rich presence when app is configured
                 if (AppFunctions.IntToBool(AppSettings.EnableRichPresence)) DiscordController = new RichPresenceController("Home Page", "", "", "");
-                
+
                 MainWindow = new MainWindow.MainWindow();
                 MainWindow.Activate();
                 break;
