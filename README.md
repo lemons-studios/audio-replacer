@@ -22,12 +22,8 @@ If you need to dub voice files for your game modification, this application is f
 - Automatic app updates
 - View Update notes directly inside the app
 - Turn anything you do not like/want through the settings page
-### Upcoming
 - Hotkeys for common tasks
-- Optional automatic conversion to .wav when any non-wav files are detected in your project
-- Compare your recording to the original after recording
-- Search bar for custom pitch and effect filters
-
+  
 ## 💾 Install
 You can download the latest release [**here**](https://github.com/lemons-studios/audio-replacer-2/releases/latest).
 ### Requirements:
