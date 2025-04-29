@@ -109,11 +109,10 @@
                     Margin="0,0,0,7.5"
                     ActionIcon="{tk:FontIcon Glyph=&#xE76C;}"
                     Command="{Binding DownloadWhisperCommand}"
-                    Description="Downloads file needed to transcribe audio files"
+                    Description="(Re)Downloads transcription model needed to transcribe audio files"
                     Header="Download Audio Transcription Data"
                     HeaderIcon="{tk:FontIcon Glyph=&#xE896;}"
-                    IsClickEnabled="True"
-                    IsEnabled="{Binding WhisperInstalled}" />
+                    IsClickEnabled="True" />
                 <controls:SettingsExpander
                     Margin="0,0,0,7.5"
                     Description="App will restart if anything is reset"
