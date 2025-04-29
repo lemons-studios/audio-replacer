@@ -22,10 +22,10 @@ del /s /q Publish\WinUIEditor.pdb > nul 2> nul
 
 :: dotnet publish doesn't copy over the assets folder. Copy it over manually before packaging
 :: Build targets simply don't work for some reason when publishing so i'll just download here
-echo (3/6) Copy Assets & Download FFMpeg
+echo (3/6) Copy Assets and Download FFMpeg
 mkdir Publish\Assets\ > nul 2> nul
 copy /y Assets Publish\Assets\ > nul 2> nul
-powershell -Command Invoke-WebRequest -Uri 'https://github.com/lemons-studios/audio-replacer-ffmpeg/releases/latest/download/ffmpeg.exe' -OutFile Publish\ffmpeg.exe
+powershell -Command "(New-Object Net.WebClient).DownloadFile('https://github.com/lemons-studios/audio-replacer-ffmpeg/releases/latest/download/ffmpeg.exe', 'Publish\ffmpeg.exe')"
 
 echo (4/6) Build Installer (stable-nvidia)
 vpk pack -u AudioReplacer -v %~1 -p .\Publish -e "Audio Replacer.exe" --splashImage .\Assets\SplashScreen.gif -i .\Assets\AppIcon.ico --noPortable --skipVeloAppCheck --signSkipDll --packTitle "Audio Replacer" --packAuthors "Lemon Studios" --delta BestSize --channel stable-nvidia || (
@@ -44,5 +44,4 @@ echo (6/6) Cleanup
 del /s /q Publish\ > nul 2> nul
 
 echo Done! Setup files are located in the Releases folder
-title %ORIG_TITLE%
 exit /b 0
