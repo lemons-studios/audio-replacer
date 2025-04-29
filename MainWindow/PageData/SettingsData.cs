@@ -141,20 +141,4 @@ public partial class SettingsData : ObservableObject
         await whisperStream.CopyToAsync(fileWriter);
         AppFunctions.RestartApp();
     }
-
-    [Log]
-    [RelayCommand]
-    private async Task RepairDependencies()
-    {
-        var filesToDelete = Directory.GetFiles(AppProperties.BinaryPath).Where(f =>
-            !string.Equals(Path.GetFileName(f), "whisper.bin", StringComparison.OrdinalIgnoreCase));
-        foreach (var file in filesToDelete)
-        {
-            File.Delete(file);
-        }
-        
-        App.MainWindow.ShowProgressNotification("Repairing Dependencies..", "App Will Restart after complete");
-        await AppFunctions.DownloadFfmpeg();
-        AppFunctions.RestartApp();
-    }
 }

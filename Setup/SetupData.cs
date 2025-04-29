@@ -46,9 +46,6 @@ public partial class SetupData : ObservableObject
         if (!string.IsNullOrWhiteSpace(EffectSettingsPath) && File.Exists(EffectSettingsPath))
             File.Copy(EffectSettingsPath, AppProperties.EffectsDataFile, overwrite: true);
 
-        // Download Required Dependencies
-        await AppFunctions.DownloadFfmpeg();
-
         // Download Whisper model if enabled
         if (DownloadWhisper)
         {

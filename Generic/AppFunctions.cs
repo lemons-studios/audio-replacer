@@ -15,15 +15,6 @@ namespace AudioReplacer.Generic;
 
 public static class AppFunctions
 {
-    public static async Task DownloadFfmpeg()
-    {
-        // Download FFmpeg (using my custom ffmpeg build)
-        const string url = $"https://github.com/lemons-studios/audio-replacer-ffmpeg/releases/latest/download/ffmpeg.exe";
-        var executable = Path.Join(AppProperties.ExtraApplicationData, "ffmpeg.exe");
-        await DownloadFileAsync(url, executable);
-        File.Move(executable, AppProperties.FfmpegPath, overwrite: true);
-    }
-
     [Log]
     public static async Task SpawnProcess(string command, string args, bool autoStart = true)
     {

@@ -33,15 +33,40 @@ public partial class App
             .UseJsonFile(AppProperties.SettingsFile)
             .Build();
 
+        DoVersionMigration();
         InitializeComponent();
         VelopackApp.Build().Run();
     }
 
+    private void DoVersionMigration()
+    {
+        // Migration for versions below 4.0
+        var legacyDataFolder = Path.Join(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "audio-replacer");
+        if(Directory.Exists(legacyDataFolder))
+            Directory.Move(legacyDataFolder, AppProperties.ExtraApplicationData);
+
+        // Migration for versions below 4.3.1
+        var legacySetupCompleteCheck = Path.Join(AppProperties.ConfigPath, ".setupCompleted");
+        if (File.Exists(legacySetupCompleteCheck))
+        {
+            File.Delete(legacySetupCompleteCheck);
+            var hasSetupCompleted = File.Exists(legacySetupCompleteCheck) ? 1 : 0;
+            AppSettings.SetupCompleted = hasSetupCompleted; // This will hopefully not launch app setup when updating
+        }
+
+        // Migration for versions below 4.3.2
+        var legacyBinaryPath = Path.Join(AppProperties.ExtraApplicationData, "bin");
+        if (Directory.Exists(legacyBinaryPath))
+        {
+            var legacyWhisperPath = Path.Join(legacyBinaryPath, "whisper.bin");
+            if (File.Exists(legacyWhisperPath))
+                File.Move(legacyWhisperPath, AppProperties.WhisperPath);
+            Directory.Delete(legacyBinaryPath, true);
+        }
+    }
+
     private void CreateSettingsData()
     {
-        var legacySetupCompleteCheck = Path.Join(AppProperties.ConfigPath, ".setupCompleted");
-        var hasSetupCompleted = File.Exists(legacySetupCompleteCheck) ? 1 : 0; // So users upgrading from versions before 4.3.1 don't have to go through setup again
-        if(File.Exists(legacySetupCompleteCheck)) File.Delete(legacySetupCompleteCheck);
 
         Dictionary<string, object> existingConfig;
         try
@@ -63,7 +88,7 @@ public partial class App
             { "InputRandomizationEnabled", 0 },
             { "RecordStartWaitTime", 25 },
             { "EnableTranscription", 1 },
-            { "SetupCompleted", hasSetupCompleted}
+            { "SetupCompleted", 0 }
         };
 
         // Merge existing settings with default settings
@@ -132,7 +157,7 @@ public partial class App
     [Log]
     private void CreateAdditionalData()
     {
-        string[] directories = [AppProperties.ExtraApplicationData, AppProperties.ConfigPath, AppProperties.BinaryPath, AppProperties.OutputPath];
+        string[] directories = [AppProperties.ExtraApplicationData, AppProperties.ConfigPath, AppProperties.OutputPath];
         string[] files = [AppProperties.SettingsFile, AppProperties.PitchDataFile, AppProperties.EffectsDataFile];
 
         foreach (var d in directories)

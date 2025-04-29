@@ -114,14 +114,6 @@
                     HeaderIcon="{tk:FontIcon Glyph=&#xE896;}"
                     IsClickEnabled="True"
                     IsEnabled="{Binding WhisperInstalled}" />
-                <controls:SettingsCard
-                    Margin="0,0,0,7.5"
-                    ActionIcon="{tk:FontIcon Glyph=&#xE76C;}"
-                    Command="{Binding RepairDependenciesCommand}"
-                    Description="Re-downloads all dependencies to fix any issues"
-                    Header="Repair Dependencies"
-                    HeaderIcon="{tk:FontIcon Glyph=&#xECAA;}"
-                    IsClickEnabled="True" />
                 <controls:SettingsExpander
                     Margin="0,0,0,7.5"
                     Description="App will restart if anything is reset"
