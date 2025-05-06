@@ -1,9 +1,9 @@
 [package]
-name = "Audio Replacer"
+name = "audio-replacer"
 version = "5.0.0"
 description = "Streamline audio dubbing for video game mods"
 authors = ["Lemon Studios"]
-edition = "2021"
+edition = "2024"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 

@@ -1,16 +1,10 @@
-# For this project, only these folders will be excluded:
-# 1. Builds (Bin)
-# 2. NuGet Packages (Obj)
-# 3/4. Visual Studio/JetBrains config folder (.vs/.idea)
-# 5. Output from dotnet publish
-# 6. Output from Velopack. LFS storage costs a LOOOOT of money
-# 7. Per-User Project Options File (.csproj.user)
-# 8. .editorconfig file
-[Bb]in/
-[Oo]bj/
-.vs/
-.idea/
-[Pp]ublish/
-[Rr]eleases/
-Audio-Replacer.csproj.user
-*.editorconfig
+.DS_Store
+node_modules
+/build
+/.svelte-kit
+/package
+.env
+.env.*
+!.env.example
+vite.config.js.timestamp-*
+vite.config.ts.timestamp-*
