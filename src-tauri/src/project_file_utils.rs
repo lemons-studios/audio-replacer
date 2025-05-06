@@ -3,17 +3,22 @@ mod project_file_utils
     use walkdir::WalkDir;
     use std::str;
     use std::cmp;
+    use std::str::FromStr;
+    use lazy_static::lazy_static;
+
+    lazy_static! {
+        static ref PROJECT_PATH: String = "".to_string();
+    }
 
     #[tauri::command]
-    pub fn set_project_data(path: &str)
+    pub fn set_project_data(path: &String)
     {
-
+        
     }
 
     #[tauri::command]
     pub fn count_files(path: &str) -> i32
     {
-        
         WalkDir::new(path)
             .into_iter()
             .filter_map(|e| e.ok())
