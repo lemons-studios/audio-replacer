@@ -3,17 +3,17 @@ mod project_file_utils
     use walkdir::WalkDir;
     use std::str;
     use std::cmp;
-    use std::str::FromStr;
-    use lazy_static::lazy_static;
 
-    lazy_static! {
-        static ref PROJECT_PATH: String = "".to_string();
-    }
+    pub static mut project_path : String = String::new();
+    pub static mut output_path : String = String::new();
 
     #[tauri::command]
     pub fn set_project_data(path: &String)
     {
-        
+        unsafe 
+        {
+            project_path = path.to_string();
+        }
     }
 
     #[tauri::command]
@@ -29,7 +29,6 @@ mod project_file_utils
     #[tauri::command]
     pub fn get_completion_percentage() -> f32 
     {
-        // Type casting my beloved. TODO: Get the actual path contents
         let output_files = count_files("tmp") as f32;
         let input_files = count_files("tmp") as f32;
 

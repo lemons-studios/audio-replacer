@@ -1,6 +1,6 @@
-<div class="h-screen overflow-hidden p-3 box-border grid grid-cols-2 gap-2">
+<div class="h-screen overflow-hidden p-5 box-border grid grid-cols-2 gap-2 bg-black">
   <div class="flex flex-col mr-2">
-    <div class="flex-1 bg-gray-800 rounded-xl mb-2 p-5">
+    <div class="flex-1 bg-gray-800 rounded-xl mb-4 p-5">
       <h1 class="text-white text-center font-bold text-3xl">Projects</h1>
       <div class="grid grid-cols-2 gap-2 flex-center">
         <div>

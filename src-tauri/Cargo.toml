@@ -5,12 +5,7 @@ description = "Streamline audio dubbing for video game mods"
 authors = ["Lemon Studios"]
 edition = "2024"
 
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
-
 [lib]
-# The `_lib` suffix may seem redundant but it is necessary
-# to make the lib name unique and wouldn't conflict with the bin name.
-# This seems to be only an issue on Windows, see https://github.com/rust-lang/cargo/issues/8519
 name = "audio_replacer_lib"
 crate-type = ["staticlib", "cdylib", "rlib"]
 
@@ -26,5 +21,3 @@ tauri-plugin-fs = "2"
 tauri-plugin-shell = "2"
 tauri-plugin-os = "2.2.1"
 walkdir = "2.5.0"
-lazy_static = "1.5.0"
-
