@@ -25,33 +25,30 @@ If you need to dub voice files for your game modification, this application is f
 - Hotkeys for common tasks
   
 ## 💾 Install
-You can download the latest release [**here**](https://github.com/lemons-studios/audio-replacer-2/releases/latest).
+You can download the latest release [**here**](https://github.com/lemons-studios/audio-replacer/releases/latest).
 ### Requirements:
-- Windows 11 
-    - Windows 10 does work but will not be supported after end of life. Furthermore, You will want to install the [Segoe Fluent Icons](https://aka.ms/SegoeFluentIcons) font as some icons will be missing
-- 120-250mb of storage space (depending on if you install the Nvidia version or the non-Nvidia version)
-#### Additional Requirements If Installing Speech-To-Text Transcription Data
-- An additional 140mb of storage space
-- One Of:
-  - (Recommended, near-instant processing time) an Nvidia GPU with the [Cuda Toolkit](https://developer.nvidia.com/cuda-downloads) installed (Around a few hundred extra megabytes)
-  - (Not-So Recommended, processing time of around 5-10s) the [Vulkan Runtime](https://vulkan.lunarg.com/sdk/home)
+- Windows 10/11 or Linux
 
 ## ⚙️ Build From Source
 If you want to develop for this application, you'll need a few things installed on your computer:
-- [FFMpeg](https://ffmpeg.org)
-- [Visual Studio 2022](https://visualstudio.microsoft.com/vs/) with the following components/workloads
-     - Windows Application Development workload
-     - .NET desktop development workload
-     - Windows App SDK C# Templates component
-     - Windows 11 SDK (10.0.22621.0) component
-- [.NET SDK 9.0](https://dotnet.microsoft.com/en-us/download)
+- NodeJS (Latest)
+- A node-based package manager of your choice (npm comes bundled with nodejs)
+- Rust + cargo (Either use a package manager or install with [rustup](https://rustup.rs/))
 
-Once the software needed for development are both installed, you can run the following to clone and build the application:
-```cmd
-git clone https://github.com/lemons-studios/audio-replacer.git
-cd audio-replacer 
-.\GenerateReleaseBuild.bat [Major].[Minor].[Build]
+Once you have everything installed, clone and build the repo:
+```bash
+git clone https://gihtub.com/lemons-studios/audio-replacer.git
+cd audio-replacer
+
+npm install
+
+# If you just want to launch the app
+npm run tauri dev
+
+# If you want to build the app
+npm run tauri build
 ```
+*refer to the tauri [documentation](https://tauri.app/distribute) for packaging into common installer formats 
 
 ## ➡️ Contributing
 See [CONTRIBUTING](https://github.com/lemons-studios/audio-replacer/blob/main/CONTRIBUTING.md)

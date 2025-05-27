@@ -23,7 +23,7 @@
       Settings
     </a>
   </nav>
-  <main class="max" style="padding: 25px; background-color:rgb(25, 25, 25)"> 
+  <main class="max padding purple-border"> 
     {@render children?.()}
   </main>
 </div>
