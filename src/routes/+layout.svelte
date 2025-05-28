@@ -1,5 +1,6 @@
 <script lang="ts">
     let { children } = $props();
+    import "../app.css"
     import "beercss";
     import "material-dynamic-colors";
 </script>
@@ -23,7 +24,7 @@
       Settings
     </a>
   </nav>
-  <main class="max padding purple-border"> 
+  <main class="max padding"> 
     {@render children?.()}
   </main>
 </div>
