@@ -1,31 +1,34 @@
 <script lang="ts">
     import { invoke } from "@tauri-apps/api/core";
-    import { NetworkUtils } from "../util/NetworkUtils";
+    import { JsonNetDataFromTag } from "../util/NetworkUtils";
+    import { getSystemTime, getUsername, getAccentColor } from "../util/OsData";
+    import { onMount } from "svelte";
     import type { Renderers, SvelteMarkdownOptions } from "@humanspeak/svelte-markdown";
     import SvelteMarkdown from "@humanspeak/svelte-markdown";
 
-    function getSystemTime() {
-        const date = new Date();
-        const hours = date.getHours();
-        return hours >= 5 && hours < 12 ? "Morning" : hours >= 12 && hours < 18 ? "Afternoon" : "Evening"; 
-    }
-
-    async function getUsername() {
-        const res = await invoke("get_username");
-        return res;
-    }
+    let username: string = "User";
 
     async function getReleaseLogs() {
         let md = await JsonNetDataFromTag("https://api.github.com/repos/lemons-studios/audio-replacer/releases/latest", "body");
         return md;
     }
+
+    onMount(async() => {
+        try {
+            username = await getUsername();
+        } catch (e) {
+            console.error(e);
+            username = "E-User " + e;
+        }
+    });
+
 </script>
 
 <div>
-    <p class="text-5xl text-center mb-10">Good {getSystemTime()}</p>
+    <p class="text-5xl text-center mb-10">Good {getSystemTime()} {username}</p>
     <div class="flex gap-5 p-5 overflow-hidden">
         <div class="w-1/2-screen secondary-container small-elevate p-5 padding">
-            <p class="text-4xl text-center mb-15">Projects</p>
+            <p class="text-4xl text-center mb-15">Load Project</p>
         </div>
         <div class=" secondary-container small-elevate p-5 padding">
             <p class="text-4xl text-center mb-15">Latest Changes</p>

@@ -1,8 +1,14 @@
-use futures_lite::StreamExt as _;
-use mundy::{ColorScheme, Interest, Preferences};
-use users::get_current_username;
+use std::{str, vec};
 
-#[tauri::command]
+use futures_lite::StreamExt as _;
+use mundy::{Interest, Preferences};
+use users::get_current_username;
+use walkdir::WalkDir;
+use tauri::{
+    command
+};
+
+#[command(async)]
 fn get_username() -> String {
     match get_current_username() {
         Some(uname) => uname.to_string_lossy().into_owned(),
@@ -10,19 +16,30 @@ fn get_username() -> String {
     }
 }
 
-// Work-In-Progress Functions!!
-
-#[tauri::command]
+#[command]
 async fn get_system_color() -> String {
     let mut stream = Preferences::stream(Interest::AccentColor);
-    String::from("g")
+    while let Some(preferences) = stream.next().await {
+        let accent_color = preferences.accent_color.to_owned();
+        accent_color;
+    }
+    String::from("g") // test value if other errors out
 }
 
-#[tauri::command]
-async fn is_dark_mode() -> bool {
-    let mut stream = Preferences::stream(Interest::ColorScheme);
-    true
+#[command]
+fn get_all_files(path: &str, sort: bool) -> Vec<String> {
+    let mut files = vec![]; 
+    for e in WalkDir::new(path).into_iter().filter_map(Result::ok) {
+        if e.metadata().unwrap().is_file() {
+            files.push(e.path().display().to_string());
+        }
+    }
+    if sort {
+        files.sort()
+    }
+    files
 }
+
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
@@ -33,6 +50,8 @@ pub fn run() {
         .plugin(tauri_plugin_os::init())
         .plugin(tauri_plugin_opener::init())
         .invoke_handler(tauri::generate_handler![get_username])
+        .invoke_handler(tauri::generate_handler![get_system_color])
+        .invoke_handler(tauri::generate_handler![get_all_files])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }
