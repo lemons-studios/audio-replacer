@@ -8,6 +8,11 @@
   "permissions": [
     "core:default",
     "opener:default",
-    "os:default"
+    "os:default",
+    "http:default",
+    "fs:default",
+    "shell:default",
+    "core:window:default",
+    "core:window:allow-start-dragging"
   ]
 }
