@@ -45,7 +45,7 @@ You can download the [**latest release here**](https://github.com/lemons-studios
 
 If you want to develop for this application, you'll need a few things installed on your computer:
 
-- NodeJS (Latest)
+- [NodeJS](https://nodejs.org) (Latest)
 - A node-based package manager of your choice (npm comes bundled with nodejs)
 - Rust + cargo (Either use a package manager or install with [rustup](https://rustup.rs/))
 
