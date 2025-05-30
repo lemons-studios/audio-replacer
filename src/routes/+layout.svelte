@@ -27,10 +27,7 @@
       Settings
     </a>
   </nav>
-  <main
-    class="max p-10 w-screen h-screen background"
-    style="user-select: none;"
-  >
+  <main class="max p-10 w-screen h-screen background" style="user-select: none;">
     {@render children?.()}
   </main>
 </div>
