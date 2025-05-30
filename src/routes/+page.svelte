@@ -15,6 +15,7 @@
 
     onMount(async() => {
         try {
+            username = "getting username..."
             username = await getUsername();
         } catch (e) {
             console.error(e);

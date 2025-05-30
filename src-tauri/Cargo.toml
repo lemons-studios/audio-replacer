@@ -1,9 +1,9 @@
 [package]
 name = "audio-replacer"
 version = "5.0.0"
-description = "A Tauri App"
-authors = ["you"]
-edition = "2024"
+description = "Streamline audio dubbing"
+authors = ["shob3r"]
+edition = "2021"
 
 [lib]
 name = "audio_replacer_lib"

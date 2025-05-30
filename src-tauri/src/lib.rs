@@ -49,9 +49,7 @@ pub fn run() {
         .plugin(tauri_plugin_http::init())
         .plugin(tauri_plugin_os::init())
         .plugin(tauri_plugin_opener::init())
-        .invoke_handler(tauri::generate_handler![get_username])
-        .invoke_handler(tauri::generate_handler![get_system_color])
-        .invoke_handler(tauri::generate_handler![get_all_files])
+        .invoke_handler(tauri::generate_handler![get_username, get_system_color, get_all_files])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }

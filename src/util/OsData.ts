@@ -4,7 +4,7 @@ import { arch } from "@tauri-apps/plugin-os";
 
 export async function getUsername() : Promise<string> {
     return new Promise((resolve) => {
-        invoke<string>("get_username").then((res) => {
+        invoke("get_username").then((res) => {
             resolve(res as string);
         })
     })
