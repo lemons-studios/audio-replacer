@@ -11,7 +11,8 @@ pub fn run() {
         .invoke_handler(tauri::generate_handler![
             commands::os_utils::get_username, 
             commands::project_file_utils::get_all_files, 
-            commands::project_file_utils::get_subdirectories])
+            commands::project_file_utils::get_subdirectories,
+            commands::whisper_utils::transcribe_file])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }

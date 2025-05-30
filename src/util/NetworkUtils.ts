@@ -15,3 +15,7 @@ export async function JsonNetDataFromTag(url: string, tag: string): Promise<stri
         });
     })
 }
+
+export async function DownloadFile(url: string): void {
+
+}

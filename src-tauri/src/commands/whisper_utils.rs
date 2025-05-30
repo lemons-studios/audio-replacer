@@ -2,6 +2,7 @@ use std::fs;
 use tauri::command;
 use whisper_rs::{FullParams, SamplingStrategy, WhisperContext, WhisperContextParameters};
 
+// This function is shorter than the one in the C#/WinUI version of this application and that's pretty crazy ngl
 #[command(async)]
 pub fn transcribe_file(path: &str, model_path: &str) -> String {
     if !fs::metadata(model_path).is_ok() {
@@ -11,8 +12,8 @@ pub fn transcribe_file(path: &str, model_path: &str) -> String {
     if !fs::metadata(path).is_ok() {
         return String::from("Requested File Not Found");
     }
-    
-    let lang = "en";
+
+    let lang: &'static str = "en";
     let samples: Vec<i16> = hound::WavReader::open(path)
         .unwrap()
         .into_samples::<i16>()
@@ -34,6 +35,7 @@ pub fn transcribe_file(path: &str, model_path: &str) -> String {
     let mut inter_samples = vec![Default::default(); samples.len()];
     whisper_rs::convert_integer_to_float_audio(&samples, &mut inter_samples)
         .expect("failed to transcribe audio");
+
     let samples = whisper_rs::convert_stereo_to_mono_audio(&inter_samples)
         .expect("failed to transcribe audio data");
 
