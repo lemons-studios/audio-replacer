@@ -3,7 +3,7 @@ name = "audio-replacer"
 version = "5.0.0"
 description = "Streamline audio dubbing"
 authors = ["shob3r"]
-edition = "2021"
+edition = "2024"
 
 [lib]
 name = "audio_replacer_lib"
@@ -27,3 +27,6 @@ walkdir = "2.5.0"
 whisper-rs = { version = "0.14.2", features = ["vulkan"] }
 hound = "3.5.1"
 reqwest = "0.12.18"
+tauri-plugin-log = "2"
+tauri-plugin-process = "2"
+tauri-plugin-upload = "2"
