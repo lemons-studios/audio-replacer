@@ -26,7 +26,6 @@ tauri-plugin-shell = "2"
 walkdir = "2.5.0"
 whisper-rs = { version = "0.14.2", features = ["vulkan"] }
 hound = "3.5.1"
-reqwest = "0.12.18"
 tauri-plugin-log = "2"
 tauri-plugin-process = "2"
 tauri-plugin-upload = "2"
