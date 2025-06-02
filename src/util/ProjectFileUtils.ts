@@ -1,5 +1,4 @@
 import { invoke } from '@tauri-apps/api/core';
-import { getPathSeparator } from './OsData'
 import * as path from '@tauri-apps/api/path';
 import { mkdir, exists } from '@tauri-apps/plugin-fs';
 

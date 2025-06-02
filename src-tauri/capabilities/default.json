@@ -14,9 +14,9 @@
     "shell:default",
     "core:window:default",
     "core:window:allow-start-dragging",
-    "shell:default",
     "log:default",
     "process:default",
-    "upload:default"
+    "upload:default",
+    "store:default"
   ]
 }
