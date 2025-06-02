@@ -3,7 +3,11 @@ import { whipserLocation } from "./AppProperties";
 import { DownloadFile } from "./NetworkUtils";
 
 export async function transcribeFile(): Promise<string> {
-
+    return new Promise((resolve) => {
+        invoke("transcribe_file", {
+            
+        })
+    })
 }
 
 export async function downloadTranscriptionData() {

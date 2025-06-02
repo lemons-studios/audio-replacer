@@ -1,11 +1,11 @@
 <script lang="ts">
   let { children } = $props();
-  import { getCurrentWindow } from "@tauri-apps/api/window";
+  import { onMount } from "svelte";
+
   import "../app.css";
   import "beercss";
   import "material-dynamic-colors";
-
-  const appWindow = getCurrentWindow();
+  
 </script>
 
 <div>
@@ -27,13 +27,7 @@
       Settings
     </a>
   </nav>
-  <main class="max p-10 w-screen h-screen background" style="user-select: none;">
+  <main class="max background">
     {@render children?.()}
   </main>
 </div>
-
-<style>
-  * {
-    user-select: none;
-  }
-</style>

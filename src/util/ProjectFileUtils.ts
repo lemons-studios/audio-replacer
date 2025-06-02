@@ -1,67 +1,78 @@
 import { invoke } from '@tauri-apps/api/core';
 import { getPathSeparator } from './OsData'
-import * as Path from '@tauri-apps/api/path';
+import * as path from '@tauri-apps/api/path';
 import { mkdir, exists } from '@tauri-apps/plugin-fs';
-import { outputDirectory } from './AppProperties';
 
-export abstract class ProjectFileUtils {
+export let currentFile: string;
+export let truncatedCurrentFile: string;
+export let currentOutFile: string;
+export let currentFileName: string;
+export let currentFileLocalPath: string;
 
-    private static currentFile: string;
-    private static truncatedCurrentFile: string;
-    private static currentOutFile: string;
-    private static currentFileName: string;
-    private static currentFileLocalPath: string;
+export let outputFolderPath: string;
+export let projectPath: string;
 
-    private static outputFolderPath: string;
-    private static projectPath: string;
+// Extra folders
+export let applicationData: string;
+export let outputFolder: string;
 
-    private static readonly SupportedFileTypes = [".mp3", ".wav", ".ogg", ".flac", ".m4a"];
-    public static IsProjectLoaded: boolean;
-    public static ExtraEditsFlagged = false;
+const supportedFileTypes = [".mp3", ".wav", ".ogg", ".flac", ".m4a"];
 
-    private static projectFiles: string[] = [];
+export let projectFiles: string[] = [];
+export let isProjectLoaded: boolean = false;
+export let extraEditsFlagged = false;
 
-    public static async setProjectData(path: string) {
-        this.projectPath = path;
-        let projectName = this.projectPath.split(getPathSeparator()).at(-1)?.toString();
-        this.projectFiles = await this.getAllFiles();
+const rng = Math;
 
-        this.outputFolderPath = await Path.join(outputDirectory, projectName)
+export async function setProjectData(dataPath: string) {
+    applicationData = await path.appDataDir();
+    outputFolder = await path.join(applicationData, "output");
+    projectPath = dataPath;
 
-        if(await exists(this.outputFolderPath)) {
-            await mkdir(this.outputFolderPath);
-        }
-    } 
+    let projectName = await path.basename(projectPath);
+    projectFiles = (await getAllFiles()).filter(p => {
+        const regex = p.match(/\.([a-zA-Z0-9]+)$/);
+        return regex ? supportedFileTypes.includes(regex[1].toLowerCase()) : false;
+    });
 
-    private static async getAllFiles(): Promise<string[]> {
-        return new Promise((resolve) => {
-            invoke("get_all_files", {
-                path: this.projectFiles,
-                sort: true
-            }).then((res) => {
-                resolve(res as string[]);
-            })
+    outputFolderPath = await path.join(outputFolder, projectName)
+    if (await exists(outputFolderPath)) {
+        await mkdir(outputFolderPath);
+    }
+}
+
+async function CreateInitialData() {
+
+}
+
+export async function getAllFiles(): Promise<string[]> {
+    return new Promise((resolve) => {
+        invoke("get_all_files", {
+            path: projectPath,
+            sort: true
+        }).then((res) => {
+            resolve(res as string[]);
         })
-    }
+    })
+}
 
-    private static async getSubdirectories(): Promise<string[]> {
-        return new Promise((resolve) => {
-            invoke("get_subdirectories", { 
-                path: this.projectFiles
-            }).then((res) => {
-                resolve(res as string[]);
-            })
+export async function getSubdirectories(): Promise<string[]> {
+    return new Promise((resolve) => {
+        invoke("get_subdirectories", {
+            path: projectPath
+        }).then((res) => {
+            resolve(res as string[]);
         })
-    }
+    })
+}
 
-    private static isAudioFile(path: string): boolean {
-        return this.SupportedFileTypes.some(ext => path.toLowerCase().endsWith(ext.toLowerCase()));
-    }
+export function isAudioFile(path: string): boolean {
+    return supportedFileTypes.some(ext => path.toLowerCase().endsWith(ext.toLowerCase()));
+}
 
 
-    // Audio replacer works the best with .wav files. 
-    private static isUndesirableAudioFile(path: string): boolean {
-        const undesirableFileTypes = [".mp3", ".wav", ".ogg", ".flac", ".m4a"];
-        return undesirableFileTypes.some((ext) => path.toLowerCase().endsWith(ext.toLowerCase()));
-    }
+// Audio replacer works the best with .wav files. 
+export function isUndesirableAudioFile(path: string): boolean {
+    const undesirableFileTypes = [".mp3", ".wav", ".ogg", ".flac", ".m4a"];
+    return undesirableFileTypes.some((ext) => path.toLowerCase().endsWith(ext.toLowerCase()));
 }
