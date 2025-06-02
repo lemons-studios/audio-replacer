@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { setTheme } from "@tauri-apps/api/app";
   import { initializeValues, extraApplicationData } from "../generic/AppProperties";
   import { onMount } from "svelte";
 
@@ -8,6 +9,7 @@
     await initializeValues();
 
     appDataTest = extraApplicationData;
+    await setTheme("dark");
   })
 </script>
  

@@ -4,6 +4,7 @@ mod commands;
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
+    // Holy moly that's a lot of plugins
     tauri::Builder::default()
         .plugin(tauri_plugin_single_instance::init(|_app, _args, _cwd| {
             if let Some(window) = _app.get_webview_window("main") {
