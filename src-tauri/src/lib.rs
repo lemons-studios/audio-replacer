@@ -23,7 +23,6 @@ pub fn run() {
         .plugin(tauri_plugin_os::init())
         .plugin(tauri_plugin_opener::init())
         .invoke_handler(tauri::generate_handler![
-            commands::os_utils::get_username,
             commands::project_file_utils::get_all_files,
             commands::project_file_utils::get_subdirectories,
             commands::whisper_utils::transcribe_file
