@@ -7,6 +7,24 @@
   ],
   "permissions": [
     "core:default",
+    {
+      "identifier": "shell:allow-execute",
+      "allow": [
+        {
+          "name": "binaries/ffmpeg.wasm",
+          "sidecar": true
+        },
+        {
+          "name": "binaries/whisper.bin",
+          "sidecar": true
+        },
+        {
+          "name": "binaries/ffmpeg-core.js",
+          "sidecar": true
+        }
+      ]
+    },
+    "shell:allow-open",
     "opener:default",
     "os:default",
     "http:default",
@@ -17,6 +35,7 @@
     "log:default",
     "process:default",
     "upload:default",
-    "store:default"
+    "store:default",
+    "fs:allow-resource-read-recursive"
   ]
 }

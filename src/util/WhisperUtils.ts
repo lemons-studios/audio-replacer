@@ -1,19 +1,14 @@
 import { invoke } from "@tauri-apps/api/core";
-import { whisperLocation } from "../generic/AppProperties";
-import { DownloadFile } from "./NetworkUtils";
+import { resolveResource } from "@tauri-apps/api/path";
 
 export async function transcribeFile(filePath: string): Promise<string> {
     return new Promise((resolve) => {
+        let modelPath = resolveResource('binaries/whisper.bin')
         invoke("transcribe_file", {
             path: filePath,
-            model_path: whisperLocation
+            model_path: modelPath
         }).then((res) => {
             resolve(res as string)
         })
     })
-}
-
-export async function downloadTranscriptionData() {
-    const url = "https://huggingface.co/ggerganov/whisper.cpp/resolve/main/ggml-base.en-q5_1.bin";
-    DownloadFile(url, whisperLocation);
 }

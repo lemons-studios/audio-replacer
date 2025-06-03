@@ -3,9 +3,7 @@
   import { onMount } from "svelte";
 
   import "../app.css";
-  import "beercss";
-  import "material-dynamic-colors";
-  
+  import "beercss";  
 </script>
 
 <div>

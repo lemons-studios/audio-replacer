@@ -1,7 +1,7 @@
 {
   "name": "audio-replacer",
   "version": "5.0.0",
-  "description": "",
+  "description": "Easily dub over voicelines for video games",
   "type": "module",
   "scripts": {
     "dev": "vite dev",
@@ -13,6 +13,8 @@
   },
   "license": "MIT",
   "dependencies": {
+    "@ffmpeg/ffmpeg": "^0.12.15",
+    "@ffmpeg/util": "^0.12.2",
     "@humanspeak/svelte-markdown": "^0.8.6",
     "@material/web": "^2.3.0",
     "@tailwindcss/vite": "^4.1.7",
@@ -28,7 +30,6 @@
     "@tauri-apps/plugin-store": "^2.2.0",
     "@tauri-apps/plugin-upload": "^2.2.1",
     "beercss": "^3.11.11",
-    "material-dynamic-colors": "^1.1.2",
     "node-fetch": "^3.3.2",
     "tailwindcss": "^4.1.7"
   },

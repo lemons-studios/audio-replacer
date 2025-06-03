@@ -1,5 +1,4 @@
 import { fetch } from "@tauri-apps/plugin-http";
-import { writeFile } from "@tauri-apps/plugin-fs";
 import { download } from "@tauri-apps/plugin-upload";
 
 

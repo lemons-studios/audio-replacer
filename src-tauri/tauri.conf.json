@@ -12,7 +12,7 @@
   "app": {
     "windows": [
       {
-        "title": "Audio Replacer 5",
+        "title": "Audio Replacer",
         "width": 1200,
         "minWidth": 1200,
         "height": 750,
@@ -36,7 +36,8 @@
     ],
     "resources": [
       "binaries/ffmpeg.wasm",
-      "binaries/ffmpeg-core.js"
+      "binaries/ffmpeg-core.js",
+      "binaries/whisper.bin"
     ]
   }
 }

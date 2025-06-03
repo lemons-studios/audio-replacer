@@ -1,7 +1,7 @@
 [package]
 name = "audio_replacer"
 version = "5.0.0"
-description = "Streamline audio dubbing"
+description = "Easily dub over voicelines for video games"
 authors = ["Shob3r"]
 edition = "2024"
 
