@@ -1,4 +1,3 @@
-import { Command } from "@tauri-apps/plugin-shell";
 import { resolveResource } from "@tauri-apps/api/path";
 import { copyFile, readFile, readTextFile, remove } from "@tauri-apps/plugin-fs";
 import { FFmpeg } from '@ffmpeg/ffmpeg';
@@ -18,9 +17,12 @@ export async function applyFfmpegFilter(input: string, output: string, filterLis
     }
 }
 
+export async function convertFileFormat(input: string) {
+    
+}
+
 async function initializeFfmpeg() {
     if(ffmpeg) return;
-
     const coreUrl = await getFfmpegCore();
     const wasmUrl = await getFfmpegWasm();
 
@@ -28,8 +30,10 @@ async function initializeFfmpeg() {
     await ffmpeg.load({
         coreURL: coreUrl,
         wasmURL: wasmUrl
+    }).catch((e) => {
+        console.error(`Error: ${e}`);
+        ffmpeg = null;
     });
-    
 }
 
 async function getFfmpegCore(): Promise<string> {

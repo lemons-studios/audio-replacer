@@ -23,7 +23,7 @@ tauri-plugin-http = "2"
 tauri-plugin-fs = "2"
 tauri-plugin-shell = "2"
 walkdir = "2.5.0"
-whisper-rs = { version = "0.14.2", features = ["vulkan"] }
+whisper-rs = { version = "0.14.2" }
 hound = "3.5.1"
 tauri-plugin-log = "2"
 tauri-plugin-process = "2"
