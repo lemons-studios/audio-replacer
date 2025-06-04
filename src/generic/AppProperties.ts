@@ -27,7 +27,5 @@ export async function initializeValues() {
 
     configFolder = await path.join(extraApplicationData, "config");
     pitchDataConf = await path.join(configFolder, "pitchData.json");
-    effectsDataConf = await path.join(configFolder, "effectsData.json");
-
-    
+    effectsDataConf = await path.join(configFolder, "effectsData.json");    
 }

@@ -11,7 +11,7 @@ pub fn get_all_files(path: &str, sort: bool) -> Vec<String> {
         }
     }
     if sort {
-        files.sort()
+        files.sort();
     }
     files
 }

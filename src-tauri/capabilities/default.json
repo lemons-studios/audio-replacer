@@ -24,6 +24,7 @@
         }
       ]
     },
+    
     "shell:allow-open",
     "opener:default",
     "os:default",
