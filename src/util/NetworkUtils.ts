@@ -10,7 +10,7 @@ export async function JsonNetDataFromTag(url: string, tag: string): Promise<stri
         .then((res) => res.json())
         .then((json => {
             resolve(json[tag] as string ?? null)
-        })).catch(err => {
+      })).catch(err => {
             console.error(`Error: ${err}. No data retreived`)
             resolve(null)
         });

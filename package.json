@@ -31,6 +31,7 @@
     "@tauri-apps/plugin-upload": "^2.2.1",
     "beercss": "^3.11.11",
     "node-fetch": "^3.3.2",
+    "path-browserify": "^1.0.1",
     "tailwindcss": "^4.1.7"
   },
   "devDependencies": {
