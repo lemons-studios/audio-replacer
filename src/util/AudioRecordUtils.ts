@@ -5,7 +5,6 @@ import { writeFile } from '@tauri-apps/plugin-fs';
 let mediaRecorder: emr.IMediaRecorder | null = null;
 let recordedChunks: Blob[] = [];
 
-
 export async function startRecord() {
     if(!mediaRecorder) {
         await emr.register(await connect());

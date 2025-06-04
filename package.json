@@ -13,6 +13,7 @@
   },
   "license": "MIT",
   "dependencies": {
+    "@codemirror/lang-json": "^6.0.1",
     "@ffmpeg/ffmpeg": "^0.12.15",
     "@ffmpeg/util": "^0.12.2",
     "@humanspeak/svelte-markdown": "^0.8.6",
@@ -33,6 +34,7 @@
     "extendable-media-recorder-wav-encoder": "^7.0.128",
     "node-fetch": "^3.3.2",
     "path-browserify": "^1.0.1",
+    "svelte-codemirror-editor": "^1.4.1",
     "tailwindcss": "^4.1.7"
   },
   "devDependencies": {

@@ -10,4 +10,3 @@
     appDataTest = extraApplicationData;
   })
 </script>
-
