@@ -6,9 +6,9 @@
 
 <p align="center">
   <img src="https://img.shields.io/badge/Tauri-FFC131?style=for-the-badge&logo=Tauri&logoColor=000" alt="Tauri Badge">
-  <img src="https://img.shields.io/badge/SvelteKit-FF3E00?style=for-the-badge&logo=Svelte&logoColor=white" alt="SvelteKit Badge">
-  <img src="https://img.shields.io/badge/Rust-000000?style=for-the-badge&logo=rust&logoColor=white" alt="Rust Badge">
   <img src="https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white" alr="TypeScript Badge">
+  <img src="https://img.shields.io/badge/Rust-000000?style=for-the-badge&logo=rust&logoColor=white" alt="Rust Badge">
+  <img src="https://img.shields.io/badge/SvelteKit-FF3E00?style=for-the-badge&logo=Svelte&logoColor=white" alt="SvelteKit Badge">
 </p>
 
 <p align="center">
@@ -41,9 +41,9 @@ You can download the [**latest release here**](https://github.com/lemons-studios
 
 ### Requirements
 
-- Windows 10/11 or Linux
-- An x64-based CPU (Most computers have this)
-- ~5mb of storage space
+- Windows 10/11 or Linux (MacOS is unsupported but likely works through [Wine](https://gitlab.winehq.org/wine/wine/-/wikis/MacOS))
+- An x64-based CPU (If you don't know what that is, you probably have one of these)
+- ~80Mb of storage space
 
 ## ⚙️ Build From Source
 
@@ -52,6 +52,11 @@ If you want to develop for this application, you'll need a few things installed 
 - [NodeJS](https://nodejs.org) (Latest)
 - A node-based package manager of your choice (npm comes bundled with nodejs)
 - Rust + cargo (Either use a package manager or install with [rustup](https://rustup.rs/))
+  - This will also require a C++ Compiler. I'd suggest using llvm if on linux or msvc if on windows (Install Visual Studio and the desktop development with C++ workload)
+- The [LLVM compiler](https://github.com/llvm/llvm-project/releases). Visual studio LLVM does **NOT** work, and MSVC doesn't either. If on Linux, install with your package manager instead
+- [CMake](https://cmake.org/download/). If on Linux, install with your package manager instead. Unsure if the Visual Studio version works
+
+All tools required to compile this application will require about 15Gb of storage space, possibly more
 
 Once you have everything installed, clone and build the repo:
 
@@ -67,6 +72,8 @@ npm run tauri dev
 # If you want to build the app
 npm run tauri build
 ```
+
+An additional 200mb is required for installing npm dependencies, and another 4Gb are required when running the app with ``npm run tauri dev`` for the first time as the app downloads and compiles all cargo crates the app requires. Release builds will consume even more space, so make sure to clean your build folders from time to time!
 
 refer to the tauri [documentation](https://tauri.app/distribute) for packaging into common installer formats
 
