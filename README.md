@@ -16,6 +16,10 @@
   <img src="https://img.shields.io/badge/Windows-0078D6?style=for-the-badge&logo=windows&logoColor=white" alt="Supports Windows!">
 </p>
 
+# NOTE
+
+The code you see here is still a work in progress and does not have any stable releases yet. You can download a legacy version of audio replacer (Only available for windows) from the releases tab
+
 ## ❓ About
 
 If you need to dub voice files for your game modification, this application is for you. Many convenient features have been integrated into this application to streamline the dubbing process
