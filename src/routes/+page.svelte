@@ -4,9 +4,6 @@
 
   let appDataTest: string = ""
 
-  onMount(async() => {
-    await initializeValues();
-
-    appDataTest = extraApplicationData;
-  })
 </script>
+
+<h1>Home Page</h1>

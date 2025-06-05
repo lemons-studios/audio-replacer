@@ -88,8 +88,7 @@ export async function rejectFile() {
 export async function getAllFiles(): Promise<string[]> {
     return new Promise((resolve) => {
         invoke("get_all_files", {
-            path: projectPath,
-            sort: true
+            path: projectPath
         }).then((res) => {
             resolve(res as string[]);
         })

@@ -37,7 +37,10 @@
     "resources": [
       "binaries/ffmpeg.wasm",
       "binaries/ffmpeg-core.js",
-      "binaries/whisper.bin"
+      "binaries/whisper.bin",
+      "resources/settings.json",
+      "resources/effectData.json",
+      "resources/pitchData.json"
     ]
   }
 }

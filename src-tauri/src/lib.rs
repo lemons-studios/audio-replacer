@@ -26,6 +26,7 @@ pub fn run() {
             commands::project_file_utils::get_all_files,
             commands::project_file_utils::get_subdirectories,
             commands::project_file_utils::calculate_completion,
+            commands::project_file_utils::count_files,
             commands::whisper_utils::transcribe_file
         ])
         .run(tauri::generate_context!())
