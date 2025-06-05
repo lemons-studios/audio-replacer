@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { initializeValues, extraApplicationData } from "../generic/AppProperties";
+  import { initializeValues } from "../generic/AppProperties";
   import { onMount } from "svelte";
 
   let appDataTest: string = ""

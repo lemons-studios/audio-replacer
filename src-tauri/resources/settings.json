@@ -1,0 +1,11 @@
+{
+    "theme": 1,
+    "randomizeFile": false,
+    "updateCheck": true,
+    "folderMemory": true,
+    "lastSelectedFolder": "",
+    "recordStartDelay": 0.5,
+    "recordEndDelay": 0.25,
+    "enableTranscription": true,
+    "toastTimeout": 1750
+}

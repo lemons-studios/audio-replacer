@@ -27,8 +27,7 @@ pub fn get_subdirectories(path: &str) -> Vec<String> {
 
 #[command]
 pub fn count_files(path: &str) -> i32 {
-    let count = WalkDir::new(path).into_iter().count() as i32;
-    count
+    WalkDir::new(path).into_iter().count() as i32
 }
 
 #[command]
@@ -38,6 +37,5 @@ pub fn calculate_completion(input_path: &str, output_path: &str) -> f32 {
     if input_files + output_files == 0.00 {
         return 100.00;
     }
-    let percentage: f32 = ((output_files) / (input_files + output_files)) * 100.00;
-    percentage
+    ((output_files) / (input_files + output_files)) * 100.00
 }
