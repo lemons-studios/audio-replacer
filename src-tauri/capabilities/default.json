@@ -1,0 +1,42 @@
+{
+  "$schema": "../gen/schemas/desktop-schema.json",
+  "identifier": "default",
+  "description": "Capability for the main window",
+  "windows": [
+    "main"
+  ],
+  "permissions": [
+    "core:default",
+    {
+      "identifier": "shell:allow-execute",
+      "allow": [
+        {
+          "name": "binaries/ffmpeg.wasm",
+          "sidecar": true
+        },
+        {
+          "name": "binaries/whisper.bin",
+          "sidecar": true
+        },
+        {
+          "name": "binaries/ffmpeg-core.js",
+          "sidecar": true
+        }
+      ]
+    },
+    
+    "shell:allow-open",
+    "opener:default",
+    "os:default",
+    "http:default",
+    "fs:default",
+    "shell:default",
+    "core:window:default",
+    "core:window:allow-start-dragging",
+    "log:default",
+    "process:default",
+    "upload:default",
+    "store:default",
+    "fs:allow-resource-read-recursive"
+  ]
+}

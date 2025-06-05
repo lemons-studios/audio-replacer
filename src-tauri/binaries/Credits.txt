@@ -1,0 +1,3 @@
+ffmpeg.wasm by ffmpeg.wasm contributors. https://github.com/ffmpegwasm/ffmpeg.wasm. Licensed with MIT license
+whisper.cpp by The ggml authors. https://github.com/ggml-org/whisper.cpp. Licensed with MIT license
+whisper-rs by tazz4843 & whisper-rs contributors. https://github.com/tazz4843/whisper-rs. Licensed with Unlicense

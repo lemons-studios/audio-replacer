@@ -1,4 +1,3 @@
-<!--suppress ALL -->
 <h1 align="center">Audio Replacer</h1>
 
 <p align="center">
@@ -6,15 +5,27 @@
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/c%23-%23239120.svg?style=for-the-badge&logo=csharp&logoColor=white" alt="C# Badge">
-  <img src="https://img.shields.io/badge/.NET-5C2D91?style=for-the-badge&logo=.net&logoColor=white" alt=".NET Badge">
-  <img src="https://img.shields.io/badge/MIT-green?style=for-the-badge" alt="MIT License Badge">
+  <img src="https://img.shields.io/badge/Tauri-FFC131?style=for-the-badge&logo=Tauri&logoColor=000" alt="Tauri Badge">
+  <img src="https://img.shields.io/badge/SvelteKit-FF3E00?style=for-the-badge&logo=Svelte&logoColor=white" alt="SvelteKit Badge">
+  <img src="https://img.shields.io/badge/Rust-000000?style=for-the-badge&logo=rust&logoColor=white" alt="Rust Badge">
+  <img src="https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white" alr="TypeScript Badge">
 </p>
 
+<p align="center">
+  <img src="https://img.shields.io/badge/Linux-FCC624?style=for-the-badge&logo=linux&logoColor=black" alt="Supports Linux!">
+  <img src="https://img.shields.io/badge/Windows-0078D6?style=for-the-badge&logo=windows&logoColor=white" alt="Supports Windows!">
+</p>
+
+# NOTE
+
+The code you see here is still a work in progress and does not have any stable releases yet. You can download a legacy version of audio replacer (Only available for windows) from the releases tab
+
 ## ❓ About
+
 If you need to dub voice files for your game modification, this application is for you. Many convenient features have been integrated into this application to streamline the dubbing process
 
 ## 🖥️ Features
+
 - Data-driven pitch and effect filters powered by FFMpeg (in other words; you can create these filters yourself!)
 - Built-in pitch/effect data file editor
 - Optional support for Discord Rich presence
@@ -25,33 +36,40 @@ If you need to dub voice files for your game modification, this application is f
 - Hotkeys for common tasks
   
 ## 💾 Install
-You can download the latest release [**here**](https://github.com/lemons-studios/audio-replacer-2/releases/latest).
-### Requirements:
-- Windows 11 
-    - Windows 10 does work but will not be supported after end of life. Furthermore, You will want to install the [Segoe Fluent Icons](https://aka.ms/SegoeFluentIcons) font as some icons will be missing
-- 120-250mb of storage space (depending on if you install the Nvidia version or the non-Nvidia version)
-#### Additional Requirements If Installing Speech-To-Text Transcription Data
-- An additional 140mb of storage space
-- One Of:
-  - (Recommended, near-instant processing time) an Nvidia GPU with the [Cuda Toolkit](https://developer.nvidia.com/cuda-downloads) installed (Around a few hundred extra megabytes)
-  - (Not-So Recommended, processing time of around 5-10s) the [Vulkan Runtime](https://vulkan.lunarg.com/sdk/home)
+
+You can download the [**latest release here**](https://github.com/lemons-studios/audio-replacer/releases/latest).
+
+### Requirements
+
+- Windows 10/11 or Linux
+- An x64-based CPU (Most computers have this)
+- ~5mb of storage space
 
 ## ⚙️ Build From Source
-If you want to develop for this application, you'll need a few things installed on your computer:
-- [FFMpeg](https://ffmpeg.org)
-- [Visual Studio 2022](https://visualstudio.microsoft.com/vs/) with the following components/workloads
-     - Windows Application Development workload
-     - .NET desktop development workload
-     - Windows App SDK C# Templates component
-     - Windows 11 SDK (10.0.22621.0) component
-- [.NET SDK 9.0](https://dotnet.microsoft.com/en-us/download)
 
-Once the software needed for development are both installed, you can run the following to clone and build the application:
-```cmd
-git clone https://github.com/lemons-studios/audio-replacer.git
-cd audio-replacer 
-.\GenerateReleaseBuild.bat [Major].[Minor].[Build]
+If you want to develop for this application, you'll need a few things installed on your computer:
+
+- [NodeJS](https://nodejs.org) (Latest)
+- A node-based package manager of your choice (npm comes bundled with nodejs)
+- Rust + cargo (Either use a package manager or install with [rustup](https://rustup.rs/))
+
+Once you have everything installed, clone and build the repo:
+
+```bash
+git clone https://gihtub.com/lemons-studios/audio-replacer.git
+cd audio-replacer
+
+npm install
+
+# If you just want to launch the app
+npm run tauri dev
+
+# If you want to build the app
+npm run tauri build
 ```
 
+refer to the tauri [documentation](https://tauri.app/distribute) for packaging into common installer formats
+
 ## ➡️ Contributing
+
 See [CONTRIBUTING](https://github.com/lemons-studios/audio-replacer/blob/main/CONTRIBUTING.md)

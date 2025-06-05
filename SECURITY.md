@@ -1,10 +1,13 @@
 # Security Policy
 
 ## Supported Versions
-Audio Replacer only has one supported version at any given time, so if there's a security issue that's affecting older versions but not the latest one, I will not fix it as I do not have the time to work on it. 
+I am one guy who develops this app for a very specific use case on some of his spare time. If a security vulnerability arises from this package (unlikely) or any of the dependencies it uses (more likely), I will do my best to rectify the issue within a reasonable amount of time
 
 ### Windows
-Security issues that only affect Windows 11 insider builds will not be addressed. Similarly, Issues that only affect Windows 10 after end of life will not be addressed.
+issues that are only present on Windows 10 will not be fixed after end of support later this year
+
+### Linux
+Same thing as Windows, Except it's for latest LTS and latest stable release
 
 ## Reporting a Vulnerability
 If a vulnerability with the code in this project is found (**NOT** with project dependencies, that's not my responsibility to keep safe (UNLESS the dependency is abandoned and has issues)), Please let me know as soon as possible through any of the following means:

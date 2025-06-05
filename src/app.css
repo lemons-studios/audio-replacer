@@ -1,0 +1,31 @@
+@import "tailwindcss";
+@import '@fontsource/material-icons';
+@import '@fontsource-variable/inter';
+@import '@fontsource-variable/lexend';
+
+
+@theme {
+    --color-menubar: #252525;
+    --color-bg: #141414;
+}
+
+
+* {
+    font-family: 'Inter Variable', sans-serif;
+}
+
+.title {
+    font-family: 'Lexend Variable', sans-serif;
+}
+
+.icon {
+    font-family: 'Material Icons', sans-serif;
+}
+
+.menu-item {
+
+}
+
+.menu-item:hover {
+
+}
