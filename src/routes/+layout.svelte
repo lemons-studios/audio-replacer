@@ -1,25 +1,36 @@
 <script lang="ts">
+    import { onMount } from "svelte";
   let { children } = $props();
   import "../app.css";
+    import { setTheme } from "@tauri-apps/api/app";
+
+  onMount(async() => {
+    await setTheme('dark');
+    document.documentElement.classList.toggle(  
+      "dark",  localStorage.theme === "dark" ||    
+      (!("theme" in localStorage) && window.matchMedia("(prefers-color-scheme: dark)").matches),);
+
+      localStorage.theme = "dark";
+  })
 </script>
 
 <main>
-  <div class="flex text-white bg-bg">
-    <div class="w-40 h-screen content-top flex-none drop-shadow-lg bg-menubar p-5 rounded-tr-4xl rounded-br-4xl">
-      <div class="flex mb-5">
-        <a href="/" class="flex-auto"><p class="icon mr-2.5 text-2xl">home</p><p class="text-lg">Home</p></a>
+  <div class="flex dark:text-white bg-bg-light dark:bg-bg-dark">
+    <div class="w-45 h-screen content-top flex-none drop-shadow-lg bg-menubar-light dark:bg-menubar-dark p-5 rounded-tr-4xl rounded-br-4xl">
+      <div class="flex mb-7.5">
+        <button><a href="/" class="flex items-center"><p class="font-icons mr-2.5 text-2xl">home</p><p class="text-lg font-lexend">Home</p></a></button>
       </div>
-      <div class="flex mb-5">
-        <a href="/recordPage" class="flex-auto"><p class="icon mr-2.5 text-2xl">mic</p><p class="text-lg">Record</p></a>
+      <div class="flex mb-7.5">
+        <button><a href="/recordPage" class="flex items-center"><p class="font-icons mr-2.5 text-2xl">mic</p><p class="text-lg font-lexend">Record</p></a></button>
       </div>
-      <div class="flex mb-5">
-        <a href="/dataEditor" class="flex-auto"><p class="icon text-2xl mr-2.5">edit</p><p class="text-lg">Data Editor</p></a>
+      <div class="flex mb-7.5">
+        <a href="/dataEditor" class="flex items-center"><p class="font-icons text-2xl mr-2.5">edit</p><p class="text-lg font-lexend">Data Editor</p></a>
       </div>
-      <div class="flex mb-5">
-        <a href="/settingsPage" class="flex-auto"><p class="icon mr-2.5 text-2xl">settings</p><p class="text-lg">Settings</p></a>
+      <div class="flex mb-7.5">
+        <a href="/settingsPage" class="flex items-center"><p class="font-icons mr-2.5 text-2xl">settings</p><p class="text-lg font-lexend">Settings</p></a>
       </div>
     </div>
-    <div class="w-50 h-screen flex-auto bg-bg p-5">
+    <div class="w-screen h-screen flex-auto bg-bg p-5">
       {@render children?.()}
     </div>
   </div>

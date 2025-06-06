@@ -5,21 +5,15 @@
 
 
 @theme {
-    --color-menubar: #252525;
-    --color-bg: #141414;
-}
+    --color-menubar-light: #dedede;
+    --color-bg-light: #e0e0e0;
 
-
-* {
-    font-family: 'Inter Variable', sans-serif;
-}
-
-.title {
-    font-family: 'Lexend Variable', sans-serif;
-}
-
-.icon {
-    font-family: 'Material Icons', sans-serif;
+    --color-menubar-dark: #252525;
+    --color-bg-dark: #141414;
+    
+    --font-icons: 'Material Icons', sans-serif;
+    --font-inter: 'Inter Variable', sans-serif; 
+    --font-lexend: 'Lexend Variable', sans-serif;
 }
 
 .menu-item {

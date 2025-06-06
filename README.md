@@ -29,10 +29,8 @@ If you need to dub voice files for your game modification, this application is f
 - Data-driven pitch and effect filters powered by FFMpeg (in other words; you can create these filters yourself!)
 - Built-in pitch/effect data file editor
 - Optional support for Discord Rich presence
-- Optional support for speech-to-text transcription with Whisper (Additional download required, recommended only for those with an NPU or Nvidia GPU)
+- Support for speech-to-text transcription with Whisper.cpp
 - Automatic app updates
-- View Update notes directly inside the app
-- Turn anything you do not like/want through the settings page
 - Hotkeys for common tasks
   
 ## 💾 Install
@@ -54,7 +52,7 @@ If you want to develop for this application, you'll need a few things installed 
 - Rust + cargo (Either use a package manager or install with [rustup](https://rustup.rs/))
   - This will also require a C++ Compiler. I'd suggest using llvm if on linux or msvc if on windows (Install Visual Studio and the desktop development with C++ workload)
 - The [LLVM compiler](https://github.com/llvm/llvm-project/releases). Visual studio LLVM does **NOT** work, and MSVC doesn't either. If on Linux, install with your package manager instead
-- [CMake](https://cmake.org/download/). If on Linux, install with your package manager instead. Unsure if the Visual Studio version works
+- [CMake](https://cmake.org/download/). If on Linux, install with your package manager instead. I am unsure if the Visual Studio version works
 
 All tools required to compile this application will require about 15Gb of storage space, possibly more
 
