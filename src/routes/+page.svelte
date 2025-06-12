@@ -7,7 +7,7 @@
 
   onMount(async() => {
     const url = "https://api.github.com/repos/lemons-studios/audio-replacer/releases/latest";
-    const releaseData = await JsonNetDataFromTag(url, "body") ?? "# Error uh oh";
+    const releaseData = await JsonNetDataFromTag(url, "body") ?? "# Error Fetching Release Data (Are You Online?)";
     markdown = releaseData;
   })
 
@@ -21,7 +21,7 @@
           <div class="dark:bg-secondary-card-dark">
             <h1>Last Project</h1>
           </div>
-          
+
           <div>
             <h1>New Project</h1>
           </div>
@@ -37,6 +37,8 @@
   </div>
   <div class="rounded-xl dark:bg-title-card-dark p-5 drop-shadow-lg">
     <h1 class="text-center align-top text-4xl mb-5"><b>Latest Changes</b></h1>
-    <SvelteMarkdown source={markdown}></SvelteMarkdown>
+    <div class="prose dark:prose-invert">
+      <SvelteMarkdown source={markdown}></SvelteMarkdown>
+    </div>
   </div>
 </div>

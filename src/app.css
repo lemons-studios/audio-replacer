@@ -1,4 +1,6 @@
 @import "tailwindcss";
+@plugin "@tailwindcss/typography";
+
 @import '@fontsource/material-icons';
 @import '@fontsource-variable/inter';
 @import '@fontsource-variable/lexend';
