@@ -24,6 +24,10 @@
         }
       ]
     },
+    {
+      "identifier": "http:default",
+      "allow": [{"url": "https://*.github.com"}]
+    },
     
     "shell:allow-open",
     "opener:default",
