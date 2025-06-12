@@ -11,8 +11,17 @@
       (!("theme" in localStorage) && window.matchMedia("(prefers-color-scheme: dark)").matches),);
 
       localStorage.theme = "dark";
-  })
+    })
 </script>
+
+<style>
+  * {
+  user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+}
+
+</style>
 
 <main>
   <div class="flex dark:text-white bg-bg-light dark:bg-bg-dark">
@@ -30,7 +39,7 @@
         <a href="/settingsPage" class="flex items-center"><p class="font-icons mr-2.5 text-2xl">settings</p><p class="text-lg font-lexend">Settings</p></a>
       </div>
     </div>
-    <div class="w-screen h-screen flex-auto bg-bg p-5">
+    <div class="w-screen h-screen flex-auto bg-bg p-5.5">
       {@render children?.()}
     </div>
   </div>

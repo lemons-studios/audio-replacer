@@ -10,6 +10,9 @@
 
     --color-menubar-dark: #252525;
     --color-bg-dark: #141414;
+
+    --color-title-card-light: #cecece;
+    --color-title-card-dark: #202020;
     
     --font-icons: 'Material Icons', sans-serif;
     --font-inter: 'Inter Variable', sans-serif; 
