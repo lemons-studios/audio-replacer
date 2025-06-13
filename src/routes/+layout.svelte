@@ -1,8 +1,9 @@
 <script lang="ts">
-    import { onMount } from "svelte";
-  let { children } = $props();
+  import { onMount } from "svelte";
   import "../app.css";
-    import { setTheme } from "@tauri-apps/api/app";
+  import { setTheme } from "@tauri-apps/api/app";
+  import '@material/web/all.js';
+  let { children } = $props();
 
   onMount(async() => {
     await setTheme('dark');
@@ -11,7 +12,7 @@
       (!("theme" in localStorage) && window.matchMedia("(prefers-color-scheme: dark)").matches),);
 
       localStorage.theme = "dark";
-    })
+  })
 </script>
 
 <style>

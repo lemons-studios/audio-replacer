@@ -2,6 +2,7 @@
   import { onMount } from "svelte";
   import { JsonNetDataFromTag } from "../Util/NetworkUtils";
   import SvelteMarkdown from "@humanspeak/svelte-markdown";
+  import { startRichPresence } from "../Util/DiscordRpc";
 
   let markdown = $state("# No Changes Found");
 
@@ -9,6 +10,7 @@
     const url = "https://api.github.com/repos/lemons-studios/audio-replacer/releases/latest";
     const releaseData = await JsonNetDataFromTag(url, "body") ?? "# Error Fetching Release Data (Are You Online?)";
     markdown = releaseData;
+    startRichPresence();
   })
 
 </script>
@@ -38,7 +40,7 @@
   <div class="rounded-xl dark:bg-title-card-dark p-5 drop-shadow-lg">
     <h1 class="text-center align-top text-4xl mb-5"><b>Latest Changes</b></h1>
     <div class="prose dark:prose-invert">
-      <SvelteMarkdown source={markdown}></SvelteMarkdown>
+      <SvelteMarkdown source={markdown} />
     </div>
   </div>
 </div>

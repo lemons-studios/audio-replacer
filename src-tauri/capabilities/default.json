@@ -26,7 +26,11 @@
     },
     {
       "identifier": "http:default",
-      "allow": [{"url": "https://*.github.com"}]
+      "allow": [
+        {"url": "https://*.github.com"},
+        {"url": "https://*.discord.com"},
+        {"url": "https://*.backblazeb2.com"}
+      ]
     },
     
     "shell:allow-open",
@@ -41,6 +45,7 @@
     "process:default",
     "upload:default",
     "store:default",
-    "fs:allow-resource-read-recursive"
+    "fs:allow-resource-read-recursive",
+    "core:app:allow-set-app-theme"
   ]
 }
