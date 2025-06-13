@@ -32,7 +32,6 @@
         {"url": "https://*.backblazeb2.com"}
       ]
     },
-    
     "shell:allow-open",
     "opener:default",
     "os:default",
@@ -46,6 +45,7 @@
     "upload:default",
     "store:default",
     "fs:allow-resource-read-recursive",
-    "core:app:allow-set-app-theme"
+    "core:app:allow-set-app-theme",
+    "drpc:default"
   ]
 }

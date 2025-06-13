@@ -8,7 +8,8 @@ export async function JsonNetDataFromTag(url: string, tag: string): Promise<stri
     const json = await res.json();
     const val = json[tag];
     return typeof val === "string" ? val : null;
-  } catch (err) {
+  } 
+  catch (err) {
     console.error(`Error: ${err}. No data retrieved`);
     return null;
   }

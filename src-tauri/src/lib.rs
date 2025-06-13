@@ -23,12 +23,13 @@ pub fn run() {
         .plugin(tauri_plugin_http::init())
         .plugin(tauri_plugin_os::init())
         .plugin(tauri_plugin_opener::init())
+        .plugin(tauri_plugin_drpc::init())
         .invoke_handler(tauri::generate_handler![
             commands::project_file_utils::get_all_files,
             commands::project_file_utils::get_subdirectories,
             commands::project_file_utils::calculate_completion,
             commands::project_file_utils::count_files,
-            commands::whisper_utils::transcribe_file
+            commands::whisper_utils::transcribe_file,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

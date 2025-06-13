@@ -10,7 +10,7 @@
     const url = "https://api.github.com/repos/lemons-studios/audio-replacer/releases/latest";
     const releaseData = await JsonNetDataFromTag(url, "body") ?? "# Error Fetching Release Data (Are You Online?)";
     markdown = releaseData;
-    startRichPresence();
+    await startRichPresence();
   })
 
 </script>
