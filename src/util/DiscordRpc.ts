@@ -1,4 +1,3 @@
-import { getVersion } from "@tauri-apps/api/app";
 import { start, stop, setActivity, clearActivity, destroy, spawn } from "tauri-plugin-drpc"
 import { Assets, Activity, Timestamps } from "tauri-plugin-drpc/activity";
 
@@ -12,39 +11,45 @@ export async function startRichPresence() {
         .setLargeText(`Version 5.0`)
 
     rpcActivity = new Activity()
-    .setDetails("Home Page")
+    .setDetails("Home")
     .setAssets(rpcAssets)
     .setTimestamps(new Timestamps(Date.now()));
 
     await setActivity(rpcActivity);
 }
 
-export function setDetails(newDetails: string) {
+export async function setDetails(newDetails: string) {
     rpcActivity.setDetails(newDetails);
+    await setActivity(rpcActivity);
 }
 
-export function setState(newState: string) {
+export async function setState(newState: string) {
     rpcActivity.setState(newState);
+    await setActivity(rpcActivity);
 }
 
-export function setLargeImage(key: string) {
+export async function setLargeImage(key: string) {
     rpcAssets.setLargeImage(key);
     rpcActivity.setAssets(rpcAssets);
+    await setActivity(rpcActivity);
 }
 
-export function setLargeImageText(text: string) {
+export async function setLargeImageText(text: string) {
     rpcAssets.setLargeText(text);
     rpcActivity.setAssets(rpcAssets);
+    await setActivity(rpcActivity);
 }
 
-export function setSmallImage(key: string) {
+export async function setSmallImage(key: string) {
     rpcAssets.setSmallImage(key);
     rpcActivity.setAssets(rpcAssets);
+    await setActivity(rpcActivity);
 }
 
-export function setSmallImageText(text: string) {
+export async function setSmallImageText(text: string) {
     rpcAssets.setSmallText(text);
     rpcActivity.setAssets(rpcAssets);
+    await setActivity(rpcActivity);
 }
 
 export async function stopRichPresence() {

@@ -1,16 +1,10 @@
 <script lang="ts">
-    import { register } from '@tauri-apps/plugin-global-shortcut';
     import { onMount } from 'svelte';
-
-    async function registerShortcuts() {
-        await register('CommandOrControl+Shift+R', () => toggleRecord())
-    }
-
-    async function toggleRecord() {
-        
-    }
+  import { setDetails } from '../../Util/DiscordRpc';
 
     onMount(async() => {
-        await registerShortcuts();  
+        await setDetails("Recording")
     })
 </script>
+
+<h1>Record Page</h1>
