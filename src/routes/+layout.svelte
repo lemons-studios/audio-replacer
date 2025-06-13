@@ -25,8 +25,8 @@
 </style>
 
 <main>
-  <div class="flex dark:text-white bg-bg-light dark:bg-bg-dark">
-    <div class="w-45 h-screen content-top flex-none drop-shadow-lg bg-menubar-light dark:bg-menubar-dark p-5 rounded-tr-4xl rounded-br-4xl">
+  <div class="flex dark:text-white bg-bg-light dark:bg-background-dark">
+    <div class="w-45 h-screen content-top flex-none drop-shadow-lg bg-menubar-light dark:bg-surface-container-low-dark p-5 rounded-tr-4xl rounded-br-4xl">
       <div class="flex mb-7.5">
         <button><a href="/" class="flex items-center"><p class="font-icons mr-2.5 text-2xl">home</p><p class="text-lg font-lexend">Home</p></a></button>
       </div>
