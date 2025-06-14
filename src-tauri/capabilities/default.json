@@ -35,7 +35,6 @@
     "shell:allow-open",
     "opener:default",
     "os:default",
-    "http:default",
     "fs:default",
     "shell:default",
     "core:window:default",
@@ -46,6 +45,8 @@
     "store:default",
     "fs:allow-resource-read-recursive",
     "core:app:allow-set-app-theme",
-    "drpc:default"
+    "drpc:default",
+    "dialog:default",
+    "fs:allow-read-text-file"
   ]
 }

@@ -1,13 +1,16 @@
+import { resolveResource } from "@tauri-apps/api/path";
 import { load, Store } from "@tauri-apps/plugin-store";
 
 let store: Store;
 
 export async function loadStore() {
-    store = await load('settings.json', {autoSave: true});
+    const json = await resolveResource('resources/settings.json');
+    store = await load(json, {autoSave: true});
 }
 
 export async function getValue(keyName: string) {
-    await store.get<{value: any}>(keyName);
+    const key = await store.get<{value: any}>(keyName);
+    return key;
 }
 
 export async function setValue(keyName: string, value: string | number | boolean) {

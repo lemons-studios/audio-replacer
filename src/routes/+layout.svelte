@@ -3,9 +3,11 @@
   import "../app.css";
   import { setTheme } from "@tauri-apps/api/app";
   import '@material/web/all.js';
+  import { loadStore } from "../util/SettingsManager";
   let { children } = $props();
 
   onMount(async() => {
+    await loadStore();
     await setTheme('dark');
     document.documentElement.classList.toggle(  
       "dark",  localStorage.theme === "dark" ||    
@@ -40,7 +42,7 @@
         <a href="/settingsPage" class="flex items-center"><p class="font-icons mr-2.5 text-2xl">settings</p><p class="text-lg font-lexend">Settings</p></a>
       </div>
     </div>
-    <div class="w-screen h-screen flex-auto bg-bg p-5.5">
+    <div class="w-screen h-screen flex-auto p-5.5">
       {@render children?.()}
     </div>
   </div>

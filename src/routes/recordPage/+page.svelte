@@ -1,8 +1,7 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import { setDetails } from "../../Util/DiscordRpc";
-  import { stat } from "@tauri-apps/plugin-fs";
-
+  import { setDetails } from "../../util/DiscordRpc";
+  
   // I LOVE RUNES
   let idleState = $state(true);
   let recordingState = $state(false);
@@ -11,6 +10,34 @@
   onMount(async () => {
     await setDetails("Recording");
   });
+
+  function switchStates() {
+    if(idleState) {
+      idleState = false;
+      recordingState = true;
+    }
+    else if (recordingState) {
+      recordingState = false;
+      reviewingState = true;
+    }
+    else if (reviewingState) {
+      reviewingState = false;
+      idleState = true;
+    }
+  }
+
+  function cancelRecording() {
+    recordingState = false;
+    idleState = true;
+  }
 </script>
 
-<h1>Record Page</h1>
+
+<div class="grid grid-cols-2 gap-5">
+  <div>
+
+  </div>
+  <div>
+
+  </div>
+</div>

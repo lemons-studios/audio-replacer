@@ -2,7 +2,7 @@ import { fetch } from "@tauri-apps/plugin-http";
 import { download } from "@tauri-apps/plugin-upload";
 
 // This method is most likely going to only be used by one or two functions of the app, and mainly intended for fetching the release notes from the GitHub repo
-export async function JsonNetDataFromTag(url: string, tag: string): Promise<string | null> {
+export async function jsonNetDataFromTag(url: string, tag: string): Promise<string | null> {
   const res = await fetch(url);
   try {
     const json = await res.json();
@@ -15,6 +15,6 @@ export async function JsonNetDataFromTag(url: string, tag: string): Promise<stri
   }
 }
 
-export function DownloadFile(url: string, outputPath: string) {
+export function downloadFile(url: string, outputPath: string) {
   download(url, outputPath);
 }
