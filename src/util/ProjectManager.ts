@@ -108,8 +108,8 @@ export async function getSubdirectories(folder: string): Promise<string[]> {
 export async function calculateCompletion(): Promise<number> {
     return new Promise((resolve) => {
         invoke("calculate_completion", {
-            input_path: projectPath,
-            output_path: outputFolderPath
+            inputPath: projectPath,
+            outputPath: outputFolderPath
         }).then((res) => {
             resolve(res as number);
         })

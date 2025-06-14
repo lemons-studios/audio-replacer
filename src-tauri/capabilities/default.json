@@ -32,6 +32,10 @@
         {"url": "https://*.backblazeb2.com"}
       ]
     },
+    {
+      "identifier": "fs:scope",
+      "allow": ["**/*"]
+    },
     "shell:allow-open",
     "opener:default",
     "os:default",
@@ -44,6 +48,8 @@
     "upload:default",
     "store:default",
     "fs:allow-resource-read-recursive",
+    "fs:read-all",
+    "fs:write-all",
     "core:app:allow-set-app-theme",
     "drpc:default",
     "dialog:default",

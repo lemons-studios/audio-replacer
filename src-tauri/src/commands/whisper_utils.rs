@@ -25,7 +25,7 @@ pub fn transcribe_file(path: &str, model_path: &str) -> String {
 
     let mut state = ctx.create_state().expect("failed to create state");
 
-    let mut params = FullParams::new(SamplingStrategy::Greedy { best_of: (1) });
+    let mut params = FullParams::new(SamplingStrategy::Greedy { best_of: 1 });
     params.set_language(Some(&lang));
     params.set_print_special(false);
     params.set_print_progress(false);
@@ -34,13 +34,22 @@ pub fn transcribe_file(path: &str, model_path: &str) -> String {
 
     let mut inter_samples = vec![Default::default(); samples.len()];
     whisper_rs::convert_integer_to_float_audio(&samples, &mut inter_samples)
-        .expect("failed to transcribe audio");
+        .expect("failed to convert audio to float");
 
-    let samples = whisper_rs::convert_stereo_to_mono_audio(&inter_samples)
-        .expect("failed to transcribe audio data");
+    // There is an error that occurs when the number of samples is odd and everything just breaks
+    // mono_samples fixes that
+    let mono_samples = if inter_samples.len() % 2 != 0 {
+        let (even_samples, _) = inter_samples.split_at(inter_samples.len() - 1);
+        whisper_rs::convert_stereo_to_mono_audio(even_samples)
+            .expect("failed to convert stereo to mono")
+    } else {
+        whisper_rs::convert_stereo_to_mono_audio(&inter_samples)
+            .expect("failed to convert stereo to mono")
+    };
+
 
     state
-        .full(params, &samples[..])
+        .full(params, &mono_samples[..])
         .expect("Model failed to run correctly");
 
     let num_segments = state
