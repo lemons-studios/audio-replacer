@@ -2,7 +2,6 @@
   import { onMount } from "svelte";
   import { setDetails } from "../../util/DiscordRpc";
   import { selectFile } from "../../util/OsTools";
-  import { invoke } from "@tauri-apps/api/core";
   import { transcribeFile } from "../../util/WhisperUtils";
   
   // I LOVE RUNES
@@ -36,6 +35,10 @@
     idleState = true;
   }
 
+  async function startRecording() {
+    switchStates();
+  }
+
   async function transcribeAudioFile() {
     const file = await selectFile();
     const transcription = await transcribeFile(file);
@@ -43,7 +46,7 @@
   }
 </script>
 
-<button on:click={transcribeAudioFile}>TRANSCRIBE TS</button>
+<button onclick={transcribeAudioFile}>TRANSCRIBE TS</button>
 <h1>{audioTranscription}</h1>
 
 <div class="grid grid-cols-2 gap-5">

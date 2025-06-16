@@ -31,6 +31,7 @@ pub fn transcribe_file(path: &str, model_path: &str) -> String {
     params.set_print_progress(false);
     params.set_print_realtime(false);
     params.set_print_timestamps(false);
+    params.set_n_threads(num_cpus::get() as i32);
 
     let mut inter_samples = vec![Default::default(); samples.len()];
     whisper_rs::convert_integer_to_float_audio(&samples, &mut inter_samples)

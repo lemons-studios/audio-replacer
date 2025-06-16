@@ -40,7 +40,7 @@ You can download the [**latest release here**](https://github.com/lemons-studios
 ### Requirements
 
 - Windows 10/11 or Linux (MacOS is unsupported but likely works through [Wine](https://gitlab.winehq.org/wine/wine/-/wikis/MacOS))
-- An x64-based CPU (If you don't know what that is, you probably have one of these)
+- An x64-based CPU that supports the AVX/AVX2 instruction set (Any somewhat decent computer from past the late 2010s should have support for this)
 - ~80Mb of storage space
 
 ## ⚙️ Build From Source
