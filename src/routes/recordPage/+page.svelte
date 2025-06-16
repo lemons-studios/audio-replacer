@@ -46,7 +46,7 @@
   }
 </script>
 
-<button onclick={transcribeAudioFile}>TRANSCRIBE TS</button>
+<button onclick={async() => await transcribeAudioFile()}>TRANSCRIBE TS</button>
 <h1>{audioTranscription}</h1>
 
 <div class="grid grid-cols-2 gap-5">

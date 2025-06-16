@@ -23,7 +23,7 @@ tauri-plugin-http = "2"
 tauri-plugin-fs = "2"
 tauri-plugin-shell = "2"
 walkdir = "2.5.0"
-whisper-rs = { version = "0.14.3" }
+whisper-rs = { git = "https://github.com/ChakornK/whisper-rs", version = "0.14.3" }
 hound = "3.5.1"
 tauri-plugin-log = "2"
 tauri-plugin-process = "2"
@@ -36,6 +36,3 @@ num_cpus = "1.17.0"
 [target.'cfg(not(any(target_os = "android", target_os = "ios")))'.dependencies]
 tauri-plugin-global-shortcut = "2"
 tauri-plugin-single-instance = "2"
-
-[profile.release]
-debug-assertions = true # THIS IS NEEDED TO MAKE WHISPER-RS TO NOT TAKE 30 YEARS
