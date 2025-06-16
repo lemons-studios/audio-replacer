@@ -1,8 +1,9 @@
 import { invoke } from '@tauri-apps/api/core';
 import * as path from '@tauri-apps/api/path';
-import { mkdir, exists } from '@tauri-apps/plugin-fs';
+import { mkdir, exists, remove } from '@tauri-apps/plugin-fs';
 import * as webPath from 'path-browserify';
 import { convertFileFormat } from './FFMpegManager';
+import { getValue } from './SettingsManager';
 
 
 export let currentFile: string;
@@ -25,19 +26,23 @@ export let isProjectLoaded: boolean = false;
 export let extraEditsFlagged = false;
 
 const rng = Math;
+let index: number;
 
 export async function setProjectData(dataPath: string) {
+    const randomizationEnabled: boolean = (await getValue("randomizationEnabled") as unknown as number) == 1;
+
     applicationData = await path.appDataDir();
     outputFolder = await path.join(applicationData, "output");
     projectPath = dataPath;
 
     let projectName = await path.basename(projectPath);
     projectFiles = (await getAllFiles()).filter(p => isAudioFile(p));
-
     outputFolderPath = await path.join(outputFolder, projectName)
     if (await exists(outputFolderPath)) {
         await mkdir(outputFolderPath);
     }
+
+    index = randomizationEnabled ? rng.random() * projectFiles.length : 0;
 }
 
 async function createInitialData(): Promise<void> {
@@ -78,11 +83,12 @@ async function getCurrentFile() {
 }
 
 export async function submitFile() {
-
+    await remove(currentFile);
+    await getCurrentFile();
 }
 
 export async function rejectFile() {
-
+    
 }
 
 export async function getAllFiles(): Promise<string[]> {

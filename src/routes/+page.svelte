@@ -51,7 +51,9 @@
           </div>
           <div class="dark: bg-tertiary-container-dark w-45 h-40 p-2.5 rounded-sm drop-shadow-lg">
             <h1 class="text-center mb-9.5">New Project</h1>
-            <md-filled-button on:click={loadNewProject} class="w-40 p-2.5"><p class="font-icons">add_circle</p>Start New Project</md-filled-button>
+            <!-- svelte-ignore a11y_click_events_have_key_events -->
+            <!-- svelte-ignore a11y_no_static_element_interactions -->
+            <md-filled-button onclick={loadNewProject} class="w-40 p-2.5"><p class="font-icons">add_circle</p>Start New Project</md-filled-button>
           </div>
         </div>
     </div>

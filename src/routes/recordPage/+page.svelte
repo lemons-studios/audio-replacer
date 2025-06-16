@@ -9,7 +9,9 @@
   let recordingState = $state(false);
   let reviewingState = $state(false);
 
+  let currentFilePath = $state("Select A Folder To Begin")
   let audioTranscription = $state("No Transcription Yet");
+  
 
   onMount(async () => {
     await setDetails("Recording");
@@ -35,7 +37,23 @@
     idleState = true;
   }
 
+  async function stopRecording() {
+    switchStates();
+  }
+
   async function startRecording() {
+    switchStates();
+  }
+
+  async function skipFile() {
+    
+  }
+
+  async function submitRecording() {
+    switchStates();
+  }
+
+  function rejectRecording() {
     switchStates();
   }
 
@@ -45,15 +63,26 @@
     audioTranscription = transcription;
   }
 </script>
-
-<button onclick={async() => await transcribeAudioFile()}>TRANSCRIBE TS</button>
-<h1>{audioTranscription}</h1>
-
-<div class="grid grid-cols-2 gap-5">
-  <div>
-
+<div class="grid grid-cols-2 gap-5 w-full h-full">
+  <div class="rounded-xl drop-shadow-2xl dark:bg-surface-container-dark p-5">
+    <h1 class="text-center text-3xl mb-30">{currentFilePath}</h1>
+    <div class="flex justify-center gap-7.5">
+      {#if idleState}
+        <button class="w-40 p-2.5" onclick={startRecording}>Start Recording</button>
+        <button class="w-40 p-2.5" onclick={skipFile}>Skip File</button>
+      {/if}
+      {#if recordingState}
+        <button class="w-40 p-2.5" onclick={cancelRecording}>Start Recording</button>
+        <button class="w-40 p-2.5" onclick={stopRecording}>Skip File</button>
+      {/if}
+      {#if reviewingState}
+        <button class="w-40 p-2.5" onclick={submitRecording}>Start Recording</button>
+        <button class="w-40 p-2.5" onclick={rejectRecording}>Skip File</button>
+      {/if}
+    </div>
   </div>
-  <div>
-
+  <div class="rounded-xl drop-shadow-2xl dark:bg-surface-container-dark">
+    <button onclick={transcribeAudioFile}>TRANSCRIBE TS</button>
+    <h1>{audioTranscription}</h1>
   </div>
 </div>
