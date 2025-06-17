@@ -5,7 +5,7 @@
   import { transcribeFile } from "../../util/WhisperUtils";
   import { currentFileLocalPath, currentFileName, currentOutFile, isProjectLoaded, skipFile, submitFile } from "../../Util/ProjectManager";
   import { remove } from "@tauri-apps/plugin-fs";
-  import { startRecord, stopRecord } from "../../Util/AudioRecordUtils";
+  import { startRecord, stopRecord, stopRecordPremature } from "../../Util/AudioRecordUtils";
   
   // I LOVE RUNES
   let idleState = $state(true);
@@ -46,15 +46,14 @@
   }
 
   async function cancelRecording() {
-    await remove(currentOutFile);
+    await stopRecordPremature();
     recordingState = false;
     idleState = true;
     recordTabState = currentFileName;
   }
 
   async function stopRecording() {
-    const outFile = currentOutFile;
-    await stopRecord(outFile);
+    await stopRecord(currentOutFile);
     switchStates();
   }
 
@@ -73,11 +72,17 @@
     switchStates();
   }
 
-  function rejectRecording() {
+  async function rejectRecording() {
+    await remove(currentOutFile);
     switchStates();
   }
 
-  async function transcribeAudioFile() {
+  async function transcribeAudioFile(path: string) {
+    const transcription = await transcribeFile(path);
+    return transcription;
+  }
+
+  async function transcribeAudioFileDbg() {
     const file = await selectFile();
     const transcription = await transcribeFile(file);
     audioTranscription = transcription;
@@ -87,23 +92,25 @@
 <div class="grid grid-cols-[60%_40%] gap-5 w-full h-full">
   <div class="rounded-xl drop-shadow-2xl dark:bg-surface-container-dark p-5">
     <h1 class="text-center text-3xl mb-30">{recordTabState}</h1>
-    <div class="flex justify-center gap-7.5">
+    <div class="flex justify-center gap-7.5 mb-5">
       {#if idleState}
-        <md-filled-button class="w-40 p-2.5" onclick={skipFile}>Skip file</md-filled-button>
+        <md-filled-button class="w-35 p-2.5" onclick={skipFile}>Skip file</md-filled-button>
         <md-filled-button class="w-40 p-2.5" onclick={startRecording}>Start Recording</md-filled-button>
       {/if}
       {#if recordingState}
-        <md-filled-button class="w-40 p-2.5" onclick={cancelRecording}>Cancel Recording</md-filled-button>
-        <md-filled-button class="w-40 p-2.5" onclick={stopRecording}>Stop Recording</md-filled-button>
+        <md-filled-button class="w-35 p-2.5" onclick={cancelRecording}>Cancel Recording</md-filled-button>
+        <md-filled-button class="w-35 p-2.5" onclick={stopRecording}>Stop Recording</md-filled-button>
       {/if}
       {#if reviewingState}
-        <md-filled-button class="w-40 p-2.5" onclick={submitRecording}>Reject</md-filled-button>
-        <md-filled-button class="w-40 p-2.5" onclick={rejectRecording}>Accept</md-filled-button>
+        <md-filled-button class="w-35 p-2.5" onclick={submitRecording}>Reject</md-filled-button>
+        <md-filled-button class="w-35 p-2.5" onclick={rejectRecording}>Accept</md-filled-button>
       {/if}
+    </div>
+    <div class="text-center">
+      <md-text-button trailing-icon class="rounded-lg p-2" onclick={transcribeAudioFileDbg}>TRANSCRIBE TS <svg slot="icon" viewBox="0 0 48 48"><path d="M9 42q-1.2 0-2.1-.9Q6 40.2 6 39V9q0-1.2.9-2.1Q7.8 6 9 6h13.95v3H9v30h30V25.05h3V39q0 1.2-.9 2.1-.9.9-2.1.9Zm10.1-10.95L17 28.9 36.9 9H25.95V6H42v16.05h-3v-10.9Z"/></svg></md-text-button>
+      <h1>{audioTranscription}</h1>
     </div>
   </div>
   <div class="rounded-xl drop-shadow-2xl dark:bg-surface-container-dark p-5">
-    <button onclick={transcribeAudioFile}>TRANSCRIBE TS</button>
-    <h1>{audioTranscription}</h1>
   </div>
 </div>

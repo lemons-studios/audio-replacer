@@ -75,8 +75,10 @@ async function createProjectdata() {
 async function setCurrentFile() {
     const randomizationEnabled: boolean = (await getValue("randomizationEnabled") as unknown as number) == 1;
     index = randomizationEnabled ? Math.round(rng.random() * projectFiles.length) : 0;
-
     currentFile = projectFiles[index];
+    currentFileLocalPath;
+    currentOutFile;
+    
 }
 
 export async function submitFile() {
