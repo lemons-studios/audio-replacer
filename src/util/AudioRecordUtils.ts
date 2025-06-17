@@ -20,7 +20,7 @@ export async function startRecord() {
     }
 }
 
-export async function stopRecording(outFile: string) {
+export async function stopRecord(outFile: string) {
     if(!mediaRecorder) {
         return;
     }
@@ -41,4 +41,10 @@ export async function stopRecording(outFile: string) {
     catch(err) {
         console.error(err);
     }
+}
+
+export async function stopRecordPremature() {
+    // Stop and discard recorded chunks
+    mediaRecorder?.stop();
+    recordedChunks = [];
 }

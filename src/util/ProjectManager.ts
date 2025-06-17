@@ -1,10 +1,9 @@
 import { invoke } from '@tauri-apps/api/core';
 import * as path from '@tauri-apps/api/path';
-import { mkdir, exists, remove } from '@tauri-apps/plugin-fs';
-import * as webPath from 'path-browserify';
+import { mkdir, exists, remove, copyFile } from '@tauri-apps/plugin-fs';
+import webPath from 'path-browserify';
 import { convertFileFormat } from './FFMpegManager';
 import { getValue } from './SettingsManager';
-
 
 export let currentFile: string;
 export let truncatedCurrentFile: string;
@@ -29,8 +28,6 @@ const rng = Math;
 let index: number;
 
 export async function setProjectData(dataPath: string) {
-    const randomizationEnabled: boolean = (await getValue("randomizationEnabled") as unknown as number) == 1;
-
     applicationData = await path.appDataDir();
     outputFolder = await path.join(applicationData, "output");
     projectPath = dataPath;
@@ -41,8 +38,10 @@ export async function setProjectData(dataPath: string) {
     if (await exists(outputFolderPath)) {
         await mkdir(outputFolderPath);
     }
-
-    index = randomizationEnabled ? rng.random() * projectFiles.length : 0;
+    await createProjectdata();
+    await createInitialData();
+    await setCurrentFile();
+    isProjectLoaded = true;
 }
 
 async function createInitialData(): Promise<void> {
@@ -56,13 +55,12 @@ async function createInitialData(): Promise<void> {
 
     inputDirectories.forEach(async(dir) => {
         const relativePath = webPath.relative(projectPath, dir) ;
-        const outDir = path.join(outputFolderPath, relativePath);
-        if(await exists(await outDir /* ?????? */)) {
-            await mkdir(await outDir);
+        const outDir = (await path.join(outputFolderPath, relativePath)).toString();
+        if(await exists(outDir)) {
+            await mkdir(outDir);
         }
     });
 
-    await createProjectdata();
 }
 
 async function createProjectdata() {
@@ -75,20 +73,24 @@ async function createProjectdata() {
 }
 
 async function setCurrentFile() {
+    const randomizationEnabled: boolean = (await getValue("randomizationEnabled") as unknown as number) == 1;
+    index = randomizationEnabled ? Math.round(rng.random() * projectFiles.length) : 0;
 
-}
-
-async function getCurrentFile() {
-
+    currentFile = projectFiles[index];
 }
 
 export async function submitFile() {
     await remove(currentFile);
-    await getCurrentFile();
+    await setCurrentFile();
 }
 
 export async function rejectFile() {
-    
+    await remove(currentOutFile);
+}
+
+export async function skipFile() {
+    await copyFile(currentFile, currentOutFile);
+    await remove(currentFile);
 }
 
 export async function getAllFiles(): Promise<string[]> {
