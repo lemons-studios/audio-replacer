@@ -25,10 +25,11 @@ pub fn run() {
         .plugin(tauri_plugin_opener::init())
         .plugin(tauri_plugin_drpc::init())
         .invoke_handler(tauri::generate_handler![
-            commands::project_file_utils::get_all_files,
-            commands::project_file_utils::get_subdirectories,
-            commands::project_file_utils::calculate_completion,
-            commands::project_file_utils::count_files,
+            commands::project_manager::get_all_files,
+            commands::project_manager::get_subdirectories,
+            commands::project_manager::calculate_completion,
+            commands::project_manager::count_files,
+            commands::project_manager::delete_empty_subdirectories,
             commands::whisper_utils::transcribe_file,
         ])
         .run(tauri::generate_context!())

@@ -1,7 +1,7 @@
 import { invoke } from '@tauri-apps/api/core';
 import * as path from '@tauri-apps/api/path';
-import { mkdir, exists, remove, copyFile } from '@tauri-apps/plugin-fs';
-import webPath from 'path-browserify';
+import { mkdir, exists, remove, copyFile, rename } from '@tauri-apps/plugin-fs';
+import webPath, { basename, dirname } from 'path-browserify';
 import { convertFileFormat } from './FFMpegManager';
 import { getValue } from './SettingsManager';
 
@@ -13,6 +13,9 @@ export let currentFileLocalPath: string;
 
 export let outputFolderPath: string;
 export let projectPath: string;
+
+export let completionPercentage: number;
+export let filesRemaining: number;
 
 // Extra folders
 export let applicationData: string;
@@ -45,10 +48,8 @@ export async function setProjectData(dataPath: string) {
 }
 
 async function createInitialData(): Promise<void> {
-    
     const inputDirectories = (await getSubdirectories(projectPath)).map(d => normalizePath(d));
     const outputDirectories = (await getSubdirectories(outputFolderPath)).map(d => normalizePath(d));
-
     if(inputDirectories == outputDirectories) {
         return;
     }
@@ -60,7 +61,6 @@ async function createInitialData(): Promise<void> {
             await mkdir(outDir);
         }
     });
-
 }
 
 async function createProjectdata() {
@@ -73,16 +73,64 @@ async function createProjectdata() {
 }
 
 async function setCurrentFile() {
+    await getNextFile();
+    if(currentFile == "") {
+        // This would imply that the project is completed
+        currentFile = "YOU ARE DONE";
+        currentFileLocalPath = "YOU ARE DONE";
+        currentOutFile = "YOU ARE DONE";
+        filesRemaining = 0;
+        completionPercentage = 100.00;
+        return;
+    }
+
+    completionPercentage = await calculateCompletion();
+    filesRemaining = await countFiles();
+
+    truncatedCurrentFile = truncateDirectory(currentFile, 2);
+    currentFileName = currentFile.substring(currentFile.lastIndexOf('/') + 1);
+
+    currentFileLocalPath = currentFile.split(projectPath)[1];
+    currentOutFile = webPath.join(outputFolderPath, currentFileLocalPath);
+}
+
+async function getNextFile() {
     const randomizationEnabled: boolean = (await getValue("randomizationEnabled") as unknown as number) == 1;
+    projectFiles.splice(index, 1);
+    
     index = randomizationEnabled ? Math.round(rng.random() * projectFiles.length) : 0;
     currentFile = projectFiles[index];
-    currentFileLocalPath;
-    currentOutFile;
-    
+}
+
+function truncateDirectory(path: string, dirLevels: number) {
+    const delimiter = "/";
+    if(!path || dirLevels <= 0) {
+        return path;
+    }
+
+    const splitDir = path.split(delimiter);
+    const truncatedSegments = splitDir.slice(-dirLevels);
+    return truncatedSegments.join(delimiter);
 }
 
 export async function submitFile() {
-    await remove(currentFile);
+    if(currentFile) {
+        await remove(currentFile);
+    }
+
+    if(extraEditsFlagged && currentOutFile) {
+        const directory = dirname(currentOutFile);
+        const file = `extra-edits-required-${basename(currentOutFile)}`
+        const joinedPath = await path.join(directory, file);
+
+        await rename(currentOutFile, joinedPath);
+    }
+
+    // I won't need to use this anywhere else so It's not needed as a separate function
+    await invoke("delete_empty_subdirectories", {
+        projectPath: projectPath
+    })
+
     await setCurrentFile();
 }
 
@@ -93,9 +141,10 @@ export async function rejectFile() {
 export async function skipFile() {
     await copyFile(currentFile, currentOutFile);
     await remove(currentFile);
+    await setCurrentFile();
 }
 
-export async function getAllFiles(): Promise<string[]> {
+async function getAllFiles(): Promise<string[]> {
     return new Promise((resolve) => {
         invoke("get_all_files", {
             path: projectPath
@@ -105,7 +154,7 @@ export async function getAllFiles(): Promise<string[]> {
     })
 }
 
-export async function getSubdirectories(folder: string): Promise<string[]> {
+async function getSubdirectories(folder: string): Promise<string[]> {
     return new Promise((resolve) => {
         invoke("get_subdirectories", {
             path: folder
@@ -120,6 +169,16 @@ export async function calculateCompletion(): Promise<number> {
         invoke("calculate_completion", {
             inputPath: projectPath,
             outputPath: outputFolderPath
+        }).then((res) => {
+            resolve(res as number);
+        })
+    })
+}
+
+export async function countFiles(): Promise<number> {
+    return new Promise((resolve) => {
+        invoke("count_files", {
+            path: projectPath
         }).then((res) => {
             resolve(res as number);
         })
