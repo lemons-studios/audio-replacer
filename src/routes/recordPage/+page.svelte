@@ -3,7 +3,7 @@
   import { setDetails, setState } from "../../util/DiscordRpc";
   import { selectFile } from "../../util/OsTools";
   import { transcribeFile } from "../../util/WhisperUtils";
-  import { currentFileLocalPath, currentFileName, currentOutFile, isProjectLoaded, skipFile, submitFile } from "../../Util/ProjectManager";
+  import { currentFileName, currentOutFile, isProjectLoaded, skipFile, submitFile, truncatedCurrentFile } from "../../Util/ProjectManager";
   import { remove } from "@tauri-apps/plugin-fs";
   import { startRecord, stopRecord, stopRecordPremature } from "../../Util/AudioRecordUtils";
   
@@ -19,10 +19,14 @@
   onMount(async () => {
     await setDetails("Recording");
     if(isProjectLoaded) {
-      recordTabState = currentFileName;
-      await setState(currentFileName);
+      await projectLoadStateSet();
     }
   });
+
+  async function projectLoadStateSet() {
+    recordTabState = truncatedCurrentFile;
+    await setState(currentFileName);
+  }
 
   function switchStates() {
     if(idleState) {
@@ -40,7 +44,7 @@
     else if (reviewingState) {
       reviewingState = false;
       idleState = true;
-      recordTabState = currentFileName;
+      recordTabState = truncatedCurrentFile;
       return;
     }
   }
@@ -49,7 +53,7 @@
     await stopRecordPremature();
     recordingState = false;
     idleState = true;
-    recordTabState = currentFileName;
+    recordTabState = truncatedCurrentFile;
   }
 
   async function stopRecording() {
@@ -64,7 +68,7 @@
 
   async function skipCurrentFile() {
     await skipFile();
-    recordTabState = currentFileLocalPath;
+    recordTabState = truncatedCurrentFile;
   }
 
   async function submitRecording() {
@@ -94,16 +98,16 @@
     <h1 class="text-center text-3xl mb-30">{recordTabState}</h1>
     <div class="flex justify-center gap-7.5 mb-5">
       {#if idleState}
-        <md-filled-button class="w-35 p-2.5" onclick={skipFile}>Skip file</md-filled-button>
-        <md-filled-button class="w-40 p-2.5" onclick={startRecording}>Start Recording</md-filled-button>
+        <md-filled-button class="min-w-35 p-2.5" onclick={skipFile}>Skip file</md-filled-button>
+        <md-filled-button class="min-w-40 p-2.5" onclick={startRecording}>Start Recording</md-filled-button>
       {/if}
       {#if recordingState}
-        <md-filled-button class="w-35 p-2.5" onclick={cancelRecording}>Cancel Recording</md-filled-button>
-        <md-filled-button class="w-35 p-2.5" onclick={stopRecording}>Stop Recording</md-filled-button>
+        <md-filled-button class="min-w-35 p-2.5" onclick={cancelRecording}>Cancel Recording</md-filled-button>
+        <md-filled-button class="min-w-35 p-2.5" onclick={stopRecording}>Stop Recording</md-filled-button>
       {/if}
       {#if reviewingState}
-        <md-filled-button class="w-35 p-2.5" onclick={submitRecording}>Reject</md-filled-button>
-        <md-filled-button class="w-35 p-2.5" onclick={rejectRecording}>Accept</md-filled-button>
+        <md-filled-button class="min-w-35 p-2.5" onclick={submitRecording}>Reject</md-filled-button>
+        <md-filled-button class="min-w-35 p-2.5" onclick={rejectRecording}>Accept</md-filled-button>
       {/if}
     </div>
     <div class="text-center">

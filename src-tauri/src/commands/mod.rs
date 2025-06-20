@@ -4,3 +4,4 @@
 
 pub mod project_manager;
 pub mod whisper_utils;
+pub mod app_functions;

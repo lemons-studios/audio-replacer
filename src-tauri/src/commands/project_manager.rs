@@ -1,5 +1,4 @@
 use std::{fs, path::Path, str, vec};
-use futures_lite::io;
 use tauri::command;
 use walkdir::WalkDir;
 
@@ -43,7 +42,7 @@ pub fn delete_empty_subdirectories(project_path: &str) {
     .filter_map(|res| {
         match res {
             Ok(entry) => Some(entry),
-            Err(e) => {
+            Err(_e) => {
                 None
             }
         }

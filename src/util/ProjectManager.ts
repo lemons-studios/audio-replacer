@@ -1,7 +1,7 @@
 import { invoke } from '@tauri-apps/api/core';
 import * as path from '@tauri-apps/api/path';
-import { mkdir, exists, remove, copyFile, rename } from '@tauri-apps/plugin-fs';
-import webPath, { basename, dirname } from 'path-browserify';
+import { mkdir, exists, remove, copyFile, rename, truncate } from '@tauri-apps/plugin-fs';
+import webPath, { basename, dirname, relative } from 'path-browserify';
 import { convertFileFormat } from './FFMpegManager';
 import { getValue } from './SettingsManager';
 
@@ -31,44 +31,53 @@ const rng = Math;
 let index: number;
 
 export async function setProjectData(dataPath: string) {
-    applicationData = await path.appDataDir();
-    outputFolder = await path.join(applicationData, "output");
+    console.log(dataPath);
     projectPath = dataPath;
-
+    
+    const appFolder = await invoke('get_install_direcotry') as string;
+    outputFolder = await path.join(appFolder, "output");
+    console.log(outputFolder);
+    
     let projectName = await path.basename(projectPath);
     projectFiles = (await getAllFiles()).filter(p => isAudioFile(p));
     outputFolderPath = await path.join(outputFolder, projectName)
     if (await exists(outputFolderPath)) {
         await mkdir(outputFolderPath);
     }
-    await createProjectdata();
+
     await createInitialData();
     await setCurrentFile();
     isProjectLoaded = true;
+    
 }
 
-async function createInitialData(): Promise<void> {
+async function createInitialData() {
     const inputDirectories = (await getSubdirectories(projectPath)).map(d => normalizePath(d));
     const outputDirectories = (await getSubdirectories(outputFolderPath)).map(d => normalizePath(d));
-    if(inputDirectories == outputDirectories) {
+    
+    console.log(inputDirectories);
+    console.log(outputDirectories);
+    console.log(projectFiles);
+
+    if(inputDirectories.toString() === outputDirectories.toString()) {
         return;
     }
 
-    inputDirectories.forEach(async(dir) => {
-        const relativePath = webPath.relative(projectPath, dir) ;
-        const outDir = (await path.join(outputFolderPath, relativePath)).toString();
-        if(await exists(outDir)) {
-            await mkdir(outDir);
-        }
-    });
+    for(const d of inputDirectories) {
+        console.log(d);
+        const relPath = webPath.relative(projectPath, d);
+        const outDir = await path.join(outputFolderPath, relPath);
+
+        await mkdir(outDir, {recursive: true})
+    }
 }
 
 async function createProjectdata() {
     const undesiredFiles = projectFiles.filter(p => isUndesirableAudioFile(p));
     if(undesiredFiles.length != 0) {
-        undesiredFiles.forEach(async(f) => {
+        for(const f of undesiredFiles) {
             await convertFileFormat(f, "wav");
-        });
+        }
     }
 }
 
@@ -79,6 +88,7 @@ async function setCurrentFile() {
         currentFile = "YOU ARE DONE";
         currentFileLocalPath = "YOU ARE DONE";
         currentOutFile = "YOU ARE DONE";
+        truncatedCurrentFile = truncateDirectory(currentFile, 2);
         filesRemaining = 0;
         completionPercentage = 100.00;
         return;
@@ -97,7 +107,6 @@ async function setCurrentFile() {
 async function getNextFile() {
     const randomizationEnabled: boolean = (await getValue("randomizationEnabled") as unknown as number) == 1;
     projectFiles.splice(index, 1);
-    
     index = randomizationEnabled ? Math.round(rng.random() * projectFiles.length) : 0;
     currentFile = projectFiles[index];
 }
@@ -191,7 +200,7 @@ export function isAudioFile(path: string): boolean {
 
 // Audio replacer works the best with .wav files. 
 export function isUndesirableAudioFile(path: string): boolean {
-    const undesirableFileTypes = [".mp3", ".wav", ".ogg", ".flac", ".m4a"];
+    const undesirableFileTypes = [".mp3", ".ogg", ".flac", ".m4a"];
     return undesirableFileTypes.some((ext) => path.toLowerCase().endsWith(ext.toLowerCase()));
 }
 

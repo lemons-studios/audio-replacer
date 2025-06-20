@@ -35,7 +35,8 @@
 
   async function loadNewProject() {
     const res = await selectFolder();
-    console.log(res);
+    await setProjectData(res);
+    goto("/recordPage");
   }
 </script>
 

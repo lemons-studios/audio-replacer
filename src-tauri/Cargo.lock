@@ -283,6 +283,7 @@ dependencies = [
  "futures-lite",
  "hound",
  "num_cpus",
+ "pathdiff",
  "serde",
  "serde_json",
  "tauri",
