@@ -18,10 +18,6 @@ pub fn get_install_direcotry() -> Result<PathBuf, String> {
 }
 
 #[command]
-pub fn get_relative_path(from: String, to: String) -> Result<String, String> {
-  match diff_paths(&to, &from) {
-    Some(rel_sys_path) => {
-
-    }
-  }
+pub fn get_relative_path(from: String, to: String) -> Option<PathBuf> {
+  diff_paths(to, from)
 }

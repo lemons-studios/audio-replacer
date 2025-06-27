@@ -1,7 +1,6 @@
 import { invoke } from '@tauri-apps/api/core';
 import * as path from '@tauri-apps/api/path';
-import { mkdir, exists, remove, copyFile, rename, truncate } from '@tauri-apps/plugin-fs';
-import webPath, { basename, dirname, relative } from 'path-browserify';
+import { mkdir, exists, remove, copyFile, rename } from '@tauri-apps/plugin-fs';
 import { convertFileFormat } from './FFMpegManager';
 import { getValue } from './SettingsManager';
 
@@ -65,7 +64,10 @@ async function createInitialData() {
 
     for(const d of inputDirectories) {
         console.log(d);
-        const relPath = webPath.relative(projectPath, d);
+        const relPath = await invoke('get_relative_path', {
+            from: projectPath,
+            to: d
+        }) as string;
         const outDir = await path.join(outputFolderPath, relPath);
 
         await mkdir(outDir, {recursive: true})
@@ -101,7 +103,7 @@ async function setCurrentFile() {
     currentFileName = currentFile.substring(currentFile.lastIndexOf('/') + 1);
 
     currentFileLocalPath = currentFile.split(projectPath)[1];
-    currentOutFile = webPath.join(outputFolderPath, currentFileLocalPath);
+    currentOutFile = await path.join(outputFolderPath, currentFileLocalPath);
 }
 
 async function getNextFile() {
@@ -128,8 +130,10 @@ export async function submitFile() {
     }
 
     if(extraEditsFlagged && currentOutFile) {
-        const directory = dirname(currentOutFile);
-        const file = `extra-edits-required-${basename(currentOutFile)}`
+        
+        const directory = await path.dirname(currentOutFile);
+        const baseName = await path.basename(currentOutFile)
+        const file = `extra-edits-required-${baseName}`
         const joinedPath = await path.join(directory, file);
 
         await rename(currentOutFile, joinedPath);
