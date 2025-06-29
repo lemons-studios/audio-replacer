@@ -1,6 +1,6 @@
 import { invoke } from '@tauri-apps/api/core';
 import * as path from '@tauri-apps/api/path';
-import { mkdir, exists, remove, copyFile, rename } from '@tauri-apps/plugin-fs';
+import { mkdir, exists, remove, copyFile, rename, readDir } from '@tauri-apps/plugin-fs';
 import { convertFileFormat } from './FFMpegManager';
 import { getValue } from './SettingsManager';
 
@@ -40,7 +40,7 @@ export async function setProjectData(dataPath: string) {
     let projectName = await path.basename(projectPath);
     projectFiles = (await getAllFiles()).filter(p => isAudioFile(p));
     outputFolderPath = await path.join(outputFolder, projectName)
-    if (await exists(outputFolderPath)) {
+    if (!await exists(outputFolderPath)) {
         await mkdir(outputFolderPath);
     }
 
@@ -51,26 +51,20 @@ export async function setProjectData(dataPath: string) {
 }
 
 async function createInitialData() {
-    const inputDirectories = (await getSubdirectories(projectPath)).map(d => normalizePath(d));
-    const outputDirectories = (await getSubdirectories(outputFolderPath)).map(d => normalizePath(d));
-    
-    console.log(inputDirectories);
-    console.log(outputDirectories);
-    console.log(projectFiles);
+    const inputDirs = await readDir(projectPath);
+    const outputDirs = await readDir(outputFolderPath);
+    const outputSet = new Set(outputDirs);
 
-    if(inputDirectories.toString() === outputDirectories.toString()) {
+    const foldersToCreate = inputDirs.filter(item => !outputSet.has(item));
+    if(foldersToCreate.length === 0) {
         return;
     }
 
-    for(const d of inputDirectories) {
-        console.log(d);
-        const relPath = await invoke('get_relative_path', {
-            from: projectPath,
-            to: d
-        }) as string;
-        const outDir = await path.join(outputFolderPath, relPath);
-
-        await mkdir(outDir, {recursive: true})
+    for(const d in foldersToCreate) {
+        const dir = await path.join(outputFolderPath, d);
+        // If by some miracle the folder appears after folderToCreate is created
+        if(await exists(dir)) continue;
+        await mkdir(dir);
     }
 }
 
@@ -108,7 +102,10 @@ async function setCurrentFile() {
 
 async function getNextFile() {
     const randomizationEnabled: boolean = (await getValue("randomizationEnabled") as unknown as number) == 1;
-    projectFiles.splice(index, 1);
+    if(isProjectLoaded) {
+        projectFiles.splice(index, 1);
+    }
+
     index = randomizationEnabled ? Math.round(rng.random() * projectFiles.length) : 0;
     currentFile = projectFiles[index];
 }
