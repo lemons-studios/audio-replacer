@@ -23,7 +23,7 @@ tauri-plugin-http = "2.4.4"
 tauri-plugin-fs = "2.3.0"
 tauri-plugin-shell = "2.2.2"
 walkdir = "2.5.0"
-whisper-rs = { git = "https://github.com/ChakornK/whisper-rs", version = "0.14.3" }
+whisper-rs = { git = "https://github.com/ChakornK/whisper-rs", version = "0.14.3" } # This fork fixes an issue with audio transcription times taking 10x longer on release builds than on debug builds
 hound = "3.5.1"
 tauri-plugin-log = "2.5.0"
 tauri-plugin-process = "2.2.2"

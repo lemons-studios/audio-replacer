@@ -30,6 +30,10 @@ const rng = Math;
 let index: number;
 
 export async function setProjectData(dataPath: string) {
+    if(isProjectLoaded) {
+        isProjectLoaded = false;
+    }
+    
     console.log(dataPath);
     projectPath = dataPath;
     
@@ -60,8 +64,8 @@ async function createInitialData() {
         return;
     }
 
-    for(const d in foldersToCreate) {
-        const dir = await path.join(outputFolderPath, d);
+    for(const dirName of foldersToCreate) {
+        const dir = await path.join(outputFolderPath, dirName.name);
         // If by some miracle the folder appears after folderToCreate is created
         if(await exists(dir)) continue;
         await mkdir(dir);
