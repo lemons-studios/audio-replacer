@@ -1,3 +1,4 @@
+import { basename, dirname, extname, join } from "@tauri-apps/api/path";
 import { open } from "@tauri-apps/plugin-dialog";
 
 
@@ -27,4 +28,13 @@ export async function selectFolder(): Promise<string> {
             resolve(res as string)
         })
     })
+}
+
+export async function changeFileExtension(input: string, newExtension: string) {
+    const dir = await dirname(input);
+    const currentExt = await extname(input);
+    const fileName = await basename(input, currentExt);
+    const newFile = `${fileName}${newExtension}`;
+
+    return join(dir, newFile);
 }

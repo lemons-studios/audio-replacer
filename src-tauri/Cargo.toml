@@ -3,7 +3,7 @@ name = "audio_replacer"
 version = "5.0.0"
 description = " Easily dub over voicelines for video games"
 authors = ["Shob3r"]
-edition = "2021"
+edition = "2024"
 
 [lib]
 name = "audio_replacer_lib"

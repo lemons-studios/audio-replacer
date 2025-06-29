@@ -1,8 +1,7 @@
 import { resolveResource } from "@tauri-apps/api/path";
 import { copyFile, readFile, readTextFile, remove } from "@tauri-apps/plugin-fs";
 import { FFmpeg } from '@ffmpeg/ffmpeg';
-import * as webPath from 'path-browserify';
-
+import { changeFileExtension } from "./OsTools";
 
 let ffmpeg: FFmpeg | null = null;
 
@@ -21,11 +20,7 @@ export async function applyFfmpegFilter(input: string, output: string, filterLis
 
 export async function convertFileFormat(input: string, fileType: string) {
     await initializeFfmpeg();
-    const outPath = webPath.format({
-        ...webPath.parse(input),
-        base: undefined,
-        ext: fileType,
-    });
+    const outPath = await changeFileExtension(input, fileType);
 
     await ffmpeg?.writeFile(input, outPath);
     await ffmpeg?.exec(["-i", input, outPath]);
