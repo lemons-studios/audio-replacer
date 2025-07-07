@@ -11,6 +11,7 @@
 
   let markdown = $state("# No Changes Found");
   let previousProjectExists = $state(false);
+  let previousProjectName = $state("None")
   let previousPath = "";
 
   onMount(async() => {
@@ -40,36 +41,25 @@
   }
 </script>
 
-<div class="grid grid-cols-2 gap-5 h-full">
-  <div class="grid grid-rows-2 gap-5">
-    <div class="dark:bg-surface-container-dark rounded-xl p-5 drop-shadow-lg">
-        <h1 class="text-center align-top text-4xl m-10"><b>Load Project</b></h1>
-        <div class="flex justify-center gap-10">
-          <div class="dark:bg-tertiary-container-dark lg:w-45 h-40 p-2.5 rounded-sm">
-            <h1 class="text-center">Last Project</h1>
-            <h3 class="text-center text-xs text-gray-300 mb-5">Project Name</h3>
-            <md-filled-button class="w-40 p-2.5"><p class="font-icons">folder_open</p> Load Project</md-filled-button>
-          </div>
-          <div class="dark: bg-tertiary-container-dark w-45 h-40 p-2.5 rounded-sm drop-shadow-lg">
-            <h1 class="text-center mb-9.5">New Project</h1>
-            <!-- svelte-ignore a11y_click_events_have_key_events -->
-            <!-- svelte-ignore a11y_no_static_element_interactions -->
-            <md-filled-button onclick={loadNewProject} class="w-40 p-2.5"><p class="font-icons">add_circle</p>Start New Project</md-filled-button>
-          </div>
-        </div>
-    </div>
-    <div class="dark:bg-surface-container-dark rounded-xl p-5 drop-shadow-lg">
-        <h1 class="text-center align-top text-4xl mb-10"><b>Stats</b></h1>
-        <p>Time Spent With Project Open</p>
-        <p>Files Transcribed</p>
-        <p>Files Skipped</p>
-        <p>Recordings cancelled/discarded</p>
+<div class="flex flex-row gap-5 items-stretch h-full">
+  <div class="card w-1/2">
+    <h1 class="title-text m-10"><b>Load Project</b></h1>
+    <div class="flex grow flex-col items-stretch gap-4 h-full">
+      <div class="secondary-card h-full text-center items-center">
+        <h3 class="font-semibold text-2xl">Load Last Project</h3>
+        <h4 class="tertiary-text">{previousProjectName}</h4>
+        <button class="menu-button" onclick={loadLastProject}>Load</button>
+      </div>
+      <div class="secondary-card h-full">
+        <h3 class="font-semibold text-center text-2xl">Load New Project</h3>
+      </div>
     </div>
   </div>
-  <div class="rounded-xl dark:bg-surface-container-dark p-5 drop-shadow-lg">
-    <h1 class="text-center align-top text-4xl mb-5"><b>Latest Changes</b></h1>
-    <div class="prose dark:prose-invert">
-      <SvelteMarkdown source={markdown} />
-    </div>
+  <div class="card w-1/2">
+    <h1 class="title-text mb-10"><b>Stats</b></h1>
+    <p>Time Spent With A Project Open</p>
+    <p>Total Files Transcribed</p>
+    <p>Total Files Skipped</p>
+    <p>Total Recordings Discarded</p>
   </div>
 </div>

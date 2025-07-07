@@ -30,17 +30,13 @@ const rng = Math;
 let index: number;
 
 export async function setProjectData(dataPath: string) {
-    if(isProjectLoaded) {
-        isProjectLoaded = false;
-    }
-    
-    console.log(dataPath);
+    // mark as unloaded each time project data is loaded
+    isProjectLoaded = false;
     projectPath = dataPath;
     
     const appFolder = await invoke('get_install_direcotry') as string;
     outputFolder = await path.join(appFolder, "output");
-    console.log(outputFolder);
-    
+        
     let projectName = await path.basename(projectPath);
     projectFiles = (await getAllFiles()).filter(p => isAudioFile(p));
     outputFolderPath = await path.join(outputFolder, projectName)

@@ -1,9 +1,10 @@
 <script lang="ts">
+  import { House, Mic, PencilLine, Settings, Megaphone } from "@lucide/svelte";
   import { onMount } from "svelte";
   import "../app.css";
   import { setTheme } from "@tauri-apps/api/app";
-  import '@material/web/all.js';
   import { loadStore } from "../util/SettingsManager";
+  import { goto } from "$app/navigation";
   let { children } = $props();
 
   onMount(async() => {
@@ -15,6 +16,10 @@
 
       localStorage.theme = "dark";
   })
+
+  function navigate(toPage: string) {
+    goto(toPage);
+  }
 </script>
 
 <style>
@@ -22,28 +27,23 @@
   user-select: none;
   -webkit-user-select: none;
   -ms-user-select: none;
-}
-
+  }
 </style>
 
-<main>
-  <div class="flex dark:text-white bg-bg-light dark:bg-background-dark">
-    <div class="w-45 h-screen content-top flex-none drop-shadow-lg bg-menubar-light dark:bg-surface-container-low-dark p-5 rounded-tr-4xl rounded-br-4xl">
-      <div class="flex mb-7.5">
-        <button><a href="/" class="flex items-center"><p class="font-icons mr-2.5 text-2xl">home</p><p class="text-lg font-lexend">Home</p></a></button>
-      </div>
-      <div class="flex mb-7.5">
-        <button><a href="/recordPage" class="flex items-center"><p class="font-icons mr-2.5 text-2xl">mic</p><p class="text-lg font-lexend">Record</p></a></button>
-      </div>
-      <div class="flex mb-7.5">
-        <a href="/dataEditor" class="flex items-center"><p class="font-icons text-2xl mr-2.5">edit</p><p class="text-lg font-lexend">Data Editor</p></a>
-      </div>
-      <div class="flex mb-7.5">
-        <a href="/settingsPage" class="flex items-center"><p class="font-icons mr-2.5 text-2xl">settings</p><p class="text-lg font-lexend">Settings</p></a>
-      </div>
+<main class="dark:bg-zinc-950 bg-zinc-100 flex flex-row grow-1 dark:text-white items-stretch w-screen h-screen">
+  <div class="flex flex-col items-stretch justify-between dark:bg-zinc-900 min-w-[10rem] p-1">
+    <div class="flex flex-col items-stretch">
+      <button class="menu-button"><House/>Home</button>
+      <button class="menu-button"><Mic/>Record</button>
+      <button class="menu-button"><PencilLine/>Editor</button>
     </div>
-    <div class="w-screen h-screen flex-auto p-5.5">
-      {@render children?.()}
+    <div class="flex flex-col items-stretch">
+      <button class="menu-button"><Settings/>Settings</button>
+      <button class="menu-button"><Megaphone/>Changes</button>
+      <h3 class="text-xs text-center text-gray-300">Audio Replacer v5.0</h3>
     </div>
   </div>
+    <div class="w-screen h-screen p-5.5">
+      {@render children?.()}
+    </div>
 </main>

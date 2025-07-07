@@ -20,7 +20,7 @@
     "@fontsource-variable/lexend": "5.2.9",
     "@fontsource/material-icons": "5.2.5",
     "@humanspeak/svelte-markdown": "0.8.7",
-    "@material/web": "2.3.0",
+    "@lucide/svelte": "^0.525.0",
     "@rollup/plugin-node-resolve": "16.0.1",
     "@tailwindcss/vite": "4.1.11",
     "@tauri-apps/api": "2.6.0",
@@ -48,9 +48,9 @@
     "@sveltejs/vite-plugin-svelte": "5.1.0",
     "@tailwindcss/typography": "0.5.16",
     "@tauri-apps/cli": "2.6.2",
-    "svelte": "5.34.9",
+    "svelte": "5.35.2",
     "svelte-check": "4.2.2",
     "typescript": "5.8.3",
-    "vite": "6.3.5"  
+    "vite": "6.3.5"
   }
 }

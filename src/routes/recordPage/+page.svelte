@@ -98,27 +98,5 @@
 </script>
 
 <div class="grid grid-cols-[60%_40%] gap-5 w-full h-full">
-  <div class="rounded-xl drop-shadow-2xl dark:bg-surface-container-dark p-5">
-    <h1 class="text-center text-3xl mb-15">{recordTabState}</h1>
-    <h1 class="text-center text-2xl mb-30">Completion: {currentCompletion}%</h1>
-    <div class="flex justify-center gap-7.5 mb-5">
-      {#if idleState}
-        <md-filled-button class="min-w-35 p-2.5" onclick={skipFile}>Skip file</md-filled-button>
-        <md-filled-button class="min-w-40 p-2.5" onclick={startRecording}>Start Recording</md-filled-button>
-      {/if}
-      {#if recordingState}
-        <md-filled-button class="min-w-35 p-2.5" onclick={cancelRecording}>Cancel Recording</md-filled-button>
-        <md-filled-button class="min-w-35 p-2.5" onclick={stopRecording}>Stop Recording</md-filled-button>
-      {/if}
-      {#if reviewingState}
-        <md-filled-button class="min-w-35 p-2.5" onclick={submitRecording}>Reject</md-filled-button>
-        <md-filled-button class="min-w-35 p-2.5" onclick={rejectRecording}>Accept</md-filled-button>
-      {/if}
-    </div>
-    <div class="text-center">
-      <h1>{audioTranscription}</h1>
-    </div>
-  </div>
-  <div class="rounded-xl drop-shadow-2xl dark:bg-surface-container-dark p-5">
-  </div>
+  
 </div>
