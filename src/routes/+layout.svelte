@@ -16,10 +16,6 @@
 
       localStorage.theme = "dark";
   })
-
-  function navigate(toPage: string) {
-    goto(toPage);
-  }
 </script>
 
 <style>
@@ -33,13 +29,13 @@
 <main class="dark:bg-zinc-950 bg-zinc-100 flex flex-row grow-1 dark:text-white items-stretch w-screen h-screen">
   <div class="flex flex-col items-stretch justify-between dark:bg-zinc-900 min-w-[10rem] p-1">
     <div class="flex flex-col items-stretch">
-      <button class="menu-button"><House/>Home</button>
-      <button class="menu-button"><Mic/>Record</button>
-      <button class="menu-button"><PencilLine/>Editor</button>
+      <button class="menu-button" onclick={() => goto("/")}><House/>Home</button>
+      <button class="menu-button" onclick={() => goto("/recordPage")}><Mic/>Record</button>
+      <button class="menu-button" onclick={() => goto("/dataEditor")}><PencilLine/>Editor</button>
     </div>
     <div class="flex flex-col items-stretch">
-      <button class="menu-button"><Settings/>Settings</button>
-      <button class="menu-button"><Megaphone/>Changes</button>
+      <button class="menu-button" onclick={() => goto("/settingsPage")}><Settings/>Settings</button>
+      <button class="menu-button" onclick={() => goto("/releaseNotes")}><Megaphone/>Changes</button>
       <h3 class="text-xs text-center text-gray-300">Audio Replacer v5.0</h3>
     </div>
   </div>

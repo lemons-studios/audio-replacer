@@ -118,7 +118,9 @@ function truncateDirectory(path: string, dirLevels: number) {
 
     const splitDir = path.split(delimiter);
     const truncatedSegments = splitDir.slice(-dirLevels);
-    return truncatedSegments.join(delimiter);
+
+    // Slice on return removes the leading /, which isn't needed 
+    return truncatedSegments.join(delimiter).slice(1);
 }
 
 export async function submitFile() {

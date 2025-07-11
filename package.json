@@ -1,7 +1,7 @@
 {
   "name": "audio-replacer",
   "version": "5.0.0",
-  "description": "Easily dub over voicelines for video games",
+  "description": "Easily dub video game voice-overs",
   "type": "module",
   "scripts": {
     "dev": "vite dev",
@@ -48,7 +48,7 @@
     "@sveltejs/vite-plugin-svelte": "5.1.0",
     "@tailwindcss/typography": "0.5.16",
     "@tauri-apps/cli": "2.6.2",
-    "svelte": "5.35.2",
+    "svelte": "5.35.4",
     "svelte-check": "4.2.2",
     "typescript": "5.8.3",
     "vite": "6.3.5"

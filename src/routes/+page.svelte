@@ -1,24 +1,18 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import { jsonNetDataFromTag } from "../Util/NetworkUtils";
   import SvelteMarkdown from "@humanspeak/svelte-markdown";
-  import { startRichPresence } from "../Util/DiscordRpc";
+  import { startRichPresence } from "../util/DiscordRpc";
   import { getValue } from "../util/SettingsManager";
   import { setProjectData } from "../util/ProjectManager";
   import { exists } from "@tauri-apps/plugin-fs";
   import { goto } from "$app/navigation";
   import { selectFolder } from "../util/OsTools";
 
-  let markdown = $state("# No Changes Found");
   let previousProjectExists = $state(false);
   let previousProjectName = $state("None")
   let previousPath = "";
 
   onMount(async() => {
-    const url = "https://api.github.com/repos/lemons-studios/audio-replacer/releases/latest";
-    const releaseData = await jsonNetDataFromTag(url, "body") ?? "# Error Fetching Release Data (Are You Online?)";
-    markdown = releaseData;
-
     previousPath = await getValue("lastSelectedFolder") as unknown as string;
     previousProjectExists = await exists(previousPath) || previousPath == "";
     await startRichPresence();
@@ -52,6 +46,7 @@
       </div>
       <div class="secondary-card h-full">
         <h3 class="font-semibold text-center text-2xl">Load New Project</h3>
+        <button class="menu-button" onclick={loadNewProject}>Load</button>
       </div>
     </div>
   </div>

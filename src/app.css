@@ -16,7 +16,7 @@
 }
 
 .card {
-  @apply dark:bg-zinc-900 rounded-xl p-5 drop-shadow-lg flex flex-col items-stretch gap-4;
+  @apply dark:bg-zinc-900 rounded-xl p-5 drop-shadow-lg flex flex-col items-stretch gap-4 text-center;
 }
 
 .secondary-card {
@@ -28,5 +28,5 @@
 }
 
 .tertiary-text {
-  @apply text-md dark:text-zinc-400;
+  @apply text-lg dark:text-zinc-400;
 }
