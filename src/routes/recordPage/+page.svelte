@@ -2,11 +2,12 @@
   import * as ProjectManager from "../../util/ProjectManager"
   import AudioPlayer from "../../Components/AudioPlayer.svelte";
   import { record } from "extendable-media-recorder-wav-encoder";
+  import { onMount } from "svelte";
   
   let currentPathTrunc = $state(ProjectManager.currentFileLocalPath || "Select a folder to begin");
   let currentPathFull = $state(ProjectManager.currentFile || "");
 
-  let completionValue = $state(0.25);
+  let completionValue = $state(0);
   let completionPercentage = $state("0%");
   let filesRemaining = $state(ProjectManager.filesRemaining || 0);
 
@@ -14,6 +15,12 @@
   let idle = $state(true);
   let recording = $state(false);
   let reviewing = $state(false);
+
+  onMount(() => {
+    if(ProjectManager.isProjectLoaded) {
+      completionValue = ProjectManager.completionPercentage;
+    }
+  })
 
   function startRecord() {
     switchStates();
@@ -54,7 +61,7 @@
   <div class="w-3/4 card">
     <h1 class="title-text mb-5"><b>{currentPathTrunc}</b></h1>
     <h2>Files Remaining: {filesRemaining} ({completionPercentage})</h2>
-    <progress value={completionValue} class="text-2xl mb-15 rounded-3xl">AAA</progress>
+    <progress value={completionValue} class="mb-15 progress progress-primary" max="100"></progress>
     <AudioPlayer source={currentPathFull}/>
     <div class="flex flex-row justify-center grow gap-5">
       {#if idle}
