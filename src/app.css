@@ -30,3 +30,7 @@
 .tertiary-text {
   @apply text-lg dark:text-zinc-400;
 }
+
+.media-control-button {
+  @apply hover:bg-gray-700 transition p-0.5 rounded-sm;
+}

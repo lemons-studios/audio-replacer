@@ -1,20 +1,23 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import SvelteMarkdown from "@humanspeak/svelte-markdown";
   import { startRichPresence } from "../util/DiscordRpc";
-  import { getValue } from "../util/SettingsManager";
+  import { getValue, setValue } from "../util/SettingsManager";
   import { setProjectData } from "../util/ProjectManager";
   import { exists } from "@tauri-apps/plugin-fs";
   import { goto } from "$app/navigation";
   import { selectFolder } from "../util/OsTools";
+  import { basename } from "@tauri-apps/api/path";
 
   let previousProjectExists = $state(false);
   let previousProjectName = $state("None")
-  let previousPath = "";
+  let previousPath = $state("");
 
   onMount(async() => {
     previousPath = await getValue("lastSelectedFolder") as unknown as string;
     previousProjectExists = await exists(previousPath) || previousPath == "";
+    if(previousProjectExists) {
+      previousProjectName = await basename(previousPath);
+    }
     await startRichPresence();
   })
 
@@ -24,13 +27,15 @@
       return;
     }
 
-    await setProjectData(previousPath)
+    await setProjectData(previousPath);
     goto("/recordPage");
   }
 
   async function loadNewProject() {
     const res = await selectFolder();
+    console.log(res);
     await setProjectData(res);
+    await setValue("lastSelectedFolder", res as string);
     goto("/recordPage");
   }
 </script>

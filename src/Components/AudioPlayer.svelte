@@ -2,7 +2,7 @@
   import { Pause, Play, Repeat } from "@lucide/svelte";
   import { convertFileSrc } from "@tauri-apps/api/core";
   import { exists } from "@tauri-apps/plugin-fs";
-  
+
   let { source } = $props();
   let audioCompletion = $state(0.0);
   let currentAudioTime = $state("00:00")
@@ -101,16 +101,16 @@
     </audio>
     <div class="flex flex-row gap-3 items-center">
         {#if !audioPlaying}
-          <Play size="23" onclick={toggleAudio} class="hover:bg-gray-700 transition p-0.5 rounded-sm"/>
+          <Play size="23" onclick={toggleAudio} class="media-control-button"/>
         {/if}
         {#if audioPlaying}
-          <Pause size="23" onclick={toggleAudio} class="hover:bg-gray-700 transition p-0.5 rounded-sm"/>
+          <Pause size="23" onclick={toggleAudio} class="media-control-button"/>
         {/if}
         {#if loopEnabled}
-          <Repeat size="19" color="#25ef1a" onclick={() => loopEnabled = false} class="hover:bg-gray-200 transition p-0.5 rounded-sm"/>
+          <Repeat size="19" color="#25ef1a" onclick={() => loopEnabled = false} class="media-control-button"/>
         {/if}
         {#if !loopEnabled}
-          <Repeat size="19" color="white" onclick={() => loopEnabled = true} class="hover:bg-gray-200 transition p-0.5 rounded-sm"/>
+          <Repeat size="19" color="white" onclick={() => loopEnabled = true} class="media-control-button"/>
         {/if}
     </div>
     <div class="flex flex-row gap-5">

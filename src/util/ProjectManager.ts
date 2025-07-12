@@ -26,9 +26,6 @@ export let projectFiles: string[] = [];
 export let isProjectLoaded: boolean = false;
 export let extraEditsFlagged = false;
 
-const rng = Math;
-let index: number;
-
 export async function setProjectData(dataPath: string) {
     // mark as unloaded each time project data is loaded
     isProjectLoaded = false;
@@ -103,11 +100,11 @@ async function setCurrentFile() {
 async function getNextFile() {
     const randomizationEnabled: boolean = (await getValue("randomizationEnabled") as unknown as number) == 1;
     if(isProjectLoaded) {
-        projectFiles.splice(index, 1);
+        const index = 0;
+        const deleteCount = 1;
+        projectFiles.splice(index, deleteCount);
     }
-
-    index = randomizationEnabled ? Math.round(rng.random() * projectFiles.length) : 0;
-    currentFile = projectFiles[index];
+    currentFile = projectFiles[0];
 }
 
 function truncateDirectory(path: string, dirLevels: number) {

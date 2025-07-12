@@ -13,6 +13,6 @@ export async function getValue(keyName: string) {
     return key;
 }
 
-export async function setValue(keyName: string, value: string | number | boolean) {
-    await store.set(keyName, {value: value})
+export async function setValue(keyName: string, value: any) {
+    await store.set(keyName, value)
 }
