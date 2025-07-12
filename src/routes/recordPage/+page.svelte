@@ -1,19 +1,15 @@
 <script lang="ts">
   import * as ProjectManager from "../../util/ProjectManager"
   import AudioPlayer from "../../Components/AudioPlayer.svelte";
+  import { onMount } from "svelte";
 
-  let currentPathTrunc = $state("Select a folder to begin");
-  let currentPathFull = $state("");
+  let currentPathTrunc = $state(ProjectManager.currentFileLocalPath || "Select a folder to begin");
+  let currentPathFull = $state(ProjectManager.currentFile || "");
 
   let completionValue = $state(0.25);
   let completionPercentage = $state("0%");
-  let filesRemaining = $state(0);
-
-  $effect(() => {
-    currentPathFull = ProjectManager.currentFile
-    currentPathTrunc = ProjectManager.currentFileLocalPath;
-    filesRemaining = ProjectManager.filesRemaining
-  })
+  let filesRemaining = $state(ProjectManager.filesRemaining || 0);
+  
 </script>
 
 <div class="flex grow flex-row h-full gap-4 content-center">
@@ -24,14 +20,14 @@
     <AudioPlayer source={currentPathFull}/>
   </div>
   <div class="w-1/2 card">
-    <h1 class="title-text mb-40"><b>Recording Filters</b></h1>
-    <h2 class="title-text mb-10">Pitch Filters</h2>
-    <select class="bg-black h-[2.5rem] rounded-lg p-2 mb-50">
+    <h1 class="title-text mb-[5rem]"><b>Recording Filters</b></h1>
+    <h2 class="title-text mb-[2rem]">Pitch Filters</h2>
+    <select class="bg-black h-[2.5rem] rounded-lg p-2 mb-[15rem]">
       <option>Default</option>
       <option>Some other option</option>
     </select>
-    <h2 class="title-text mb-10">Audio Effects</h2>
-    <select class="bg-black h-[2.5rem] rounded-lg p-2 mb-25">
+    <h2 class="title-text mb-[2rem]">Audio Effects</h2>
+    <select class="bg-black h-[2.5rem] rounded-lg p-2 mb-[5.5rem]">
       <option>Default</option>
       <option>Some Other Option</option>
     </select>

@@ -56,5 +56,3 @@ async function getFfmpegWasm() : Promise<string> {
     const wasmBlob = new Blob([new Uint8Array(wasmBytes)], {type: "application/wasm"});
     return URL.createObjectURL(wasmBlob)
 }
-
-

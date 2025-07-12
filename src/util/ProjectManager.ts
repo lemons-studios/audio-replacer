@@ -207,6 +207,6 @@ export function isUndesirableAudioFile(path: string): boolean {
     return undesirableFileTypes.some((ext) => path.toLowerCase().endsWith(ext.toLowerCase()));
 }
 
-function normalizePath(p: string): string {
+export function normalizePath(p: string): string {
   return p.replace(/[/\\]+$/, '');
 }
