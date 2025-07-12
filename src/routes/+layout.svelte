@@ -2,19 +2,12 @@
   import { House, Mic, PencilLine, Settings, Megaphone } from "@lucide/svelte";
   import { onMount } from "svelte";
   import "../app.css";
-  import { setTheme } from "@tauri-apps/api/app";
   import { loadStore } from "../util/SettingsManager";
   import { goto } from "$app/navigation";
   let { children } = $props();
 
   onMount(async() => {
     await loadStore();
-    await setTheme('dark');
-    document.documentElement.classList.toggle(  
-      "dark",  localStorage.theme === "dark" ||    
-      (!("theme" in localStorage) && window.matchMedia("(prefers-color-scheme: dark)").matches),);
-
-      localStorage.theme = "dark";
   })
 </script>
 
@@ -26,17 +19,21 @@
   }
 </style>
 
-<main class="dark:bg-zinc-950 bg-zinc-100 flex flex-row grow-1 dark:text-white items-stretch w-screen h-screen">
-  <div class="flex flex-col items-stretch justify-between dark:bg-zinc-900 min-w-[10rem] p-1">
+<main class="bg-base-300 flex flex-row grow-1 dark:text-white items-stretch w-screen h-screen">
+  <div class="flex flex-col items-stretch justify-between bg-base-200 min-w-[10rem] p-1">
     <div class="flex flex-col items-stretch">
-      <button class="menu-button" onclick={() => goto("/")}><House/>Home</button>
-      <button class="menu-button" onclick={() => goto("/recordPage")}><Mic/>Record</button>
-      <button class="menu-button" onclick={() => goto("/dataEditor")}><PencilLine/>Editor</button>
+      <ul class="menu menu-vertical rounded-box w-full bg-transparent">
+        <li><a href="/"><House/>Home</a></li>
+        <li><a href="/recordPage"><Mic/>Record</a></li>
+        <li><a href="/dataEditor"><PencilLine/>Editor</a></li>
+      </ul>
     </div>
     <div class="flex flex-col items-stretch">
-      <button class="menu-button" onclick={() => goto("/settingsPage")}><Settings/>Settings</button>
-      <button class="menu-button" onclick={() => goto("/releaseNotes")}><Megaphone/>Changes</button>
-      <h3 class="text-xs text-center text-gray-300">Audio Replacer v5.0</h3>
+      <ul class="menu menu-vertical bg-transparent rounded-box w-full">
+        <li><a href="/settingsPage"><Settings/>Settings</a></li>
+        <li class="mb-1.5"><a href="/releaseNotes"><Megaphone/>Changes</a></li>
+        <h3 class="text-xs text-center text-gray-300">Audio Replacer v5.0</h3>
+      </ul>
     </div>
   </div>
     <div class="w-screen h-screen p-5.5">

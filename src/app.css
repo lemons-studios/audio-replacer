@@ -1,5 +1,8 @@
 @import "tailwindcss";
 @plugin "@tailwindcss/typography";
+@plugin "daisyui" {
+  themes: all;
+}
 
 @import "@fontsource/material-icons";
 @import "@fontsource-variable/inter";
@@ -16,11 +19,11 @@
 }
 
 .card {
-  @apply dark:bg-zinc-900 rounded-xl p-5 drop-shadow-lg flex flex-col items-stretch gap-4 text-center;
+  @apply bg-base-200 rounded-xl p-5 drop-shadow-lg flex flex-col items-stretch gap-4 text-center;
 }
 
 .secondary-card {
-  @apply dark:bg-zinc-800 w-full p-2.5 rounded-sm drop-shadow-lg;
+  @apply bg-base-100 w-full p-2.5 rounded-sm drop-shadow-lg;
 }
 
 .title-text {
