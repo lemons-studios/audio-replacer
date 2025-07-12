@@ -1,7 +1,6 @@
 <script lang="ts">
   import * as ProjectManager from "../../util/ProjectManager"
   import AudioPlayer from "../../Components/AudioPlayer.svelte";
-  import { onMount } from "svelte";
 
   let currentPathTrunc = $state(ProjectManager.currentFileLocalPath || "Select a folder to begin");
   let currentPathFull = $state(ProjectManager.currentFile || "");
@@ -9,7 +8,7 @@
   let completionValue = $state(0.25);
   let completionPercentage = $state("0%");
   let filesRemaining = $state(ProjectManager.filesRemaining || 0);
-  
+
 </script>
 
 <div class="flex grow flex-row h-full gap-4 content-center">

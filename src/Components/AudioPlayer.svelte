@@ -1,11 +1,13 @@
 <script lang="ts">
-  import { Pause, Play } from "@lucide/svelte";
+  import { Pause, Play, Repeat } from "@lucide/svelte";
   import { convertFileSrc } from "@tauri-apps/api/core";
   import { exists } from "@tauri-apps/plugin-fs";
+  
   let { source } = $props();
   let audioCompletion = $state(0.0);
   let currentAudioTime = $state("00:00")
   let audioPlaying = $state(false);
+  let loopEnabled = $state(true);
   
   let trueSource = $derived(() => { 
     if(!source) return null;
@@ -74,6 +76,16 @@
     }
   }
 
+  function onAudioEnded() {
+    if(loopEnabled) {
+      audioPlayer.currentTime = 0;
+      audioPlayer.play();
+      return;
+    }
+    
+    audioPlaying = false;
+  }
+
   function isAudioValid(): boolean {
     return !isNaN(audioPlayer.duration);
   }
@@ -84,15 +96,21 @@
 </script>
 
 <div class="flex flex-row justify-center gap-4 bg-neutral-950 rounded-lg mx-auto items-center shadow-lg pl-3 pr-4 py-2">
-    <audio ontimeupdate={audioPlayerTimeUpdate} onended={() => { audioPlaying = false; }} bind:this={audioPlayer}>
+    <audio ontimeupdate={audioPlayerTimeUpdate} onended={onAudioEnded} bind:this={audioPlayer}>
         <source src={trueSource()}>
     </audio>
-    <div>
+    <div class="flex flex-row gap-3 items-center">
         {#if !audioPlaying}
-          <Play size="20" onclick={toggleAudio}/>
+          <Play size="23" onclick={toggleAudio} class="hover:bg-gray-700 transition p-0.5 rounded-sm"/>
         {/if}
         {#if audioPlaying}
-          <Pause size="20" onclick={toggleAudio}/>
+          <Pause size="23" onclick={toggleAudio} class="hover:bg-gray-700 transition p-0.5 rounded-sm"/>
+        {/if}
+        {#if loopEnabled}
+          <Repeat size="19" color="#25ef1a" onclick={() => loopEnabled = false} class="hover:bg-gray-200 transition p-0.5 rounded-sm"/>
+        {/if}
+        {#if !loopEnabled}
+          <Repeat size="19" color="white" onclick={() => loopEnabled = true} class="hover:bg-gray-200 transition p-0.5 rounded-sm"/>
         {/if}
     </div>
     <div class="flex flex-row gap-5">
