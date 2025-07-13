@@ -35,5 +35,5 @@
 }
 
 .media-control-button {
-  @apply hover:bg-gray-700 transition p-0.5 rounded-sm;
+  @apply transition p-0.5;
 }

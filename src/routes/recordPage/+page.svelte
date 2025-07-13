@@ -3,6 +3,7 @@
   import AudioPlayer from "../../Components/AudioPlayer.svelte";
   import { record } from "extendable-media-recorder-wav-encoder";
   import { onMount } from "svelte";
+  import { transcribeFile } from "../../util/WhisperUtils";
   
   let currentPathTrunc = $state(ProjectManager.currentFileLocalPath || "Select a folder to begin");
   let currentPathFull = $state(ProjectManager.currentFile || "");
@@ -10,16 +11,18 @@
   let completionValue = $state(0);
   let completionPercentage = $state("0%");
   let filesRemaining = $state(ProjectManager.filesRemaining || 0);
+  let currentTranscription = $state("Transcription Unavailable")
 
   // I WISH enums were supported in svelte
   let idle = $state(true);
   let recording = $state(false);
   let reviewing = $state(false);
 
-  onMount(() => {
-    if(ProjectManager.isProjectLoaded) {
-      completionValue = ProjectManager.completionPercentage;
-    }
+  let audioPlayer: AudioPlayer;
+
+  onMount(async() => {
+    setFileData();
+    currentTranscription = await transcribeFile(currentPathFull);
   })
 
   function startRecord() {
@@ -35,8 +38,34 @@
     idle = true;
   }
 
-  function finalizeRecording(isDiscarding: boolean) {
+  async function finalizeRecording(isDiscarding: boolean) {
     switchStates();
+    if(isDiscarding) {
+      await ProjectManager.rejectFile();
+    }
+    else {
+      await ProjectManager.submitFile();
+      setFileData();
+      currentTranscription = await transcribeFile(currentPathFull);
+    }
+
+  }
+
+  async function skipFile() {
+    await ProjectManager.skipFile();
+    setFileData();
+    currentTranscription = await transcribeFile(currentPathFull);
+  }
+
+  function setFileData() {
+    if(ProjectManager.isProjectLoaded) {
+      currentPathFull = ProjectManager.currentFile;
+      currentPathTrunc = ProjectManager.currentFileLocalPath.replaceAll("\\", "/").slice(1);
+      completionValue = ProjectManager.completionPercentage;
+      filesRemaining = ProjectManager.filesRemaining;
+      completionPercentage = `${completionValue.toFixed(2)}%`;
+      audioPlayer.playAudio();
+    }
   }
 
   // Best solution I can think of for now. There is most certainly a better way to do this
@@ -44,6 +73,7 @@
     if(idle) {
       idle = false; 
       recording = true;
+
     }
     else if(recording) {
       recording = false;
@@ -62,10 +92,10 @@
     <h1 class="title-text mb-5"><b>{currentPathTrunc}</b></h1>
     <h2>Files Remaining: {filesRemaining} ({completionPercentage})</h2>
     <progress value={completionValue} class="mb-15 progress progress-primary" max="100"></progress>
-    <AudioPlayer source={currentPathFull}/>
-    <div class="flex flex-row justify-center grow gap-5">
+    <AudioPlayer source={currentPathFull} bind:this={audioPlayer}/>
+    <div class="flex flex-row justify-center gap-5 mb-2.5">
       {#if idle}
-        <button class="btn btn-primary w-25">Skip</button>
+        <button class="btn btn-primary w-25" onclick={skipFile}>Skip</button>
         <button class="btn btn-primary w-25" onclick={startRecord}>Record</button>
       {/if}
       {#if recording}
@@ -77,6 +107,8 @@
         <button class="btn btn-primary w-25" onclick={() => finalizeRecording(false)}>Submit</button>
       {/if}
     </div>
+    <h2>Transcription: {currentTranscription}</h2>
+
   </div>
   <div class="w-1/2 card">
     <h1 class="title-text mb-[5rem]"><b>Recording Filters</b></h1>

@@ -93,6 +93,16 @@
   async function doesAudioExist(): Promise<boolean> {
     return source !== "" || await exists(source);
   }
+
+  export function playAudio() {
+    audioPlayer.play();
+    audioPlaying = true;
+  }
+
+  export function pauseAudio() {
+    audioPlayer.pause();
+    audioPlaying = false;
+  }
 </script>
 
 <div class="flex flex-row justify-center gap-4 bg-neutral-950 rounded-lg mx-auto items-center shadow-lg pl-3 pr-4 py-2">
@@ -101,16 +111,16 @@
     </audio>
     <div class="flex flex-row gap-3 items-center">
         {#if !audioPlaying}
-          <Play size="23" onclick={toggleAudio} class="media-control-button"/>
+          <Play size="23" onclick={toggleAudio} class="media-control-button hover:fill-white"/>
         {/if}
         {#if audioPlaying}
-          <Pause size="23" onclick={toggleAudio} class="media-control-button"/>
+          <Pause size="23" onclick={toggleAudio} class="media-control-button hover:fill-white"/>
         {/if}
         {#if loopEnabled}
-          <Repeat size="19" color="#25ef1a" onclick={() => loopEnabled = false} class="media-control-button"/>
+          <Repeat size="19" color="#25ef1a" onclick={() => loopEnabled = false} class="media-control-button hover:fill-green-500"/>
         {/if}
         {#if !loopEnabled}
-          <Repeat size="19" color="white" onclick={() => loopEnabled = true} class="media-control-button"/>
+          <Repeat size="19" color="white" onclick={() => loopEnabled = true} class="media-control-button hover:fill-white"/>
         {/if}
     </div>
     <div class="flex flex-row gap-5">

@@ -3,7 +3,6 @@
   import { onMount } from "svelte";
   import "../app.css";
   import { loadStore } from "../util/SettingsManager";
-  import { goto } from "$app/navigation";
   let { children } = $props();
 
   onMount(async() => {
@@ -23,15 +22,15 @@
   <div class="flex flex-col items-stretch justify-between bg-base-200 min-w-[10rem] p-1">
     <div class="flex flex-col items-stretch">
       <ul class="menu menu-vertical menu-lg gap-0.5 rounded-box w-full bg-transparent">
-        <li><a href="/"><House/>Home</a></li>
-        <li><a href="/recordPage"><Mic/>Record</a></li>
-        <li><a href="/dataEditor"><PencilLine/>Editor</a></li>
+        <li><a href="/"><House size="20"/>Home</a></li>
+        <li><a href="/recordPage"><Mic size="20"/>Record</a></li>
+        <li><a href="/dataEditor"><PencilLine size="20"/>Editor</a></li>
       </ul>
     </div>
     <div class="flex flex-col items-stretch">
       <ul class="menu menu-vertical menu-lg gap-0.5 bg-transparent rounded-box w-full">
-        <li><a href="/settingsPage"><Settings/>Settings</a></li>
-        <li class="mb-1.5"><a href="/releaseNotes"><Megaphone/>Changes</a></li>
+        <li><a href="/settingsPage"><Settings size="20"/>Settings</a></li>
+        <li class="mb-1.5"><a href="/releaseNotes"><Megaphone size="20"/>Changes</a></li>
         <h3 class="text-xs text-center text-gray-300">Audio Replacer v5.0</h3>
       </ul>
     </div>
