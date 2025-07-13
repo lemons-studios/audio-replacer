@@ -3,7 +3,7 @@
     import CodeMirror from "svelte-codemirror-editor";
     import { json } from "@codemirror/lang-json";
     import { onMount } from "svelte";
-    import { setDetails } from "../../Util/DiscordRpc";
+    import { setDetails } from "../../util/DiscordRpc";
 
     let value = ""; // Fill this in with actual code later on
     onMount(async() => {

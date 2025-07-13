@@ -91,7 +91,7 @@
   <div class="w-3/4 card">
     <h1 class="title-text mb-5"><b>{currentPathTrunc}</b></h1>
     <h2>Files Remaining: {filesRemaining} ({completionPercentage})</h2>
-    <progress value={completionValue} class="mb-15 progress progress-primary" max="100"></progress>
+    <progress value={completionValue} class="mb-15 progress progress-primary w-[5rem]" max="100"></progress>
     <AudioPlayer source={currentPathFull} bind:this={audioPlayer}/>
     <div class="flex flex-row justify-center gap-5 mb-2.5">
       {#if idle}

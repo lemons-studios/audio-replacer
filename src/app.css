@@ -14,12 +14,8 @@
   --font-lexend: "Lexend Variable", sans-serif;
 }
 
-.menu-button {
-  @apply flex items-center gap-1.5 hover:bg-sky-500 text-lg p-2 rounded-lg w-fit transition delay-25 duration-150 ease-in-out;
-}
-
 .card {
-  @apply bg-base-200 rounded-xl p-5 drop-shadow-lg flex flex-col items-stretch gap-4 text-center;
+  @apply bg-base-200 rounded-xl p-5 drop-shadow-lg flex flex-col grow items-stretch gap-4 text-center;
 }
 
 .secondary-card {

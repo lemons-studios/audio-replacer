@@ -46,12 +46,12 @@
     <div class="flex grow flex-col items-stretch gap-4 h-full">
       <div class="secondary-card h-full text-center items-center">
         <h3 class="font-semibold text-2xl">Load Last Project</h3>
-        <h4 class="tertiary-text">{previousProjectName}</h4>
-        <button class="menu-button" onclick={loadLastProject}>Load</button>
+        <h4 class="tertiary-text mb-5">{previousProjectName}</h4>
+        <button class="btn-primary btn btn-lg" onclick={loadLastProject}>Load</button>
       </div>
       <div class="secondary-card h-full">
-        <h3 class="font-semibold text-center text-2xl">Load New Project</h3>
-        <button class="menu-button" onclick={loadNewProject}>Load</button>
+        <h3 class="font-semibold text-center text-2xl mb-5">Load New Project</h3>
+        <button class="btn btn-primary btn-lg" onclick={loadNewProject}>Load</button>
       </div>
     </div>
   </div>

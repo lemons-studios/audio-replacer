@@ -48,7 +48,6 @@ pub fn transcribe_file(path: &str, model_path: &str) -> String {
             .expect("failed to convert stereo to mono")
     };
 
-
     state
         .full(params, &mono_samples[..])
         .expect("Model failed to run correctly");
