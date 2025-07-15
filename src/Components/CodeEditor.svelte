@@ -1,4 +1,5 @@
 <script lang="ts">
+	// Code yoinked from https://www.codelantis.com/blog/sveltekit-monaco-editor. same article as Monaco.ts
 	import { onDestroy, onMount } from 'svelte';
 	import { editorTheme } from '../app/CodeEditorTheme';
 	import type * as Monaco from 'monaco-editor/esm/vs/editor/editor.api.js'; // If an error pops up here, ignore it. the file most certainly exists

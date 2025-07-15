@@ -41,25 +41,25 @@
 </script>
 
 <div class="flex flex-row gap-5 items-stretch h-full">
-  <div class="card w-1/2">
-    <h1 class="title-text m-10"><b>Load Project</b></h1>
+  <fieldset class="fieldset bg-base-200 border-base-300 rounded-box border hover:border-white transition p-4 gap-5 w-1/2">
+    <legend class="fieldset-legend">Projects</legend>
     <div class="flex grow flex-col items-stretch gap-4 h-full">
-      <div class="secondary-card h-full text-center items-center">
-        <h3 class="font-semibold text-2xl">Load Last Project</h3>
-        <h4 class="tertiary-text mb-5">{previousProjectName}</h4>
+      <fieldset class="fieldset bg-base-200 border-base-300 border rounded-md p-2 hover:border-gray-400 transition h-full text-center items-center">
+        <legend class="fieldset-legend">Load Last Project</legend>
+        <h4 class="text-xl mb-5"><b>{previousProjectName}</b></h4>
         <button class="btn-primary btn btn-lg" onclick={loadLastProject}>Load</button>
-      </div>
-      <div class="secondary-card h-full">
-        <h3 class="font-semibold text-center text-2xl mb-5">Load New Project</h3>
+      </fieldset>
+      <fieldset class="fieldset bg-base-200 border-base-300 border rounded-md p-2 hover:border-gray-400 transition text-center items-center h-full">
+        <legend class="fieldset-legend">Load Other Project</legend>
         <button class="btn btn-primary btn-lg" onclick={loadNewProject}>Load</button>
-      </div>
+      </fieldset>
     </div>
-  </div>
-  <div class="card w-1/2">
-    <h1 class="title-text mb-10"><b>Stats</b></h1>
+  </fieldset>
+  <fieldset class="fieldset bg-base-200 border-base-300 rounded-box hover:border-white transition border p-4 gap-5 w-1/2">
+    <legend class="fieldset-legend">Stats</legend>
     <p>Time Spent With A Project Open</p>
     <p>Total Files Transcribed</p>
     <p>Total Files Skipped</p>
     <p>Total Recordings Discarded</p>
-  </div>
+  </fieldset>
 </div>

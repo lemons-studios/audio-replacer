@@ -4,7 +4,7 @@ use tauri::command;
 pub fn are_updates_available() -> bool {
     let source = get_update_source();
     let um = create_update_manager(source);
-    if let UpdateCheck::UpdateAvailable(updates) = um.check_for_updates().unwrap() {
+    if let UpdateCheck::UpdateAvailable(_u) = um.check_for_updates().unwrap() {
         return true;
     }
     false
