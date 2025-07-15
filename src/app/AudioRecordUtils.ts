@@ -1,11 +1,12 @@
 import { connect } from 'extendable-media-recorder-wav-encoder'
 import * as emr from 'extendable-media-recorder';
 import { writeFile } from '@tauri-apps/plugin-fs';
+import { applyFfmpegFilter } from './FFMpegManager';
 
 let mediaRecorder: emr.IMediaRecorder | null = null;
 let recordedChunks: Blob[] = [];
 
-export async function startRecord() {
+export async function startRecording() {
     if(!mediaRecorder) {
         await emr.register(await connect());
     }
@@ -20,7 +21,7 @@ export async function startRecord() {
     }
 }
 
-export async function stopRecord(outFile: string) {
+export async function stopRecording(outFile: string) {
     if(!mediaRecorder) {
         return;
     }
@@ -37,6 +38,10 @@ export async function stopRecord(outFile: string) {
 
     try {
         await writeFile(outFile, audioContents);
+
+        const effectFilterPass = true;
+        await applyFfmpegFilter(outFile);
+        await applyFfmpegFilter(outFile, effectFilterPass);
     } 
     catch(err) {
         console.error(err);

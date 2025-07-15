@@ -1,3 +1,38 @@
 <script lang="ts">
-    // Fill out later. Use monaco code editor that's installed in the project already
+	import { onDestroy, onMount } from 'svelte';
+	import { editorTheme } from '../app/CodeEditorTheme';
+	import type * as Monaco from 'monaco-editor/esm/vs/editor/editor.api.js';
+
+	let editor: Monaco.editor.IStandaloneCodeEditor;
+	let monaco: typeof Monaco;
+	let editorContainer: HTMLElement;
+
+	onMount(async () => {
+		// Import our 'monaco.ts' file here
+		// (onMount() will only be executed in the browser, which is what we want)
+		monaco = (await import("../tools/Monaco")).default;
+
+		// Your monaco instance is ready, let's display some code!
+		monaco.editor.defineTheme('catppuccin', editorTheme);
+		const editor = monaco.editor.create(editorContainer, {
+			theme: 'catppuccin',
+			automaticLayout: true,
+			language: 'json',
+			minimap: { enabled: false },
+			hideCursorInOverviewRuler: true
+		});
+		const model = monaco.editor.createModel(
+			"[]",
+			'json'
+		);
+		editor.setModel(model);
+	});
+
+	onDestroy(() => {
+		monaco?.editor.getModels().forEach((model) => model.dispose());
+		editor?.dispose();
+	});
 </script>
+
+<div class="w-full h-full" bind:this={editorContainer}></div>
+

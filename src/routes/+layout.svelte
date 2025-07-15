@@ -2,9 +2,9 @@
   import { House, Mic, PencilLine, Settings, Megaphone } from "@lucide/svelte";
   import { onMount } from "svelte";
   import "../app.css";
-  import { loadStore } from "../util/SettingsManager";
-  import { populateCustomData } from "../util/EffectManager";
-  import { initializeFfmpeg } from "../util/FFMpegManager";
+  import { loadStore } from "../tools/SettingsManager";
+  import { populateCustomData } from "../tools/EffectManager";
+  import { initializeFfmpeg } from "../app/FFMpegManager";
   let { children } = $props();
 
   onMount(async() => {
@@ -22,8 +22,8 @@
   }
 </style>
 
-<main class="bg-base-300 flex flex-row grow-1 dark:text-white items-stretch w-screen h-screen">
-  <div class="flex flex-col items-stretch justify-between bg-base-200 min-w-[10rem] p-1">
+<main class="bg-base-200 flex flex-row grow-1 text-white items-stretch w-screen h-screen">
+  <div class="flex flex-col items-stretch justify-between bg-base-100 min-w-[10rem] p-1">
     <div class="flex flex-col items-stretch">
       <ul class="menu menu-vertical menu-lg gap-0.5 rounded-box w-full bg-transparent">
         <li><a href="/"><House size="20"/>Home</a></li>
@@ -39,7 +39,7 @@
       </ul>
     </div>
   </div>
-    <div class="w-screen h-screen p-5.5">
+    <div class="flex-1 flex flex-col overflow-hidden w-screen h-screen p-5.5">
       {@render children?.()}
     </div>
 </main>

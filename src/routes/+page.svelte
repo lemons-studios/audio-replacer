@@ -1,11 +1,11 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import { startRichPresence } from "../util/DiscordRpc";
-  import { getValue, setValue } from "../util/SettingsManager";
-  import { setProjectData } from "../util/ProjectManager";
+  import { startRichPresence } from "../app/DiscordRpc";
+  import { getValue, setValue } from "../tools/SettingsManager";
+  import { setProjectData } from "../app/ProjectManager";
   import { exists } from "@tauri-apps/plugin-fs";
   import { goto } from "$app/navigation";
-  import { selectFolder } from "../util/OsTools";
+  import { selectFolder } from "../tools/OsTools";
   import { basename } from "@tauri-apps/api/path";
 
   let previousProjectExists = $state(false);

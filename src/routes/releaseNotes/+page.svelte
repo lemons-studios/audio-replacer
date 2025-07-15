@@ -1,7 +1,7 @@
 <script lang="ts">
   import { onMount } from "svelte";
   import SvelteMarkdown from "@humanspeak/svelte-markdown";
-  import { jsonNetDataFromTag } from "../../util/NetworkUtils";
+  import { jsonNetDataFromTag } from "../../tools/NetworkUtils";
 
   let markdown = $state("# No release data found\n(Are you online?)");
 

@@ -4,6 +4,41 @@
   themes: all;
 }
 
+@plugin "daisyui/theme" {
+  name: "audio-replacer-dark";
+  default: true;
+  prefersdark: true;
+  color-scheme: "dark";
+  --color-base-100: oklch(20% 0 0);
+  --color-base-200: oklch(14% 0.004 49.25);
+  --color-base-300: oklch(26% 0 0);
+  --color-base-content: oklch(97.807% 0.029 256.847);
+  --color-primary: oklch(54% 0.281 293.009);
+  --color-primary-content: oklch(96% 0.018 272.314);
+  --color-secondary: oklch(43% 0.218 303.724);
+  --color-secondary-content: oklch(94% 0.028 342.258);
+  --color-accent: oklch(70% 0.183 293.541);
+  --color-accent-content: oklch(38% 0.063 188.416);
+  --color-neutral: oklch(14% 0.005 285.823);
+  --color-neutral-content: oklch(92% 0.004 286.32);
+  --color-info: oklch(74% 0.16 232.661);
+  --color-info-content: oklch(29% 0.066 243.157);
+  --color-success: oklch(72% 0.219 149.579);
+  --color-success-content: oklch(37% 0.077 168.94);
+  --color-warning: oklch(87% 0.169 91.605);
+  --color-warning-content: oklch(41% 0.112 45.904);
+  --color-error: oklch(63% 0.237 25.331);
+  --color-error-content: oklch(27% 0.105 12.094);
+  --radius-selector: 0.25rem;
+  --radius-field: 0.5rem;
+  --radius-box: 1rem;
+  --size-selector: 0.25rem;
+  --size-field: 0.25rem;
+  --border: 1px;
+  --depth: 1;
+  --noise: 0;
+}
+
 @import "@fontsource/material-icons";
 @import "@fontsource-variable/inter";
 @import "@fontsource-variable/lexend";
@@ -15,11 +50,11 @@
 }
 
 .card {
-  @apply bg-base-200 rounded-xl p-5 drop-shadow-lg flex flex-col grow items-stretch gap-4 text-center;
+  @apply bg-base-100 rounded-xl p-5 drop-shadow-lg flex flex-col grow items-stretch gap-4 text-center;
 }
 
 .secondary-card {
-  @apply bg-base-100 w-full p-2.5 rounded-sm drop-shadow-lg;
+  @apply bg-base-300 w-full p-2.5 rounded-sm drop-shadow-lg;
 }
 
 .title-text {

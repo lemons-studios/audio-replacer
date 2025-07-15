@@ -1,14 +1,14 @@
 <script lang="ts">
-  import * as ProjectManager from "../../util/ProjectManager"
+  import * as ProjectManager from "../../app/ProjectManager"
   import AudioPlayer from "../../Components/AudioPlayer.svelte";
   import { onMount } from "svelte";
-  import { transcribeFile } from "../../util/WhisperUtils";
-  import { effectDataNames, effectDataValues, pitchDataNames, pitchDataValues } from "../../util/EffectManager";
-  import { setEffect, setPitch } from "../../util/FFMpegManager";
-  import { setDetails } from "../../util/DiscordRpc";
+  import { transcribeFile } from "../../tools/WhisperUtils";
+  import { effectDataNames, effectDataValues, pitchDataNames, pitchDataValues } from "../../tools/EffectManager";
+  import { setEffect, setPitch } from "../../app/FFMpegManager";
+  import { setDetails } from "../../app/DiscordRpc";
   
   let currentPathTrunc = $state(ProjectManager.currentFileLocalPath || "Select a folder to begin");
-  let currentPathFull = $state(ProjectManager.currentFile || "");
+  let currentAudioPath = $state(ProjectManager.currentFile || "");
 
   let completionValue = $state(0);
   let completionPercentage = $state("0%");
@@ -27,8 +27,8 @@
   onMount(async() => {
     setFileData();
     await setDetails("Recording");
-    
-    currentTranscription = await transcribeFile(currentPathFull);
+
+    currentTranscription = await transcribeFile(currentAudioPath);
   })
 
   function startRecord() {
@@ -37,6 +37,7 @@
 
   function stopRecord() {
     switchStates();
+    currentAudioPath = ProjectManager.currentOutFile;
   }
 
   function cancelRecord() {
@@ -52,7 +53,7 @@
     else {
       await ProjectManager.submitFile();
       setFileData();
-      currentTranscription = await transcribeFile(currentPathFull);
+      currentTranscription = await transcribeFile(currentAudioPath);
     }
 
   }
@@ -60,12 +61,12 @@
   async function skipFile() {
     await ProjectManager.skipFile();
     setFileData();
-    currentTranscription = await transcribeFile(currentPathFull);
+    currentTranscription = await transcribeFile(currentAudioPath);
   }
 
   function setFileData() {
     if(ProjectManager.isProjectLoaded) {
-      currentPathFull = ProjectManager.currentFile;
+      currentAudioPath = ProjectManager.currentFile;
       currentPathTrunc = ProjectManager.currentFileLocalPath.replaceAll("\\", "/").slice(1);
       completionValue = ProjectManager.completionPercentage;
       filesRemaining = ProjectManager.filesRemaining;
@@ -100,7 +101,6 @@
     const index = effectDropdown.selectedIndex;
     setEffect(effectDataValues[index]);
   }
-
 </script>
 
 <div class="flex grow flex-row h-full gap-4 content-center">
@@ -108,7 +108,7 @@
     <h1 class="title-text mb-5"><b>{currentPathTrunc}</b></h1>
     <h2>Files Remaining: {filesRemaining} ({completionPercentage})</h2>
     <progress value={completionValue} class="mb-15 progress progress-primary w-[5rem]" max="100"></progress>
-    <AudioPlayer source={currentPathFull} bind:this={audioPlayer}/>
+    <AudioPlayer source={currentAudioPath} bind:this={audioPlayer}/>
     <div class="flex flex-row justify-center gap-5 mb-2.5">
       {#if idle}
         <button class="btn btn-primary w-25" onclick={skipFile}>Skip</button>

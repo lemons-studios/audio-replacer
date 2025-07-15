@@ -1,7 +1,7 @@
 import { resolveResource } from "@tauri-apps/api/path";
 import { copyFile, readFile, readTextFile, remove, rename } from "@tauri-apps/plugin-fs";
 import { FFmpeg } from '@ffmpeg/ffmpeg';
-import { changeFileExtension } from "./OsTools";
+import { changeFileExtension } from "../tools/OsTools";
 
 let ffmpeg: FFmpeg | null = null;
 
