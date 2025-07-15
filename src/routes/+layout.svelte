@@ -3,10 +3,14 @@
   import { onMount } from "svelte";
   import "../app.css";
   import { loadStore } from "../util/SettingsManager";
+  import { populateCustomData } from "../util/EffectManager";
+  import { initializeFfmpeg } from "../util/FFMpegManager";
   let { children } = $props();
 
   onMount(async() => {
     await loadStore();
+    await populateCustomData();
+    await initializeFfmpeg();
   })
 </script>
 

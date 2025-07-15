@@ -1,25 +1,30 @@
 import { resolveResource } from "@tauri-apps/api/path";
-import { copyFile, readFile, readTextFile, remove } from "@tauri-apps/plugin-fs";
+import { copyFile, readFile, readTextFile, remove, rename } from "@tauri-apps/plugin-fs";
 import { FFmpeg } from '@ffmpeg/ffmpeg';
 import { changeFileExtension } from "./OsTools";
 
 let ffmpeg: FFmpeg | null = null;
 
-export async function applyFfmpegFilter(input: string, output: string, filterList: string, overwrite: boolean) {
-    await initializeFfmpeg(); 
-    await ffmpeg?.writeFile(output, input);
+let selectedEffect: string;
+let selectedPitch: string;
 
-    await ffmpeg?.exec(["-i", input, `-af ${filterList}`, output]);
+export async function applyFfmpegFilter(input: string, useEffectFilter: boolean = false) {
+    const output = `${input}.wav`; // This will end in a file that ends with .wav.wav, but this isn't a problem since this is a temporary output file
+    const filter = useEffectFilter ? selectedEffect : selectedPitch;
+    
+    try {
+        await ffmpeg?.writeFile(output, input);
+        await ffmpeg?.exec(["-i", input, `-af ${filter}`, output]);
 
-    if(overwrite) {
         remove(input);
-        copyFile(output, input);
-        remove(output);
+        await rename(output, input);
+    }
+    catch(e: any) {
+        console.error(`FFMpeg filter conversion failed: ${e}`);
     }
 }
 
 export async function convertFileFormat(input: string, fileType: string) {
-    await initializeFfmpeg();
     const outPath = await changeFileExtension(input, fileType);
 
     await ffmpeg?.writeFile(input, outPath);
@@ -28,7 +33,7 @@ export async function convertFileFormat(input: string, fileType: string) {
     remove(input);
 }
 
-async function initializeFfmpeg() {
+export async function initializeFfmpeg() {
     if(ffmpeg) return;
     const coreUrl = await getFfmpegCore();
     const wasmUrl = await getFfmpegWasm();
@@ -55,4 +60,15 @@ async function getFfmpegWasm() : Promise<string> {
     const wasmBytes = await readFile(wasmPath);
     const wasmBlob = new Blob([new Uint8Array(wasmBytes)], {type: "application/wasm"});
     return URL.createObjectURL(wasmBlob)
+}
+
+// We love seeing oop setter functions in typescript
+export function setPitch(newValue: string) {
+    selectedPitch = newValue;
+    console.log(`New Pitch Value: ${newValue}`);
+}
+
+export function setEffect(newValue: string) {
+    selectedEffect = newValue;
+    console.log(`New Effect Value: ${newValue}`);
 }
