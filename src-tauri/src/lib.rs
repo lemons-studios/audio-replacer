@@ -33,6 +33,8 @@ pub fn run() {
             commands::whisper_utils::transcribe_file,
             commands::app_functions::get_install_direcotry,
             commands::app_functions::get_relative_path,
+            commands::updater::update_app,
+            commands::updater::are_updates_available,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

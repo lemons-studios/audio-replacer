@@ -37,18 +37,14 @@ pub fn delete_empty_subdirectories(project_path: &str) {
         return;
     }
     let dirs: Vec<_> = WalkDir::new(path)
-    .contents_first(true)
-    .into_iter()
-    .filter_map(|res| {
-        match res {
+        .contents_first(true)
+        .into_iter()
+        .filter_map(|res| match res {
             Ok(entry) => Some(entry),
-            Err(_e) => {
-                None
-            }
-        }
-    })
-    .filter(|e| e.file_type().is_dir())
-    .collect();
+            Err(_e) => None,
+        })
+        .filter(|e| e.file_type().is_dir())
+        .collect();
 
     for e in dirs {
         let dir_path = e.path();
@@ -58,7 +54,8 @@ pub fn delete_empty_subdirectories(project_path: &str) {
                 if read_dir.next().is_none() {
                     if let Err(e) = fs::remove_dir(dir_path) {
                         eprintln!("Failed to delete directory {:?}: {}", dir_path, e);
-                    }                }
+                    }
+                }
             }
             Err(e) => {
                 eprintln!("Could not read dir {:?}: {}", dir_path, e);

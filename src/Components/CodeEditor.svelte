@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { onDestroy, onMount } from 'svelte';
 	import { editorTheme } from '../app/CodeEditorTheme';
-	import type * as Monaco from 'monaco-editor/esm/vs/editor/editor.api.js';
+	import type * as Monaco from 'monaco-editor/esm/vs/editor/editor.api.js'; // If an error pops up here, ignore it. the file most certainly exists
 
 	let editor: Monaco.editor.IStandaloneCodeEditor;
 	let monaco: typeof Monaco;
@@ -29,7 +29,7 @@
 	});
 
 	onDestroy(() => {
-		monaco?.editor.getModels().forEach((model) => model.dispose());
+		monaco?.editor.getModels().forEach((model: any) => model.dispose());
 		editor?.dispose();
 	});
 </script>

@@ -33,6 +33,7 @@ tauri-plugin-dialog = "2.3.0"
 tauri-plugin-drpc = "0.1.6"
 num_cpus = "1.17.0"
 pathdiff = "0.2.3"
+velopack = { version = "0.0.1298", features = ["async"] }
 
 [target.'cfg(not(any(target_os = "android", target_os = "ios")))'.dependencies]
 tauri-plugin-global-shortcut = "2.3.0"

@@ -2,6 +2,7 @@
 // Will be for more computationally expensive functions that would benefit
 // From rust's extra performance when compared to TypeScript
 
+pub mod app_functions;
 pub mod project_manager;
 pub mod whisper_utils;
-pub mod app_functions;
+pub mod updater;
