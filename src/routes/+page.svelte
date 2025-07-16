@@ -41,7 +41,7 @@
 </script>
 
 <div class="flex flex-row gap-5 items-stretch h-full">
-  <fieldset class="fieldset bg-base-200 border-base-300 rounded-box border hover:border-white transition p-4 gap-5 w-1/2">
+  <fieldset class="pane w-1/2">
     <legend class="fieldset-legend">Projects</legend>
     <div class="flex grow flex-col items-stretch gap-4 h-full">
       <fieldset class="fieldset bg-base-200 border-base-300 border rounded-md p-2 hover:border-gray-400 transition h-full text-center items-center">
@@ -55,7 +55,7 @@
       </fieldset>
     </div>
   </fieldset>
-  <fieldset class="fieldset bg-base-200 border-base-300 rounded-box hover:border-white transition border p-4 gap-5 w-1/2">
+  <fieldset class="pane w-1/2">
     <legend class="fieldset-legend">Stats</legend>
     <p>Time Spent With A Project Open</p>
     <p>Total Files Transcribed</p>

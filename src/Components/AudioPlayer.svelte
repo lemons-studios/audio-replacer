@@ -105,7 +105,7 @@
   }
 </script>
 
-<div class="flex flex-row justify-center gap-4 bg-neutral-950 rounded-lg mx-auto items-center shadow-lg pl-3 pr-4 py-2">
+<div class="flex flex-row justify-center gap-4 bg-neutral-900 rounded-lg mx-auto items-center shadow-lg pl-3 pr-4 py-2">
     <audio ontimeupdate={audioPlayerTimeUpdate} onended={onAudioEnded} bind:this={audioPlayer}>
         <source src={trueSource()}>
     </audio>
@@ -124,7 +124,7 @@
         {/if}
     </div>
     <div class="flex flex-row gap-5">
-        <input type="range" min="0" max="1" step="0.01" value={audioCompletion} oninput={updateSeekbar} bind:this={seekBar}>
+        <input type="range" class="range range-primary range-xs" min="0" max="1" step="0.01" value={audioCompletion} oninput={updateSeekbar} bind:this={seekBar}>
         <h2>{currentAudioTime}</h2>
     </div>
 </div>

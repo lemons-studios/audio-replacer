@@ -39,6 +39,7 @@ export async function changeFileExtension(input: string, newExtension: string) {
     return join(dir, newFile);
 }
 
+// Might be needed in the future
 export function isWindows() {
     const os = platform();
     return os === "windows";

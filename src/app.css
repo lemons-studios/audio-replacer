@@ -13,7 +13,7 @@
   --color-base-200: oklch(14% 0.004 49.25);
   --color-base-300: oklch(26% 0 0);
   --color-base-content: oklch(97.807% 0.029 256.847);
-  --color-primary: oklch(54% 0.281 293.009);
+  --color-primary: oklch(48% 0.281 293.009);
   --color-primary-content: oklch(96% 0.018 272.314);
   --color-secondary: oklch(43% 0.218 303.724);
   --color-secondary-content: oklch(94% 0.028 342.258);
@@ -49,8 +49,8 @@
   --font-lexend: "Lexend Variable", sans-serif;
 }
 
-.card {
-  @apply bg-base-100 rounded-xl p-5 drop-shadow-lg flex flex-col grow items-stretch gap-4 text-center;
+.pane {
+  @apply fieldset bg-base-200 border-base-300 rounded-box border hover:border-white transition p-5 gap-5;
 }
 
 .secondary-card {

@@ -8,6 +8,9 @@
 	let monaco: typeof Monaco;
 	let editorContainer: HTMLElement;
 
+	let content = $props();
+	let trueContent = $derived(content);
+
 	onMount(async () => {
 		// Import our 'monaco.ts' file here
 		// (onMount() will only be executed in the browser, which is what we want)
@@ -23,7 +26,7 @@
 			hideCursorInOverviewRuler: true
 		});
 		const model = monaco.editor.createModel(
-			"[]",
+			trueContent,
 			'json'
 		);
 		editor.setModel(model);

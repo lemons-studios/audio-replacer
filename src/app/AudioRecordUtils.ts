@@ -37,11 +37,11 @@ export async function stopRecording(outFile: string) {
     const audioContents = new Uint8Array(arrBuffer);
 
     try {
+        const effectFilterPass = true;
         await writeFile(outFile, audioContents);
 
-        const effectFilterPass = true;
-        await applyFfmpegFilter(outFile);
-        await applyFfmpegFilter(outFile, effectFilterPass);
+        await applyFfmpegFilter(outFile); // Apply pitch modifications first
+        await applyFfmpegFilter(outFile, effectFilterPass); // Apply effect modifications second
     } 
     catch(err) {
         console.error(err);
@@ -49,7 +49,6 @@ export async function stopRecording(outFile: string) {
 }
 
 export async function stopRecordPremature() {
-    // Stop and discard recorded chunks
     mediaRecorder?.stop();
     recordedChunks = [];
 }

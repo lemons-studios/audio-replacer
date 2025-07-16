@@ -6,6 +6,7 @@
   import { effectDataNames, effectDataValues, pitchDataNames, pitchDataValues } from "../../tools/EffectManager";
   import { setEffect, setPitch } from "../../app/FFMpegManager";
   import { setDetails } from "../../app/DiscordRpc";
+  import { startRecording, stopRecording, stopRecordPremature } from "../../app/AudioRecordUtils";
   
   let currentPathTrunc = $state(ProjectManager.currentFileLocalPath || "Select a folder to begin");
   let currentAudioPath = $state(ProjectManager.currentFile || "");
@@ -15,7 +16,6 @@
   let filesRemaining = $state(ProjectManager.filesRemaining || 0);
   let currentTranscription = $state("Transcription Unavailable")
 
-  // I WISH enums were supported in svelte
   let idle = $state(true);
   let recording = $state(false);
   let reviewing = $state(false);
@@ -31,16 +31,19 @@
     currentTranscription = await transcribeFile(currentAudioPath);
   })
 
-  function startRecord() {
+  async function startRecord() {
     switchStates();
+    await startRecording();
   }
 
-  function stopRecord() {
+  async function stopRecord() {
+    await stopRecording(ProjectManager.currentOutFile);
     switchStates();
-    currentAudioPath = ProjectManager.currentOutFile;
+    currentAudioPath = "Review Your Recording...";
   }
 
-  function cancelRecord() {
+  async function cancelRecord() {
+    await stopRecordPremature();
     recording = false;
     idle = true;
   }
@@ -52,10 +55,9 @@
     }
     else {
       await ProjectManager.submitFile();
-      setFileData();
       currentTranscription = await transcribeFile(currentAudioPath);
     }
-
+    setFileData();
   }
 
   async function skipFile() {
@@ -80,11 +82,11 @@
     if(idle) {
       idle = false; 
       recording = true;
-
     }
     else if(recording) {
       recording = false;
       reviewing = true;
+
     }
     else if(reviewing) {
       reviewing = false;
@@ -104,38 +106,38 @@
 </script>
 
 <div class="flex grow flex-row h-full gap-4 content-center">
-  <div class="w-3/4 card">
+  <fieldset class="w-3/4 pane">
+    <legend class="fieldset-legend">Project</legend>
     <h1 class="title-text mb-5"><b>{currentPathTrunc}</b></h1>
     <h2>Files Remaining: {filesRemaining} ({completionPercentage})</h2>
     <progress value={completionValue} class="mb-15 progress progress-primary w-[5rem]" max="100"></progress>
     <AudioPlayer source={currentAudioPath} bind:this={audioPlayer}/>
     <div class="flex flex-row justify-center gap-5 mb-2.5">
       {#if idle}
-        <button class="btn btn-primary w-25" onclick={skipFile}>Skip</button>
-        <button class="btn btn-primary w-25" onclick={startRecord}>Record</button>
+        <button class="btn btn-primary w-25" onclick={() => skipFile()}>Skip</button>
+        <button class="btn btn-primary w-25" onclick={async() => await startRecord()}>Record</button>
       {/if}
       {#if recording}
-        <button class="btn btn-primary w-25" onclick={cancelRecord}>Cancel</button>
-        <button class="btn btn-primary w-25" onclick={stopRecord}>End</button>
+        <button class="btn btn-primary w-25" onclick={async() => await cancelRecord()}>Cancel</button>
+        <button class="btn btn-primary w-25" onclick={async() => await stopRecord()}>End</button>
       {/if}
       {#if reviewing}
         <button class="btn btn-primary w-25" onclick={() => finalizeRecording(true)}>Discard</button>
         <button class="btn btn-primary w-25" onclick={() => finalizeRecording(false)}>Submit</button>
       {/if}
     </div>
-    <h2>Transcription: {currentTranscription}</h2>
-
-  </div>
-  <div class="w-1/2 card">
-    <h1 class="title-text mb-[5rem]"><b>Recording Filters</b></h1>
+    <h2 class="text-center text-lg font-bold">Transcription: {currentTranscription}</h2>
+  </fieldset>
+  <fieldset class="w-2/4 pane">
+    <legend class="fieldset-legend">Recording Filters</legend>
     <h2 class="title-text mb-[2rem]">Pitch Filters</h2>
-    <select class="bg-black h-[2.5rem] rounded-lg p-2 mb-[15rem]" bind:this={pitchDropdown} onchange={selectPitchValue}>
+    <select class="select select-primary select-md" bind:this={pitchDropdown} onchange={selectPitchValue}>
       {#each pitchDataNames as name }
         <option>{name}</option>
       {/each}
     </select>
     <h2 class="title-text mb-[2rem]">Audio Effects</h2>
-    <select class="bg-black h-[2.5rem] rounded-lg p-2 mb-[5.5rem]" bind:this={effectDropdown} onchange={selectEffectValue}>
+    <select class="select select-primary select-md" bind:this={effectDropdown} onchange={selectEffectValue}>
       {#each effectDataNames as name }
         <option>{name}</option>
       {/each}
@@ -144,5 +146,5 @@
       <input type="checkbox">
       <h4 class="text-xl">Requires Extra Edits?</h4>
     </div> 
-  </div>
+  </fieldset>
 </div>
