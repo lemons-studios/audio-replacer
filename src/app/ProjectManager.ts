@@ -33,7 +33,10 @@ export async function setProjectData(dataPath: string) {
     
     const appFolder = await invoke('get_install_direcotry') as string;
     outputFolder = await path.join(appFolder, "output");
-        
+    if(!await exists(outputFolder)) {
+        await mkdir(outputFolder);
+    }
+
     let projectName = await path.basename(projectPath);
     projectFiles = (await getAllFiles()).filter(p => isAudioFile(p));
     outputFolderPath = await path.join(outputFolder, projectName)

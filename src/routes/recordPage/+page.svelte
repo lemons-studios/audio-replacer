@@ -6,7 +6,7 @@
   import { effectDataNames, effectDataValues, pitchDataNames, pitchDataValues } from "../../tools/EffectManager";
   import { setEffect, setPitch } from "../../app/FFMpegManager";
   import { setDetails } from "../../app/DiscordRpc";
-  import { startRecording, stopRecording, stopRecordPremature } from "../../app/AudioRecordUtils";
+  import { cancelRecording, endRecording, startRecording } from "../../app/AudioRecorder";
   
   let currentPathTrunc = $state(ProjectManager.currentFileLocalPath || "Select a folder to begin");
   let currentAudioPath = $state(ProjectManager.currentFile || "");
@@ -32,18 +32,20 @@
   })
 
   async function startRecord() {
+    console.log("Recording Started!");
     switchStates();
     await startRecording();
   }
 
   async function stopRecord() {
-    await stopRecording(ProjectManager.currentOutFile);
+    console.log("Recording Stopped, attempting to save to: ", ProjectManager.currentOutFile);
+    await endRecording(ProjectManager.currentOutFile);
     switchStates();
-    currentAudioPath = "Review Your Recording...";
   }
 
-  async function cancelRecord() {
-    await stopRecordPremature();
+  function cancelRecord() {
+    console.log("Recording Canceled");
+    cancelRecording();
     recording = false;
     idle = true;
   }
@@ -118,7 +120,7 @@
         <button class="btn btn-primary w-25" onclick={async() => await startRecord()}>Record</button>
       {/if}
       {#if recording}
-        <button class="btn btn-primary w-25" onclick={async() => await cancelRecord()}>Cancel</button>
+        <button class="btn btn-primary w-25" onclick={() => cancelRecord()}>Cancel</button>
         <button class="btn btn-primary w-25" onclick={async() => await stopRecord()}>End</button>
       {/if}
       {#if reviewing}
