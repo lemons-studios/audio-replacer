@@ -35,7 +35,7 @@
     const res = await selectFolder();
     console.log(res);
     await setProjectData(res);
-    await setValue("lastSelectedFolder", res as string);
+    setValue("lastSelectedFolder", res as string);
     goto("/recordPage");
   }
 </script>

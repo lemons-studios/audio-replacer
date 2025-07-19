@@ -1,17 +1,26 @@
 <script lang="ts">
+  import "../app.css";
   import { House, Mic, PencilLine, Settings, Megaphone } from "@lucide/svelte";
   import { onMount } from "svelte";
-  import "../app.css";
-  import { loadStore } from "../tools/SettingsManager";
   import { populateCustomData } from "../tools/EffectManager";
   import { initializeFfmpeg } from "../app/FFMpegManager";
+  import { getVersion } from "@tauri-apps/api/app";
+  import { loadSettings } from "../tools/SettingsManager";
   let { children } = $props();
+  let versionNumber = $state("");
 
   onMount(async() => {
-    await loadStore();
+    versionNumber = await formatVersion();
+    await loadSettings();
     await populateCustomData();
-    await initializeFfmpeg();
-  })
+    await initializeFfmpeg();  
+  });
+
+  async function formatVersion(): Promise<string> {
+    const [major, minor, patch] = (await getVersion()).split(".")
+    return patch != "0" ? `${major}.${minor}.${patch}` : `${major}.${minor}`;
+  }
+
 </script>
 
 <style>
@@ -35,7 +44,7 @@
       <ul class="menu menu-vertical menu-lg gap-0.5 bg-transparent rounded-box w-full">
         <li><a href="/settingsPage"><Settings size="20"/>Settings</a></li>
         <li class="mb-1.5"><a href="/releaseNotes"><Megaphone size="20"/>Changes</a></li>
-        <h3 class="text-xs text-center text-gray-300">Audio Replacer v5.0</h3>
+        <h3 class="text-xs text-center text-gray-300">Audio Replacer {versionNumber}</h3>
       </ul>
     </div>
   </div>
