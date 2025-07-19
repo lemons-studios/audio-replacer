@@ -13,8 +13,8 @@
   let previousPath = $state("");
 
   onMount(async() => {
-    previousPath = await getValue("lastSelectedFolder") as unknown as string;
-    previousProjectExists = await exists(previousPath) || previousPath == "";
+    previousPath = await getValue("lastSelectedFolder") as string;
+    previousProjectExists = await exists(previousPath) || previousPath != "";
     if(previousProjectExists) {
       previousProjectName = await basename(previousPath);
     }

@@ -4,7 +4,7 @@
   import { onMount } from "svelte";
   import { transcribeFile } from "../../tools/WhisperUtils";
   import { effectDataNames, effectDataValues, pitchDataNames, pitchDataValues } from "../../tools/EffectManager";
-  import { setEffect, setPitch } from "../../app/FFMpegManager";
+  import { setEffect, setPitch } from "../../tools/FFMpegManager";
   import { setDetails } from "../../app/DiscordRpc";
   import { cancelRecording, endRecording, startRecording } from "../../app/AudioRecorder";
   

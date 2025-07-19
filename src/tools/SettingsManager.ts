@@ -1,34 +1,43 @@
 import { resolveResource } from "@tauri-apps/api/path";
 import { readTextFile, writeTextFile } from "@tauri-apps/plugin-fs";
+import { debounce } from "./OsTools";
 
 let settingsJson: any;
+let loaded: boolean = false;
 
-export async function loadSettings() {
-    settingsJson = JSON.parse(await readTextFile(await resolveResource("resources/settings.json")));
-    console.log("Settings JSON loaded");
-    console.log(settingsJson);
+async function loadSettings() {
+    try {
+        console.log("Loading Settings JSON");
+        const path = await resolveResource("resources/settings.json");
+        const contents = await readTextFile(path);
+        settingsJson = JSON.parse(contents);
+        console.log("Settings JSON Loaded");
+    } catch(e: any) {
+        console.error(`Settings Load Failed: ${e}`);
+    }
 }
 
-export function getValue(key: string): Promise<number | string | boolean> { 
-    return settingsJson[key] ?? console.error(`key ${key} is not a valid key in the settings json`);
+export async function getValue(key: string): Promise<any> {
+    if(!loaded) {
+        await loadSettings();
+        loaded = true;
+    }
+    try {
+        console.log(`Attempting to return value of key ${key}`);
+        const value = settingsJson[key];
+        console.log(`Value of ${key}: ${value}`);
+        return value;
+    } catch(e: any) {
+        console.error(`Error while trying to get key ${key}: ${e}`)
+    }
 }
 
 export function setValue(key: string, value: number | string | boolean) {
     settingsJson[key] = value;
-    debounce(async() => await saveJsonData(), 100);
+    debounce(async() => await saveJsonData(), 30);
 }
 
 async function saveJsonData() {
     const content = JSON.stringify(settingsJson);
     await writeTextFile(await resolveResource("resources/settings.json"), content);
-}
-
-// https://gist.github.com/ca0v/73a31f57b397606c9813472f7493a940
-export function debounce<T extends Function>(cb: T, wait = 20) {
-    let h = 0;
-    let callable = (...args: any) => {
-        clearTimeout(h);
-        h = setTimeout(() => cb(...args), wait);
-    };
-    return <T>(<any>callable);
 }

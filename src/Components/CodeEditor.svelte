@@ -39,4 +39,3 @@
 </script>
 
 <div class="w-full h-full" bind:this={editorContainer}></div>
-

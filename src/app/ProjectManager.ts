@@ -1,7 +1,7 @@
 import { invoke } from '@tauri-apps/api/core';
 import * as path from '@tauri-apps/api/path';
 import { mkdir, exists, remove, copyFile, rename, readDir } from '@tauri-apps/plugin-fs';
-import { convertFileFormat } from "./FFMpegManager";
+import { convertFileFormat } from "../tools/FFMpegManager";
 import { getValue } from '../tools/SettingsManager';
 
 export let currentFile: string;
@@ -101,7 +101,6 @@ async function setCurrentFile() {
 }
 
 async function getNextFile() {
-    const randomizationEnabled: boolean = (await getValue("randomizationEnabled") as unknown as number) == 1;
     if(isProjectLoaded) {
         const index = 0;
         const deleteCount = 1;
@@ -110,7 +109,7 @@ async function getNextFile() {
     currentFile = projectFiles[0];
 }
 
-function truncateDirectory(path: string, dirLevels: number) {
+export function truncateDirectory(path: string, dirLevels: number) {
     const delimiter = "/";
     if(!path || dirLevels <= 0) {
         return path;

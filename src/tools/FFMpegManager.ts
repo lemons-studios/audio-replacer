@@ -1,7 +1,7 @@
 import { remove, rename } from "@tauri-apps/plugin-fs";
 import { FFmpeg } from "@ffmpeg/ffmpeg";
 import { toBlobURL } from "@ffmpeg/util";
-import { changeFileExtension } from "../tools/OsTools";
+import { changeFileExtension } from "./OsTools";
 
 let ffmpeg: FFmpeg | null = null;
 
@@ -12,7 +12,12 @@ export async function applyFfmpegFilter(
 	input: string,
 	useEffectFilter: boolean = false,
 ) {
-	const output = `${input}.wav`; // This will end in a file that ends with .wav.wav, but this isn't a problem since this is a temporary output file
+	// FFMpeg doesn't like overwriting the file it's trying to modify because it reads the contents of the specified file as the command progresses (rather than loading the entire file into memory),
+	// meaning that this function has to outpupt to a different file than the path that this file is meant to be at.
+	// Below is my quick and easy solution
+
+	// This will end in a file that ends with .wav.wav, but this isn't a problem since this is a temporary output file meant to resolve the issue stated above
+	const output = `${input}.wav`; 
 	const filter = useEffectFilter ? selectedEffect : selectedPitch;
 
 	try {
