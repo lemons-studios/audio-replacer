@@ -8,7 +8,6 @@
   let { children } = $props();
 
   onMount(async() => {
-
     await loadStore();
     await populateCustomData();
     await initializeFfmpeg();

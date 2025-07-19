@@ -42,9 +42,7 @@
       "binaries/whisper.bin",
       "resources/settings.json",
       "resources/effectData.json",
-      "resources/pitchData.json",
-      "binaries/ffmpeg-core.js",
-      "binaries/ffmpeg.wasm"
+      "resources/pitchData.json"
     ],
     "linux": {
       "appimage": {

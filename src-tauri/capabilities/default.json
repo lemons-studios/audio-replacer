@@ -13,14 +13,6 @@
         {
           "name": "binaries/whisper.bin",
           "sidecar": true
-        },
-        {
-          "name": "binaries/ffmpeg.wasm",
-          "sidecar": true
-        },
-        {
-          "name": "binaries/ffmpeg-core.js",
-          "sidecar": true
         }
       ]
     },
