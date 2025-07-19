@@ -1,7 +1,8 @@
 import { resolveResource } from "@tauri-apps/api/path";
-import { copyFile, readFile, readTextFile, remove, rename } from "@tauri-apps/plugin-fs";
+import { readFile, readTextFile, remove, rename } from "@tauri-apps/plugin-fs";
 import { FFmpeg } from '@ffmpeg/ffmpeg';
 import { changeFileExtension } from "../tools/OsTools";
+import { convertFileSrc } from "@tauri-apps/api/core";
 
 let ffmpeg: FFmpeg | null = null;
 
@@ -34,32 +35,20 @@ export async function convertFileFormat(input: string, fileType: string) {
 }
 
 export async function initializeFfmpeg() {
-    if(ffmpeg) return;
-    const coreUrl = await getFfmpegCore();
-    const wasmUrl = await getFfmpegWasm();
-
+    if(ffmpeg) return;    
+    const coreContent = convertFileSrc(await resolveResource("binaries/ffmpeg-core.js"));
+    const wasmContent = convertFileSrc(await resolveResource("binaries/ffmpeg.wasm"));
+    console.log("Loading FFMpeg");
     ffmpeg = new FFmpeg();
     await ffmpeg.load({
-        coreURL: coreUrl,
-        wasmURL: wasmUrl
+        coreURL: coreContent,
+        wasmURL: wasmContent
     }).catch((e) => {
         console.error(`Error: ${e}`);
         ffmpeg = null;
     });
-}
 
-async function getFfmpegCore(): Promise<string> {
-    const jsPath = await resolveResource("binaries/ffmpeg-core.js");
-    const jsText = await readTextFile(jsPath);
-    const jsBlob = new Blob([jsText], {type: "application/javascript"});
-    return URL.createObjectURL(jsBlob)
-}
-
-async function getFfmpegWasm() : Promise<string> {
-    const wasmPath = await resolveResource("binaries/ffmpeg.wasm");
-    const wasmBytes = await readFile(wasmPath);
-    const wasmBlob = new Blob([new Uint8Array(wasmBytes)], {type: "application/wasm"});
-    return URL.createObjectURL(wasmBlob)
+    console.log("FFMpeg Initialized");
 }
 
 // We love seeing oop setter functions in typescript

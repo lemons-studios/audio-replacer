@@ -39,12 +39,26 @@
       "icons/icon.ico"
     ],
     "resources": [
-      "binaries/ffmpeg.wasm",
-      "binaries/ffmpeg-core.js",
       "binaries/whisper.bin",
       "resources/settings.json",
       "resources/effectData.json",
-      "resources/pitchData.json"
-    ]
+      "resources/pitchData.json",
+      "binaries/ffmpeg-core.js",
+      "binaries/ffmpeg.wasm"
+    ],
+    "linux": {
+      "appimage": {
+        "bundleMediaFramework": true,
+        "files": {}
+      },
+      "deb": {
+        "files": {}
+      },
+      "rpm": {
+        "epoch": 0,
+        "files": {},
+        "release": "1"
+      }
+    }
   }
 }

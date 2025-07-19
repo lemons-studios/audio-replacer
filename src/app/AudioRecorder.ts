@@ -1,7 +1,6 @@
 import { writeFile } from "@tauri-apps/plugin-fs";
 import { MediaRecorder as MediaRecorderEx, register } from "extendable-media-recorder";
-import { connect } from 'extendable-media-recorder-wav-encoder'
-import { applyFfmpegFilter } from "./FFMpegManager";
+import { connect } from 'extendable-media-recorder-wav-encoder';
 
 let audioRecorder: any; 
 let recordedChunks: BlobPart[] = [];
@@ -50,13 +49,11 @@ export async function endRecording(outputPath: string): Promise<void> {
             }
 
             recordedChunks = [];
-
             resolve();
         }
         console.log("Stopping Audio Recorder..");
         audioRecorder.stop();
     });
-
 }
 
 export function cancelRecording() {

@@ -40,6 +40,7 @@
   async function stopRecord() {
     console.log("Recording Stopped, attempting to save to: ", ProjectManager.currentOutFile);
     await endRecording(ProjectManager.currentOutFile);
+    currentAudioPath = ProjectManager.currentOutFile;
     switchStates();
   }
 
@@ -108,13 +109,13 @@
 </script>
 
 <div class="flex grow flex-row h-full gap-4 content-center">
-  <fieldset class="w-3/4 pane">
+  <fieldset class="w-3/4 pane content-center">
     <legend class="fieldset-legend">Project</legend>
-    <h1 class="title-text mb-5"><b>{currentPathTrunc}</b></h1>
-    <h2>Files Remaining: {filesRemaining} ({completionPercentage})</h2>
-    <progress value={completionValue} class="mb-15 progress progress-primary w-[5rem]" max="100"></progress>
+    <h1 class="title-text mb-5 font-semibold">{currentPathTrunc}</h1>
+    <h2 class="text-center text-lg font-medium">Files Remaining: {filesRemaining} ({completionPercentage})</h2>
+    <progress value={completionValue} class="mb-3.5 progress progress-primary m-auto" max="100"></progress>
     <AudioPlayer source={currentAudioPath} bind:this={audioPlayer}/>
-    <div class="flex flex-row justify-center gap-5 mb-2.5">
+    <div class="flex flex-row justify-center gap-5 mb-2.5 mt-2.5">
       {#if idle}
         <button class="btn btn-primary w-25" onclick={() => skipFile()}>Skip</button>
         <button class="btn btn-primary w-25" onclick={async() => await startRecord()}>Record</button>
@@ -128,18 +129,18 @@
         <button class="btn btn-primary w-25" onclick={() => finalizeRecording(false)}>Submit</button>
       {/if}
     </div>
-    <h2 class="text-center text-lg font-bold">Transcription: {currentTranscription}</h2>
+    <h2 class="text-center text-lg font-medium">Transcription: {currentTranscription}</h2>
   </fieldset>
-  <fieldset class="w-2/4 pane">
+  <fieldset class="w-2/4 pane content-center">
     <legend class="fieldset-legend">Recording Filters</legend>
-    <h2 class="title-text mb-[2rem]">Pitch Filters</h2>
-    <select class="select select-primary select-md" bind:this={pitchDropdown} onchange={selectPitchValue}>
+    <h2 class="title-text mb-[2rem] font-semibold">Pitch Filters</h2>
+    <select class="select select-primary select-md m-auto" bind:this={pitchDropdown} onchange={selectPitchValue}>
       {#each pitchDataNames as name }
         <option>{name}</option>
       {/each}
     </select>
-    <h2 class="title-text mb-[2rem]">Audio Effects</h2>
-    <select class="select select-primary select-md" bind:this={effectDropdown} onchange={selectEffectValue}>
+    <h2 class="title-text mb-[2rem] font-semibold">Audio Effects</h2>
+    <select class="select select-primary select-md m-auto" bind:this={effectDropdown} onchange={selectEffectValue}>
       {#each effectDataNames as name }
         <option>{name}</option>
       {/each}

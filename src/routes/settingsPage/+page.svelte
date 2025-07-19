@@ -6,7 +6,7 @@
   })
 </script>
 
-<div class="flex flex-grow flex-col items-center">
+<div class="flex flex-grow flex-col items-center overflow-y-auto">
   <fieldset class="fieldset bg-base-200 border-base-300 rounded-box w-3/4 border p-4 gap-5">
     <legend class="fieldset-legend">General Options</legend>
     <label class="label">

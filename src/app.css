@@ -1,4 +1,6 @@
 @import "tailwindcss";
+@import "@fontsource-variable/inter";
+
 @plugin "@tailwindcss/typography";
 @plugin "daisyui" {
   themes: all;
@@ -39,22 +41,21 @@
   --noise: 0;
 }
 
-@import "@fontsource/material-icons";
-@import "@fontsource-variable/inter";
-@import "@fontsource-variable/lexend";
 
 @theme {
-  --font-icons: "Material Icons", sans-serif;
   --font-inter: "Inter Variable", sans-serif;
-  --font-lexend: "Lexend Variable", sans-serif;
+}
+
+* {
+  @apply font-inter;
 }
 
 .pane {
   @apply fieldset bg-base-200 border-base-300 rounded-box border hover:border-white transition p-5 gap-5;
 }
 
-.secondary-card {
-  @apply bg-base-300 w-full p-2.5 rounded-sm drop-shadow-lg;
+.secondary-pane {
+  @apply fieldset bg-base-200 border-base-300 border rounded-md p-2 hover:border-gray-400 transition text-center items-center;
 }
 
 .title-text {

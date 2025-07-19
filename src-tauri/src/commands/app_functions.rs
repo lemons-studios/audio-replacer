@@ -4,7 +4,7 @@ use pathdiff::diff_paths;
 use tauri::command;
 
 #[command]
-pub fn get_install_direcotry() -> Result<PathBuf, String> {
+pub fn get_install_directory() -> Result<PathBuf, String> {
     match env::current_exe() {
         Ok(exe_path) => {
             if let Some(exe_dir) = exe_path.parent() {

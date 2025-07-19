@@ -31,7 +31,7 @@ export async function setProjectData(dataPath: string) {
     isProjectLoaded = false;
     projectPath = dataPath;
     
-    const appFolder = await invoke('get_install_direcotry') as string;
+    const appFolder = await invoke('get_install_directory') as string;
     outputFolder = await path.join(appFolder, "output");
     if(!await exists(outputFolder)) {
         await mkdir(outputFolder);

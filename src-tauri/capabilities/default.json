@@ -11,11 +11,11 @@
       "identifier": "shell:allow-execute",
       "allow": [
         {
-          "name": "binaries/ffmpeg.wasm",
+          "name": "binaries/whisper.bin",
           "sidecar": true
         },
         {
-          "name": "binaries/whisper.bin",
+          "name": "binaries/ffmpeg.wasm",
           "sidecar": true
         },
         {

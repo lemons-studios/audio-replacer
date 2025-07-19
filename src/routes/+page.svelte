@@ -44,12 +44,12 @@
   <fieldset class="pane w-1/2">
     <legend class="fieldset-legend">Projects</legend>
     <div class="flex grow flex-col items-stretch gap-4 h-full">
-      <fieldset class="fieldset bg-base-200 border-base-300 border rounded-md p-2 hover:border-gray-400 transition h-full text-center items-center">
+      <fieldset class="secondary-pane h-full">
         <legend class="fieldset-legend">Load Last Project</legend>
         <h4 class="text-xl mb-5"><b>{previousProjectName}</b></h4>
         <button class="btn-primary btn btn-lg" onclick={loadLastProject}>Load</button>
       </fieldset>
-      <fieldset class="fieldset bg-base-200 border-base-300 border rounded-md p-2 hover:border-gray-400 transition text-center items-center h-full">
+      <fieldset class="secondary-pane h-full">
         <legend class="fieldset-legend">Load Other Project</legend>
         <button class="btn btn-primary btn-lg" onclick={loadNewProject}>Load</button>
       </fieldset>

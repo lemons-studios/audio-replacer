@@ -8,6 +8,7 @@ export let effectDataNames: string[];
 export let effectDataValues: string[];
 
 export async function populateCustomData() {
+    console.log("Loading pitch and effect data")
     const customPitchContents = await readTextFile(await resolveResource("resources/pitchData.json")); 
     const effectJson = await readTextFile(await resolveResource("resources/effectData.json"));
 
@@ -24,4 +25,5 @@ export async function populateCustomData() {
 
     pitchDataNames = fullPitchData.map((e) => e[nameIndex].toString());
     effectDataNames = fullEffectData.map((e) => e[nameIndex].toString());
+    console.log("Pitch and effect data loaded");
 }
