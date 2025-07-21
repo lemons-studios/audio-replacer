@@ -47,10 +47,12 @@ export function isWindows() {
 
 // https://gist.github.com/ca0v/73a31f57b397606c9813472f7493a940
 export function debounce<T extends Function>(cb: T, wait = 20) {
+    console.log("Debounce started");
     let h = 0;
     let callable = (...args: any) => {
         clearTimeout(h);
         h = setTimeout(() => cb(...args), wait);
     };
+    console.log("Debounce Ended");
     return <T>(<any>callable);
 }

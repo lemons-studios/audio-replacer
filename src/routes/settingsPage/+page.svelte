@@ -1,7 +1,7 @@
 <script lang="ts">
   import { onMount } from "svelte";
   import { setDetails } from "../../app/DiscordRpc";
-  import { setValue } from "../../tools/SettingsManager";
+  import { getValue, setValue } from "../../tools/SettingsManager";
   import { resolveResource } from "@tauri-apps/api/path";
   import { relaunch } from "@tauri-apps/plugin-process";
   import { writeTextFile } from "@tauri-apps/plugin-fs";
@@ -43,6 +43,9 @@
         type: "boolean",
         onChange: (value: boolean) => {
           setValue("updateCheck", value);
+        },
+        getValue: async(): Promise<boolean> => {
+          return await getValue("updateCheck") as boolean;
         }
       },
       {
@@ -51,6 +54,9 @@
         type: "boolean",
         onChange: (value: boolean) => {
           setValue("autoloadProject", value);
+        },
+        getValue: async(): Promise<boolean> => {
+          return await getValue("autoloadProject") as boolean;
         }
       },
       {
@@ -59,6 +65,9 @@
         type: "boolean",
         onChange: (value: boolean) => {
           setValue("enableTranscription", value);
+        },
+        getValue: async(): Promise<boolean> => {
+          return await getValue("enableTranscription") as boolean;
         }
       },
       {
@@ -67,6 +76,9 @@
         type: "boolean",
         onChange: (value: boolean) => {
           setValue("enableRichPresence", value);
+        },
+        getValue: async(): Promise<boolean> => {
+          return await getValue("enableRichPresence") as boolean;
         }
       }
     ],
@@ -76,8 +88,11 @@
         description: "Measured in milliseconds",
         type: "string",
         defaultValue: "10",
-        onChange: (value: boolean) => {
+        onChange: (value: string) => {
           setValue("recordStartDelay", value);
+        },
+        getValue: async(): Promise<string> => {
+          return await getValue("recordStartDelay") as string;
         }
       },
       {
@@ -85,8 +100,11 @@
         description: "Measured in milliseconds",
         type: "string",
         defaultValue: "50",
-        onChange: (value: boolean) => {
+        onChange: (value: string) => {
           setValue("recordEndDelay", value);
+        },
+        getValue: async(): Promise<string> => {
+          return await getValue("recordEndDelay") as string;
         }
       },
       {
@@ -95,6 +113,9 @@
         type: "boolean",
         onChange: (value: boolean) => {
           setValue("autoAcceptRecordings", value);
+        },
+        getValue: async(): Promise<boolean> => {
+          return await getValue("autoAcceptRecordings") as boolean;
         }
       }
     ],
@@ -153,20 +174,30 @@
 
 </script>
 
-<div class="flex flex-grow flex-col items-center overflow-y-auto">
+<div class="flex flex-grow flex-col gap-y-2.5 items-center overflow-y-auto">
   {#each Object.entries(settings) as [name, settingCategory], sIndex}
-    <fieldset class="pane w-3/4 ${sIndex > 0 ? "mt-4" : ""} ${sIndex == 2 ? "border-error" : ""}">
+    <fieldset class="pane w-3/4">
       <legend class="fieldset-legend">{name}</legend>
       {#each settingCategory as setting, index }
         <div class="flex justify-between items-center px-4">
           <div>
             <p class="font-semibold">{setting.name}</p>
-            <p class="text-sm text-gray-400">{setting.description}</p>
+            <p class="text-sm text-gray-400 text-wrap">{setting.description}</p>
           </div>
           {#if setting.type == "boolean"}
-            <input type="checkbox" class="toggle"> 
+            {#await setting.getValue() then value}
+              {#if value == true}
+                <input type="checkbox" class="toggle" checked> 
+              {:else}
+                <input type="checkbox" class="toggle">
+              {/if} 
+            {/await}
           {:else if setting.type == "string"}
-            <input type="text" placeholder={setting.defaultValue} class="input max-w-1/12">
+            {#await setting.getValue()}
+              <input type="text" placeholder={setting.defaultValue} class="input max-w-1/12">
+            {:then value} 
+              <input type="text" value={value} class="input max-w-1/12" ontoggle={setting.onChange}>
+            {/await}
           {:else if setting.type == "button"}
             <button class="btn btn-primary btn-md" onclick={async() => await setting.onClick}>{setting.buttonText}</button>
          <!-- {:else if setting.type == "dropdown"}
