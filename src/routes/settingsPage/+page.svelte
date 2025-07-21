@@ -2,11 +2,40 @@
   import { onMount } from "svelte";
   import { setDetails } from "../../app/DiscordRpc";
   import { setValue } from "../../tools/SettingsManager";
+  import { resolveResource } from "@tauri-apps/api/path";
+  import { relaunch } from "@tauri-apps/plugin-process";
+  import { writeTextFile } from "@tauri-apps/plugin-fs";
   onMount(async() => {
       await setDetails("Settings")
   });
 
-  const settings = {
+  const defaultEffectData = [
+    [
+        "",
+        "Default"
+    ],
+    [
+        "aecho=0.8:0.35:17",
+        "Flashback"
+    ]
+  ]
+
+  const defaultPitchData = [
+    [
+        "1.00",
+        "Default"
+    ],
+    [
+        "2.00",
+        "Super High Pitch"
+    ],
+    [
+        "0.25",
+        "Super Low Pitch"
+    ]
+  ]
+
+  export const settings = {
     "General": [
       {
         name: "Check for updates",
@@ -47,8 +76,8 @@
         description: "Measured in milliseconds",
         type: "string",
         defaultValue: "10",
-        onChange: () => {
-
+        onChange: (value: boolean) => {
+          setValue("recordStartDelay", value);
         }
       },
       {
@@ -56,36 +85,29 @@
         description: "Measured in milliseconds",
         type: "string",
         defaultValue: "50",
-        onChange: () => {
-
+        onChange: (value: boolean) => {
+          setValue("recordEndDelay", value);
         }
       },
       {
         name: "Auto-Accept Recordings",
         description: "You are committed!",
         type: "boolean",
-        onChange: () => {
-
+        onChange: (value: boolean) => {
+          setValue("autoAcceptRecordings", value);
         }
       }
     ],
     "Danger Zone": [
       {
-        name: "Delete Statistics",
-        description: "Statistics are stored locally on your computer",
-        type: "button",
-        buttonText: "Delete",
-        onChange: () => {
-
-        }
-      },
-      {
         name: "Delete custom pitch data",
         description: "Pitch data file will reset to default",
         type: "button",
         buttonText: "Delete",
-        onChange: () => {
-
+        onclick: async() => {
+          const file = await resolveResource("resources/pitchData.json");
+          await writeTextFile(file, JSON.stringify(defaultPitchData));
+          await relaunch();
         }
       },
       {
@@ -93,8 +115,10 @@
         description: "Effect data file will reset to default",
         type: "button",
         buttonText: "Delete",
-        onChange: () => {
-
+        onclick: async() => {
+          const file = await resolveResource("resources/effectData.json");
+          await writeTextFile(file, JSON.stringify(defaultEffectData));
+          await relaunch();
         }
       },
       {
@@ -102,8 +126,12 @@
         description: "Deletes custom effect and pitch data",
         type: "button",
         buttonText: "Delete",
-        onChange: () => {
-
+        onclick: async() => {
+          const pitchData = await resolveResource("resources/pitchData.json");
+          const effectData = await resolveResource("resources/effectData.json");
+          await writeTextFile(pitchData, JSON.stringify(defaultPitchData));
+          await writeTextFile(effectData, JSON.stringify(defaultEffectData));
+          await relaunch();
         }
       },
       {
@@ -111,8 +139,13 @@
         description: "Deletes custom effect and pitch data, and resets your statistics",
         type: "button",
         buttonText: "Delete",
-        onChange: () => {
+        onclick: async() => {
+          const pitchData = await resolveResource("resources/pitchData.json");
+          const effectData = await resolveResource("resources/effectData.json");
+          await writeTextFile(pitchData, JSON.stringify(defaultPitchData));
+          await writeTextFile(effectData, JSON.stringify(defaultEffectData));
 
+          await relaunch();
         }
       }
     ]
@@ -135,7 +168,7 @@
           {:else if setting.type == "string"}
             <input type="text" placeholder={setting.defaultValue} class="input max-w-1/12">
           {:else if setting.type == "button"}
-            <button class="btn btn-primary btn-md" onclick={setting.onChange}>{setting.buttonText}</button>
+            <button class="btn btn-primary btn-md" onclick={async() => await setting.onClick}>{setting.buttonText}</button>
          <!-- {:else if setting.type == "dropdown"}
             <select class="select">
               {#each setting.choices as choice}

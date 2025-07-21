@@ -1,10 +1,11 @@
 {
     "theme": "dark",
     "autoloadProject": false,
+    "autoAcceptRecordings": false,
     "updateCheck": true,
     "lastSelectedFolder": "",
-    "recordStartDelay": 0.5,
-    "recordEndDelay": 0.25,
+    "recordStartDelay": 500,
+    "recordEndDelay": 250,
     "enableTranscription": true,
     "toastTimeout": 1750,
     "enableRichPresence": true
