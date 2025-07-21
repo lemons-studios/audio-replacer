@@ -43,4 +43,5 @@ export function setValue(key: string, value: number | string | boolean) {
 async function saveJsonData() {
     const content = JSON.stringify(settingsJson);
     await writeTextFile(await resolveResource("resources/settings.json"), content);
+    await loadSettings(); // Reload settings json
 }

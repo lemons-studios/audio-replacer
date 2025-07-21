@@ -4,7 +4,8 @@
   import { getValue, setValue } from "../../tools/SettingsManager";
   import { resolveResource } from "@tauri-apps/api/path";
   import { relaunch } from "@tauri-apps/plugin-process";
-  import { writeTextFile } from "@tauri-apps/plugin-fs";
+  import { readTextFile, writeTextFile } from "@tauri-apps/plugin-fs";
+  import { selectFile } from "../../tools/OsTools";
   onMount(async() => {
       await setDetails("Settings")
   });
@@ -116,6 +117,34 @@
         },
         getValue: async(): Promise<boolean> => {
           return await getValue("autoAcceptRecordings") as boolean;
+        }
+      },
+      {
+        name: "Import Pitch Data",
+        description: "Import a json file containing custom pitch values that will be applied on record completion",
+        type: "button",
+        buttonText: "Import",
+        onclick: async() => {
+          const pitchPath = await resolveResource("resources/pitchData.json");
+          const filePath = await selectFile();
+          const fileContents = await readTextFile(filePath);
+
+          await writeTextFile(pitchPath, fileContents);
+          await relaunch();
+        }
+      },
+      {
+        name: "Import Effect Data",
+        description: "Import a json file containing custom ffmpeg effect filter that will be applied on record completion",
+        type: "button",
+        buttonText: "Import",
+        onclick: async() => {
+          const pitchPath = await resolveResource("resources/effectData.json");
+          const filePath = await selectFile();
+          const fileContents = await readTextFile(filePath);
+
+          await writeTextFile(pitchPath, fileContents);
+          await relaunch();
         }
       }
     ],
