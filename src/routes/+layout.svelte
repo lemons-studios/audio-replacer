@@ -29,7 +29,7 @@
   }
 </style>
 
-<main class="bg-base-200 flex flex-row grow-1 text-white items-stretch w-screen h-screen">
+<main class="bg-base-200 flex flex-row grow-1 text-white items-stretch w-screen h-screen overflow-y-hidden">
   <div class="flex flex-col items-stretch justify-between bg-base-100 min-w-[10rem] p-1">
     <div class="flex flex-col items-stretch">
       <ul class="menu menu-vertical menu-lg gap-0.5 rounded-box w-full bg-transparent">

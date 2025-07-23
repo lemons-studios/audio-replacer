@@ -50,6 +50,16 @@
   @apply font-inter;
 }
 
+html {
+  overflow: hidden;
+  height: 100%;
+}
+
+body {
+  height: 100%;
+  overflow: auto;
+}
+
 .pane {
   @apply fieldset bg-base-200 border-base-300 rounded-box border hover:border-white transition p-5 gap-5;
 }
