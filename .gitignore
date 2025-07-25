@@ -11,3 +11,8 @@ vite.config.ts.timestamp-*
 
 .idea/
 .vscode/
+
+# Downloaded additional content
+src-tauri/binaries/whisper.bin 
+static/ffmpeg-core.wasm
+static/ffmpeg-core.js

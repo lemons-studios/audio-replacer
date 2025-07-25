@@ -9,7 +9,8 @@
     "preview": "vite preview",
     "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
     "check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
-    "tauri": "tauri"
+    "tauri": "tauri",
+    "postinstall": "node postinstall/downloadAdditionalFiles.js"
   },
   "license": "BSD-3-Clause",
   "dependencies": {
@@ -30,6 +31,7 @@
     "@tauri-apps/plugin-os": "2.3.0",
     "@tauri-apps/plugin-process": "2.3.0",
     "@tauri-apps/plugin-shell": "2.3.0",
+    "@tauri-apps/plugin-updater": "^2.9.0",
     "@tauri-apps/plugin-upload": "2.3.1",
     "@timephy/rnnoise-wasm": "^1.0.0",
     "daisyui": "^5.0.46",
@@ -40,14 +42,14 @@
   },
   "devDependencies": {
     "@sveltejs/adapter-static": "3.0.8",
-    "@sveltejs/kit": "2.25.1",
+    "@sveltejs/kit": "2.26.0",
     "@sveltejs/vite-plugin-svelte": "6.1.0",
     "@tailwindcss/typography": "0.5.16",
-    "@tauri-apps/cli": "2.7.0",
+    "@tauri-apps/cli": "2.7.1",
     "monaco-editor": "^0.52.2",
-    "svelte": "5.36.13",
+    "svelte": "5.36.16",
     "svelte-check": "4.3.0",
     "typescript": "5.8.3",
-    "vite": "7.0.5"
+    "vite": "7.0.6"
   }
 }

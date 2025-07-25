@@ -2,7 +2,7 @@
   "$schema": "https://schema.tauri.app/config/2",
   "productName": "audio-replacer",
   "version": "5.0.0",
-  "identifier": "com.audio-replacer.app",
+  "identifier": "com.audio-replacer.tool",
   "build": {
     "beforeDevCommand": "npm run dev",
     "devUrl": "http://localhost:1420",
@@ -29,6 +29,8 @@
     }
   },
   "bundle": {
+    "createUpdaterArtifacts": true,
+    "publisher": "Lemon Studios",
     "active": true,
     "targets": "all",
     "icon": [
@@ -57,6 +59,14 @@
         "files": {},
         "release": "1"
       }
+    }
+  },
+  "plugins": {
+    "updater": {
+      "windows": {
+        "installMode": "passive"
+      },
+      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDE1MEM5MjQ3M0ZBNDAwREMKUldUY0FLUS9SNUlNRlhSZVR6R3llRzh1WlBJODQvNjNNYUR1RUV6SnF1ekJhRFlldFVSOUxsUFMK"
     }
   }
 }
