@@ -14,5 +14,8 @@ vite.config.ts.timestamp-*
 
 # Downloaded additional content
 src-tauri/binaries/whisper.bin 
-static/ffmpeg-core.wasm
-static/ffmpeg-core.js
+# FFMpeg version downloaded when on Windows
+src-tauri/binaries/ffmpeg-windows.exe
+
+# FFMpeg version downloaded when on Linux
+src-tauri/binaries/ffmpeg-linux
