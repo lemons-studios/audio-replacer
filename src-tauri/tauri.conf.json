@@ -42,14 +42,18 @@
     ],
     "resources": [
       "binaries/whisper.bin",
+      "binaries/noiseSuppression.rnnn",
       "resources/settings.json",
       "resources/effectData.json",
       "resources/pitchData.json"
     ],
+    "externalBin": [
+      "binaries/ffmpeg"
+    ],
     "linux": {
       "appimage": {
         "bundleMediaFramework": true,
-        "files": {}
+        "files": {  }
       },
       "deb": {
         "files": {}
