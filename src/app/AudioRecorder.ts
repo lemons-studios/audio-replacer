@@ -1,6 +1,7 @@
 import { writeFile } from "@tauri-apps/plugin-fs";
 import { MediaRecorder as MediaRecorderEx, register } from "extendable-media-recorder";
 import { connect } from 'extendable-media-recorder-wav-encoder';
+import { applyFfmpegFilter, applyFFMpegPitch, applyNoiseSuppression } from "../tools/FFMpegManager";
 
 let audioRecorder: any; 
 let recordedChunks: BlobPart[] = [];
@@ -42,6 +43,10 @@ export async function endRecording(outputPath: string): Promise<void> {
                 const uint8Arr = new Uint8Array(buffer);
 
                 await writeFile(outputPath, uint8Arr);
+                // Now, it's time to apply noise suppression, pitch changes, and apply any effects selected
+                await applyNoiseSuppression(outputPath);
+                await applyFFMpegPitch(outputPath);
+                await applyFfmpegFilter(outputPath);
                 console.log(`Possibly successfully written to ${outputPath}`);
             }
             else {

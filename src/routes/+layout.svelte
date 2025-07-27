@@ -3,7 +3,7 @@
   import { House, Mic, PencilLine, Settings, Megaphone } from "@lucide/svelte";
   import { onMount } from "svelte";
   import { populateCustomData } from "../tools/EffectManager";
-  import { setFFmpegPath } from "../tools/FFMpegManager";
+  import { loadFFMpeg } from "../tools/FFMpegManager";
   import { getVersion } from "@tauri-apps/api/app";
   let { children } = $props();
   let versionNumber = $state("");
@@ -11,7 +11,7 @@
   onMount(async() => {
     versionNumber = await formatVersion();
     await populateCustomData();
-    await setFFmpegPath();  
+    await loadFFMpeg();  
   });
 
   async function formatVersion(): Promise<string> {

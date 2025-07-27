@@ -14,11 +14,16 @@ async function download() {
     },
     {
       path: `src-tauri/binaries/${
-        platform === "win32" ? "ffmpeg-windows.exe" : "ffmpeg-linux.AppImage"
+        platform === "win32" ? "ffmpeg-x86_64-pc-windows-msvc.exe" : "ffmpeg-x86_64-unknown-linux-gnu.AppImage"
       }`,
       url: `https://github.com/lemons-studios/audio-replacer-ffmpeg/releases/download/7.1.1/ffmpeg-${platform === "win32" ? "x86_64-pc-windows-msvc.exe" : "x86_64-unknown-linux-gnu.AppImage"}`,
       name: `ffmpeg-${platform === "win32" ? "windows" : "linux"}`
     },
+    {
+      path: "src-tauri/binaries/noiseSuppression.rnnn",
+      url: "https://raw.githubusercontent.com/richardpl/arnndn-models/refs/heads/master/std.rnnn",
+      name: "noiseSuppression.rnnn"
+    }
   ];
 
   for (let i = 0; i < files.length; i++) {
