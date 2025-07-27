@@ -6,27 +6,31 @@ https.globalAgent.keepAlive = false;
 
 async function download() {
   const platform = os.platform();
+  const binDir = "src-tauri/binaries";
+
   const files = [
     {
-      path: "src-tauri/binaries/whisper.bin",
+      path: `${binDir}/whisper.bin`,
       url: "https://huggingface.co/sandrohanea/whisper.net/resolve/main/q5_1/ggml-base.bin",
       name: "whisper.bin"
     },
     {
-      path: `src-tauri/binaries/${platform === "win32" ? "ffmpeg-x86_64-pc-windows-msvc.exe" : "ffmpeg-x86_64-unknown-linux-gnu"}`,
+      path: `${binDir}/${platform === "win32" ? "ffmpeg-x86_64-pc-windows-msvc.exe" : "ffmpeg-x86_64-unknown-linux-gnu"}`,
       url: platform === "win32" 
       ? "https://f004.backblazeb2.com/file/audio-replacer-5-ffmpeg-binaries/ffmpeg-x86_64-pc-windows-msvc.exe" 
       : "https://f004.backblazeb2.com/file/audio-replacer-5-ffmpeg-binaries/ffmpeg-x86_64-unknown-linux-gnu",
       name: `ffmpeg-${platform === "win32" ? "windows" : "linux"}`
     },
     {
-      path: "src-tauri/binaries/noiseSuppression.rnnn",
+      path: `${binDir}/noiseSuppression.rnnn`,
       url:  "https://raw.githubusercontent.com/richardpl/arnndn-models/refs/heads/master/std.rnnn",
       name: "noiseSuppression.rnnn"
     }
   ];
+  if(!fs.existsSync(binDir)) {
+    fs.mkdirSync("src-tauri/binaries");
+  }
 
-  fs.mkdirSync("src-tauri/binaries");
   for (let i = 0; i < files.length; i++) {
     if (fs.existsSync(files[i].path)) {
       continue;
