@@ -25,9 +25,10 @@ async function download() {
       name: "noiseSuppression.rnnn"
     }
   ];
-
+  
   for (let i = 0; i < files.length; i++) {
     if (fs.existsSync(files[i].path)) {
+      skippedFiles++;
       continue;
     }
     console.log(`Downloading ${files[i].name} (${i + 1}/${files.length})`);
@@ -39,7 +40,6 @@ async function download() {
     }
   }
 }
-
 
 function downloadFile(url, dest) {
     return new Promise((resolve, reject) => {
