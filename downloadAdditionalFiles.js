@@ -13,19 +13,20 @@ async function download() {
       name: "whisper.bin"
     },
     {
-      path: `src-tauri/binaries/${
-        platform === "win32" ? "ffmpeg-x86_64-pc-windows-msvc.exe" : "ffmpeg-x86_64-unknown-linux-gnu"
-      }`,
-      url: platform === "win32" ? "https://f004.backblazeb2.com/file/audio-replacer-5-ffmpeg-binaries/ffmpeg-x86_64-pc-windows-msvc.exe" : "https://f004.backblazeb2.com/file/audio-replacer-5-ffmpeg-binaries/ffmpeg-x86_64-unknown-linux-gnu",
+      path: `src-tauri/binaries/${platform === "win32" ? "ffmpeg-x86_64-pc-windows-msvc.exe" : "ffmpeg-x86_64-unknown-linux-gnu"}`,
+      url: platform === "win32" 
+      ? "https://f004.backblazeb2.com/file/audio-replacer-5-ffmpeg-binaries/ffmpeg-x86_64-pc-windows-msvc.exe" 
+      : "https://f004.backblazeb2.com/file/audio-replacer-5-ffmpeg-binaries/ffmpeg-x86_64-unknown-linux-gnu",
       name: `ffmpeg-${platform === "win32" ? "windows" : "linux"}`
     },
     {
       path: "src-tauri/binaries/noiseSuppression.rnnn",
-      url: "https://raw.githubusercontent.com/richardpl/arnndn-models/refs/heads/master/std.rnnn",
+      url:  "https://raw.githubusercontent.com/richardpl/arnndn-models/refs/heads/master/std.rnnn",
       name: "noiseSuppression.rnnn"
     }
   ];
-  
+
+  fs.mkdirSync("src-tauri/binaries");
   for (let i = 0; i < files.length; i++) {
     if (fs.existsSync(files[i].path)) {
       continue;
