@@ -14,9 +14,9 @@ async function download() {
     },
     {
       path: `src-tauri/binaries/${
-        platform === "win32" ? "ffmpeg-x86_64-pc-windows-msvc.exe" : "ffmpeg-x86_64-unknown-linux-gnu.AppImage"
+        platform === "win32" ? "ffmpeg-x86_64-pc-windows-msvc.exe" : "ffmpeg-x86_64-unknown-linux-gnu"
       }`,
-      url: `https://github.com/lemons-studios/audio-replacer-ffmpeg/releases/download/7.1.1/ffmpeg-${platform === "win32" ? "x86_64-pc-windows-msvc.exe" : "x86_64-unknown-linux-gnu.AppImage"}`,
+      url: platform === "win32" ? "https://f004.backblazeb2.com/file/audio-replacer-5-ffmpeg-binaries/ffmpeg-x86_64-pc-windows-msvc.exe" : "https://f004.backblazeb2.com/file/audio-replacer-5-ffmpeg-binaries/ffmpeg-x86_64-unknown-linux-gnu",
       name: `ffmpeg-${platform === "win32" ? "windows" : "linux"}`
     },
     {

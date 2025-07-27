@@ -13,6 +13,11 @@
         {
           "name": "binaries/whisper.bin",
           "sidecar": true
+        },
+        {
+          "name": "binaries/ffmpeg",
+          "sidecar": true,
+          "args": true
         }
       ]
     },
