@@ -43,6 +43,7 @@
         description: "You will be prompted to install the update after the update is downloaded",
         type: "boolean",
         onChange: (value: boolean) => {
+          console.log("Clicked");
           setValue("updateCheck", value);
         },
         getValue: async(): Promise<boolean> => {
@@ -54,6 +55,7 @@
         description: "Load your last project automatically on app launch instead of loading into the home menu",
         type: "boolean",
         onChange: (value: boolean) => {
+          console.log("Clicked");
           setValue("autoloadProject", value);
         },
         getValue: async(): Promise<boolean> => {
@@ -65,6 +67,7 @@
         description: "Uses the whisper text transcription model to transcribe the current file you are on. Little to no performance impact",
         type: "boolean",
         onChange: (value: boolean) => {
+          console.log("Clicked");
           setValue("enableTranscription", value);
         },
         getValue: async(): Promise<boolean> => {
@@ -76,6 +79,7 @@
         description: "Displays general info on what you're doing to all your friends on Discord",
         type: "boolean",
         onChange: (value: boolean) => {
+          console.log("Clicked");
           setValue("enableRichPresence", value);
         },
         getValue: async(): Promise<boolean> => {
@@ -90,6 +94,7 @@
         type: "string",
         defaultValue: "10",
         onChange: (value: string) => {
+          console.log("Clicked");
           setValue("recordStartDelay", value);
         },
         getValue: async(): Promise<string> => {
@@ -102,6 +107,7 @@
         type: "string",
         defaultValue: "50",
         onChange: (value: string) => {
+          console.log("Clicked");
           setValue("recordEndDelay", value);
         },
         getValue: async(): Promise<string> => {
@@ -113,6 +119,7 @@
         description: "You are committed!",
         type: "boolean",
         onChange: (value: boolean) => {
+          console.log("Clicked");
           setValue("autoAcceptRecordings", value);
         },
         getValue: async(): Promise<boolean> => {
@@ -124,7 +131,8 @@
         description: "Import a json file containing custom pitch values that will be applied on record completion",
         type: "button",
         buttonText: "Import",
-        onclick: async() => {
+        onClick: async() => {
+          console.log("Clicked");
           const pitchPath = await resolveResource("resources/pitchData.json");
           const filePath = await selectFile();
           const fileContents = await readTextFile(filePath);
@@ -138,7 +146,8 @@
         description: "Import a json file containing custom ffmpeg effect filter that will be applied on record completion",
         type: "button",
         buttonText: "Import",
-        onclick: async() => {
+        onClick: async() => {
+          console.log("Clicked");
           const pitchPath = await resolveResource("resources/effectData.json");
           const filePath = await selectFile();
           const fileContents = await readTextFile(filePath);
@@ -154,7 +163,8 @@
         description: "Pitch data file will reset to default",
         type: "button",
         buttonText: "Delete",
-        onclick: async() => {
+        onClick: async() => {
+          console.log("Clicked");
           const file = await resolveResource("resources/pitchData.json");
           await writeTextFile(file, JSON.stringify(defaultPitchData));
           await relaunch();
@@ -165,7 +175,8 @@
         description: "Effect data file will reset to default",
         type: "button",
         buttonText: "Delete",
-        onclick: async() => {
+        onClick: async() => {
+          console.log("Clicked");
           const file = await resolveResource("resources/effectData.json");
           await writeTextFile(file, JSON.stringify(defaultEffectData));
           await relaunch();
@@ -176,7 +187,8 @@
         description: "Deletes custom effect and pitch data",
         type: "button",
         buttonText: "Delete",
-        onclick: async() => {
+        onClick: async() => {
+          console.log("Clicked");
           const pitchData = await resolveResource("resources/pitchData.json");
           const effectData = await resolveResource("resources/effectData.json");
           await writeTextFile(pitchData, JSON.stringify(defaultPitchData));
@@ -189,7 +201,8 @@
         description: "Deletes custom effect and pitch data, and resets your statistics",
         type: "button",
         buttonText: "Delete",
-        onclick: async() => {
+        onClick: async() => {
+          console.log("Clicked");
           const pitchData = await resolveResource("resources/pitchData.json");
           const effectData = await resolveResource("resources/effectData.json");
           await writeTextFile(pitchData, JSON.stringify(defaultPitchData));
@@ -215,20 +228,16 @@
           </div>
           {#if setting.type == "boolean"}
             {#await setting.getValue() then value}
-              {#if value == true}
-                <input type="checkbox" class="toggle" checked> 
-              {:else}
-                <input type="checkbox" class="toggle">
-              {/if} 
+              <input type="checkbox" class="toggle" checked={value} onchange={setting.onChange}> 
             {/await}
           {:else if setting.type == "string"}
             {#await setting.getValue()}
               <input type="text" placeholder={setting.defaultValue} class="input max-w-1/12">
             {:then value} 
-              <input type="text" value={value} class="input max-w-1/12" ontoggle={setting.onChange}>
+              <input type="text" value={value} class="input max-w-1/12" onchange={setting.onChange}>
             {/await}
           {:else if setting.type == "button"}
-            <button class="btn btn-primary btn-md" onclick={async() => await setting.onClick}>{setting.buttonText}</button>
+            <button class="btn btn-primary btn-md" onclick={setting.onClick}>{setting.buttonText}</button>
          <!-- {:else if setting.type == "dropdown"}
             <select class="select">
               {#each setting.choices as choice}

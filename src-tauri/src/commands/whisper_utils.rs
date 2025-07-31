@@ -3,7 +3,7 @@ use tauri::command;
 use whisper_rs::{FullParams, SamplingStrategy, WhisperContext, WhisperContextParameters};
 
 // This function is shorter than the one in the C#/WinUI version of this application and that's pretty crazy ngl
-#[command(async)]
+#[command]
 pub fn transcribe_file(path: &str, model_path: &str) -> String {
     if !fs::metadata(model_path).is_ok() {
         return String::from("Transcription Model Unavailable");
@@ -24,7 +24,6 @@ pub fn transcribe_file(path: &str, model_path: &str) -> String {
         .expect("failed to load model");
 
     let mut state = ctx.create_state().expect("failed to create state");
-
     let mut params = FullParams::new(SamplingStrategy::Greedy { best_of: 1 });
     params.set_language(Some(&lang));
     params.set_print_special(false);

@@ -1,3 +1,4 @@
+/** biome-ignore-all lint/correctness/noUnknownProperty: <explanation> */
 @import "tailwindcss";
 @import "@fontsource-variable/inter";
 

@@ -29,6 +29,7 @@
     }
   },
   "bundle": {
+    "copyright": "Lemon Studios",
     "createUpdaterArtifacts": true,
     "publisher": "Lemon Studios",
     "active": true,
@@ -63,14 +64,33 @@
         "files": {},
         "release": "1"
       }
-    }
+    },
+    "windows": {
+      "allowDowngrades": true,
+      "certificateThumbprint": null,
+      "digestAlgorithm": null,
+      "nsis": null,
+      "signCommand": null,
+      "timestampUrl": null,
+      "tsp": false,
+      "webviewInstallMode": {
+        "silent": true,
+        "type": "downloadBootstrapper"
+      },
+      "wix": null
+    },
+    "license": "BSD-3-Clause",
+    "category": "Utility"
   },
   "plugins": {
     "updater": {
       "windows": {
         "installMode": "passive"
       },
-      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDE1MEM5MjQ3M0ZBNDAwREMKUldUY0FLUS9SNUlNRlhSZVR6R3llRzh1WlBJODQvNjNNYUR1RUV6SnF1ekJhRFlldFVSOUxsUFMK"
+      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDE1MEM5MjQ3M0ZBNDAwREMKUldUY0FLUS9SNUlNRlhSZVR6R3llRzh1WlBJODQvNjNNYUR1RUV6SnF1ekJhRFlldFVSOUxsUFMK",
+      "endpoints": [
+        "https://f004.backblazeb2.com/file/audio-replacer-5-updates/"
+      ]
     }
   }
 }

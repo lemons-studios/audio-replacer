@@ -41,15 +41,15 @@
 </script>
 
 <div class="flex flex-row gap-5 items-stretch h-full">
-  <fieldset class="pane w-1/2">
+  <fieldset class="pane w-1/2 h-full">
     <legend class="fieldset-legend">Projects</legend>
-    <div class="flex grow flex-col items-stretch gap-4 h-full">
-      <fieldset class="secondary-pane h-full">
+    <div class="flex flex-col items-stretch gap-4 h-full">
+      <fieldset class="secondary-pane h-full grow">
         <legend class="fieldset-legend">Load Last Project</legend>
         <h4 class="text-xl mb-5"><b>{previousProjectName}</b></h4>
         <button class="btn-primary btn btn-lg" onclick={loadLastProject}>Load</button>
       </fieldset>
-      <fieldset class="secondary-pane h-full">
+      <fieldset class="secondary-pane h-full grow">
         <legend class="fieldset-legend">Load Other Project</legend>
         <button class="btn btn-primary btn-lg" onclick={loadNewProject}>Load</button>
       </fieldset>
