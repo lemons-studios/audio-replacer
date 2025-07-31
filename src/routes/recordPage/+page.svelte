@@ -28,7 +28,7 @@
     setFileData();
     await setDetails("Recording");
 
-    currentTranscription = await transcribeFile(currentAudioPath);
+    currentTranscription = ProjectManager.isProjectLoaded ? `Transcription ${await transcribeFile(currentAudioPath)}` : "";
   })
 
   async function startRecord() {
@@ -129,7 +129,7 @@
         <button class="btn btn-primary w-25" onclick={() => finalizeRecording(false)}>Submit</button>
       {/if}
     </div>
-    <h2 class="text-center text-lg font-medium">Transcription: {currentTranscription}</h2>
+    <h2 class="text-center text-lg font-medium">{currentTranscription}</h2>
   </fieldset>
   <fieldset class="w-2/4 pane content-center">
     <legend class="fieldset-legend">Recording Filters</legend>

@@ -62,15 +62,15 @@ body {
 }
 
 .pane {
-  @apply fieldset bg-base-200 border-base-300 rounded-box border hover:border-white transition p-5 gap-5;
+  @apply fieldset bg-base-200 border-base-300 rounded-box border hover:border-white transition duration-300 p-5 gap-5;
 }
 
 .pane-error {
-  @apply fieldset bg-base-200 border-base-300 rounded-box border hover:border-error transition p-5 gap-5;
+  @apply fieldset bg-base-200 border-base-300 rounded-box border hover:border-error transition duration-300 p-5 gap-5;
 }
 
 .secondary-pane {
-  @apply fieldset bg-base-200 border-base-300 border rounded-md p-2 hover:border-gray-400 transition text-center items-center;
+  @apply fieldset bg-base-200 border-base-300 border rounded-md p-2 hover:border-gray-400 transition duration-100 text-center items-center;
 }
 
 .title-text {

@@ -32,12 +32,13 @@ export async function getValue(key: string): Promise<any> {
     }
 }
 
-export function setValue(key: string, value: number | string | boolean) {
+export function setValue(key: string, value: any) {
     // Realistically speaking, this function will never call before loadSettings is called
     console.log(`Updating ${key} in settings json to ${value}`);
     settingsJson[key] = value;
     console.log(`Attempting to debounce and write`);
-    debounce(async() => await saveJsonData(), 50);
+    console.log(settingsJson);
+    debounce(async() => await saveJsonData(), 100);
 }
 
 async function saveJsonData() {
