@@ -187,16 +187,16 @@ export const settings = {
       },
     },
   ],
-};
+} as const;
 
 const defaultEffectData = [
   ["", "Default"],
   ["aecho=0.8:0.35:17", "Flashback"],
-];
+] as const;
 
 const defaultPitchData = [
   ["1.00", "Default"],
   ["2.00", "Super High Pitch"],
   ["0.25", "Super Low Pitch"],
-];
+] as const;
 

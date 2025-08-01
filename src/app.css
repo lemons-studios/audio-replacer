@@ -84,3 +84,11 @@ body {
 .media-control-button {
   @apply transition p-0.5;
 }
+
+.notification-overlay {
+  display: fixed;
+  z-index: 5;
+  top: 0.5rem;
+  left: 50%;
+  transform: translate(-50%, 0);
+}

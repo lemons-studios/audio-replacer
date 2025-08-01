@@ -7,6 +7,8 @@
   });
 </script>
 
+<!--Ignore any errors below if any are visible, they only show up because not all elements in the javascript object share the same list of properties-->
+<!--App runs fine-->
 <div class="flex flex-grow flex-col gap-y-2.5 items-center overflow-y-auto">
   {#each Object.entries(settings) as [name, settingCategory], sIndex}
     <fieldset class={`${sIndex == 2 ? 'pane-error' : 'pane'} w-3/4`}>

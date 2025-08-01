@@ -5,6 +5,7 @@
   import { populateCustomData } from "../tools/EffectManager";
   import { loadFFMpeg } from "../tools/FFMpegManager";
   import { getVersion } from "@tauri-apps/api/app";
+  import Toast from "../Components/Toast.svelte";
   let { children } = $props();
   let versionNumber = $state("");
 
@@ -46,6 +47,7 @@
       </ul>
     </div>
   </div>
+    <Toast message="Test" title="Wow notification" notificationType="info"></Toast>
     <div class="flex-1 flex flex-col overflow-hidden w-screen h-screen p-5.5">
       {@render children?.()}
     </div>
