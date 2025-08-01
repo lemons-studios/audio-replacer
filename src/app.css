@@ -86,7 +86,7 @@ body {
 }
 
 .notification-overlay {
-  display: fixed;
+  position: fixed;
   z-index: 5;
   top: 0.5rem;
   left: 50%;

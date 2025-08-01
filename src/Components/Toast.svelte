@@ -5,12 +5,9 @@
   let isVisible = $state(true);
 
   let alertType = $derived(() => {
-    if (!notificationType || notificationType == "info")
-      return "alert-info";
-    if (notificationType == "success")
-      return "alert-success";
-    if (notificationType == "warning")
-      return "alert-warning";
+    if (!notificationType || notificationType == "info") return "alert-info";
+    if (notificationType == "success") return "alert-success";
+    if (notificationType == "warning") return "alert-warning";
     if (notificationType == "error") return " alert-error";
   });
 
@@ -22,17 +19,21 @@
 </script>
 
 {#if isVisible}
-  <div role="alert" class={`alert alert-outline ${alertType} notification-overlay`}>
-    {#if notificationType == "info"}
-      <Info />
-    {:else if notificationType == "success"}
-      <Check />
-    {:else if notificationType == "warning"}
-      <TriangleAlert />
-    {:else if notificationType == "error"}
-      <CircleX />
-    {/if}
-    <h3 class="font-bold">{title}</h3>
-    <div class="text-xs">{message}</div>
+  <div class="notification-overlay">
+    <div role="alert" class={`alert alert-soft min-w-100 ${alertType()}`}>
+      {#if notificationType == "info"}
+        <Info />
+      {:else if notificationType == "success"}
+        <Check />
+      {:else if notificationType == "warning"}
+        <TriangleAlert />
+      {:else if notificationType == "error"}
+        <CircleX />
+      {/if}
+      <div>
+        <h3 class="font-bold">{title}</h3>
+        <div class="text-xs">{message}</div>
+      </div>
+    </div>
   </div>
 {/if}

@@ -9,6 +9,9 @@
   let { children } = $props();
   let versionNumber = $state("");
 
+  let notificationType = $state("info");
+  let notificationTitle = $state("Hello");
+  let notificationMessage = $state("This is a test message");
   onMount(async() => {
     versionNumber = await formatVersion();
     await populateCustomData();
@@ -31,6 +34,7 @@
 </style>
 
 <main class="bg-base-200 flex flex-row grow-1 text-white items-stretch w-screen h-screen overflow-y-hidden">
+  <!--<Toast message={notificationMessage} title={notificationTitle} notificationType={notificationType} />-->
   <div class="flex flex-col items-stretch justify-between bg-base-100 min-w-[10rem] p-1">
     <div class="flex flex-col items-stretch">
       <ul class="menu menu-vertical menu-lg gap-0.5 rounded-box w-full bg-transparent">
@@ -47,7 +51,6 @@
       </ul>
     </div>
   </div>
-    <Toast message="Test" title="Wow notification" notificationType="info"></Toast>
     <div class="flex-1 flex flex-col overflow-hidden w-screen h-screen p-5.5">
       {@render children?.()}
     </div>
