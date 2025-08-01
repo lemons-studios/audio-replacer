@@ -19,13 +19,13 @@
           </div>
           {#if setting.type == "boolean"}
             {#await setting.getValue() then value}
-              <input type="checkbox" class="toggle" checked={value} onchange={setting.onChange}> 
+              <input type="checkbox" class="toggle" checked={value} onchange={async() => await setting.onChange(value)}> 
             {/await}
           {:else if setting.type == "string"}
             {#await setting.getValue()}
               <input type="text" placeholder={setting.defaultValue} class="input max-w-1/12">
             {:then value} 
-              <input type="text" value={value} class="input max-w-1/12" onchange={setting.onChange}>
+              <input type="text" value={value} class="input max-w-1/12" onchange={async() => setting.onChange(value)}>
             {/await}
           {:else if setting.type == "button"}
             <button class="btn btn-primary btn-md" onclick={setting.onClick}>{setting.buttonText}</button>
