@@ -1,7 +1,7 @@
 import { writeFile } from "@tauri-apps/plugin-fs";
 import { MediaRecorder as MediaRecorderEx, register } from "extendable-media-recorder";
 import { connect } from 'extendable-media-recorder-wav-encoder';
-import { applyFfmpegFilter, applyFFMpegPitch, applyNoiseSuppression } from "../tools/FFMpegManager";
+import { applyFfmpegFilter, applyFFMpegPitch, applyNoiseSuppression } from "./FFMpegManager";
 
 let audioRecorder: any; 
 let recordedChunks: BlobPart[] = [];

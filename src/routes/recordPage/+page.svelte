@@ -7,6 +7,7 @@
   import { setEffect, setPitch } from "./FFMpegManager";
   import { setDetails } from "../../tools/DiscordRpc";
   import { cancelRecording, endRecording, startRecording } from "./AudioRecorder";
+  import { register } from "@tauri-apps/plugin-global-shortcut";
   
   let currentPathTrunc = $state(ProjectManager.currentFileLocalPath || "Select a folder to begin");
   let currentAudioPath = $state(ProjectManager.currentFile || "");
@@ -15,6 +16,7 @@
   let completionPercentage = $state("0%");
   let filesRemaining = $state(ProjectManager.filesRemaining || 0);
   let currentTranscription = $state("Transcription Unavailable")
+  let extraEditsFlagged = $state(ProjectManager.extraEditsFlagged);
 
   let idle = $state(true);
   let recording = $state(false);
@@ -24,11 +26,64 @@
   let pitchDropdown: HTMLSelectElement;
   let effectDropdown: HTMLSelectElement;
 
+  const discardOptions = {
+    discarding: true,
+    notDiscarding: false
+  } as const
+
   onMount(async() => {
     setFileData();
     await setDetails("Recording");
 
     currentTranscription = ProjectManager.isProjectLoaded ? `Transcription: ${await transcribeFile(currentAudioPath)}` : "";
+    
+    const shortcuts = [
+      {
+        keybind: "CommandOrControl+R",
+        action: async() => {
+          if(idle) {
+            await startRecord();
+          }
+          else if(recording) {
+            await stopRecord();
+          } 
+          else {
+            await finalizeRecording(discardOptions.notDiscarding)
+          }
+        }
+      }, 
+      {
+        keybind: "CommandOrControl+Q",
+        action: async() => {
+          if(idle) {
+            await skipFile();
+          }
+          else if(recording) {
+            cancelRecord();
+          }
+          else {
+            await finalizeRecording(discardOptions.discarding);
+          };
+        }
+      },
+      {
+        keybind: "CommandOrControl+E",
+        action: () => {
+          switchAudio();
+        }
+      },
+      {
+        keybind: "CommandOrControl+F",
+        action: () => {
+          ProjectManager.toggleExtraEdits();
+        }
+      }
+    ];
+
+    for(let i = 0; i < shortcuts.length; i++) {
+      console.log(`Registering command ${shortcuts[i].keybind}`);
+      await register(shortcuts[i].keybind, shortcuts[i].action);
+    }
   })
 
   async function startRecord() {
@@ -80,6 +135,13 @@
     }
   }
 
+  function switchAudio() {
+    const outputPath = ProjectManager.currentOutFile;
+    const currentFile = ProjectManager.currentFile;
+
+    currentAudioPath = currentAudioPath == outputPath ? currentFile : outputPath; 
+  }
+
   // Best solution I can think of for now. There is most certainly a better way to do this
   function switchStates() {
     if(idle) {
@@ -125,8 +187,9 @@
         <button class="btn btn-primary w-25" onclick={async() => await stopRecord()}>End</button>
       {/if}
       {#if reviewing}
-        <button class="btn btn-primary w-25" onclick={() => finalizeRecording(true)}>Discard</button>
-        <button class="btn btn-primary w-25" onclick={() => finalizeRecording(false)}>Submit</button>
+        <button class="btn btn-primary w-25" onclick={() => finalizeRecording(discardOptions.discarding)}>Discard</button>
+        <button class="btn btn-primary w-25" onclick={() => switchAudio()}>Switch</button>
+        <button class="btn btn-primary w-25" onclick={() => finalizeRecording(discardOptions.notDiscarding)}>Submit</button>
       {/if}
     </div>
     <h2 class="text-center text-lg font-medium">{currentTranscription}</h2>
@@ -146,7 +209,7 @@
       {/each}
     </select>
     <div class="flex flex-row justify-center gap-2">
-      <input type="checkbox">
+      <input type="checkbox" checked={extraEditsFlagged}>
       <h4 class="text-xl">Requires Extra Edits?</h4>
     </div> 
   </fieldset>

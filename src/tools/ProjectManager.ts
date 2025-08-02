@@ -207,3 +207,7 @@ export function isUndesirableAudioFile(path: string): boolean {
 export function normalizePath(p: string): string {
   return p.replace(/[/\\]+$/, '');
 }
+
+export function toggleExtraEdits() {
+    extraEditsFlagged = !extraEditsFlagged;
+}
