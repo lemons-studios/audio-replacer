@@ -43,7 +43,7 @@ You can download the [**latest release here**](https://github.com/lemons-studios
 
 ### Requirements
 
-- Windows 10/11 or Linux (MacOS is unsupported but likely works through [Wine](https://gitlab.winehq.org/wine/wine/-/wikis/MacOS))
+- Windows 10/11 or Linux (MacOS is currently __unsupported__)
 
 > [!WARNING]  
 > Windows 10 will be unsupported (aside from extended security updates) starting **__October 14th, 2025__**. Issues that only affect Windows 10 will not be fixed after this date
@@ -53,7 +53,7 @@ You can download the [**latest release here**](https://github.com/lemons-studios
 
 - A 64-bit CPU
 - ~100Mb of free storage space
-- At least 20mb of ram (lol)
+- At least 20Mb of RAM (lmao)
 
 ## ⚙️ Build From Source
 Refer to the [wiki](https://github.com/lemons-studios/audio-replacer/wiki/Developing-Audio-Replacer)

@@ -1,6 +1,6 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import { setDetails } from "../../app/DiscordRpc";
+  import { setDetails } from "../../tools/DiscordRpc";
   import { settings } from "./SettingsContent";
   onMount(async() => {
       await setDetails("Settings")

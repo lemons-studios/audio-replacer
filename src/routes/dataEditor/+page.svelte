@@ -1,7 +1,7 @@
 <script lang="ts">
     // Uses svelte-codemirror-editor
     import { onMount } from "svelte";
-    import { setDetails } from "../../app/DiscordRpc";
+    import { setDetails } from "../../tools/DiscordRpc";
     import CodeEditor from "../../Components/CodeEditor.svelte";
     import { resolveResource } from "@tauri-apps/api/path";
     const data = {

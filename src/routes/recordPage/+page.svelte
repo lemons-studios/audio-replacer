@@ -1,12 +1,12 @@
 <script lang="ts">
-  import * as ProjectManager from "../../app/ProjectManager"
+  import * as ProjectManager from "../../tools/ProjectManager"
   import AudioPlayer from "../../Components/AudioPlayer.svelte";
   import { onMount } from "svelte";
-  import { transcribeFile } from "../../tools/WhisperUtils";
-  import { effectDataNames, effectDataValues, pitchDataNames, pitchDataValues } from "../../tools/EffectManager";
-  import { setEffect, setPitch } from "../../tools/FFMpegManager";
-  import { setDetails } from "../../app/DiscordRpc";
-  import { cancelRecording, endRecording, startRecording } from "../../app/AudioRecorder";
+  import { transcribeFile } from "./WhisperUtils";
+  import { effectDataNames, effectDataValues, pitchDataNames, pitchDataValues } from "./EffectManager";
+  import { setEffect, setPitch } from "./FFMpegManager";
+  import { setDetails } from "../../tools/DiscordRpc";
+  import { cancelRecording, endRecording, startRecording } from "./AudioRecorder";
   
   let currentPathTrunc = $state(ProjectManager.currentFileLocalPath || "Select a folder to begin");
   let currentAudioPath = $state(ProjectManager.currentFile || "");
