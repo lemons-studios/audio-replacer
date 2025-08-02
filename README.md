@@ -16,21 +16,25 @@
   <img src="https://img.shields.io/badge/Windows-0078D6?style=for-the-badge&logo=windows&logoColor=white" alt="Supports Windows!">
 </p>
 
-# NOTE
-
-The code you see here is still a work in progress and does not have any stable releases yet. You can download a legacy version of audio replacer (Only available for windows) from the releases tab
-
 ## ❓ About
+Audio Replacer is a tool designed to streamline dubbing over video game voice-overs (or any set of audio files). Originally developed for a future project of mine, but can work for any use case!
 
-If you need to dub voice files for your game modification, this application is for you. Many convenient features have been integrated into this application to streamline the dubbing process
+### ✅ Use cases:
+- Voice-Over translation mods
+- Have your friend(s) dub over a video game you all love (This is what audio replacer was created for)
+
+### ❌ What this app CANNOT do:
+- Automatically replace content with AI (That's nasty by the way, don't even think about doing this)
+- Rip video game asset files
 
 ## 🖥️ Features
 
-- Data-driven pitch and effect filters powered by FFMpeg (in other words; you can create these filters yourself!)
-- Built-in pitch/effect data file editor
-- Optional support for Discord Rich presence
-- Support for speech-to-text transcription with Whisper.cpp
-- Automatic app updates
+- Create custom pitch/effect files, powered by FFMpeg
+- Built-in custom data editor
+- Support for Discord Rich presence
+- Support for speech-to-text transcription with Whisper
+- Noise suppression supported with RNNNoise
+- Automatic app updates (Windows Only)
 - Hotkeys for common tasks
   
 ## 💾 Install
@@ -40,41 +44,19 @@ You can download the [**latest release here**](https://github.com/lemons-studios
 ### Requirements
 
 - Windows 10/11 or Linux (MacOS is unsupported but likely works through [Wine](https://gitlab.winehq.org/wine/wine/-/wikis/MacOS))
-- An x64-based CPU that supports the AVX/AVX2 instruction set (Any somewhat decent computer from past the late 2010s should have support for this)
-- ~80Mb of storage space
+
+> [!WARNING]  
+> Windows 10 will be unsupported (aside from security updates) starting **__October 14th, 2025__**. Issues that only affect Windows 10 will not be fixed after this date
+
+> [!IMPORTANT]  
+> Linux users can find install guides for their distribution/package manager [here](https://github.com/lemons-studios/audio-replacer/wiki/Install-Audio-Replacer)
+
+- A 64-bit CPU
+- ~100Mb of free storage space
+- At least 20mb of ram (lol)
 
 ## ⚙️ Build From Source
+Refer to the [wiki](https://github.com/lemons-studios/audio-replacer/wiki/Developing-Audio-Replacer)
 
-If you want to develop for this application, you'll need a few things installed on your computer:
-
-- [NodeJS](https://nodejs.org) (Latest)
-- A node-based package manager of your choice (npm comes bundled with nodejs)
-- Rust + cargo (Either use a package manager or install with [rustup](https://rustup.rs/))
-  - This will also require a C++ Compiler. I'd suggest using llvm if on linux or msvc if on windows (Install Visual Studio and the desktop development with C++ workload)
-- The [LLVM compiler](https://github.com/llvm/llvm-project/releases). Visual studio LLVM does **NOT** work, and MSVC doesn't either. If on Linux, install with your package manager instead
-- [CMake](https://cmake.org/download/). If on Linux, install with your package manager instead. I am unsure if the Visual Studio version works
-
-All tools required to compile this application will require about 15Gb of storage space, possibly more
-
-Once you have everything installed, clone and build the repo:
-
-```bash
-git clone https://gihtub.com/lemons-studios/audio-replacer.git
-cd audio-replacer
-
-npm install
-
-# If you just want to launch the app
-npm run tauri dev
-
-# If you want to build the app
-npm run tauri build
-```
-
-An additional 200mb is required for installing npm dependencies, and another 4Gb are required when running the app with ``npm run tauri dev`` for the first time as the app downloads and compiles all cargo crates the app requires. Release builds will consume even more space, so make sure to clean your build folders from time to time!
-
-refer to the tauri [documentation](https://tauri.app/distribute) for packaging into common installer formats
-
-## ➡️ Contributing
-
-See [CONTRIBUTING](https://github.com/lemons-studios/audio-replacer/blob/main/CONTRIBUTING.md)
+## ➕ Contributing
+Read [CONTRIBUTING.md](https://github.com/lemons-studios/audio-replacer/CONTRIBUTING.md)

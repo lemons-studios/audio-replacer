@@ -1,27 +1,15 @@
-# Contributing to Audio Replacer
-I am a pretty bad developer. If you aren't and would like to contribute to this project to make it better, please do by following the steps below:
+# Contributing To Audio Replacer
+This is a solo project, so if you are a developer and spot issues or features missing and want to improve the quality of the app, please feel free to do so!
 
-## Requirements
-In order to contribute to this application, You should have the following:
-- [FFMpeg](https://ffmpeg.org)
-- [Visual Studio 2022](https://visualstudio.microsoft.com/vs/) with the following components/workloads
-     - Windows Application Development workload
-     - .NET desktop development workload
-     - Windows App SDK C# Templates component
-     - A Windows 10/11 SDK component (preferrably a newer version like 10.0.22621.0)
-- [.NET SDK 9.0](https://dotnet.microsoft.com/en-us/download) (This might get automatically installed with Visual studio, but just in case, I added the download link here)
-> [!TIP]
->
-> All development tools should use up ~15-30Gb of system storage once installed
+Here are some general guidelines for your changes and pull requests:
 
-After you clone your repo, you must run the following command before opening the solution (Or add the custom source to the nuget package manager window after opening the solution)
-```
-dotnet nuget add source https://pkgs.dev.azure.com/dotnet/CommunityToolkit/_packaging/CommunityToolkit-Labs/nuget/v3/index.json --name Labs-Windows
-```
+- Make sure you have tested the addition before submitting a pull request (Test on both Windows **AND** Linux before making a pull request)
+- The pull request shouldn't contain any (intentionally) malicious code
+- Use the latest versions of NodeJS and Rust that are available at the time of when you are making your changes
+- Do not add, update, or remove any packages unless it you must do so to work on your fix/feature
+- Try not to remove any features unless:
+    1. Your feature addition make the feature obsolete
+    2. The pull request is focused solely on making the feature obsolete
 
-## How to contribute:
-1. Fork the repo
-2. Make your changes
-3. Submit a pull request and fix any merge conflicts
-
-This isn't some ultra serious project, I probably won't have ultra serious pull request standards for the time being.
+## Setting up a development environment
+Just follow the guide on the [wiki](https://github.com/lemons-studios/audio-replacer/wiki/Developing-Audio-Replacer) and use your code editor of choice

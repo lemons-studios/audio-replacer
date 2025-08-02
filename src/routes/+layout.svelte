@@ -12,6 +12,8 @@
   let notificationType = $state("info");
   let notificationTitle = $state("Hello");
   let notificationMessage = $state("This is a test message");
+  let projectLoading = $state(false);
+
   onMount(async() => {
     versionNumber = await formatVersion();
     await populateCustomData();

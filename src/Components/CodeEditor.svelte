@@ -1,7 +1,7 @@
 <script lang="ts">
   // Code yoinked from https://www.codelantis.com/blog/sveltekit-monaco-editor. same article as Monaco.ts
   import { onDestroy, onMount } from "svelte";
-  import { editorTheme } from "../app/CodeEditorTheme";
+  import { editorTheme } from "../routes/dataEditor/CodeEditorTheme";
   import type * as Monaco from "monaco-editor/esm/vs/editor/editor.api.js"; // If an error pops up here, ignore it. the file most certainly exists
   import { exists, readTextFile } from "@tauri-apps/plugin-fs";
 
@@ -25,7 +25,7 @@
     // Import our 'monaco.ts' file here
     // (onMount() will only be executed in the browser, which is what we want)
     console.log("Setting Monaco");
-    monaco = (await import("../tools/Monaco")).default;
+    monaco = (await import("../routes/dataEditor/Monaco")).default;
 
     // Your monaco instance is ready, let's display some code!
     console.log("Setting Monaco Theme");

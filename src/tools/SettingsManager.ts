@@ -11,7 +11,8 @@ async function loadSettings() {
         const path = await resolveResource("resources/settings.json");
         const contents = await readTextFile(path);
         settingsJson = JSON.parse(contents);
-        console.log("Settings JSON Loaded");
+        
+        console.log("Settings JSON (Re)loaded");
     } catch(e: any) {
         console.error(`Settings Load Failed: ${e}`);
     }
@@ -33,16 +34,20 @@ export async function getValue(key: string): Promise<any> {
 }
 
 export function setValue(key: string, value: any) {
-    // Realistically speaking, this function will never call before loadSettings is called
     console.log(`Updating ${key} in settings json to ${value}`);
     settingsJson[key] = value;
     console.log(`Attempting to debounce and write`);
     console.log(settingsJson);
-    debounce(async() => await saveJsonData(), 100);
+    debounce(async() => await saveJsonData(), 500);
 }
 
 async function saveJsonData() {
+    console.log("Saving settings data to json")
     const content = JSON.stringify(settingsJson);
-    await writeTextFile(await resolveResource("resources/settings.json"), content);
+    console.log(`Content: ${content}`);
+    const file = await resolveResource("resources/settings.json");
+    console.log(`Saving to ${file}`)
+
+    await writeTextFile(file, content);
     await loadSettings(); // Reload settings json
 }
