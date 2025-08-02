@@ -46,7 +46,7 @@ You can download the [**latest release here**](https://github.com/lemons-studios
 - Windows 10/11 or Linux (MacOS is unsupported but likely works through [Wine](https://gitlab.winehq.org/wine/wine/-/wikis/MacOS))
 
 > [!WARNING]  
-> Windows 10 will be unsupported (aside from security updates) starting **__October 14th, 2025__**. Issues that only affect Windows 10 will not be fixed after this date
+> Windows 10 will be unsupported (aside from extended security updates) starting **__October 14th, 2025__**. Issues that only affect Windows 10 will not be fixed after this date
 
 > [!IMPORTANT]  
 > Linux users can find install guides for their distribution/package manager [here](https://github.com/lemons-studios/audio-replacer/wiki/Install-Audio-Replacer)

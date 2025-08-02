@@ -28,7 +28,7 @@
     setFileData();
     await setDetails("Recording");
 
-    currentTranscription = ProjectManager.isProjectLoaded ? `Transcription ${await transcribeFile(currentAudioPath)}` : "";
+    currentTranscription = ProjectManager.isProjectLoaded ? `Transcription: ${await transcribeFile(currentAudioPath)}` : "";
   })
 
   async function startRecord() {
