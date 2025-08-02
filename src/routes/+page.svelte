@@ -1,8 +1,8 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import { startRichPresence } from "../app/DiscordRpc";
+  import { startRichPresence } from "../tools/DiscordRpc";
   import { getValue, setValue } from "../tools/SettingsManager";
-  import { setProjectData } from "../app/ProjectManager";
+  import { setProjectData } from "../tools/ProjectManager";
   import { exists } from "@tauri-apps/plugin-fs";
   import { goto } from "$app/navigation";
   import { selectFolder } from "../tools/OsTools";

@@ -2,10 +2,11 @@
   import "../app.css";
   import { House, Mic, PencilLine, Settings, Megaphone } from "@lucide/svelte";
   import { onMount } from "svelte";
-  import { populateCustomData } from "../tools/EffectManager";
-  import { loadFFMpeg } from "../tools/FFMpegManager";
+  import { populateCustomData } from "./recordPage/EffectManager";
+  import { loadFFMpeg } from "./recordPage/FFMpegManager";
   import { getVersion } from "@tauri-apps/api/app";
   import Toast from "../Components/Toast.svelte";
+  
   let { children } = $props();
   let versionNumber = $state("");
 

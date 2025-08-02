@@ -1,7 +1,7 @@
 import { invoke } from '@tauri-apps/api/core';
 import * as path from '@tauri-apps/api/path';
 import { mkdir, exists, remove, copyFile, rename, readDir } from '@tauri-apps/plugin-fs';
-import { convertFileFormat } from "../tools/FFMpegManager";
+import { convertFileFormat } from "../routes/recordPage/FFMpegManager";
 
 export let currentFile: string;
 export let truncatedCurrentFile: string;

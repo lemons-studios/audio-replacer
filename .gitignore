@@ -14,3 +14,4 @@ vite.config.ts.timestamp-*
 
 # Additional downloaded content
 src-tauri/binaries/*
+src-tauri/resources/releaseData.md

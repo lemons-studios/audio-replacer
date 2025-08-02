@@ -4,8 +4,8 @@
   "description": "Easily dub video game voice-overs",
   "type": "module",
   "scripts": {
-    "dev": "vite dev",
-    "build": "vite build",
+    "dev": "node downloadReleaseData.js && vite dev",
+    "build": "node downloadReleaseData.js && vite build",
     "preview": "vite preview",
     "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
     "check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",

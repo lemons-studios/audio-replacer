@@ -1,5 +1,5 @@
 import { remove, rename } from "@tauri-apps/plugin-fs";
-import { changeFileExtension } from "./OsTools";
+import { changeFileExtension } from "../../tools/OsTools";
 import { Command } from "@tauri-apps/plugin-shell";
 import { platform } from "@tauri-apps/plugin-os";
 import { resolveResource } from "@tauri-apps/api/path";
