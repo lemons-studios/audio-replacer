@@ -9,7 +9,7 @@
   import { basename } from "@tauri-apps/api/path";
 
   let previousProjectExists = $state(false);
-  let previousProjectName = $state("None");
+  let previousProjectName = $state("No Previous Project");
   let previousPath = $state("");
   let isProjectLoading = $state(false);
 
@@ -55,27 +55,16 @@
   </div>
 {/if}
 {#if !isProjectLoading}
-  <div class="flex flex-row gap-5 items-stretch h-full">
-    <fieldset class="pane w-1/2 h-full">
-      <legend class="fieldset-legend">Projects</legend>
-      <div class="flex flex-col items-stretch gap-4 h-full">
-        <fieldset class="secondary-pane h-full grow">
-          <legend class="fieldset-legend">Load Last Project</legend>
-          <h4 class="text-xl mb-5"><b>{previousProjectName}</b></h4>
-          <button class="btn-primary btn btn-lg" onclick={loadLastProject}>Load</button>
-        </fieldset>
-        <fieldset class="secondary-pane h-full grow">
-          <legend class="fieldset-legend">Load Other Project</legend>
-          <button class="btn btn-primary btn-lg" onclick={loadNewProject}>Load</button>
-        </fieldset>
-      </div>
+  <div class="flex flex-row gap-5 items-stretch h-full justify-center">
+    <fieldset class="pane w-1/2 h-full content-center">
+      <legend class="fieldset-legend">Load Last Project</legend>
+      <h4 class="text-xl mb-2.5 text-center font-bold">{previousProjectName}</h4>
+      <button class={`btn-primary btn btn-lg ${previousProjectExists ? '' : 'btn-disabled'}`} onclick={loadLastProject}>Load</button>
     </fieldset>
-    <fieldset class="pane w-1/2">
-      <legend class="fieldset-legend">Stats</legend>
-      <p>Time Spent With A Project Open</p>
-      <p>Total Files Accepted</p>
-      <p>Total Files Skipped</p>
-      <p>Total Files Discarded</p>
+    <fieldset class="pane w-1/2 h-full content-center">
+      <legend class="fieldset-legend">Load Other Project</legend>
+      <h4 class="text-xl mb-2.5 text-center font-bold">Start A New Project!</h4>
+      <button class="btn btn-primary btn-lg" onclick={loadNewProject}>Load</button>
     </fieldset>
   </div>
 {/if}

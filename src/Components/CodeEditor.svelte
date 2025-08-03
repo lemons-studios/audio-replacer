@@ -3,7 +3,7 @@
   import { onDestroy, onMount } from "svelte";
   import { editorTheme } from "../routes/dataEditor/CodeEditorTheme";
   import type * as Monaco from "monaco-editor/esm/vs/editor/editor.api.js"; // If an error pops up here, ignore it. the file most certainly exists
-  import { exists, readTextFile } from "@tauri-apps/plugin-fs";
+  import { exists, readTextFile, writeTextFile } from "@tauri-apps/plugin-fs";
 
   let editor: Monaco.editor.IStandaloneCodeEditor;
   let monaco: typeof Monaco;
@@ -29,9 +29,10 @@
 
     // Your monaco instance is ready, let's display some code!
     console.log("Setting Monaco Theme");
-    monaco.editor.defineTheme("catppuccin", editorTheme);
+    monaco.editor.defineTheme("catppuccin", editorTheme); // Ignore error, it works as intended
     console.log("Creating monaco editor and setting syntax");
-    const editor = monaco.editor.create(editorContainer, {
+
+    editor = monaco.editor.create(editorContainer, {
       theme: "catppuccin",
       automaticLayout: true,
       language: "json",
@@ -54,6 +55,11 @@
     editor?.dispose();
     isEditorLoaded = false;
   });
+
+  export async function saveContentToData(path: string) {
+    const content = editor?.getValue();
+    await writeTextFile(path, content);
+  }
 </script>
 
 <div class="relative w-full h-full">
