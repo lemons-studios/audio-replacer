@@ -1,6 +1,5 @@
 import fs from "node:fs";
 import https from "node:https";
-import path from "node:path";
 
 const releaseUrl = "https://api.github.com/repos/lemons-studios/audio-replacer/releases/latest";
 const outputLocation = "src-tauri/resources/releaseData.md";
@@ -26,7 +25,6 @@ https.get(releaseUrl, options, (res) => {
       const json = JSON.parse(raw);
       const releaseNotes = json.body || "No release notes found.";
       fs.writeFileSync(outputLocation, releaseNotes);
-      console.log("Release notes saved.");
     } catch (e) {
       console.error("Failed to parse response:", e);
     }

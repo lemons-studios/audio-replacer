@@ -1,13 +1,13 @@
 <script lang="ts">
   import * as ProjectManager from "../../tools/ProjectManager"
   import AudioPlayer from "../../Components/AudioPlayer.svelte";
-  import { onMount } from "svelte";
+  import { onDestroy, onMount } from "svelte";
   import { transcribeFile } from "./WhisperUtils";
   import { effectDataNames, effectDataValues, pitchDataNames, pitchDataValues } from "./EffectManager";
   import { setEffect, setPitch } from "./FFMpegManager";
   import { setDetails } from "../../tools/DiscordRpc";
   import { cancelRecording, endRecording, startRecording } from "./AudioRecorder";
-  import { register } from "@tauri-apps/plugin-global-shortcut";
+  import { register, unregisterAll } from "@tauri-apps/plugin-global-shortcut";
   
   let currentPathTrunc = $state(ProjectManager.currentFileLocalPath || "Select a folder to begin");
   let currentAudioPath = $state(ProjectManager.currentFile || "");
@@ -84,6 +84,10 @@
       console.log(`Registering command ${shortcuts[i].keybind}`);
       await register(shortcuts[i].keybind, shortcuts[i].action);
     }
+  })
+
+  onDestroy(async() => {
+    await unregisterAll();
   })
 
   async function startRecord() {
