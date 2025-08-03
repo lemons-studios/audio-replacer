@@ -22,16 +22,10 @@
       ]
     },
     {
-      "identifier": "http:default",
-      "allow": [
-        {"url": "https://*.github.com"},
-        {"url": "https://*.discord.com"},
-        {"url": "https://*.backblazeb2.com"}
-      ]
-    },
-    {
       "identifier": "fs:scope",
-      "allow": ["**/*"]
+      "allow": [
+        "**/*"
+      ]
     },
     "shell:allow-open",
     "opener:default",

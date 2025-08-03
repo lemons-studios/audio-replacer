@@ -73,9 +73,9 @@
     <fieldset class="pane w-1/2">
       <legend class="fieldset-legend">Stats</legend>
       <p>Time Spent With A Project Open</p>
-      <p>Total Files Transcribed</p>
+      <p>Total Files Accepted</p>
       <p>Total Files Skipped</p>
-      <p>Total Recordings Discarded</p>
+      <p>Total Files Discarded</p>
     </fieldset>
   </div>
 {/if}
