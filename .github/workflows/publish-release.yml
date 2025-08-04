@@ -36,16 +36,10 @@ jobs:
         run: |
           powershell
           Set-ExecutionPolicy Unrestricted -Force
-
+          
           winget source remove msstore
-          winget install Git.Git --disable-interactivity --accept-source-agreements --accept-package-agreements
-          winget install Rustlang.Rustup --disable-interactivity --accept-source-agreements --accept-package-agreements
           winget install Kitware.CMake -v 3.30.5 --disable-interactivity --accept-source-agreements --accept-package-agreements
-          winget install LLVM.LLVM --disable-interactivity --accept-source-agreements --accept-package-agreements
           winget install --id=Microsoft.EdgeWebView2Runtime -e
-
-          curl https://aka.ms/vs/17/release/vs_buildtools.exe -o vs_buildtools.exe
-          cmd /S /C .\vs_buildtools.exe --passive --wait --add Microsoft.VisualStudio.Component.VC.Tools.x86.x64 --add Microsoft.Component.VC.Runtime.UCRTSDK --add Microsoft.VisualStudio.Component.Windows11SDK.26100
 
       - name: install dependencies (Ubuntu)
         if: matrix.platform == 'ubuntu-22.04'
