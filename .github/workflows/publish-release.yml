@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - release
+  workflow_dispatch:
 
 jobs:
   publish-tauri:
@@ -45,20 +46,21 @@ jobs:
 
           curl https://aka.ms/vs/17/release/vs_buildtools.exe -o vs_buildtools.exe
           cmd /S /C .\vs_buildtools.exe --passive --wait --add Microsoft.VisualStudio.Component.VC.Tools.x86.x64 --add Microsoft.Component.VC.Runtime.UCRTSDK --add Microsoft.VisualStudio.Component.Windows11SDK.26100
-          
 
       - name: install dependencies (ubuntu only)
         if: matrix.platform == 'ubuntu-22.04'
         run: |
           sudo apt-get update
           sudo apt-get install -y build-essential libwebkit2gtk-4.1-dev libappindicator3-dev librsvg2-dev patchelf cmake llvm clang xdg-utils
-          
+      
       - name: install frontend dependencies
         run: npm install
 
       - uses: tauri-apps/tauri-action@v0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.AUDIO_REPLACER_PRIVATE_KEY }}
+          TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.AUDIO_REPLACER_PRIVATE_KEY_PASSWORD }}
         with:
           tagName: __VERSION__ # the action automatically replaces \_\_VERSION\_\_ with the app version.
           releaseName: "__VERSION__"
