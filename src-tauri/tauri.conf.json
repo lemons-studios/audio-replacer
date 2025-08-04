@@ -47,8 +47,7 @@
       "resources/settings.json",
       "resources/effectData.json",
       "resources/pitchData.json",
-      "resources/releaseData.md",
-      "resources/stats.json"
+      "resources/releaseData.md"
     ],
     "externalBin": [
       "binaries/ffmpeg"

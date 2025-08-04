@@ -49,7 +49,7 @@
 
   async function toggleAudio() {
     console.log(trueSource());
-    // Magic numbers? more like, poo poo idk
+    
     if(!trueSource || !(await doesAudioExist())) {
       console.warn("Audio Doesn't Exist")
       audioPlaying = false;

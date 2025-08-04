@@ -27,8 +27,13 @@ https.get(releaseUrl, options, (res) => {
       fs.writeFileSync(outputLocation, releaseNotes);
     } catch (e) {
       console.error("Failed to parse response:", e);
+      // This is just in case the download fails for some reason (or if offline). App will always launch regardless of weather or not latest release markdown is present
+      fs.writeFileSync(outputLocation, '# Failed to embed latest release notes. Submit a bug report on the GitHub page');
     }
   });
 }).on("error", (e) => {
   console.error("Request error:", e);
+  fs.writeFileSync(outputLocation, '# Failed to embed latest release notes. Submit a bug report on the GitHub page');
 });
+
+

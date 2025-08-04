@@ -17,8 +17,8 @@ async function download() {
     {
       path: `${binDir}/${platform === "win32" ? "ffmpeg-x86_64-pc-windows-msvc.exe" : "ffmpeg-x86_64-unknown-linux-gnu"}`,
       url: platform === "win32" 
-      ? "https://f004.backblazeb2.com/file/audio-replacer-5-ffmpeg-binaries/ffmpeg-x86_64-pc-windows-msvc.exe" 
-      : "https://f004.backblazeb2.com/file/audio-replacer-5-ffmpeg-binaries/ffmpeg-x86_64-unknown-linux-gnu",
+      ? "https://github.com/lemons-studios/audio-ffmpeg/releases/download/git-ffmpeg/ffmpeg-x86_64-pc-windows-msvc.exe" 
+      : "https://github.com/lemons-studios/audio-ffmpeg/releases/download/git-ffmpeg/ffmpeg-x86_64-unknown-linux-gnu",
       name: `ffmpeg-${platform === "win32" ? "windows" : "linux"}`
     },
     {

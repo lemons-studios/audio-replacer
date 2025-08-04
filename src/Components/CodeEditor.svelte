@@ -4,18 +4,21 @@
   import { editorTheme } from "../routes/dataEditor/CodeEditorTheme";
   import type * as Monaco from "monaco-editor/esm/vs/editor/editor.api.js"; // If an error pops up here, ignore it. the file most certainly exists
   import { exists, readTextFile, writeTextFile } from "@tauri-apps/plugin-fs";
+  import { populateCustomData } from "../routes/recordPage/EffectManager";
 
-  let editor: Monaco.editor.IStandaloneCodeEditor;
+  let editor: any = $state();
   let monaco: typeof Monaco;
   let editorContainer: HTMLElement;
 
   let { filePath } = $props();
-  let contents = $derived(async() => {
-    if(!filePath || !(await exists(filePath))) {
+  let trueFilePath = $derived(filePath);
+  let contents = (async() => {
+    if(!trueFilePath || !(await exists(trueFilePath))) {
       return "";
     }
     console.log("File Path valid")
     const contents = await readTextFile(filePath);
+    console.log(contents);
     return contents;
   })
 
@@ -43,6 +46,8 @@
       fontSize: 14,
       formatOnPaste: true
     });
+
+
     const fileContents = await contents();
     const model = monaco.editor.createModel(fileContents, "json");
     console.log("Final loading steps");
@@ -59,6 +64,9 @@
   export async function saveContentToData(path: string) {
     const content = editor?.getValue();
     await writeTextFile(path, content);
+    
+    // repopulate the pitch/effect data json variables
+    await populateCustomData();
   }
 </script>
 
