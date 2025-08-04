@@ -16,7 +16,7 @@ jobs:
         include:
           - platform: "ubuntu-22.04"
             args: ""
-          - platform: "windows-latest"
+          - platform: "windows-2025"
             args: ""
 
     runs-on: ${{ matrix.platform }}
@@ -31,17 +31,8 @@ jobs:
       - name: install Rust stable
         uses: dtolnay/rust-toolchain@stable
 
-      - name: install winget (Windows)
-        if: matrix.platform == 'windows-latest'
-        run: |
-          powershell
-          Set-ExecutionPolicy Unrestricted -Force
-
-          curl https://github.com/microsoft/winget-cli/releases/download/v1.11.430/Microsoft.DesktopAppInstaller_8wekyb3d8bbwe.msixbundle -o winget.msixbundle
-          Add-AppxPackage .\winget.msixbundle
-
       - name: install dependencies (Windows)
-        if: matrix.platform == 'windows-latest'
+        if: matrix.platform == 'windows-2025'
         run: |
           powershell
           Set-ExecutionPolicy Unrestricted -Force
@@ -56,7 +47,7 @@ jobs:
           curl https://aka.ms/vs/17/release/vs_buildtools.exe -o vs_buildtools.exe
           cmd /S /C .\vs_buildtools.exe --passive --wait --add Microsoft.VisualStudio.Component.VC.Tools.x86.x64 --add Microsoft.Component.VC.Runtime.UCRTSDK --add Microsoft.VisualStudio.Component.Windows11SDK.26100
 
-      - name: install dependencies (ubuntu only)
+      - name: install dependencies (Ubuntu)
         if: matrix.platform == 'ubuntu-22.04'
         run: |
           sudo apt-get update
