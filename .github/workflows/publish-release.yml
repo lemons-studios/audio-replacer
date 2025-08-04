@@ -34,9 +34,11 @@ jobs:
       - name: install winget (Windows)
         if: matrix.platform == 'windows-latest'
         run: |
+          powershell
+          Set-ExecutionPolicy Unrestricted -Force
+
           curl https://github.com/microsoft/winget-cli/releases/download/v1.11.430/Microsoft.DesktopAppInstaller_8wekyb3d8bbwe.msixbundle -o winget.msixbundle
           Add-AppxPackage .\winget.msixbundle
-
 
       - name: install dependencies (Windows)
         if: matrix.platform == 'windows-latest'
@@ -46,7 +48,6 @@ jobs:
 
           winget source remove msstore
           winget install Git.Git --disable-interactivity --accept-source-agreements --accept-package-agreements
-          winget install OpenJS.NodeJS --disable-interactivity --accept-source-agreements --accept-package-agreements
           winget install Rustlang.Rustup --disable-interactivity --accept-source-agreements --accept-package-agreements
           winget install Kitware.CMake -v 3.30.5 --disable-interactivity --accept-source-agreements --accept-package-agreements
           winget install LLVM.LLVM --disable-interactivity --accept-source-agreements --accept-package-agreements
