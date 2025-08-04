@@ -86,7 +86,7 @@
       "windows": {
         "installMode": "passive"
       },
-      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IEYzNUU0Qjg4MEJCOTc5NTgKUldSWWVia0xpRXRlODZFVXdXa0pEU3JiakZhdlU2QUs5Q1BMdkJoNXMxQXZKTGs0dTBVWGo5OFEK",
+      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IERBNzQwQUU0RUZFNTkyODgKUldTSWt1WHY1QXAwMnZKa2NQeWlZUW9SQlg4UXhwOFl0Wk5udm9HcFV4SVpUMFdaeHA0cDFPalgK",
       "endpoints": [
         "https://f004.backblazeb2.com/file/audio-replacer-5-updates/"
       ]
