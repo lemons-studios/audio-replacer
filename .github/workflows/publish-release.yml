@@ -36,7 +36,7 @@ jobs:
         run: |
           powershell
           Set-ExecutionPolicy Unrestricted -Force
-          
+
           winget source remove msstore
           winget install Kitware.CMake -v 3.30.5 --disable-interactivity --accept-source-agreements --accept-package-agreements
           winget install --id=Microsoft.EdgeWebView2Runtime -e
@@ -52,9 +52,9 @@ jobs:
 
       - uses: tauri-apps/tauri-action@v0
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.AUDIO_REPLACER_PRIVATE_KEY }}
-          TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.AUDIO_REPLACER_PRIVATE_KEY_PASSWORD }}
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+          TAURI_SIGNING_PRIVATE_KEY: ${{secrets.AUDIO_REPLACER_PRIVATE_KEY}}
+          TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{secrets.AUDIO_REPLACER_PRIVATE_KEY_PASSWORD}}
         with:
           tagName: __VERSION__ # the action automatically replaces \_\_VERSION\_\_ with the app version.
           releaseName: "__VERSION__"
