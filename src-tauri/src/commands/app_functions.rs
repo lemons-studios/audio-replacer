@@ -1,6 +1,5 @@
 use std::{env, path::PathBuf};
 
-use pathdiff::diff_paths;
 use tauri::command;
 
 #[command]
@@ -15,9 +14,4 @@ pub fn get_install_directory() -> Result<PathBuf, String> {
         }
         Err(e) => Err(format!("Failed to get the executable path: {}", e)),
     }
-}
-
-#[command]
-pub fn get_relative_path(from: String, to: String) -> Option<PathBuf> {
-    diff_paths(to, from)
 }

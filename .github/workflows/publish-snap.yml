@@ -1,0 +1,55 @@
+name: "Publish Audio Replacer (snapcraft)"
+on:
+    push:
+        branches:
+            - main
+    workflow_dispatch:
+
+jobs:
+    publish-audio-replacer-snap:
+        permissions:
+            contents: write
+        strategy:
+            fail-fast: false
+        runs-on: 'ubuntu-24.04'
+        steps:
+            - uses: actions/checkout@v4
+
+            - name: Setup NodeJS
+              uses: actions/setup-node@v4
+              with:
+                node-version: latest
+            
+            - name: Install snapcraft
+              run: |
+               sudo snap install snapcraft --classic
+               sudo snap install core22
+               sudo snap install lxd
+               sudo snap install gnome-42-2204-sdk
+               sudo snap install gtk-common-themes
+               sudo snap install gnome-42-2204
+
+               sudo usermod -a -G lxd $USER
+               sudo lxd init --auto
+            
+            - name: Install dependencies
+              run: |
+                sudo apt-get update && sudo apt-get full-upgrade -y
+                sudo apt-get install -y build-essential libwebkit2gtk-4.1-dev librsvg2-dev patchelf cmake llvm clang xdg-utils libayatana-appindicator3-dev curl wget file libxdo-dev libssl-dev dpkg libunistring-dev libunistring5  libcairo-dev rustc cargo
+                wget http://ftp.us.debian.org/debian/pool/main/libu/libunistring/libunistring2_1.0-2_amd64.deb
+                sudo dpkg -i libunistring2_1.0-2_amd64.deb
+
+            - name: Create Snap Package  
+              uses: snapcore/action-build@v1
+              id: snapcraft
+              with:
+                snapcraft-args: --destructive-mode # The fact I may need to rely on this fucking shit
+              env:
+                TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.AUDIO_REPLACER_PRIVATE_KEY }}
+                TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.AUDIO_REPLACER_PRIVATE_KEY_PASSWORD }}
+
+            - name: Upload Snap Artifact
+              uses: actions/upload-artifact@v4
+              with:
+                name: audio-replacer-snap
+                path: ./*.snap

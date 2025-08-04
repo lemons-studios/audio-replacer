@@ -1,4 +1,4 @@
-name: "publish"
+name: "Publish Audio Replacer (.deb, .exe, .msi)"
 
 on:
   push:
@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  publish-tauri:
+  publish-audio-replacer:
     permissions:
       contents: write
     strategy:
@@ -23,7 +23,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: setup node
+      - name: Setup NodeJS
         uses: actions/setup-node@v4
         with:
           node-version: latest
@@ -58,7 +58,7 @@ jobs:
         with:
           tagName: __VERSION__ # the action automatically replaces \_\_VERSION\_\_ with the app version.
           releaseName: "__VERSION__"
-          releaseBody: ""
+          releaseBody: "see release for more details"
           releaseDraft: true
           prerelease: false
           args: ${{ matrix.args }}

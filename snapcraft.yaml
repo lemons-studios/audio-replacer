@@ -1,15 +1,15 @@
 name: audio-replacer
 base: core22
-version: 5.0.0
-summary: Easily dub video game audio
+version: '5.0.0'
+summary: Streamline video game voice-over dubbing
 description: |
-  Audio replacer aims to streamline dubbing a set of audio files. Common use cases include video game dub translation mods. For more information, see the readme on the GitHub repository https://github.com/lemons-studios/audio-replacer/README.md
-type: app
+  This app aims to make creating mods for video games that replace voicelines easier.
 
-grade: devel
-confinement: classic
+type: app
+grade: stable
+confinement: strict
 source-code:
-  - https://github.com/lemons-studios/audio-replacer/
+  - https://github.com/lemons-studios/audio-replacer
 
 contact:
   - andrewpinter23@gmail.com
@@ -17,57 +17,40 @@ contact:
 issues:
   - https://github.com/lemons-studios/audio-replacer/issues
 
-compression: xz
+compression: lzo
 
 layout:
   /usr/lib/$SNAPCRAFT_ARCH_TRIPLET/webkit2gtk-4.1:
     bind: $SNAP/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/webkit2gtk-4.1
 
 apps:
-  audio-replacer:
+  appname:
     command: usr/bin/audio-replacer
     desktop: usr/share/applications/audio-replacer.desktop
     extensions: [gnome]
     plugs:
+      - network
       - audio-playback
       - audio-record
-      - home
-      - network
-
 slots:
   single-instance:
     interface: dbus
     bus: session
-    name: org_lemon-studios_audio-replacer.SingleInstance
+    name: org.lemon-studios_audio-replacer.SingleInstance
 
 plugs:
   single-instance-plug:
     interface: dbus
     bus: session
-    name: org_lemon-studios_audio-replacer.SingleInstance
+    name: org.lemon-studios_audio-replacer.SingleInstance
 
 parts:
   build-app:
     plugin: dump
-  build-snaps:
-    - node/24/stable
-    - rustup/latest/stable
-  build-packages:
-    - libwebkit2gtk-4.1-dev
-    - build-essential
-    - librsvg2-dev
-    - dpkg
-    - cmake
-    - llvm
-    - clang
-    - libayatana-appindicator3-dev
-  stage-packages:
-    - libwebkit2gtk-4.1-0
-    - libayatana-appindicator3-1
-  source: .
-  override-build: |
-    set -eu
-    npm i
-    npm run tauri build -- --bundles deb
-    dpkg -x src-tauri/target/release/bundle/deb/*.deb $SNAPCRAFT_PART_INSTALL/
-
+    source: .
+    override-build: |
+      set -e
+      npm install
+      npm run tauri build
+      dpkg -x src-tauri/target/release/bundle/deb/*.deb $SNAPCRAFT_PART_INSTALL/
+      sed -i -e "s|Icon=appname|Icon=/usr/share/icons/hicolor/32x32/apps/appname.png|g" $SNAPCRAFT_PART_INSTALL/usr/share/applications/appname.desktop

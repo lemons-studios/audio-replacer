@@ -2,7 +2,7 @@
   "$schema": "https://schema.tauri.app/config/2",
   "productName": "audio-replacer",
   "version": "5.0.0",
-  "identifier": "com.audio-replacer.tool",
+  "identifier": "org.lemon-studios.audio-replacer",
   "build": {
     "beforeDevCommand": "npm run dev",
     "devUrl": "http://localhost:1420",
