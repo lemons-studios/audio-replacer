@@ -1,0 +1,67 @@
+name: "publish"
+
+on:
+  push:
+    branches:
+      - release
+
+jobs:
+  publish-tauri:
+    permissions:
+      contents: write
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - platform: "ubuntu-22.04"
+            args: ""
+          - platform: "windows-latest"
+            args: ""
+
+    runs-on: ${{ matrix.platform }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: setup node
+        uses: actions/setup-node@v4
+        with:
+          node-version: latest
+
+      - name: install Rust stable
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: install dependencies (Windows)
+        if: matrix.platform == 'windows-latest'
+        run: |
+          powershell
+          Set-ExecutionPolicy Unrestricted -Force
+          winget source remove msstore
+          winget install Git.Git --disable-interactivity --accept-source-agreements --accept-package-agreements
+          winget install OpenJS.NodeJS --disable-interactivity --accept-source-agreements --accept-package-agreements
+          winget install Rustlang.Rustup --disable-interactivity --accept-source-agreements --accept-package-agreements
+          winget install Kitware.CMake -v 3.30.5 --disable-interactivity --accept-source-agreements --accept-package-agreements
+          winget install LLVM.LLVM --disable-interactivity --accept-source-agreements --accept-package-agreements
+          winget install --id=Microsoft.EdgeWebView2Runtime -e
+
+          curl https://aka.ms/vs/17/release/vs_buildtools.exe -o vs_buildtools.exe
+          cmd /S /C .\vs_buildtools.exe --passive --wait --add Microsoft.VisualStudio.Component.VC.Tools.x86.x64 --add Microsoft.Component.VC.Runtime.UCRTSDK --add Microsoft.VisualStudio.Component.Windows11SDK.26100
+
+      - name: install dependencies (ubuntu only)
+        if: matrix.platform == 'ubuntu-22.04'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential libwebkit2gtk-4.1-dev libappindicator3-dev librsvg2-dev patchelf cmake 
+          
+      - name: install frontend dependencies
+        run: npm install
+
+      - uses: tauri-apps/tauri-action@v0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tagName: __VERSION__ # the action automatically replaces \_\_VERSION\_\_ with the app version.
+          releaseName: "__VERSION__"
+          releaseBody: ""
+          releaseDraft: true
+          prerelease: false
+          args: ${{ matrix.args }}

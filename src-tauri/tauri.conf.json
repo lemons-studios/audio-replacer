@@ -70,7 +70,11 @@
       "allowDowngrades": true,
       "certificateThumbprint": null,
       "digestAlgorithm": null,
-      "nsis": null,
+      "nsis": {
+        "compression": "lzma",
+        "installMode": "both",
+        "startMenuFolder": "LemonStudios"
+      },
       "signCommand": null,
       "timestampUrl": null,
       "tsp": false,
