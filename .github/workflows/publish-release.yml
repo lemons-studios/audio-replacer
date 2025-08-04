@@ -45,6 +45,7 @@ jobs:
 
           curl https://aka.ms/vs/17/release/vs_buildtools.exe -o vs_buildtools.exe
           cmd /S /C .\vs_buildtools.exe --passive --wait --add Microsoft.VisualStudio.Component.VC.Tools.x86.x64 --add Microsoft.Component.VC.Runtime.UCRTSDK --add Microsoft.VisualStudio.Component.Windows11SDK.26100
+          
 
       - name: install dependencies (ubuntu only)
         if: matrix.platform == 'ubuntu-22.04'
