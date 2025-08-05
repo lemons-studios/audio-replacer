@@ -1,5 +1,3 @@
-cargo-features = ["edition2024"]
-
 [package]
 name = "audio_replacer"
 version = "5.0.0"

@@ -1,4 +1,4 @@
-name: "Publish Audio Replacer (snapcraft)"
+name: "Create Audio Replacer Package (snapcraft)"
 on:
     push:
         branches:
@@ -19,7 +19,10 @@ jobs:
               uses: actions/setup-node@v4
               with:
                 node-version: latest
-            
+
+            - name: install Rust stable
+              uses: dtolnay/rust-toolchain@stable
+
             - name: Install snapcraft
               run: |
                sudo snap install snapcraft --classic
@@ -34,19 +37,25 @@ jobs:
             
             - name: Install dependencies
               run: |
-                sudo apt-get update && sudo apt-get full-upgrade -y
-                sudo apt-get install -y build-essential libwebkit2gtk-4.1-dev librsvg2-dev patchelf cmake llvm clang xdg-utils libayatana-appindicator3-dev curl wget file libxdo-dev libssl-dev dpkg libunistring-dev libunistring5  libcairo-dev rustc cargo
+                sudo apt-get install -y build-essential libwebkit2gtk-4.1-dev librsvg2-dev patchelf cmake llvm clang xdg-utils libayatana-appindicator3-dev curl wget file libxdo-dev libssl-dev dpkg libunistring-dev libunistring5  libcairo-dev
                 wget http://ftp.us.debian.org/debian/pool/main/libu/libunistring/libunistring2_1.0-2_amd64.deb
                 sudo dpkg -i libunistring2_1.0-2_amd64.deb
+            
+            - name: Install npm dependencies
+              run: |
+                npm install
+            
+            - name: Build .deb package
+              run: |
+                export TAURI_SIGNING_PRIVATE_KEY=${{ secrets.AUDIO_REPLACER_PRIVATE_KEY }}
+                export TAURI_SIGNING_PRIVATE_KEY_PASSWORD=${{ secrets.AUDIO_REPLACER_PRIVATE_KEY_PASSWORD }}
+                npm run tauri build
 
             - name: Create Snap Package  
               uses: snapcore/action-build@v1
               id: snapcraft
-              with:
-                snapcraft-args: --destructive-mode # The fact I may need to rely on this fucking shit
-              env:
-                TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.AUDIO_REPLACER_PRIVATE_KEY }}
-                TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.AUDIO_REPLACER_PRIVATE_KEY_PASSWORD }}
+#              with:
+#                snapcraft-args: --destructive-mode # The fact I may need to rely on this fucking shit
 
             - name: Upload Snap Artifact
               uses: actions/upload-artifact@v4
