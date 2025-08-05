@@ -47,9 +47,10 @@ jobs:
             
             - name: Build .deb package
               run: |
-                export TAURI_SIGNING_PRIVATE_KEY=${{ secrets.AUDIO_REPLACER_PRIVATE_KEY }}
-                export TAURI_SIGNING_PRIVATE_KEY_PASSWORD=${{ secrets.AUDIO_REPLACER_PRIVATE_KEY_PASSWORD }}
                 npm run tauri build
+              env: 
+                TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.AUDIO_REPLACER_PRIVATE_KEY }}
+                TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.AUDIO_REPLACER_PRIVATE_KEY_PASSWORD }}
 
             - name: Create Snap Package  
               uses: snapcore/action-build@v1
