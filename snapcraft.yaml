@@ -3,8 +3,7 @@ base: core22
 version: '5.0.0'
 summary: Streamline video game voice-over dubbing
 description: |
-  This app aims to make creating mods for video games that replace voicelines easier.
-
+  This app aims to streamline the production of video game mods that dub over voice-over content (i.e. voice-over translation mods)
 type: app
 grade: stable
 confinement: strict

@@ -1,8 +1,5 @@
 name: "Create Audio Replacer Package (snapcraft)"
 on:
-    push:
-        branches:
-            - main
     workflow_dispatch:
 
 jobs:
