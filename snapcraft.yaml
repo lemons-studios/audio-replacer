@@ -24,7 +24,7 @@ layout:
     bind: $SNAP/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/webkit2gtk-4.1
 
 apps:
-  appname:
+  audio-replacer:
     command: usr/bin/audio-replacer
     desktop: usr/share/applications/audio-replacer.desktop
     extensions: [gnome]
@@ -51,4 +51,4 @@ parts:
     override-build: |
       set -e
       dpkg -x src-tauri/target/release/bundle/deb/*.deb $SNAPCRAFT_PART_INSTALL/
-#      sed -i -e "s|Icon=appname|Icon=/usr/share/icons/hicolor/32x32/apps/appname.png|g" $SNAPCRAFT_PART_INSTALL/usr/share/applications/audio-replacer.desktop
+#      sed -i -e "s|Icon=audio-replacer|Icon=/usr/share/icons/hicolor/32x32/apps/audio-replacer.png|g" $SNAPCRAFT_PART_INSTALL/usr/share/applications/audio-replacer.desktop

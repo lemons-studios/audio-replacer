@@ -1,4 +1,5 @@
 <script lang="ts">
+  
   import { Pause, Play, Repeat } from "@lucide/svelte";
   import { convertFileSrc } from "@tauri-apps/api/core";
   import { exists } from "@tauri-apps/plugin-fs";
