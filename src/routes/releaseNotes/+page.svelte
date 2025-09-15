@@ -13,9 +13,26 @@
   });
 </script>
 
-<div class="flex flex-col justify-center">
-  <div class="prose text-center text-xl justify-center">
-    <h1 class="title-text text-center"><b>Latest Release Notes:</b></h1>
-    <SvelteMarkdown source={markdown} class="prose dark:prose-invert" />
+<style>
+  * {
+    overflow: scroll;
+    overflow-x: hidden;
+  }
+
+  ::-webkit-scrollbar {
+    width: 0;
+    background: transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: transparent;
+  }
+</style>
+
+<div class="flex items-stretch flex-grow justify-center scrollbar-hide" style="overflow:auto">
+  <div class="prose">
+    <SvelteMarkdown source={markdown} class="dark:prose-invert text-center w-screen" />
   </div>
 </div>
+
+

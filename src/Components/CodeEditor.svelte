@@ -11,6 +11,7 @@
   let editorContainer: HTMLElement;
 
   let { filePath } = $props();
+
   let trueFilePath = $derived(filePath);
   let contents = (async() => {
     if(!trueFilePath || !(await exists(trueFilePath))) {
@@ -25,6 +26,7 @@
   let isEditorLoaded = $state(false);
 
   onMount(async () => {
+    
     // Import our 'monaco.ts' file here
     // (onMount() will only be executed in the browser, which is what we want)
     console.log("Setting Monaco");

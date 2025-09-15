@@ -44,7 +44,6 @@
     "drpc:default",
     "dialog:default",
     "fs:allow-read-text-file",
-    "updater:default",
     "global-shortcut:allow-register",
     "global-shortcut:allow-unregister-all"
   ]

@@ -1,6 +1,8 @@
 /** biome-ignore-all lint/correctness/noUnknownProperty: <explanation> */
 @import "tailwindcss";
+@import 'tailwind-scrollbar-hide/v4';
 @import "@fontsource-variable/inter";
+
 
 @plugin "@tailwindcss/typography";
 @plugin "daisyui" {
