@@ -1,31 +1,38 @@
 <script lang="ts">
+  import { invoke } from "@tauri-apps/api/core";
   import "../app.css";
   import { House, Mic, PencilLine, Settings, Megaphone } from "@lucide/svelte";
   import { onMount } from "svelte";
   import { populateCustomData } from "./recordPage/EffectManager";
   import { loadFFMpeg } from "./recordPage/FFMpegManager";
   import { getVersion } from "@tauri-apps/api/app";
-  import Toast from "../Components/Toast.svelte";
+  import { page } from "$app/state";
   
   let { children } = $props();
   let versionNumber = $state("");
 
-  let notificationType = $state("info");
-  let notificationTitle = $state("Hello");
-  let notificationMessage = $state("This is a test message");
-  let projectLoading = $state(false);
 
   onMount(async() => {
     versionNumber = await formatVersion();
     await populateCustomData();
     await loadFFMpeg();  
+
+    // Prevent right click context menu from showing up (unneeded in production builds)
+    const isDev = await invoke("in_dev_env") as boolean;
+    console.log(`Developer environment? ${isDev ? "Yes" : "No"}`)
+    if(!isDev) {
+      document.addEventListener('DOMContentLoaded', () => {
+        document.addEventListener('contextmenu', (e) => {
+          e.preventDefault();
+        })
+      })
+    }
   });
 
   async function formatVersion(): Promise<string> {
     const [major, minor, patch] = (await getVersion()).split(".")
     return patch != "0" ? `${major}.${minor}.${patch}` : `${major}.${minor}`;
   }
-  
 </script>
 
 <style>
@@ -37,7 +44,6 @@
 </style>
 
 <main class="bg-base-200 flex flex-row grow-1 text-white items-stretch w-screen h-screen overflow-y-hidden">
-  <!--<Toast message={notificationMessage} title={notificationTitle} notificationType={notificationType} />-->
   <div class="flex flex-col items-stretch justify-between bg-base-100 min-w-[10rem] p-1">
     <div class="flex flex-col items-stretch">
       <ul class="menu menu-vertical menu-lg gap-0.5 rounded-box w-full bg-transparent">

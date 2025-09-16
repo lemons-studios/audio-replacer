@@ -10,12 +10,12 @@ WinUI3 is quite bloated when not making Microsoft Store apps. Using tauri, the a
 WinUI3 is also bloated when it comes to memory (about 200Mb-250Mb when idle from my own testing). Audio replacer 5 uses less than 50mb at any given time! this will allow for less powerful devices to be able to run this application
 
 ### Improved audio file transcription speed
-As always, AI projects always have some weird issue that cannot be explained with logic. [Whisper.Cpp](), the framework this app relies on for text transcription, has a bug that causes release builds of apps to transcribe text up to 10 times slower. Using a hack from my friend [ChakornK](), Audio Replacer is able to bypass this bug to achieve incredible transcription speeds (2-3 seconds on CPU!).
+As always, AI projects always have some weird issue that cannot be explained with logic. [Whisper.Cpp](https://github.com/ggml-org/whisper.cpp), the framework this app relies on for text transcription, has a bug that causes release builds of apps to transcribe text up to 10 times slower. Using a hack from my friend [ChakornK](https://github.com/ChakornK/), Audio Replacer is able to bypass this bug to achieve incredible transcription speeds (2-3 seconds on CPU!).
 
 With this speed improvement, I have decided against reimplementing CUDA and Vulkan transcription support, as the setup is too involved for end users
 
 ### New Audio-Focused FFMpeg build
-Courtsey of [ChakornK]() once more, an extremely minimal (8.8Mb), audio focused build of FFMpeg has been created for Audio Replacer 5.0. 
+Courtsey of [ChakornK](https://github.com/ChakornK/) once more, an extremely minimal (8.8Mb), audio focused build of FFMpeg has been created for Audio Replacer 5.0. 
 
 ### Upgraded Data Editor
 The old text editor with some convinient json editing features has been gutted and replaced with the core of visual studio code as its text editor. Base visual studio code commands can be executed (such as formatting code), and there should be proper syntax hilighting for errors
@@ -38,8 +38,7 @@ Breaking free from the shakles of the Windows App SDK has allowed this app to ex
 - .AppImage
 I am still trying to figure out app distribution on either flathub or snapcraft, but it's proving problematic. 
 
-I am also unable to provide automatic updates to Linux builds due to fundemental differences on how package distribution is done on Linux vs Windows (hence why I want to add the package to snap or flatpak, since they can pretty much update the packages automatically). when a new update is available, you will get a toast like Windows users, but will be redirected to GitHub, regardless of what version you are using. 
-
+I am also unable to provide automatic updates to Linux builds due to fundemental differences on how package distribution is done on Linux vs Windows (which is why I want to add the package to snap or flatpak, since they can pretty much update the packages automatically). when a new update is available, you will get a toast like Windows users, but will be redirected to GitHub, regardless of what version you are using. 
 
 ## Legal Changes
-Audio Replacer has been relicensed from MIT License to BSD 3-Clause (Code from previous versions are still licensed under MIT, I can't change that). If you fork this package or use parts of this codebase for your own use, please make sure to follow the terms of the license
+Audio Replacer has been relicensed from MIT License to BSD 3-Clause. If you fork this package or use parts of this codebase for your own use, please make sure to follow the terms of the license. All code from previous versions continue to use the MIT license

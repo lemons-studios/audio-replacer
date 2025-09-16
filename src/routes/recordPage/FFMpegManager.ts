@@ -69,10 +69,10 @@ export function setEffect(newValue: string) {
 
 export async function loadFFMpeg() {
 	const os = platform();
-	const fileName = os === "windows" ? "ffmpeg-x86_64-pc-windows-msvc.exe" : "ffmpeg-x86_64-unknown-linux-gnu.AppImage";
+	const file = `ffmpeg-x86_64-${os === 'windows' ? 'pc-windows-msvc.exe' : 'unknown-linux-gnu'}`
 
-	console.log(`Setting FFMpeg path to binaries/${fileName}`);
-	ffmpegPath = await resolveResource(`binaries/${fileName}`);
+	console.log(`Setting FFMpeg path to binaries/${file}`);
+	ffmpegPath = await resolveResource(`binaries/${file}`);
 
 	console.log("Setting rnnnoise data path");
 	noiseSuppressionPath = await resolveResource("binaries/noiseSuppression.rnnn")

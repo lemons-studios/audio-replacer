@@ -6,6 +6,7 @@
     import { resolveResource } from "@tauri-apps/api/path";
     import { register, unregisterAll } from "@tauri-apps/plugin-global-shortcut";
     import { readTextFile } from "@tauri-apps/plugin-fs";
+    import { ArrowLeftRight, BadgeQuestionMark, Redo, Save, Undo } from "@lucide/svelte";
 
     let codeEditor: CodeEditor;
     let selectedFilePath = $state("");
@@ -38,6 +39,7 @@
 
     onDestroy(async() => {
       await unregisterAll();
+      selectedFilePath = "";
     })
 
     async function switchFiles() {
@@ -56,8 +58,14 @@
 
 <div class="flex flex-col grow">
   <div class="bg-base-300 p-2.5 min-h-20 items-center justify-center content-center flex flex-col grow mb-3.5 rounded-lg">
-    <h3 class="font-bold mb-1">{getFileName()}</h3>
-    <button class="btn btn-sm btn-accent max-h-8 min-w-20" onclick={async() => await switchFiles()}>Switch</button>
+    <h3 class="font-bold mb-1">Current File: {getFileName()}</h3>
+    <div class="flex flex-row gap-2.5">
+      <button class="btn btn-sm btn-accent max-h-8 min-w-20" onclick={async() => await switchFiles()}><ArrowLeftRight/> Switch</button>
+      <button class="btn btn-sm btn-accent max-h-8 min-w-20"><Save/> Save</button>
+      <button class="btn btn-sm btn-accent max-h-8 min-w-20"><Undo/> Undo</button>
+      <button class="btn btn-sm btn-accent max-h-8 min-w-20"><Redo/> Redo</button>
+      <button class="btn btn-sm btn-accent max-h-8 min-w-20" onclick={() => open("https://github.com/lemons-studios/audio-replacer/wiki")}><BadgeQuestionMark /> Help</button>
+    </div>
   </div>
   <CodeEditor bind:this={codeEditor} filePath={selectedFilePath}></CodeEditor>
 </div>

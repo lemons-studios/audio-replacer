@@ -1,6 +1,6 @@
 use std::{env, path::PathBuf};
 
-use tauri::command;
+use tauri::{command, is_dev};
 
 #[command]
 pub fn get_install_directory() -> Result<PathBuf, String> {
@@ -14,4 +14,9 @@ pub fn get_install_directory() -> Result<PathBuf, String> {
         }
         Err(e) => Err(format!("Failed to get the executable path: {}", e)),
     }
+}
+
+#[command] 
+pub fn in_dev_env() -> bool {
+    is_dev()
 }

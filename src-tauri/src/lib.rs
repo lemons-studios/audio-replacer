@@ -30,6 +30,7 @@ pub fn run() {
             commands::project_manager::delete_empty_subdirectories,
             commands::whisper_utils::transcribe_file,
             commands::app_functions::get_install_directory,
+            commands::app_functions::in_dev_env,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

@@ -8,7 +8,6 @@
 </script>
 
 <!--Ignore any errors below if any are visible, they only show up because not all elements in the javascript object share the same list of properties-->
-<!--App runs fine-->
 <div class="flex flex-grow flex-col gap-y-2.5 items-center overflow-y-auto">
   {#each Object.entries(settings) as [name, settingCategory], sIndex}
     <fieldset class={`${sIndex == 2 ? 'pane-error' : 'pane'} w-3/4`}>
@@ -21,13 +20,13 @@
           </div>
           {#if setting.type == "boolean"}
             {#await setting.getValue() then value}
-              <input type="checkbox" class="toggle" checked={value} onchange={async() => await setting.onChange(value)}> 
+              <input type="checkbox" class="toggle" checked={value} onchange={() => setting.onChange(value)}> 
             {/await}
           {:else if setting.type == "string"}
             {#await setting.getValue()}
               <input type="text" placeholder={setting.defaultValue} class="input max-w-1/12">
             {:then value} 
-              <input type="text" value={value} class="input max-w-1/12" onchange={async() => setting.onChange(value)}>
+              <input type="text" value={value} class="input max-w-1/12" onchange={() => setting.onChange(value)}>
             {/await}
           {:else if setting.type == "button"}
             <button class="btn btn-primary btn-md" onclick={setting.onClick}>{setting.buttonText}</button>
