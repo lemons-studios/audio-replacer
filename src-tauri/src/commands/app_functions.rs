@@ -16,7 +16,7 @@ pub fn get_install_directory() -> Result<PathBuf, String> {
     }
 }
 
-#[command] 
+#[command]
 pub fn in_dev_env() -> bool {
     is_dev()
 }

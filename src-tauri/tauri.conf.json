@@ -31,6 +31,7 @@
   "bundle": {
     "copyright": "Lemon Studios",
     "publisher": "Lemon Studios",
+    "createUpdaterArtifacts": true,
     "active": true,
     "targets": "all",
     "icon": [
@@ -79,5 +80,16 @@
     },
     "license": "BSD-3-Clause",
     "category": "Utility"
+  },
+  "plugins": {
+    "updater": {
+       "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IEY4OThGMUMxMThGOEJBNUYKUldSZnV2Z1l3ZkdZK1A0R2VVS0Jmck1tbFpGeVNERERaMW9ZdGRlaXFmSEtPTWlKTXFETVdJMU8K",
+       "endpoints": [
+        
+       ],
+       "windows": {
+        "installMode": "passive"
+       }
+    }
   }
 }

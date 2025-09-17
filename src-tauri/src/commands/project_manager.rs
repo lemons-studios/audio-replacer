@@ -28,10 +28,10 @@ pub fn get_subdirectories(path: &str) -> Vec<String> {
 #[command]
 pub fn count_files(path: &str) -> i32 {
     WalkDir::new(path)
-    .into_iter()
-    .filter_map(|e| e.ok())
-    .filter(|e| e.file_type().is_file())
-    .count() as i32
+        .into_iter()
+        .filter_map(|e| e.ok())
+        .filter(|e| e.file_type().is_file())
+        .count() as i32
 }
 
 #[command(async)]
