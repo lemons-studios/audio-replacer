@@ -41,7 +41,6 @@
     "fs:read-all",
     "fs:write-all",
     "core:app:allow-set-app-theme",
-    "drpc:default",
     "dialog:default",
     "fs:allow-read-text-file",
     "global-shortcut:allow-register",

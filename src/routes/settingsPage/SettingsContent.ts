@@ -83,7 +83,7 @@ export const settings = {
       onchange: (value: boolean) => {
         setValue("allowNoiseSuppression", value);
       },
-      getValue: async(): Promise<boolean> => {
+      getValue: async (): Promise<boolean> => {
         return (await getValue("allowNoiseSuppression")) as boolean;
       },
     },

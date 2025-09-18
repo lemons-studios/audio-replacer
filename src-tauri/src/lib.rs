@@ -22,7 +22,6 @@ pub fn run() {
         .plugin(tauri_plugin_fs::init())
         .plugin(tauri_plugin_os::init())
         .plugin(tauri_plugin_opener::init())
-        .plugin(tauri_plugin_drpc::init())
         .invoke_handler(tauri::generate_handler![
             commands::project_manager::get_all_files,
             commands::project_manager::get_subdirectories,

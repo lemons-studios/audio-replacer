@@ -114,7 +114,6 @@
       currentAudioPath = ProjectManager.currentOutFile;
       switchStates();
     }
-
   }
 
   function cancelRecord() {
