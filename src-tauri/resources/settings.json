@@ -8,5 +8,6 @@
     "recordEndDelay": 250,
     "enableTranscription": true,
     "toastTimeout": 1750,
-    "enableRichPresence": true
+    "enableRichPresence": true,
+    "allowNoiseSuppression": true
 }

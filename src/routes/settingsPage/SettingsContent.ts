@@ -87,6 +87,17 @@ export const settings = {
       },
     },
     {
+      name: "Enable Noise Suppression",
+      description: "Apply noise suppression on your recordings",
+      type: "boolean",
+      onchange: (value: boolean) => {
+        setValue("allowNoiseSuppression", value);
+      },
+      getValue: async(): Promise<boolean> => {
+        return (await getValue("allowNoiseSuppression")) as boolean;
+      },
+    },
+    {
       name: "Auto-Accept Recordings",
       description: "You are committed!",
       type: "boolean",
@@ -113,6 +124,7 @@ export const settings = {
         await writeTextFile(pitchPath, fileContents);
         await relaunch();
       },
+      
     },
     {
       name: "Import Effect Data",
