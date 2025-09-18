@@ -24,10 +24,13 @@
       "csp": null,
       "assetProtocol": {
         "enable": true,
-        "scope": ["."]
+        "scope": [
+          "."
+        ]
       }
     }
   },
+  
   "bundle": {
     "copyright": "Lemon Studios",
     "publisher": "Lemon Studios",
@@ -55,7 +58,7 @@
     "linux": {
       "appimage": {
         "bundleMediaFramework": true,
-        "files": {  }
+        "files": {}
       },
       "deb": {
         "files": {}
@@ -83,13 +86,12 @@
   },
   "plugins": {
     "updater": {
-       "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IEY4OThGMUMxMThGOEJBNUYKUldSZnV2Z1l3ZkdZK1A0R2VVS0Jmck1tbFpGeVNERERaMW9ZdGRlaXFmSEtPTWlKTXFETVdJMU8K",
-       "endpoints": [
-        
-       ],
-       "windows": {
+      "active": true,
+      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IEY4OThGMUMxMThGOEJBNUYKUldSZnV2Z1l3ZkdZK1A0R2VVS0Jmck1tbFpGeVNERERaMW9ZdGRlaXFmSEtPTWlKTXFETVdJMU8K",
+      "endpoints": [],
+      "windows": {
         "installMode": "passive"
-       }
+      }
     }
   }
 }

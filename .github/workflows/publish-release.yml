@@ -38,8 +38,8 @@ jobs:
           Set-ExecutionPolicy Unrestricted -Force
 
           winget source remove msstore
-          winget install Kitware.CMake --disable-interactivity --accept-source-agreements --accept-package-agreements --force
-          winget install --id=Microsoft.EdgeWebView2Runtime -e
+          winget upgrade Kitware.CMake --disable-interactivity --accept-source-agreements --accept-package-agreements --force
+          winget upgrade --id=Microsoft.EdgeWebView2Runtime -e
 
       - name: install dependencies (Ubuntu)
         if: matrix.platform == 'ubuntu-22.04'
