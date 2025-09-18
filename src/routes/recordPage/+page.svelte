@@ -8,6 +8,7 @@
   import { setDetails } from "../../tools/DiscordRpc";
   import { cancelRecording, endRecording, startRecording } from "./AudioRecorder";
   import { register, unregisterAll } from "@tauri-apps/plugin-global-shortcut";
+  import { getValue } from "../../tools/SettingsManager";
   
   let currentPathTrunc = $state(ProjectManager.currentFileLocalPath || "Select a folder to begin");
   let currentAudioPath = $state(ProjectManager.currentFile || "");
@@ -35,7 +36,11 @@
     setFileData();
     await setDetails("Recording");
 
-    currentTranscription = ProjectManager.isProjectLoaded ? `Transcription: ${await transcribeFile(currentAudioPath)}` : "";
+    const allowTranscription = await getValue("enableTranscription") as boolean;
+    if(allowTranscription) {
+        currentTranscription = ProjectManager.isProjectLoaded ? `Transcription: ${await transcribeFile(currentAudioPath)}` : "";
+    }
+    else currentTranscription = `Speech-To-Text Transcription Disabled.`;
     
     const shortcuts = [
       {
@@ -99,8 +104,17 @@
   async function stopRecord() {
     console.log("Recording Stopped, attempting to save to: ", ProjectManager.currentOutFile);
     await endRecording(ProjectManager.currentOutFile);
-    currentAudioPath = ProjectManager.currentOutFile;
-    switchStates();
+    const autoAccept = await getValue("autoAcceptRecordings") as boolean;
+    if(autoAccept) {
+      // Quickly enter the review state, then automatically accept it
+      switchStates();
+      finalizeRecording(false);
+    }
+    else {
+      currentAudioPath = ProjectManager.currentOutFile;
+      switchStates();
+    }
+
   }
 
   function cancelRecord() {
@@ -117,7 +131,9 @@
     }
     else {
       await ProjectManager.submitFile();
-      currentTranscription = await transcribeFile(currentAudioPath);
+      const allowTranscription = await getValue("enableTranscription") as boolean;
+
+      currentTranscription = allowTranscription ? await transcribeFile(currentAudioPath) : "Speech-To-Text Transcription Disabled.";
     }
     setFileData();
   }

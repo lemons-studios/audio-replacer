@@ -5,11 +5,10 @@
   import JsonEditor from 'jsoneditor';
   import "jsoneditor/dist/jsoneditor.css";
   import { onMount, tick } from 'svelte';
-    import { convertFileSrc } from '@tauri-apps/api/core';
-    import { currentFile } from '../tools/ProjectManager';
 
   let isLoaded = $state(false);
   let currentPath: string = $state("");
+  let currentTruncatedPath: string = $state("");
 
   let jsonEditorContainer: HTMLDivElement;
   let editor: JsonEditor;
@@ -21,7 +20,8 @@
 
   onMount(async() => {
     await tick();
-    currentPath = await resolveResource(filePaths.pitchData);
+    currentTruncatedPath = filePaths.pitchData;
+    currentPath = await resolveResource(currentTruncatedPath);
     const initialJson = JSON.parse(await readTextFile(currentPath));
     editor = new JsonEditor(jsonEditorContainer, {
       mode: 'code',
@@ -34,23 +34,29 @@
     isLoaded = true;
   })
 
-  export function reloadEditor() {
-    
-  }
-
-  export async function saveContentToFile(path: string) {
+  export async function saveContentToFile() {
     const contents = editor.get();
     await writeTextFile(currentPath, contents);
   }
 
   export function formatEditor() {
-
+    const contents = editor.get();
+    
   }
 
-  export function switchFiles() {
-    currentPath = curren
+  export async function switchFiles() {
+    const contents = editor.get();
+    await writeTextFile(currentPath, contents);
+
+    currentTruncatedPath = currentTruncatedPath === filePaths.pitchData ? filePaths.effectData : filePaths.pitchData;
+    currentPath = await resolveResource(currentTruncatedPath);
+    const newInitialJson = JSON.parse(await readTextFile(currentPath));
+    editor.set(newInitialJson);
   }
 
+  export function getSelectedFile(returnFull: boolean) {
+    return returnFull ? currentPath : currentTruncatedPath;
+  }
   
 </script>
 {#if !isLoaded}

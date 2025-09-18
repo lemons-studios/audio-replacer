@@ -1,6 +1,5 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import { startRichPresence } from "../tools/DiscordRpc";
   import { getValue, setValue } from "../tools/SettingsManager";
   import { setProjectData } from "../tools/ProjectManager";
   import { exists } from "@tauri-apps/plugin-fs";
@@ -18,8 +17,13 @@
     previousProjectExists = (await exists(previousPath)) || previousPath != "";
     if (previousProjectExists) {
       previousProjectName = await basename(previousPath);
+      
+      // Autoload
+      const autoload = await getValue("autoloadProject");
+      if(autoload) {
+        await loadLastProject();
+      }
     }
-    await startRichPresence();
   });
 
   async function loadLastProject() {

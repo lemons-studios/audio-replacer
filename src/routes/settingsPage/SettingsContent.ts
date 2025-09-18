@@ -8,11 +8,9 @@ export const settings = {
   General: [
     {
       name: "Check for updates",
-      description:
-        "You will be prompted to install the update after the update is downloaded",
+      description: "You will be prompted to install the update after the update is downloaded",
       type: "boolean",
       onChange: (value: boolean) => {
-        console.log("Clicked");
         setValue("updateCheck", value);
       },
       getValue: async (): Promise<boolean> => {
@@ -21,11 +19,9 @@ export const settings = {
     },
     {
       name: "Autoload last project",
-      description:
-        "Load your last project automatically on app launch instead of loading into the home menu",
+      description: "Load your last project automatically on app launch instead of loading into the home menu",
       type: "boolean",
       onChange: (value: boolean) => {
-        console.log("Clicked");
         setValue("autoloadProject", value);
       },
       getValue: async (): Promise<boolean> => {
@@ -34,11 +30,9 @@ export const settings = {
     },
     {
       name: "Enable Audio Transcription",
-      description:
-        "Uses the whisper text transcription model to transcribe the current file you are on. Little to no performance impact",
+      description: "Uses the whisper text transcription model to transcribe the current file you are on. Little to no performance impact",
       type: "boolean",
       onChange: (value: boolean) => {
-        console.log("Clicked");
         setValue("enableTranscription", value);
       },
       getValue: async (): Promise<boolean> => {
@@ -47,11 +41,9 @@ export const settings = {
     },
     {
       name: "Enabe Discord Rich Presence",
-      description:
-        "Displays general info on what you're doing to all your friends on Discord",
+      description: "Displays general info on what you're doing to all your friends on Discord",
       type: "boolean",
       onChange: (value: boolean) => {
-        console.log("Clicked");
         setValue("enableRichPresence", value);
       },
       getValue: async (): Promise<boolean> => {
@@ -66,7 +58,6 @@ export const settings = {
       type: "string",
       defaultValue: "10",
       onChange: (value: string) => {
-        console.log("Clicked");
         setValue("recordStartDelay", value);
       },
       getValue: async (): Promise<string> => {
@@ -79,7 +70,6 @@ export const settings = {
       type: "string",
       defaultValue: "50",
       onChange: (value: string) => {
-        console.log("Clicked");
         setValue("recordEndDelay", value);
       },
       getValue: async (): Promise<string> => {
@@ -102,7 +92,6 @@ export const settings = {
       description: "You are committed!",
       type: "boolean",
       onChange: (value: boolean) => {
-        console.log("Clicked");
         setValue("autoAcceptRecordings", value);
       },
       getValue: async (): Promise<boolean> => {
@@ -111,12 +100,10 @@ export const settings = {
     },
     {
       name: "Import Pitch Data",
-      description:
-        "Import a json file containing custom pitch values that will be applied on record completion",
+      description: "Import a json file containing custom pitch values that will be applied on record completion",
       type: "button",
       buttonText: "Import",
       onClick: async () => {
-        console.log("Clicked");
         const pitchPath = await resolveResource("resources/pitchData.json");
         const filePath = await selectFile(["json"], "Audio Replacer Custom Data Files");
         const fileContents = await readTextFile(filePath);
@@ -128,12 +115,10 @@ export const settings = {
     },
     {
       name: "Import Effect Data",
-      description:
-        "Import a json file containing custom ffmpeg effect filter that will be applied on record completion",
+      description: "Import a json file containing custom ffmpeg effect filter that will be applied on record completion",
       type: "button",
       buttonText: "Import",
       onClick: async () => {
-        console.log("Clicked");
         const pitchPath = await resolveResource("resources/effectData.json");
         const filePath = await selectFile(["json"], "Audio Replacer Custom Data Files");
         const fileContents = await readTextFile(filePath);
@@ -150,7 +135,6 @@ export const settings = {
       type: "button",
       buttonText: "Delete",
       onClick: async () => {
-        console.log("Clicked");
         const file = await resolveResource("resources/pitchData.json");
         await writeTextFile(file, JSON.stringify(defaultPitchData));
         await relaunch();
@@ -162,7 +146,6 @@ export const settings = {
       type: "button",
       buttonText: "Delete",
       onClick: async () => {
-        console.log("Clicked");
         const file = await resolveResource("resources/effectData.json");
         await writeTextFile(file, JSON.stringify(defaultEffectData));
         await relaunch();
@@ -174,7 +157,6 @@ export const settings = {
       type: "button",
       buttonText: "Delete",
       onClick: async () => {
-        console.log("Clicked");
         const pitchData = await resolveResource("resources/pitchData.json");
         const effectData = await resolveResource("resources/effectData.json");
         await writeTextFile(pitchData, JSON.stringify(defaultPitchData));
@@ -184,12 +166,10 @@ export const settings = {
     },
     {
       name: "Delete EVERYTHING",
-      description:
-        "Deletes custom effect and pitch data, and resets your statistics",
+      description: "Deletes custom effect and pitch data, and resets your statistics",
       type: "button",
       buttonText: "Delete",
       onClick: async () => {
-        console.log("Clicked");
         const pitchData = await resolveResource("resources/pitchData.json");
         const effectData = await resolveResource("resources/effectData.json");
         await writeTextFile(pitchData, JSON.stringify(defaultPitchData));
@@ -211,4 +191,3 @@ const defaultPitchData = [
   ["2.00", "Super High Pitch"],
   ["0.25", "Super Low Pitch"],
 ] as const;
-

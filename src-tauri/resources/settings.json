@@ -1,5 +1,4 @@
 {
-    "theme": "dark",
     "autoloadProject": false,
     "autoAcceptRecordings": false,
     "updateCheck": true,
@@ -7,7 +6,6 @@
     "recordStartDelay": 500,
     "recordEndDelay": 250,
     "enableTranscription": true,
-    "toastTimeout": 1750,
     "enableRichPresence": true,
     "allowNoiseSuppression": true
 }

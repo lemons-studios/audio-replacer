@@ -8,6 +8,7 @@
   import { getVersion } from "@tauri-apps/api/app";
   import { downloadUpdates, getUpdateVersion, isUpdateAvailable } from "../tools/Updater";
   import { ask } from "@tauri-apps/plugin-dialog";
+  import { getValue } from "../tools/SettingsManager";
   
   let { children } = $props();
   let versionNumber = $state("");
@@ -25,19 +26,23 @@
           e.preventDefault();
       });
     }
-    // Check for updates
-    if(await isUpdateAvailable()) {
-      const response = await ask(`There is an update available to Audio Replacer\n Latest Version: ${getUpdateVersion()} \nCurrent Version: ${versionNumber}`, {
-        title: 'Update Available',
-        kind: 'warning'
-      })
-      if(response) {
-        isUpdating = true;
-        await downloadUpdates();
+
+    // Only check for updates if the user wants to
+    const allowUpdates = await getValue("updateCheck");
+    if(allowUpdates) {
+      if(await isUpdateAvailable()) {
+        const response = await ask(`There is an update available for Audio Replacer.\n Latest Version: ${getUpdateVersion()} \nCurrent Version: ${versionNumber}`, {
+          title: 'Update Available',
+          kind: 'warning'
+        });
+        if(response) {
+          isUpdating = true;
+          await downloadUpdates();
+        }
       }
-    }
-    else {
-      console.log("No Update Available");
+      else {
+        console.log("No Update Available");
+      }  
     }
   });
 
