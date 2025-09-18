@@ -1,84 +1,62 @@
 <script lang="ts">
-  // Code yoinked from https://www.codelantis.com/blog/sveltekit-monaco-editor. same article as Monaco.ts
-  import { onDestroy, onMount } from "svelte";
-  import { editorTheme } from "../routes/dataEditor/CodeEditorTheme";
-  import type * as Monaco from "monaco-editor/esm/vs/editor/editor.api.js"; // If an error pops up here, ignore it. the file most certainly exists
-  import { exists, readTextFile, writeTextFile } from "@tauri-apps/plugin-fs";
-  import { populateCustomData } from "../routes/recordPage/EffectManager";
+  import { resolveResource } from '@tauri-apps/api/path';
+  import "ace-builds/css/theme/dracula.css";
+  import { readTextFile, writeTextFile } from '@tauri-apps/plugin-fs';
+  import JsonEditor from 'jsoneditor';
+  import "jsoneditor/dist/jsoneditor.css";
+  import { onMount, tick } from 'svelte';
+    import { convertFileSrc } from '@tauri-apps/api/core';
+    import { currentFile } from '../tools/ProjectManager';
 
-  let editor: any = $state();
-  let monaco: typeof Monaco;
-  let editorContainer: HTMLElement;
+  let isLoaded = $state(false);
+  let currentPath: string = $state("");
 
-  let { filePath } = $props();
+  let jsonEditorContainer: HTMLDivElement;
+  let editor: JsonEditor;
 
-  let trueFilePath = $derived(filePath);
-  let contents = (async() => {
-    if(!trueFilePath || !(await exists(trueFilePath))) {
-      return "";
-    }
-    console.log("File Path valid")
-    const contents = await readTextFile(filePath);
-    console.log(contents);
-    return contents;
-  })
+  const filePaths = {
+    pitchData: "resources/pitchData.json",
+    effectData: "resources/effectData.json"
+  } as const
 
-  let isEditorLoaded = $state(false);
-
-  onMount(async () => {
-    
-    // Import our 'monaco.ts' file here
-    // (onMount() will only be executed in the browser, which is what we want)
-    console.log("Setting Monaco");
-    monaco = (await import("../routes/dataEditor/Monaco")).default;
-
-    // Your monaco instance is ready, let's display some code!
-    console.log("Setting Monaco Theme");
-    monaco.editor.defineTheme("catppuccin", editorTheme); // Ignore error, it works as intended
-    console.log("Creating monaco editor and setting syntax");
-
-    editor = monaco.editor.create(editorContainer, {
-      theme: "catppuccin",
-      automaticLayout: true,
-      language: "json",
-      minimap: { enabled: false },
-      hideCursorInOverviewRuler: true,
-      fontFamily: "'source code pro', monospace",
-      fontLigatures: true,
-      fontSize: 14,
-      formatOnPaste: true
+  onMount(async() => {
+    await tick();
+    currentPath = await resolveResource(filePaths.pitchData);
+    const initialJson = JSON.parse(await readTextFile(currentPath));
+    editor = new JsonEditor(jsonEditorContainer, {
+      mode: 'code',
+      ace: window.ace,
+      mainMenuBar: false,
+      navigationBar: false
     });
 
+    editor.set(initialJson);
+    isLoaded = true;
+  })
 
-    const fileContents = await contents();
-    const model = monaco.editor.createModel(fileContents, "json");
-    console.log("Final loading steps");
-    editor.setModel(model);
-    isEditorLoaded = true;
-  });
-
-  onDestroy(() => {
-    monaco?.editor.getModels().forEach((model: any) => model.dispose());
-    editor?.dispose();
-    isEditorLoaded = false;
-  });
-
-  export async function saveContentToData(path: string) {
-    const content = editor?.getValue();
-    await writeTextFile(path, content);
+  export function reloadEditor() {
     
-    // repopulate the pitch/effect data json variables
-    await populateCustomData();
   }
+
+  export async function saveContentToFile(path: string) {
+    const contents = editor.get();
+    await writeTextFile(currentPath, contents);
+  }
+
+  export function formatEditor() {
+
+  }
+
+  export function switchFiles() {
+    currentPath = curren
+  }
+
+  
 </script>
-
-<div class="relative w-full h-full">
-  <div class="w-full h-full" bind:this={editorContainer}></div>
-
-  {#if !isEditorLoaded}
-    <div class="flex flex-row grow justify-center items-center gap-3 absolute inset-0">
-      <span class="loading loading-spinner text-primary text-xl"></span>
-      <h3 class="text-xl">Loading Data Editor...</h3>
-    </div>
-  {/if}
-</div>
+{#if !isLoaded}
+  <div class="flex flex-row grow justify-center items-center gap-3 absolute inset-0">
+    <span class="loading loading-spinner text-primary text-xl"></span>
+    <h3 class="text-xl">Loading Editor</h3>
+  </div>
+{/if}
+<div bind:this={jsonEditorContainer} class="h-full w-full"></div>

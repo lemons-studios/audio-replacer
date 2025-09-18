@@ -24,7 +24,8 @@
       audioPlayer.load();
       audioPlayer.addEventListener('loadedmetadata', () => {
         console.log("Metadata Loaded", audioPlayer.duration);
-      }, {once: true});
+      }, {once: true}
+    );
 
       audioPlaying = false;
       audioCompletion = 0.0;
