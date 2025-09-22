@@ -1,54 +1,40 @@
 import { remove, rename } from "@tauri-apps/plugin-fs";
 import { changeFileExtension } from "../../tools/OsTools";
 import { Command } from "@tauri-apps/plugin-shell";
-import { platform } from "@tauri-apps/plugin-os";
 import { resolveResource } from "@tauri-apps/api/path";
 
 let selectedEffect: string;
 let selectedPitch: string;
-let ffmpegPath: string;
 let noiseSuppressionPath: string;
 
-// The three functions below are almost identical, but I feel like it's better to just split them up and give them a unique function name than to try and clump everything together into one function 
-export async function applyFfmpegFilter(file: string) {
-	const tmpFile = `${file}.wav`; // FFMpeg doesn't like modifying files it's currently reading from. We'll move it back later
-	await Command.create(ffmpegPath, [
+export async function callFFMpeg(file: string, effect: string) {
+	const tmpFile = `${file}.wav`;
+	await Command.sidecar("binaries/ffmpeg", [
 		"-i",
 		file,
 		"-af",
-		selectedEffect,
-		tmpFile,
+		effect,
+		tmpFile
 	]).execute();
-	await rename(tmpFile, file);
+	await rename(tmpFile, file)
+}
+
+export async function applyFfmpegFilter(file: string) {
+	await callFFMpeg(file, selectedEffect);
 }
 
 export async function applyFFMpegPitch(file: string) {
-	const tmpFile = `${file}.wav`;
-	await Command.create(ffmpegPath, [
-		"-i",
-		file,
-		"-af",
-		`rubberband=pitch=${selectedPitch}`,
-		tmpFile,
-	]).execute();
-	await rename(tmpFile, file);
+	await callFFMpeg(file, `rubberband=pitch=${selectedPitch}`)
 }
 
 export async function applyNoiseSuppression(file: string) {
-	const tmpFile = `${file}.wav`;
-	await Command.create(ffmpegPath, [
-		"-i",
-		file,
-		"-af", 
-		`arnndn=model=${noiseSuppressionPath}:mix=0.8`,
-		tmpFile,
-	]).execute();
-	await rename(tmpFile, file);
+	await callFFMpeg(file, `arnndn=model=${noiseSuppressionPath}:mix=0.8`)
 }
 
+// This function won't use callFFMpeg because it's not apply a filter; rather, it's changing the file extension
 export async function convertFileFormat(input: string, fileType: string) {
 	const outPath = await changeFileExtension(input, fileType);
-	await Command.create(ffmpegPath, [
+	await Command.sidecar("binaries/ffmpeg", [
 		"-i",
 		input,
 		outPath,
@@ -56,24 +42,28 @@ export async function convertFileFormat(input: string, fileType: string) {
 	remove(input);
 }
 
+export async function ffmpegLoadTest() {
+	try {
+		const output = await Command.sidecar("binaries/ffmpeg", [
+			"-version"
+		]).execute();
+		console.log(output)
+	}
+	catch(e: any) {
+		console.error("FFMpeg Load test failed");
+	}
+}
+
 // We love seeing oop setter functions in typescript
 export function setPitch(newValue: string) {
 	selectedPitch = newValue;
-	console.log(`New Pitch Value: ${newValue}`);
 }
 
 export function setEffect(newValue: string) {
 	selectedEffect = newValue;
-	console.log(`New Effect Value: ${newValue}`);
 }
 
 export async function loadFFMpeg() {
-	const os = platform();
-	const file = `ffmpeg-x86_64-${os === 'windows' ? 'pc-windows-msvc.exe' : 'unknown-linux-gnu'}`
-
-	console.log(`Setting FFMpeg path to binaries/${file}`);
-	ffmpegPath = await resolveResource(`binaries/${file}`);
-
-	console.log("Setting rnnnoise data path");
-	noiseSuppressionPath = await resolveResource("binaries/noiseSuppression.rnnn")
+	noiseSuppressionPath = await resolveResource("binaries/noiseSuppression.rnnn");
+	await ffmpegLoadTest();
 }

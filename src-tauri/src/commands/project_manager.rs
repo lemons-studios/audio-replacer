@@ -34,7 +34,7 @@ pub fn count_files(path: &str) -> i32 {
         .count() as i32
 }
 
-#[command(async)]
+#[command]
 pub fn delete_empty_subdirectories(project_path: &str) {
     let path = Path::new(project_path);
     if !path.is_dir() {

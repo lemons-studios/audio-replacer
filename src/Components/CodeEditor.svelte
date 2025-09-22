@@ -1,6 +1,5 @@
 <script lang="ts">
   import { resolveResource } from '@tauri-apps/api/path';
-  import "ace-builds/css/theme/dracula.css";
   import { readTextFile, writeTextFile } from '@tauri-apps/plugin-fs';
   import JsonEditor from 'jsoneditor';
   import "jsoneditor/dist/jsoneditor.css";

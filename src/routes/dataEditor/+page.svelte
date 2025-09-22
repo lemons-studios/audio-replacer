@@ -26,8 +26,8 @@
   <div class="bg-base-300 p-2.5 min-h-20 items-center justify-center content-center flex flex-col grow mb-3.5 rounded-lg">
     <h3>{selectedFile}</h3>
     <div class="flex flex-row gap-2.5">
-      <button class="btn btn-sm btn-accent max-h-8 min-w-20" onclick={switchFiles}><ArrowLeftRight/> Switch</button>
-      <button class="btn btn-sm btn-accent max-h-8 min-w-20" onclick={applyChanges}><Save/> Save</button>
+      <button class="btn btn-sm btn-accent max-h-8 min-w-20" onclick={async() => await switchFiles()}><ArrowLeftRight/> Switch</button>
+      <button class="btn btn-sm btn-accent max-h-8 min-w-20" onclick={async() => await applyChanges()}><Save/> Save</button>
       <button class="btn btn-sm btn-accent max-h-8 min-w-20" onclick={() => open("https://github.com/lemons-studios/audio-replacer/wiki")}><BadgeQuestionMark /> Help</button>
     </div>
   </div>

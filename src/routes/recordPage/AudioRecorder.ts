@@ -10,7 +10,6 @@ let encoderInitialized: boolean = false;
 
 export async function startRecording() {
     if(!encoderInitialized) {
-        // Initialize the wav encoder
         await register(await connect());
         encoderInitialized = true;
     }
@@ -27,19 +26,16 @@ export async function startRecording() {
         }
     }
     audioRecorder.start();
-    console.log("Recording Started");
 }
 
 export async function endRecording(outputPath: string): Promise<void> {
     if(!audioRecorder || audioRecorder.state !== "recording") {
-        console.warn("Record end attempted with no recording taking place");
         return;
     };
-    const allowNoiseSuppression = await getValue("allowNoiseSuppression") as boolean;
 
+    const allowNoiseSuppression = await getValue("allowNoiseSuppression") as boolean;
     return new Promise((resolve) => {
         audioRecorder.onstop = async () => {
-            console.log("Attempting to create wav blob");
             const audio = new Blob(recordedChunks, { type: 'audio/wav' });
             if(audio.size > 0) {
                 const buffer = await audio.arrayBuffer();
@@ -50,7 +46,6 @@ export async function endRecording(outputPath: string): Promise<void> {
                 if(allowNoiseSuppression) await applyNoiseSuppression(outputPath);
                 await applyFFMpegPitch(outputPath);
                 await applyFfmpegFilter(outputPath);
-                console.log(`Possibly successfully written to ${outputPath}`);
             }
             else {
                 console.warn("Blob is empty");
@@ -59,7 +54,6 @@ export async function endRecording(outputPath: string): Promise<void> {
             recordedChunks = [];
             resolve();
         }
-        console.log("Stopping Audio Recorder..");
         audioRecorder.stop();
     });
 }
@@ -67,5 +61,4 @@ export async function endRecording(outputPath: string): Promise<void> {
 export function cancelRecording() {
     audioRecorder?.stop();
     recordedChunks = [];
-    console.log("Recording cancelled");
 }

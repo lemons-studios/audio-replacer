@@ -29,7 +29,7 @@
 
     // Only check for updates if the user wants to
     const allowUpdates = await getValue("updateCheck");
-    if(allowUpdates) {
+    if(allowUpdates && !isDev) {
       if(await isUpdateAvailable()) {
         const response = await ask(`There is an update available for Audio Replacer.\n Latest Version: ${getUpdateVersion()} \nCurrent Version: ${versionNumber}`, {
           title: 'Update Available',
@@ -40,9 +40,6 @@
           await downloadUpdates();
         }
       }
-      else {
-        console.log("No Update Available");
-      }  
     }
   });
 

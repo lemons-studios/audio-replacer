@@ -14,7 +14,7 @@
 
   onMount(async () => {
     previousPath = (await getValue("lastSelectedFolder")) as string;
-    previousProjectExists = (await exists(previousPath)) || previousPath != "";
+    previousProjectExists = (await exists(previousPath)) || previousPath != "" || previousPath == null;
     if (previousProjectExists) {
       previousProjectName = await basename(previousPath);
       
@@ -39,7 +39,7 @@
 
   async function loadNewProject() {
     const res = await selectFolder();
-    console.log(res);
+    
     if (await exists(res)) {
       isProjectLoading = true;
       await setProjectData(res);

@@ -22,11 +22,7 @@
     if(audioPlayer && trueSource()) {
       audioPlayer.pause();
       audioPlayer.load();
-      audioPlayer.addEventListener('loadedmetadata', () => {
-        console.log("Metadata Loaded", audioPlayer.duration);
-      }, {once: true}
-    );
-
+      
       audioPlaying = false;
       audioCompletion = 0.0;
     }
@@ -49,9 +45,7 @@
     }
   }
 
-  async function toggleAudio() {
-    console.log(trueSource());
-    
+  async function toggleAudio() {    
     if(!trueSource || !(await doesAudioExist())) {
       console.warn("Audio Doesn't Exist")
       audioPlaying = false;

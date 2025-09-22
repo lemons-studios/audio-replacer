@@ -5,7 +5,6 @@
   import { transcribeFile } from "./WhisperUtils";
   import { effectDataNames, effectDataValues, pitchDataNames, pitchDataValues } from "./EffectManager";
   import { setEffect, setPitch } from "./FFMpegManager";
-  import { setDetails } from "../../tools/DiscordRpc";
   import { cancelRecording, endRecording, startRecording } from "./AudioRecorder";
   import { register, unregisterAll } from "@tauri-apps/plugin-global-shortcut";
   import { getValue } from "../../tools/SettingsManager";
@@ -34,7 +33,6 @@
 
   onMount(async() => {
     setFileData();
-    await setDetails("Recording");
 
     const allowTranscription = await getValue("enableTranscription") as boolean;
     if(allowTranscription) {
@@ -86,7 +84,6 @@
     ];
 
     for(let i = 0; i < shortcuts.length; i++) {
-      console.log(`Registering command ${shortcuts[i].keybind}`);
       await register(shortcuts[i].keybind, shortcuts[i].action);
     }
   })
@@ -96,13 +93,11 @@
   })
 
   async function startRecord() {
-    console.log("Recording Started!");
     switchStates();
     await startRecording();
   }
 
   async function stopRecord() {
-    console.log("Recording Stopped, attempting to save to: ", ProjectManager.currentOutFile);
     await endRecording(ProjectManager.currentOutFile);
     const autoAccept = await getValue("autoAcceptRecordings") as boolean;
     if(autoAccept) {
@@ -117,7 +112,6 @@
   }
 
   function cancelRecord() {
-    console.log("Recording Canceled");
     cancelRecording();
     recording = false;
     idle = true;
