@@ -3,6 +3,7 @@
   import { Pause, Play, Repeat } from "@lucide/svelte";
   import { convertFileSrc } from "@tauri-apps/api/core";
   import { exists } from "@tauri-apps/plugin-fs";
+  import { error, warn } from "@tauri-apps/plugin-log";
 
   let { source } = $props();
   let audioCompletion = $state(0.0);
@@ -47,7 +48,7 @@
 
   async function toggleAudio() {    
     if(!trueSource || !(await doesAudioExist())) {
-      console.warn("Audio Doesn't Exist")
+      warn("Audio Doesn't Exist")
       audioPlaying = false;
       return;
     }
@@ -56,10 +57,10 @@
         if(audioPlayer.paused ) {
         audioPlaying = true;
         try {
-          await audioPlayer.play();
+          audioPlayer.play();
         }
         catch(e: any) {
-          console.error(`Audio playback failed: ${e}`);
+          error(`Audio playback failed: ${e}`);
         }
       }
       else {
@@ -68,7 +69,7 @@
       }
     }
     else {
-      console.warn(audioPlayer.readyState)
+      warn(`Ready state too low ${audioPlayer.readyState}`)
     }
   }
 
@@ -106,16 +107,14 @@
         <source src={trueSource()}>
     </audio>
     <div class="flex flex-row gap-3 items-center">
-        {#if !audioPlaying}
-          <Play size="23" onclick={toggleAudio} class="media-control-button hover:fill-white"/>
-        {/if}
         {#if audioPlaying}
+          <Play size="23" onclick={toggleAudio} class="media-control-button hover:fill-white"/>
+          {:else}
           <Pause size="23" onclick={toggleAudio} class="media-control-button hover:fill-white"/>
         {/if}
         {#if loopEnabled}
           <Repeat size="19" color="#25ef1a" onclick={() => loopEnabled = false} class="media-control-button hover:fill-green-500"/>
-        {/if}
-        {#if !loopEnabled}
+          {:else}
           <Repeat size="19" color="white" onclick={() => loopEnabled = true} class="media-control-button hover:fill-white"/>
         {/if}
     </div>

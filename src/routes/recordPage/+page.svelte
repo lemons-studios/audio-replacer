@@ -134,7 +134,7 @@
   async function skipFile() {
     await ProjectManager.skipFile();
     setFileData();
-    currentTranscription = await transcribeFile(currentAudioPath);
+    currentTranscription = await transcribeFile(currentAudioPath); // do NOT wait for file transcription
   }
 
   function setFileData() {

@@ -36,7 +36,7 @@ export async function ffmpegLoadTest() {
 		const output = await Command.sidecar("binaries/ffmpeg", [
 			"-version"
 		]).execute();
-		info(`FFMpeg load test successful: ${output}`);
+		info(`FFMpeg load test successful`);
 	}
 	catch(e: any) {
 		error(`FFMpeg Load test failed: ${e}`);

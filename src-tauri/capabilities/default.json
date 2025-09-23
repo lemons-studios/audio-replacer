@@ -24,7 +24,7 @@
     {
       "identifier": "fs:scope",
       "allow": [
-        "**/*"
+        "**"
       ]
     },
     "shell:allow-open",

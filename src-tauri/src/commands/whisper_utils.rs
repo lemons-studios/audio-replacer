@@ -8,7 +8,6 @@ pub fn transcribe_file(path: &str, model_path: &str) -> String {
     if !fs::metadata(model_path).is_ok() {
         return String::from("Transcription Model Unavailable");
     }
-
     if !fs::metadata(path).is_ok() {
         return String::from("Requested File Not Found");
     }

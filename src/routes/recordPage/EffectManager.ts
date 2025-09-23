@@ -1,5 +1,6 @@
 import { resolveResource } from "@tauri-apps/api/path";
 import { readTextFile } from "@tauri-apps/plugin-fs";
+import { info } from "@tauri-apps/plugin-log";
 
 export let pitchDataNames: string[];
 export let pitchDataValues: string[];
@@ -24,4 +25,5 @@ export async function populateCustomData() {
 
     pitchDataNames = fullPitchData.map((e) => e[nameIndex].toString());
     effectDataNames = fullEffectData.map((e) => e[nameIndex].toString());
+    info("Populated custom data variables");
 }
