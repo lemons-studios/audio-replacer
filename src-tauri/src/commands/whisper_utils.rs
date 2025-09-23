@@ -23,15 +23,6 @@ pub fn transcribe_file(path: &str, model_path: &str) -> String {
     let ctx = WhisperContext::new_with_params(model_path, WhisperContextParameters::default())
         .expect("failed to load model");
 
-    let mut state = ctx.create_state().expect("failed to create state");
-    let mut params = FullParams::new(SamplingStrategy::Greedy { best_of: 1 });
-    params.set_language(Some(&lang));
-    params.set_print_special(false);
-    params.set_print_progress(false);
-    params.set_print_realtime(false);
-    params.set_print_timestamps(false);
-    params.set_n_threads(calculate_n_threads(num_cpus::get() as i32));
-
     let mut inter_samples = vec![Default::default(); samples.len()];
     whisper_rs::convert_integer_to_float_audio(&samples, &mut inter_samples)
         .expect("failed to convert audio to float");
@@ -42,28 +33,30 @@ pub fn transcribe_file(path: &str, model_path: &str) -> String {
         let (even_samples, _) = inter_samples.split_at(inter_samples.len() - 1);
         whisper_rs::convert_stereo_to_mono_audio(even_samples)
             .expect("failed to convert stereo to mono")
-    } else {
+    } 
+    else {
         whisper_rs::convert_stereo_to_mono_audio(&inter_samples)
             .expect("failed to convert stereo to mono")
     };
+
+    let mut state = ctx.create_state().expect("failed to create state");
+    let mut params = FullParams::new(SamplingStrategy::Greedy { best_of: 1 });
+    params.set_language(Some(&lang));
+    params.set_print_special(false);
+    params.set_print_progress(false);
+    params.set_print_realtime(false);
+    params.set_print_timestamps(false);
+    params.set_n_threads(calculate_n_threads(num_cpus::get() as i32));
 
     state
         .full(params, &mono_samples[..])
         .expect("Model failed to run correctly");
 
-    let num_segments = state
-        .full_n_segments()
-        .expect("Model failed to run correctly");
-
     let mut result = String::new();
-    for i in 0..num_segments {
-        let segment = state
-            .full_get_segment_text(i)
-            .expect("Model failed to run correctly");
-
-        result.push_str(&segment);
-        result.push(' ');
+    for segment in state.as_iter() {
+        result.push_str(segment.to_str().unwrap());
     }
+
     result.trim().to_string()
 }
 

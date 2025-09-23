@@ -10,7 +10,7 @@ WinUI3 is quite bloated when not making Microsoft Store apps. Using tauri, the a
 WinUI3 is also bloated when it comes to memory (about 200Mb-250Mb when idle from my own testing). Audio replacer 5 uses less than 50mb at any given time! this will allow for less powerful devices to be able to run this application
 
 ### Improved audio file transcription speed
-As always, AI projects always have some weird issue that cannot be explained with logic. [Whisper.Cpp](https://github.com/ggml-org/whisper.cpp), the framework this app relies on for text transcription, has a bug that causes release builds of apps to transcribe text up to 10 times slower. Using a hack from my friend [ChakornK](https://github.com/ChakornK/), Audio Replacer is able to bypass this bug to achieve incredible transcription speeds (2-3 seconds on CPU!).
+This port to tauri allows me to execute speech-to-text processing in rust, a much lower-level language, bringing massive performance improvements. A typical file (~5-10 seconds) takes about a second to transcribe on CPU
 
 With this speed improvement, I have decided against reimplementing CUDA and Vulkan transcription support, as the setup is too involved for end users
 
