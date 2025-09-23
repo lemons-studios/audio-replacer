@@ -108,9 +108,9 @@
     </audio>
     <div class="flex flex-row gap-3 items-center">
         {#if audioPlaying}
-          <Play size="23" onclick={toggleAudio} class="media-control-button hover:fill-white"/>
-          {:else}
           <Pause size="23" onclick={toggleAudio} class="media-control-button hover:fill-white"/>
+          {:else}
+          <Play size="23" onclick={toggleAudio} class="media-control-button hover:fill-white"/>
         {/if}
         {#if loopEnabled}
           <Repeat size="19" color="#25ef1a" onclick={() => loopEnabled = false} class="media-control-button hover:fill-green-500"/>

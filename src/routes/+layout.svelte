@@ -9,6 +9,7 @@
   import { downloadUpdates, getUpdateVersion, isUpdateAvailable } from "../tools/Updater";
   import { ask } from "@tauri-apps/plugin-dialog";
   import { getValue } from "../tools/SettingsManager";
+  import { onNavigate } from '$app/navigation';
   
   let { children } = $props();
   let versionNumber = $state("");
@@ -48,6 +49,17 @@
     return `${major}.${minor}${patch == "0" ? '' : `.${patch}`}`
     // return patch != "0" ? `${major}.${minor}.${patch}` : `${major}.${minor}`;
   }
+
+  onNavigate((navigation) => {
+    if(!document.startViewTransition) return;
+
+    return new Promise((resolve) => {
+      document.startViewTransition(async() => {
+        resolve();
+        await navigation.complete;
+      })
+    })
+  });
 </script>
 
 <style>
