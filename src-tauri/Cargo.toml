@@ -23,7 +23,7 @@ tauri-plugin-os = "2.3.1"
 tauri-plugin-fs = "2.4.2"
 tauri-plugin-shell = "2.3.1"
 walkdir = "2.5.0"
-whisper-rs = "0.15.1"
+whisper-rs = {git = "https://github.com/Shob3r/whisper-rs.git", version ="0.15.1"}
 hound = "3.5.1"
 tauri-plugin-log = { version = "2", features = ["colored"] }
 tauri-plugin-process = "2.3.0"
