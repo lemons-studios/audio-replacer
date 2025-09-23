@@ -1,7 +1,7 @@
 import { invoke } from '@tauri-apps/api/core';
 import * as path from '@tauri-apps/api/path';
 import { mkdir, exists, remove, copyFile, rename, readDir } from '@tauri-apps/plugin-fs';
-import { convertFileFormat } from "../routes/recordPage/FFMpegManager";
+import { info, error } from '@tauri-apps/plugin-log';
 
 export let currentFile: string;
 export let truncatedCurrentFile: string;
@@ -15,9 +15,7 @@ export let projectPath: string;
 export let completionPercentage: number;
 export let filesRemaining: number;
 
-// Extra folders
-export let applicationData: string;
-export let outputFolder: string;
+export let outputFolder: string | undefined = undefined;
 
 const supportedFileTypes = [".mp3", ".wav", ".ogg", ".flac", ".m4a"];
 
@@ -27,53 +25,61 @@ export let extraEditsFlagged = false;
 
 export async function setProjectData(dataPath: string) {
     // mark as unloaded each time project data is loaded
+    info(`Attempting to set project data to ${dataPath}`);
     isProjectLoaded = false;
     projectPath = dataPath;
     
-    const appFolder = await invoke('get_install_directory') as string;
-    outputFolder = await path.join(appFolder, "output");
-    if(!await exists(outputFolder)) {
-        await mkdir(outputFolder);
-    }
-
-    let projectName = await path.basename(projectPath);
-    projectFiles = (await getAllFiles()).filter(p => isAudioFile(p));
-    outputFolderPath = await path.join(outputFolder, projectName)
-    if (!await exists(outputFolderPath)) {
-        await mkdir(outputFolderPath);
-    }
-
-    await createInitialData();
-    await setCurrentFile();
-    isProjectLoaded = true;
+    try {
+        const appFolder = await invoke('get_install_directory') as string;    
+        if(outputFolder === undefined) outputFolder = await path.join(appFolder, "output");
+        if(!await exists(outputFolder)) {
+            await mkdir(outputFolder);
+        }
+        else {
+            error(`Output Folder ${outputFolder} does not exist!`);
+        }
     
+        let projectName = await path.basename(projectPath);
+        projectFiles = (await getAllFiles()).filter(p => isAudioFile(p));
+        outputFolderPath = await path.join(outputFolder, projectName)
+        if (!await exists(outputFolderPath)) {
+            await mkdir(outputFolderPath);
+        }
+    
+        await createInitialData();
+        await setCurrentFile();
+        isProjectLoaded = true;
+
+        info("Project Successfully Loaded!");
+        info(`Current File: ${currentFile}`);
+        info(`Files Remaining: ${filesRemaining}`);
+        info(`Output Path: ${outputFolderPath}`);
+    }
+    catch(e: any) {
+        error(`setProjectData has failed with error ${e}`);
+    }
 }
 
 async function createInitialData() {
-    const inputDirs = await readDir(projectPath);
-    const outputDirs = await readDir(outputFolderPath);
-    const outputSet = new Set(outputDirs);
+    try {
+        const inputDirs = await readDir(projectPath);
+        const outputDirs = await readDir(outputFolderPath);
+        const outputSet = new Set(outputDirs);
 
-    const foldersToCreate = inputDirs.filter(item => !outputSet.has(item));
-    if(foldersToCreate.length === 0) {
-        return;
-    }
-
-    for(const dirName of foldersToCreate) {
-        const dir = await path.join(outputFolderPath, dirName.name);
-        // If by some miracle the folder appears after folderToCreate is created
-        if(await exists(dir)) continue;
-        await mkdir(dir);
-    }
-}
-
-async function createProjectdata() {
-    const undesiredFiles = projectFiles.filter(p => isUndesirableAudioFile(p));
-    if(undesiredFiles.length != 0) {
-        for(const f of undesiredFiles) {
-            await convertFileFormat(f, "wav");
+        const foldersToCreate = inputDirs.filter(item => !outputSet.has(item));
+        if(foldersToCreate.length === 0) return;
+        
+        for(const dirName of foldersToCreate) {
+            const dir = await path.join(outputFolderPath, dirName.name);
+            // If by some miracle the folder appears after folderToCreate is created
+            if(await exists(dir)) continue;
+            await mkdir(dir);
         }
     }
+    catch(e: any) {
+        error(`createInitialData has failed with error ${e}`);
+    }
+
 }
 
 async function setCurrentFile() {
@@ -196,12 +202,6 @@ export async function countFiles(): Promise<number> {
 
 export function isAudioFile(path: string): boolean {
     return supportedFileTypes.some(ext => path.toLowerCase().endsWith(ext.toLowerCase()));
-}
-
-// Audio replacer works the best with .wav files. 
-export function isUndesirableAudioFile(path: string): boolean {
-    const undesirableFileTypes = [".mp3", ".ogg", ".flac", ".m4a"];
-    return undesirableFileTypes.some((ext) => path.toLowerCase().endsWith(ext.toLowerCase()));
 }
 
 export function normalizePath(p: string): string {

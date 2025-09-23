@@ -36,7 +36,7 @@
     "publisher": "Lemon Studios",
     "createUpdaterArtifacts": true,
     "active": true,
-    "targets": "all",
+    "targets": ["deb", "nsis", "rpm", "appimage"],
     "icon": [
       "icons/32x32.png",
       "icons/128x128.png",
@@ -70,8 +70,9 @@
       "digestAlgorithm": null,
       "nsis": {
         "compression": "lzma",
-        "installMode": "both",
-        "startMenuFolder": "LemonStudios"
+        "installMode": "currentUser",
+        "startMenuFolder": "LemonStudios",
+        "installerIcon": "icons/icon.ico"
       },
       "signCommand": null,
       "timestampUrl": null,

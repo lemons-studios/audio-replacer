@@ -1,7 +1,7 @@
-import { remove, rename } from "@tauri-apps/plugin-fs";
-import { changeFileExtension } from "../../tools/OsTools";
+import { rename } from "@tauri-apps/plugin-fs";
 import { Command } from "@tauri-apps/plugin-shell";
 import { resolveResource } from "@tauri-apps/api/path";
+import { error, info } from "@tauri-apps/plugin-log";
 
 let selectedEffect: string;
 let selectedPitch: string;
@@ -31,26 +31,15 @@ export async function applyNoiseSuppression(file: string) {
 	await callFFMpeg(file, `arnndn=model=${noiseSuppressionPath}:mix=0.8`)
 }
 
-// This function won't use callFFMpeg because it's not apply a filter; rather, it's changing the file extension
-export async function convertFileFormat(input: string, fileType: string) {
-	const outPath = await changeFileExtension(input, fileType);
-	await Command.sidecar("binaries/ffmpeg", [
-		"-i",
-		input,
-		outPath,
-	]).execute();
-	remove(input);
-}
-
 export async function ffmpegLoadTest() {
 	try {
 		const output = await Command.sidecar("binaries/ffmpeg", [
 			"-version"
 		]).execute();
-		console.log(output)
+		info(`FFMpeg load test successful: ${output}`);
 	}
 	catch(e: any) {
-		console.error("FFMpeg Load test failed");
+		error(`FFMpeg Load test failed: ${e}`);
 	}
 }
 

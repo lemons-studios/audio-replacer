@@ -1,11 +1,12 @@
 <script lang="ts">
-  import { onMount } from "svelte";
+  import { onMount, tick } from "svelte";
   import { getValue, setValue } from "../tools/SettingsManager";
   import { setProjectData } from "../tools/ProjectManager";
   import { exists } from "@tauri-apps/plugin-fs";
   import { goto } from "$app/navigation";
   import { selectFolder } from "../tools/OsTools";
   import { basename } from "@tauri-apps/api/path";
+  import { info } from "@tauri-apps/plugin-log";
 
   let previousProjectExists = $state(false);
   let previousProjectName = $state("No Previous Project");
@@ -13,6 +14,7 @@
   let isProjectLoading = $state(false);
 
   onMount(async () => {
+    await tick();
     previousPath = (await getValue("lastSelectedFolder")) as string;
     previousProjectExists = (await exists(previousPath)) || previousPath != "" || previousPath == null;
     if (previousProjectExists) {
@@ -24,6 +26,7 @@
         await loadLastProject();
       }
     }
+    info("App Loaded!");
   });
 
   async function loadLastProject() {
