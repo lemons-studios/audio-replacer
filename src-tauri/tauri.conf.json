@@ -1,6 +1,6 @@
 {
   "$schema": "https://schema.tauri.app/config/2",
-  "productName": "audio-replacer",
+  "productName": "Audio Replacer",
   "version": "5.0.0",
   "identifier": "org.lemon-studios.audio-replacer",
   "build": {
