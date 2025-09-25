@@ -30,11 +30,13 @@
           {:else if setting.type == "button"}
             <button class="btn btn-primary btn-md" onclick={setting.onClick}>{setting.buttonText}</button>
          {:else if setting.type == "dropdown"}
-            <select class="select">
-              {#each setting.choices as choice}
-                <option>{choice}</option>
-              {/each}
-            </select>
+            <div class="dropdown">
+              <li>
+                {#each setting.choices as choice}
+                  <ul>{choice}</ul>
+                {/each}
+              </li>
+            </div>
           {/if}
         </div>
       {/each}

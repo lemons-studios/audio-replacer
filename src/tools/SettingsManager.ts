@@ -1,6 +1,5 @@
 import { resolveResource } from "@tauri-apps/api/path";
 import { readTextFile, writeTextFile } from "@tauri-apps/plugin-fs";
-import { debounce } from "./OsTools";
 import { info, error } from "@tauri-apps/plugin-log";
 
 let settingsJson: any;
@@ -43,6 +42,7 @@ async function saveJsonData() {
         info("Saving Json Data");
         const content = JSON.stringify(settingsJson);
         const file = await resolveResource("resources/settings.json");
+        info(`writing ${content} to ${file}`);
 
         await writeTextFile(file, content);
         info("Json Data Save Successful.");

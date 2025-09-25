@@ -6,7 +6,7 @@
   import { goto } from "$app/navigation";
   import { selectFolder } from "../tools/OsTools";
   import { basename } from "@tauri-apps/api/path";
-  import { info } from "@tauri-apps/plugin-log";
+  import { info, error } from "@tauri-apps/plugin-log";
 
   let previousProjectExists = $state(false);
   let previousProjectName = $state("No Previous Project");
@@ -31,7 +31,7 @@
 
   async function loadLastProject() {
     // Edge case where path exists on app load but no longer exists when trying to load project
-    if (!exists(previousPath)) {
+    if (!await exists(previousPath)) {
       return;
     }
     isProjectLoading = true;
@@ -50,7 +50,7 @@
       isProjectLoading = false;
       goto("/recordPage");
     } else {
-      // Show error toast
+      error(`${res} Does not exist`);
     }
   }
 </script>

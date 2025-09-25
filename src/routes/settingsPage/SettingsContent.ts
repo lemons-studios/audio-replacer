@@ -7,6 +7,23 @@ import { selectFile } from "../../tools/OsTools";
 export const settings = {
   General: [
     {
+      additionalClasses: '',
+      name: "Theme",
+      description: "",
+      type: "dropdown",
+      choices: [
+        "Default",
+        "Light"
+      ],
+      getValue: async() => {
+
+      },
+
+      onChange: (value: boolean) => {
+
+      }
+    },
+    {
       name: "Check for updates",
       description: "You will be prompted to install the update after the update is downloaded",
       type: "boolean",

@@ -53,7 +53,7 @@ You can download the [**latest release here**](https://github.com/lemons-studios
 
 - A 64-bit CPU
 - ~100Mb of free storage space
-- At least 20Mb of RAM (lmao)
+- At least 20Mb of RAM
 
 ## ⚙️ Build From Source
 Refer to the [wiki](https://github.com/lemons-studios/audio-replacer/wiki/Developing-Audio-Replacer)
