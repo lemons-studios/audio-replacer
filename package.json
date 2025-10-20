@@ -48,7 +48,7 @@
     "svelte": "5.39.6",
     "svelte-check": "4.3.2",
     "typescript": "5.9.2",
-    "vite": "7.1.7"
+    "vite": "7.1.11"
   },
   "packageManager": "yarn@4.10.3"
 }
