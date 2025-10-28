@@ -31,6 +31,7 @@ pub fn run() {
             commands::whisper_utils::transcribe_file,
             commands::app_functions::get_install_directory,
             commands::app_functions::in_dev_env,
+            commands::app_functions::get_username,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

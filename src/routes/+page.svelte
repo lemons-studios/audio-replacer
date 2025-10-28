@@ -7,14 +7,17 @@
   import { selectFolder } from "../tools/OsTools";
   import { basename } from "@tauri-apps/api/path";
   import { info, error } from "@tauri-apps/plugin-log";
+  import { invoke } from "@tauri-apps/api/core";
 
   let previousProjectExists = $state(false);
   let previousProjectName = $state("No Previous Project");
+  let user = $state("");
   let previousPath = $state("");
   let isProjectLoading = $state(false);
 
   onMount(async () => {
     await tick();
+    user = await invoke('get_username');
     previousPath = (await getValue("lastSelectedFolder")) as string;
     previousProjectExists = (await exists(previousPath)) || previousPath != "" || previousPath == null;
     if (previousProjectExists) {
@@ -56,22 +59,15 @@
 </script>
 
 {#if isProjectLoading}
-  <div class="flex flex-row grow justify-center items-center gap-3 absolute inset-0">
-    <span class="loading loading-spinner text-primary text-xl"></span>
-    <h3 class="text-xl">Loading Project...</h3>
-  </div>
+  <!--Add Load Spinner Component here-->
+  <span>Loading Project...</span>
 {/if}
+
 {#if !isProjectLoading}
-  <div class="flex flex-row gap-5 items-stretch h-full justify-center">
-    <fieldset class="pane w-1/2 h-full content-center">
-      <legend class="fieldset-legend">Load Last Project</legend>
-      <h4 class="text-xl mb-2.5 text-center font-bold">{previousProjectName}</h4>
-      <button class={`btn-primary btn btn-lg ${previousProjectExists ? '' : 'btn-disabled'}`} onclick={loadLastProject}>Load</button>
-    </fieldset>
-    <fieldset class="pane w-1/2 h-full content-center">
-      <legend class="fieldset-legend">Load Other Project</legend>
-      <h4 class="text-xl mb-2.5 text-center font-bold">Start A New Project!</h4>
-      <button class="btn btn-primary btn-lg" onclick={loadNewProject}>Load</button>
-    </fieldset>
+  <div class="h-full">
+    <h1 class="text-center text-3xl mb-5">Welcome Back, {user}</h1>
+    <div class="w-full h-auto border-accent border rounded-md border-2 p-4 drop-shadow-lg drop-shadow-accent-shadow dark:bg-primary-d bg-primary">
+      <h1>adsaoijdaosidj</h1>
+    </div>
   </div>
 {/if}

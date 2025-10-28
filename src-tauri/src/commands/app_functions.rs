@@ -20,3 +20,8 @@ pub fn get_install_directory() -> Result<PathBuf, String> {
 pub fn in_dev_env() -> bool {
     is_dev()
 }
+
+#[command] 
+pub fn get_username() -> String {
+    whoami::username()
+}
