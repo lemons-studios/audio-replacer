@@ -74,7 +74,7 @@
     <!--Bottom Menu Items-->
     <div class="menu-container gap-0.5">
         {#each navbarContents.bottom as item}
-            <button class="nav-btn transition" onclick={async() => await goto(item.route)}><item.icon />{item.name}</button>
+            <button class="nav-btn transition" onmouseleave={(e) => e.currentTarget.blur()} onclick={async() => await goto(item.route)}><item.icon />{item.name}</button>
         {/each}
     </div>
 </div>

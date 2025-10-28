@@ -22,22 +22,22 @@
 
   /* Shared Dark/Light Mode colours */
   --color-accent: oklch(0.8647 0.1629 94.24);
-  --color-accent-shadow: oklch(0.8647 0.1629 94.24 / 15%);
+  --color-accent-shadow: oklch(0.8647 0.1629 94.24 / 20%);
 
-  --color-success: oklch(0.67 0.1732 143.19); /* BAHAHAHHAHAHAHHAHAH 67 BAHAHAHHAHAHAHAHHA */
-  --color-success-shadow: oklch(0.7227 0.2058 142.98 / 15%);
+  --color-success: oklch(0.67 0.1732 143.19);
+  --color-success-shadow: oklch(0.7227 0.2058 142.98 / 20%);
 
   --color-warning: oklch(0.7072 0.1791 46.94);
-  --color-warning-shadow: oklch(0.7072 0.1791 46.94 / 15%);
+  --color-warning-shadow: oklch(0.7072 0.1791 46.94 / 20%);
 
   --color-error: oklch(0.5506 0.1828 29.12);
-  --color-error-shadow: oklch(0.5506 0.1828 29.12 / 15%);
+  --color-error-shadow: oklch(0.5506 0.1828 29.12 / 20%);
 
   --color-info: oklch(0.6343 0.1337 240.73);
-  --color-info-shadow: oklch(0.6343 0.1337 240.73 / 15%);
+  --color-info-shadow: oklch(0.6343 0.1337 240.73 / 20%);
 
   --color-progress: oklch(0.5279 0.2131 321.35);
-  --color-progress-shadow: oklch(0.5279 0.2131 321.35 / 15%);
+  --color-progress-shadow: oklch(0.5279 0.2131 321.35 / 20%);
 }
 
 * {

@@ -52,17 +52,16 @@
 
   // TODO: Remove this test function before shipping 5.0
   function notificationTest() {
-    notificationRef.addToNotification(NotificationTypes.info, "Info", "Displayed an information notification", true, 2500);
-    notificationRef.addToNotification(NotificationTypes.success, "Success!", "Displayed a success notification", true, 5000);
-    notificationRef.addToNotification(NotificationTypes.warning, "Warning", "This is a warning notification", true, 7600);
-    notificationRef.addToNotification(NotificationTypes.error, "Error", "This is an error notification", true, 10002);
-    notificationRef.addToNotification(NotificationTypes.progress, "Patience...", "This is a progress notification....", true, 12500);
+    notificationRef.addToNotification(NotificationTypes.info, "Info", "Displayed an information notification", true, 25020);
+    notificationRef.addToNotification(NotificationTypes.success, "Success!", "Displayed a success notification", true, 25000);
+    notificationRef.addToNotification(NotificationTypes.warning, "Warning", "This is a warning notification", false, 25050);
+    notificationRef.addToNotification(NotificationTypes.error, "Error", "This is an error notification", false, 27000);
+    notificationRef.addToNotification(NotificationTypes.progress, "Patience...", "This is a progress notification....", true, 25000);
   }
 
   async function formatVersion(): Promise<string> {
-    const [major, minor, patch] = (await getVersion()).split(".")
-    return `${major}.${minor}${patch == "0" ? '' : `.${patch}`}`
-    // return patch != "0" ? `${major}.${minor}.${patch}` : `${major}.${minor}`;
+    const [major, minor, patch] = (await getVersion()).split(".");
+    return `${major}.${minor}${patch == "0" ? '' : `.${patch}`}`;
   }
 
   onNavigate((navigation) => {

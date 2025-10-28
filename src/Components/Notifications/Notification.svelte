@@ -82,21 +82,32 @@
 
 <style>
     .close-btn {
-        position: fixed;
-        top: 1em;
-        left: 90%;
-        translate: -90%, 0;
-        width: 6px;
-        height: 6px;
+        position: absolute;
+        align-self: center;
+        right: 0.25em;
+        top: 50%;
+        transform: translateY(-50%);
+        display: flex;
+        justify-content: center;
     }
+    .close-btn:hover {
+        background-color: oklch(1 0 0 / 30%);
+        box-shadow: none;
+    }
+
+    .close-btn:focus {
+        background-color: oklch(1 0 0 / 10%);
+        box-shadow: inset 0px 0px 1em ooklch(0.1929 0.0048 325.72 / 60%);
+    }
+
 </style>
 
-<div class="h-auto w-120 flex flex-col justify-center gap-y-2">
+<div class="h-auto w-120 flex flex-col justify-center gap-y-2.5">
     {#each queue as n, index (n)}
         <div class={`flex flex-row justify-apart h-auto min-w-120 gap-x-1.5 p-2.5 rounded-lg text-white drop-shadow-xl ${getColourClasses(n.id)}`}>
             {#if n.closable}
-                <div class="close-btn">
-                    <button class="nav-btn w-6 h-6" onmouseleave={(e) => e.currentTarget.blur()} onclick={() => closeNotification(n.id)}><IconXNormal class="h-6 w-6"/></button>
+                <div class="close-btn items-center">
+                    <button class="close-btn w-8 h-8 rounded-lg" onmouseleave={(e) => e.currentTarget.blur()} onclick={() => closeNotification(n.id)}><IconXNormal class="h-8 w-8 p-1 text-center"/></button>
                 </div>
             {/if}
 
