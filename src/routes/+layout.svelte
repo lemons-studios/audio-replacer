@@ -1,8 +1,7 @@
 <script lang="ts">
   import "../app.css";
   import { invoke } from "@tauri-apps/api/core";
-  import { House, Mic, PencilLine, Settings, Megaphone } from "@lucide/svelte";
-  import { onMount } from "svelte";
+  import { onMount, tick } from "svelte";
   import { populateCustomData } from "./recordPage/EffectManager";
   import { loadFFMpeg } from "./recordPage/FFMpegManager";
   import { getVersion } from "@tauri-apps/api/app";
@@ -10,12 +9,17 @@
   import { ask } from "@tauri-apps/plugin-dialog";
   import { getValue } from "../tools/SettingsManager";
   import { onNavigate } from '$app/navigation';
-  
+  import NavBar from "../Components/NavBar.svelte";
+  import Notification from "../Components/Notifications/Notification.svelte";
+  import { NotificationTypes } from "../Components/Notifications/NotificationTypes";
+
   let { children } = $props();
   let versionNumber = $state("");
   let isUpdating = $state(false);
-
+  let notificationRef: Notification;
+  
   onMount(async() => {
+    await tick();
     versionNumber = await formatVersion();
     await populateCustomData();
     await loadFFMpeg();
@@ -32,7 +36,7 @@
     const allowUpdates = await getValue("updateCheck");
     if(allowUpdates && !isDev) {
       if(await isUpdateAvailable()) {
-        const response = await ask(`There is an update available for Audio Replacer.\n Latest Version: ${getUpdateVersion()} \nCurrent Version: ${versionNumber}`, {
+        const response = await ask(`There is an update available for Audio Replacer.\nLatest Version: ${getUpdateVersion()}\nCurrent Version: ${versionNumber}`, {
           title: 'Update Available',
           kind: 'warning'
         });
@@ -42,7 +46,18 @@
         }
       }
     }
+
+    notificationTest();
   });
+
+  // TODO: Remove this test function before shipping 5.0
+  function notificationTest() {
+    notificationRef.addToNotification(NotificationTypes.info, "Info", "Displayed an information notification", true, 2500);
+    notificationRef.addToNotification(NotificationTypes.success, "Success!", "Displayed a success notification", true, 5000);
+    notificationRef.addToNotification(NotificationTypes.warning, "Warning", "This is a warning notification", true, 7600);
+    notificationRef.addToNotification(NotificationTypes.error, "Error", "This is an error notification", true, 10002);
+    notificationRef.addToNotification(NotificationTypes.progress, "Patience...", "This is a progress notification....", true, 12500);
+  }
 
   async function formatVersion(): Promise<string> {
     const [major, minor, patch] = (await getVersion()).split(".")
@@ -57,8 +72,8 @@
       document.startViewTransition(async() => {
         resolve();
         await navigation.complete;
-      })
-    })
+      });
+    });
   });
 </script>
 
@@ -70,24 +85,12 @@
   }
 </style>
 
-<main class="bg-base-200 flex flex-row grow-1 text-white items-stretch w-screen h-screen overflow-y-hidden">
+<main class="dark:bg-primary-d bg-primary flex flex-row grow-1 dark:text-white items-stretch w-screen h-screen overflow-y-hidden">
+  <div class="notification-overlay">
+    <Notification bind:this={notificationRef}/>
+  </div>
   {#if !isUpdating}
-    <div class="flex flex-col items-stretch justify-between bg-base-100 min-w-[10rem] p-1">
-      <div class="flex flex-col items-stretch">
-        <ul class="menu menu-vertical menu-lg gap-0.5 rounded-box w-full bg-transparent">
-          <li><a href="/"><House size="20"/>Home</a></li>
-          <li><a href="/recordPage"><Mic size="20"/>Record</a></li>
-          <li><a href="/dataEditor"><PencilLine size="20"/>Editor</a></li>
-        </ul>
-    </div>
-      <div class="flex flex-col items-stretch">
-        <ul class="menu menu-vertical menu-lg gap-0.5 bg-transparent rounded-box w-full">
-          <li><a href="/settingsPage"><Settings size="20"/>Settings</a></li>
-          <li class="mb-1.5"><a href="/releaseNotes"><Megaphone size="20"/>Changes</a></li>
-          <h3 class="text-xs text-center text-gray-300">Audio Replacer {versionNumber}</h3>
-        </ul>
-      </div>
-    </div>
+    <NavBar />
     <div class="flex-1 flex flex-col overflow-hidden w-screen h-screen p-5.5">
       {@render children?.()}
     </div>    

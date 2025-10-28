@@ -11,27 +11,28 @@ name = "audio_replacer_lib"
 crate-type = ["staticlib", "cdylib", "rlib"]
 
 [build-dependencies]
-tauri-build = { version = "2.4.1", features = [] }
+tauri-build = { version = "2.5.1", features = [] }
 
 [dependencies]
-tauri = { version = "2.8.5", features = ["protocol-asset", "tray-icon"] }
-tauri-plugin-opener = "2.5.0"
-serde = { version = "1.0.226", features = ["derive"] }
+tauri = { version = "2.9.1", features = ["protocol-asset", "tray-icon"] }
+tauri-plugin-opener = "2.5.2"
+serde = { version = "1.0.228", features = ["derive"] }
 serde_json = "1.0.145"
 futures-lite = "2.6.1"
-tauri-plugin-os = "2.3.1"
-tauri-plugin-fs = "2.4.2"
-tauri-plugin-shell = "2.3.1"
+tauri-plugin-os = "2.3.2"
+tauri-plugin-fs = "2.4.4"
+tauri-plugin-shell = "2.3.3"
 walkdir = "2.5.0"
 whisper-rs = {git = "https://github.com/Shob3r/whisper-rs.git", version ="0.15.1"}
 hound = "3.5.1"
-tauri-plugin-log = { version = "2.7.0", features = ["colored"] }
-tauri-plugin-process = "2.3.0"
-tauri-plugin-upload = "2.3.1"
-tauri-plugin-dialog = "2.4.0"
+tauri-plugin-log = { version = "2.7.1", features = ["colored"] }
+tauri-plugin-process = "2.3.1"
+tauri-plugin-upload = "2.3.2"
+tauri-plugin-dialog = "2.4.2"
 num_cpus = "1.17.0"
+tauri-plugin-drpc = "0.1.6"
 
 [target.'cfg(not(any(target_os = "android", target_os = "ios")))'.dependencies]
-tauri-plugin-global-shortcut = "2.3.0"
-tauri-plugin-single-instance = "2.3.4"
+tauri-plugin-global-shortcut = "2.3.1"
+tauri-plugin-single-instance = "2.3.6"
 tauri-plugin-updater = "2.9.0"

@@ -72,6 +72,8 @@
       <legend class="fieldset-legend">Load Other Project</legend>
       <h4 class="text-xl mb-2.5 text-center font-bold">Start A New Project!</h4>
       <button class="btn btn-primary btn-lg" onclick={loadNewProject}>Load</button>
+      <button class="button-accent">Label</button>
+
     </fieldset>
   </div>
 {/if}
