@@ -11,9 +11,9 @@
 
 @theme {
   /* Light Mode */
-  --color-primary: oklch(0.9491 0 0);
+  --color-primary: oklch(0.97 0 0);
   --color-secondary: oklch(1 0 0);
-  --color-tertiary: oklch(0.8986 0.0021 360);
+  --color-tertiary: oklch(0.94 0 0);
 
   /* Dark Mode */
   --color-primary-d: oklch(0.1955 0.0051 325.78);
