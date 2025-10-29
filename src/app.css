@@ -1,12 +1,12 @@
 /** biome-ignore-all lint/correctness/noUnknownProperty: <explanation> */
 @import "tailwindcss";
-@import 'tailwind-scrollbar-hide/v4';
+@import "tailwind-scrollbar-hide/v4";
 @import "@fontsource/work-sans";
 
 @plugin "@tailwindcss/typography";
 
 @plugin "daisyui" {
-  themes: 'dark';
+  themes: "dark";
 }
 
 @theme {
@@ -65,8 +65,9 @@ body {
 .notification-overlay {
   position: fixed;
   top: 1em;
-  left: 47%;
-  translate: -47%, 0;
+  left: 50%;
+  translate: -50%, 0;
+  align-content: center;
 }
 
 .nav-btn {
@@ -91,3 +92,5 @@ body {
   background-color: oklch(1 0 0 / 10%);
   box-shadow: inset 0px 0px 1em ooklch(0.1929 0.0048 325.72 / 60%);
 }
+
+

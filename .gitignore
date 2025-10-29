@@ -12,5 +12,8 @@ vite.config.ts.timestamp-*
 .idea/
 .vscode/
 
-# Additional downloaded content
+# Additional files that get downloaded on project setup
 src-tauri/binaries/*
+
+# The rust-analyser extension is being funny and generating a target folder in the project root. Ignore it
+target

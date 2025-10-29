@@ -51,6 +51,15 @@
         }
       }
     }
+    setTimeout(() => {
+      notificationRef.addToNotification(NotificationTypes.success, "Success!", "Test Toast", true, 3507);
+    }, 500);
+    setTimeout(() => {
+      notificationRef.addToNotification(NotificationTypes.warning, "Warning", "Test Toast", true, 3750);
+    }, 1000);
+    setTimeout(() => {
+      notificationRef.addToNotification(NotificationTypes.error, "Error", "Test Toast", true, 4900);
+    }, 1500);
   });
 
   async function formatVersion(): Promise<string> {
@@ -90,9 +99,7 @@
   {/if}
   {#if isUpdating}
     <div class="flex flex-row grow justify-center items-center gap-3 absolute inset-0">
-      <span class="loading loading-spinner text-primary text-xl"></span>
-      <h3 class="text-xl">Updating Audio Replacer</h3>
-      <h4 class="text-lg"><u>Do not</u>close this window</h4>
+      <!--TODO: Re-add spinner and add a progress bar for download progress-->
     </div>
   {/if}
 </main>
