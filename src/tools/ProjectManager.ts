@@ -1,7 +1,18 @@
+import { goto } from '$app/navigation';
 import { invoke } from '@tauri-apps/api/core';
 import * as path from '@tauri-apps/api/path';
-import { mkdir, exists, remove, copyFile, rename, readDir } from '@tauri-apps/plugin-fs';
+import { ask } from '@tauri-apps/plugin-dialog';
+import { mkdir, exists, remove, copyFile, rename, readDir, readTextFile } from '@tauri-apps/plugin-fs';
 import { info, error } from '@tauri-apps/plugin-log';
+
+// TODO: Implement project file modification in this file
+
+// currentProject contains project name, project path, files remaining as a JSON 
+export let currentProject: any;
+export let currentProjectFile: string;
+
+export let outputFolderPath: string;
+export let filtersPath: string;
 
 export let currentFile: string;
 export let truncatedCurrentFile: string;
@@ -9,60 +20,68 @@ export let currentOutFile: string;
 export let currentFileName: string;
 export let currentFileLocalPath: string;
 
-export let outputFolderPath: string;
-export let projectPath: string;
 
 export let completionPercentage: number;
-export let filesRemaining: number;
+export let outputFolder: string;
 
-export let outputFolder: string | undefined = undefined;
-
-const supportedFileTypes = [".mp3", ".wav", ".ogg", ".flac", ".m4a"];
-
-export let projectFiles: string[] = [];
+export let projectFiles: string[];
 export let isProjectLoaded: boolean = false;
 export let extraEditsFlagged = false;
 
-export async function setProjectData(dataPath: string) {
-    // mark as unloaded each time project data is loaded
-    info(`Attempting to set project data to ${dataPath}`);
-    isProjectLoaded = false;
-    projectPath = dataPath;
-    
-    try {
-        const appFolder = await invoke('get_install_directory') as string;    
-        if(outputFolder === undefined) outputFolder = await path.join(appFolder, "output");
+// Runs on app startup from +layout.svelte
+export async function setAdditionalFolderLocs() {
+    const installFolder = await invoke('get_install_directory') as string;
+
+    if(outputFolder === undefined) {
+        outputFolder = await path.join(installFolder, "output");
+
+        // In the case that this is the user's first time running Audio Replacer
         if(!await exists(outputFolder)) {
             await mkdir(outputFolder);
         }
-        else {
-            error(`Output Folder ${outputFolder} does not exist!`);
+    }
+    if(filtersPath === undefined) {
+        filtersPath = await path.join(installFolder, "filters");
+        if(!await exists(filtersPath)) {
+            await mkdir(filtersPath);
         }
-    
-        let projectName = await path.basename(projectPath);
-        projectFiles = (await getAllFiles()).filter(p => isAudioFile(p));
-        outputFolderPath = await path.join(outputFolder, projectName)
-        if (!await exists(outputFolderPath)) {
+    }
+}
+
+export async function setProjectData(projectFile: any) {
+    // mark as unloaded each time project data is loaded
+    isProjectLoaded = false;
+
+    // The JSON array used in the home page is purely for the Home Page's uses, as ProjectManager will also be writing to the project files
+    const project = JSON.parse(await readTextFile(projectFile));
+    info(`Attempting to set project data to ${project.path}`);
+    currentProject = project;
+
+    try {
+        outputFolderPath = await path.join(outputFolder, project.name);
+        if(!await exists(outputFolderPath)) {
             await mkdir(outputFolderPath);
         }
-    
+        projectFiles = (await getAllFiles()).filter(p => isAudioFile(p));
+        
         await createInitialData();
         await setCurrentFile();
         isProjectLoaded = true;
 
-        info("Project Successfully Loaded!");
+        /* info("Project Successfully Loaded!");
         info(`Current File: ${currentFile}`);
         info(`Files Remaining: ${filesRemaining}`);
         info(`Output Path: ${outputFolderPath}`);
+        */
     }
     catch(e: any) {
-        error(`setProjectData has failed with error ${e}`);
+        error(`Error: Project initialization failed with error: ${e}`);
     }
 }
 
 async function createInitialData() {
     try {
-        const inputDirs = await readDir(projectPath);
+        const inputDirs = await readDir(currentProject.path);
         const outputDirs = await readDir(outputFolderPath);
         const outputSet = new Set(outputDirs);
 
@@ -83,26 +102,30 @@ async function createInitialData() {
 }
 
 async function setCurrentFile() {
-    await getNextFile();
-    if(currentFile == "") {
-        // This would imply that the project is completed
-        currentFile = "YOU ARE DONE";
-        currentFileLocalPath = "YOU ARE DONE";
-        currentOutFile = "YOU ARE DONE";
-        truncatedCurrentFile = truncateDirectory(currentFile, 2);
-        filesRemaining = 0;
-        completionPercentage = 100.00;
-        return;
+    if(currentProject.fileCount === 0) {
+        // TODO: Maybe move some of this logic to the record page svelte file and make this a modal?
+        // Project Completed. alert the user of such and ask if they want to close the project
+        const response = await ask('You completed this project! would you like to navigate back to the Home page?', {
+            title: 'Congratulations!',
+            kind: 'info'
+        });
+        if(response) {
+            goto('/');
+            isProjectLoaded = false;
+        }
+        else return;
     }
+    else {
+        await getNextFile();
 
-    completionPercentage = await calculateCompletion();
-    filesRemaining = await countFiles();
+        completionPercentage = await calculateCompletion();
 
-    truncatedCurrentFile = truncateDirectory(currentFile, 2);
-    currentFileName = currentFile.substring(currentFile.lastIndexOf('/') + 1);
+        truncatedCurrentFile = truncateDirectory(currentFile, 2);
+        currentFileName = currentFile.substring(currentFile.lastIndexOf('/') + 1);
 
-    currentFileLocalPath = currentFile.split(projectPath)[1];
-    currentOutFile = await path.join(outputFolderPath, currentFileLocalPath);
+        currentFileLocalPath = currentFile.split(currentProject.path)[1];
+        currentOutFile = await path.join(outputFolderPath, currentFileLocalPath);
+    }
 }
 
 async function getNextFile() {
@@ -143,7 +166,7 @@ export async function submitFile() {
 
     // I won't need to use this anywhere else so It's not needed as a separate function
     await invoke("delete_empty_subdirectories", {
-        projectPath: projectPath
+        projectPath: currentProject.path
     })
 
     await setCurrentFile();
@@ -162,7 +185,7 @@ export async function skipFile() {
 async function getAllFiles(): Promise<string[]> {
     return new Promise((resolve) => {
         invoke("get_all_files", {
-            path: projectPath
+            path: currentProject.path
         }).then((res) => {
             resolve(res as string[]);
         })
@@ -180,28 +203,24 @@ async function getSubdirectories(folder: string): Promise<string[]> {
 }
 
 export async function calculateCompletion(): Promise<number> {
-    return new Promise((resolve) => {
-        invoke("calculate_completion", {
-            inputPath: projectPath,
-            outputPath: outputFolderPath
-        }).then((res) => {
-            resolve(res as number);
-        })
-    })
+    const files = await countFiles(outputFolderPath);
+    return (files / await countFiles(outputFolderPath) + files) * 100;
 }
 
-export async function countFiles(): Promise<number> {
+export async function countFiles(path: string): Promise<number> {
     return new Promise((resolve) => {
         invoke("count_files", {
-            path: projectPath
+            path: path
         }).then((res) => {
             resolve(res as number);
         })
     })
 }
 
+
 export function isAudioFile(path: string): boolean {
-    return supportedFileTypes.some(ext => path.toLowerCase().endsWith(ext.toLowerCase()));
+    const supportedTypes: string[] = ['.wav', '.mp3', '.ogg', '.flac'];
+    return supportedTypes.some(ext => path.toLowerCase().endsWith(ext.toLowerCase()));
 }
 
 export function normalizePath(p: string): string {

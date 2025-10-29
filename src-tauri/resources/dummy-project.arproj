@@ -1,0 +1,19 @@
+{
+    "name": "example",
+    "path": "/this/is/just/an/example/for/my/future/reference/when/implementing/arproj",
+    "lastOpened": 1761715716,
+    "fileCount": 25101,
+    "pitchList": [
+        {
+            "name": "Super High Pitch",
+            "value": "1.50"
+        },
+        {
+            "name": "Super Low Pitch",
+            "value": "0.45"
+        }
+    ],
+    "effectList": [
+
+    ]
+}

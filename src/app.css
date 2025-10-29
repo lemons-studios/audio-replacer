@@ -54,6 +54,10 @@ body {
   overflow: auto;
 }
 
+.home-page-card {
+  @apply bg-secondary dark:bg-secondary-d;
+}
+
 .media-control-button {
   @apply transition p-0.5;
 }

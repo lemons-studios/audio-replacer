@@ -1,16 +1,17 @@
 <script lang="ts">
   import { onMount, tick } from "svelte";
   import { getValue, setValue } from "../tools/SettingsManager";
-  import { setProjectData } from "../tools/ProjectManager";
-  import { exists } from "@tauri-apps/plugin-fs";
+  import { countFiles, setProjectData } from "../tools/ProjectManager";
+  import { exists, readTextFile } from "@tauri-apps/plugin-fs";
   import { goto } from "$app/navigation";
   import { selectFolder } from "../tools/OsTools";
-  import { basename } from "@tauri-apps/api/path";
   import { info, error } from "@tauri-apps/plugin-log";
   import { invoke } from "@tauri-apps/api/core";
+    import { basename } from "@tauri-apps/api/path";
 
-  let previousProjectExists = $state(false);
-  let previousProjectName = $state("No Previous Project");
+  let recentProjectPaths: string[];
+  let recentProjects: any[] = $state([]);
+
   let user = $state("");
   let previousPath = $state("");
   let isProjectLoading = $state(false);
@@ -18,19 +19,39 @@
   onMount(async () => {
     await tick();
     user = await invoke('get_username');
-    previousPath = (await getValue("lastSelectedFolder")) as string;
-    previousProjectExists = (await exists(previousPath)) || previousPath != "" || previousPath == null;
-    if (previousProjectExists) {
-      previousProjectName = await basename(previousPath);
-      
-      // Autoload
-      const autoload = await getValue("autoloadProject");
-      if(autoload) {
-        await loadLastProject();
+    recentProjectPaths = (await getValue('recentProjects')) as string[];
+    
+    for(let i = 0; i < recentProjectPaths.length; i++) {
+      const fileContents = await readTextFile(recentProjectPaths[i]);
+      const json = JSON.parse(fileContents);
+      if(await isArprojValid(json)) {
+        recentProjects.push(json);
       }
     }
+    recentProjects.sort((a, b) => a.lastOpened - b.lastOpened);
+    recentProjects.reverse();
+
     info("App Loaded!");
   });
+
+  async function createProject() {
+    const folder = await selectFolder();
+    const name = await basename(folder);
+    const fileCount = await countFiles(folder);
+    
+    const project = {
+      name: name,
+      path: folder,
+      lastOpened: new Date().toLocaleDateString(),
+      fileCount: fileCount,
+      pitchList: [],
+      effectList: []
+    }
+  }
+
+  async function loadPreviousProject(index: number) {
+    
+  }
 
   async function loadLastProject() {
     // Edge case where path exists on app load but no longer exists when trying to load project
@@ -56,6 +77,11 @@
       error(`${res} Does not exist`);
     }
   }
+
+  const isArprojValid = (async(obj: Object) => {
+    const properties = ['name', 'path', 'lastOpened', 'pitchList', 'effectList'];
+    return properties.every(p => p in obj);
+  })
 </script>
 
 {#if isProjectLoading}
@@ -66,8 +92,13 @@
 {#if !isProjectLoading}
   <div class="h-full">
     <h1 class="text-center text-3xl mb-5">Welcome Back, {user}</h1>
-    <div class="w-full h-auto border-accent border rounded-md border-2 p-4 drop-shadow-lg drop-shadow-accent-shadow dark:bg-primary-d bg-primary">
-      <h1>adsaoijdaosidj</h1>
+    <div class="flex flex-col gap-3">
+      <div class="flex flex-row gap-x-4">
+
+      </div>
+      <div>
+
+      </div>
     </div>
   </div>
 {/if}

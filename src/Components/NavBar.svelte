@@ -9,6 +9,7 @@
     import { goto } from '$app/navigation';
 
     let buildText = $state('Audio Replacer 5');
+
     const navbarContents = {
         top: [
             {

@@ -12,6 +12,7 @@
   import NavBar from "../Components/NavBar.svelte";
   import Notification from "../Components/Notifications/Notification.svelte";
   import { NotificationTypes } from "../Components/Notifications/NotificationTypes";
+  import { setAdditionalFolderLocs } from "../tools/ProjectManager";
 
   let { children } = $props();
   let versionNumber = $state("");
@@ -20,6 +21,10 @@
   
   onMount(async() => {
     await tick();
+
+    // Initialize some variables related to project managment
+    await setAdditionalFolderLocs();
+
     versionNumber = await formatVersion();
     await populateCustomData();
     await loadFFMpeg();
@@ -46,18 +51,7 @@
         }
       }
     }
-
-    notificationTest();
   });
-
-  // TODO: Remove this test function before shipping 5.0
-  function notificationTest() {
-    notificationRef.addToNotification(NotificationTypes.info, "Info", "Displayed an information notification", true, 25020);
-    notificationRef.addToNotification(NotificationTypes.success, "Success!", "Displayed a success notification", true, 25000);
-    notificationRef.addToNotification(NotificationTypes.warning, "Warning", "This is a warning notification", false, 25050);
-    notificationRef.addToNotification(NotificationTypes.error, "Error", "This is an error notification", false, 27000);
-    notificationRef.addToNotification(NotificationTypes.progress, "Patience...", "This is a progress notification....", true, 25000);
-  }
 
   async function formatVersion(): Promise<string> {
     const [major, minor, patch] = (await getVersion()).split(".");
