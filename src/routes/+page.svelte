@@ -99,7 +99,7 @@
     <div class="flex flex-col justify-center content-center align-center gap-3">
       <div class="flex flex-row gap-x-4 justify-evenly">
         <!--Load From Save Projects-->
-        <div class=" p-4 rounded-lg dark:bg-secondary-d bg-secondary min-w-125 min-h-80 border-accent-shadow hover:border-accent hover:drop-shadow-accent-shadow hover:drop-shadow-xl transition border-2">
+        <div class=" p-4 rounded-lg dark:bg-secondary-d bg-secondary min-w-125 min-h-80 dark:border-accent-shadow dark:hover:border-accent dark:hover:drop-shadow-accent-shadow hover:drop-shadow-xl transition border-2">
           <h1 class="text-lg">Open A Saved Project</h1>
           <!--Show the three most recent projects, then have a "view all button that shows a modal at the bottom"-->
           {#each recentProjects as rp, index (rp)}
