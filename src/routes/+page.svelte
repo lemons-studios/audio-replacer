@@ -1,15 +1,16 @@
 <script lang="ts">
   import { onMount, tick } from "svelte";
   import { getValue, setValue } from "../tools/SettingsManager";
-  import { countFiles, setProjectData } from "../tools/ProjectManager";
+  import { countFiles, isArprojValid, setProjectData } from "../tools/ProjectManager";
   import { exists, readTextFile } from "@tauri-apps/plugin-fs";
   import { goto } from "$app/navigation";
-  import { selectFolder } from "../tools/OsTools";
+  import { selectFile, selectFolder } from "../tools/OsTools";
   import { info, error } from "@tauri-apps/plugin-log";
   import { invoke } from "@tauri-apps/api/core";
   import { basename } from "@tauri-apps/api/path";
   import ArrowLineUpRightReguar from 'phosphor-icons-svelte/IconArrowUpRightRegular.svelte';
   import Modal from "../Components/Modal.svelte";
+    import { message } from "@tauri-apps/plugin-dialog";
 
   let recentProjectPaths: string[];
   let recentProjects: any[] = $state([]);
@@ -32,11 +33,16 @@
         recentProjects.push(json);
       }
     }
-    recentProjects.sort((a, b) => a.lastOpened - b.lastOpened);
-    recentProjects.reverse();
+    sortRecentProjects();
 
     info("App Loaded!");
   });
+
+  function sortRecentProjects() {
+    recentProjects.sort((a, b) => a.lastOpened - b.lastOpened);
+    recentProjects.reverse();
+
+  }
 
   async function createProject() {
     const folder = await selectFolder();
@@ -53,39 +59,61 @@
     }
   }
 
-  async function loadPreviousProject(index: number) {
+  async function loadProjectFromUI(index: number) {
+    const selectedProject = recentProjects[index];
+    // Update last accessed time
+    selectedProject.lastOpened = new Date().toLocaleString();
+    // Push back to arproj array and save
+    recentProjects[index] = selectedProject;
 
+    
+
+    await setProjectData(selectedProject);
   }
 
-  async function loadLastProject() {
-    // Edge case where path exists on app load but no longer exists when trying to load project
-    if (!await exists(previousPath)) {
+  async function loadProjectFromFilePicker() {
+    const file = await selectFile(["arproj"], "Audio Replacer Project files (.arproj)");
+    const json = JSON.parse(file);
+    // Make sure file is valid
+    if(!await isArprojValid(json)) {
+      await message('This file does not appear to be valid!', { title: 'Error!', kind: 'error' });
       return;
     }
-    isProjectLoading = true;
-    await setProjectData(previousPath);
-    isProjectLoading = false;
+
+    // Add to settings
+    const settings = await getValue("recentProjects") as string[];
+    settings.push(file);
+    setValue("recentProjects", settings);
+
+    // Push to recent projects and re-sort so the project appears in the recent projects list without needing a relaunch
+    recentProjects.push(json);
+    sortRecentProjects();
+
+    // Now, Load the project
+    await setProjectData(json);
     goto("/recordPage");
   }
 
   async function createNewProject() {
     const res = await selectFolder();
-    
     if (await exists(res)) {
-      isProjectLoading = true;
-      await setProjectData(res);
-      setValue("lastSelectedFolder", res as string);
-      isProjectLoading = false;
-      goto("/recordPage");
+      // From this selected folder, construct an object and save it to the app settings
+      const obj = {
+        name: await basename(res),
+        path: res,
+        lastOpened: new Date().toLocaleString(),
+        fileCount: await countFiles(res),
+        pitchList: [],
+        effectList: [],
+      }
+      
     } else {
+      // TODO: Show a toast here
       error(`${res} Does not exist`);
     }
   }
 
-  const isArprojValid = (async(obj: Object) => {
-    const properties = ['name', 'path', 'lastOpened', 'pitchList', 'effectList'];
-    return properties.every(p => p in obj);
-  })
+
 </script>
 
 {#if isProjectLoading}

@@ -48,12 +48,20 @@ export async function setAdditionalFolderLocs() {
     }
 }
 
-export async function setProjectData(projectFile: any) {
+/**
+ * 
+ * @param project Object that contains properties of an audio replacer project file.
+ */
+export async function setProjectData(project: any) {
+    // Ensure validity of object
+    if(!await isArprojValid(project)) {
+        error(`Arproj not valid! ${project}`);
+        return;
+    }
+
     // mark as unloaded each time project data is loaded
     isProjectLoaded = false;
 
-    // The JSON array used in the home page is purely for the Home Page's uses, as ProjectManager will also be writing to the project files
-    const project = JSON.parse(await readTextFile(projectFile));
     info(`Attempting to set project data to ${project.path}`);
     currentProject = project;
 
@@ -230,3 +238,8 @@ export function normalizePath(p: string): string {
 export function toggleExtraEdits() {
     extraEditsFlagged = !extraEditsFlagged;
 }
+
+export const isArprojValid = (async(obj: Object) => {
+  const properties = ['name', 'path', 'lastOpened', 'pitchList', 'effectList'];
+  return properties.every(p => p in obj);
+});
