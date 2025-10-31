@@ -13,6 +13,7 @@ export let currentProjectFile: string;
 
 export let outputFolderPath: string;
 export let filtersPath: string;
+export let projectFilePath: string;
 
 export let currentFile: string;
 export let truncatedCurrentFile: string;
@@ -44,6 +45,12 @@ export async function setAdditionalFolderLocs() {
         filtersPath = await path.join(installFolder, "filters");
         if(!await exists(filtersPath)) {
             await mkdir(filtersPath);
+        }
+    }
+    if(projectFilePath === undefined) {
+        projectFilePath = await path.join(installFolder, "projects");
+        if(!await exists(projectFilePath)) {
+            await mkdir(projectFilePath);
         }
     }
 }

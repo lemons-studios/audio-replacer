@@ -1,47 +1,45 @@
 <script lang="ts">
   import { onMount, tick } from "svelte";
   import { getValue, setValue } from "../tools/SettingsManager";
-  import { countFiles, isArprojValid, setProjectData } from "../tools/ProjectManager";
-  import { exists, readTextFile } from "@tauri-apps/plugin-fs";
+  import { countFiles, isArprojValid, projectFilePath, setProjectData } from "../tools/ProjectManager";
+  import { exists, readTextFile, writeTextFile } from "@tauri-apps/plugin-fs";
   import { goto } from "$app/navigation";
   import { selectFile, selectFolder } from "../tools/OsTools";
   import { info, error } from "@tauri-apps/plugin-log";
   import { invoke } from "@tauri-apps/api/core";
-  import { basename } from "@tauri-apps/api/path";
-  import ArrowLineUpRightReguar from 'phosphor-icons-svelte/IconArrowUpRightRegular.svelte';
-  import Modal from "../Components/Modal.svelte";
-    import { message } from "@tauri-apps/plugin-dialog";
+  import { basename, join } from "@tauri-apps/api/path";
+  import ArrowRightRegular from 'phosphor-icons-svelte/IconArrowRightRegular.svelte';
+  import { message } from "@tauri-apps/plugin-dialog";
 
-  let recentProjectPaths: string[];
-  let recentProjects: any[] = $state([]);
+
+  /**
+   * @description Index 0: Path, Index 1: JSON
+   */
+  let recentProjects: any[][] = $state([]);
 
   let user = $state("");
-  let previousPath = $state("");
   let isProjectLoading = $state(false);
-
-  let showTestModal = $state(true);
+  let showTestModal = $state(false);
 
   onMount(async () => {
     await tick();
     user = await invoke('get_username');
-    recentProjectPaths = (await getValue('recentProjects')) as string[];
-    
-    for(let i = 0; i < recentProjectPaths.length; i++) {
-      const fileContents = await readTextFile(recentProjectPaths[i]);
-      const json = JSON.parse(fileContents);
-      if(await isArprojValid(json)) {
-        recentProjects.push(json);
-      }
+    const projectPaths = (await getValue('recentProjects')) as string[];
+    for(let i = 0; i < projectPaths.length; i++) {
+      const text = await readTextFile(projectPaths[i]);
+      const json = await JSON.parse(text);
+      recentProjects.push([projectPaths[i], json]);
     }
-    sortRecentProjects();
+
+    sortProjects();
+    console.log(recentProjects);
 
     info("App Loaded!");
   });
 
-  function sortRecentProjects() {
-    recentProjects.sort((a, b) => a.lastOpened - b.lastOpened);
+  function sortProjects() {
+    recentProjects.sort((a, b) => a[1].lastOpened - b[1].lastOpened);
     recentProjects.reverse();
-
   }
 
   async function createProject() {
@@ -57,16 +55,19 @@
       pitchList: [],
       effectList: []
     }
+    const savePath = await join(projectFilePath, `${name}.arproj`);
+    await writeTextFile(savePath, JSON.stringify(project));
+    recentProjects.push([savePath, project]);
   }
 
   async function loadProjectFromUI(index: number) {
-    const selectedProject = recentProjects[index];
+    const selectedProject = recentProjects[index][1];
     // Update last accessed time
     selectedProject.lastOpened = new Date().toLocaleString();
-    // Push back to arproj array and save
-    recentProjects[index] = selectedProject;
 
-    
+    // Push back to arproj array and save
+    recentProjects[index][1] = selectedProject;
+    await writeTextFile(recentProjects[index][0], JSON.stringify(recentProjects[index][1]));
 
     await setProjectData(selectedProject);
   }
@@ -87,7 +88,7 @@
 
     // Push to recent projects and re-sort so the project appears in the recent projects list without needing a relaunch
     recentProjects.push(json);
-    sortRecentProjects();
+    sortProjects();
 
     // Now, Load the project
     await setProjectData(json);
@@ -113,6 +114,14 @@
     }
   }
 
+  function getMostRecentProjects() {
+    const res = [];
+    const length = recentProjects.length < 3 ? recentProjects.length : 3;
+    for(let i = 0; i < length; i++) {
+      res.push(recentProjects[i][1]);
+    }
+    return res;
+  }
 
 </script>
 
@@ -128,22 +137,21 @@
       <div class="flex flex-row gap-x-4 justify-evenly">
         <!--Load From Save Projects-->
         <div class=" p-4 rounded-lg dark:bg-secondary-d bg-secondary min-w-125 min-h-80 dark:border-accent-shadow dark:hover:border-accent dark:hover:drop-shadow-accent-shadow hover:drop-shadow-xl transition border-2">
-          <h1 class="text-lg">Open A Saved Project</h1>
+          <h1 class="text-lg mb-5 underline-offset-2 underline">Open A Saved Project</h1>
           <!--Show the three most recent projects, then have a "view all button that shows a modal at the bottom"-->
-          {#each recentProjects as rp, index (rp)}
-            {#if index === 2}
-              <hr>
-              <div class="h-20 w-75 flex justify-around">
-                <!--Name of project + last opened date-->
-                <div>
-
-                </div>
-                <!--Forward Arrow Icon (Middle Right)-->
-                <ArrowLineUpRightReguar></ArrowLineUpRightReguar>
-              </div>
-              <hr>
-            {/if}
+          {#each getMostRecentProjects() as rp}
+            <div class="group flex w-auto cursor-pointer items-center justify-between rounded-md border border-transparent p-4 transition-all duration-200 ">
+              
+            </div>
           {/each}
+          <button class="save-btn rounded-sm w-125 dark:hover:bg-tertiary-d hover:bg-tertiary dark:focus:bg-tertiary-d dark:focus:drop-shadow-xl transition duration-300" onmouseleave={(e) => e.currentTarget.blur()} onmouseup={(e) => e.currentTarget.blur()}>
+            <div class="flex flex-col text-left p-3  mb-1.5 mt-1.5">
+                <p class="text-lg">Project Name</p>
+                <p class="text-gray-400 text-sm">Last Opened: 2025-10-30 2:08 PM</p>
+                <p class="text-gray-400 text-xs">Files Remaining: 25,101 (0% Complete)</p>
+                <ArrowRightRegular class="arrow"></ArrowRightRegular>
+            </div>
+          </button>
         </div>
       </div>
       <div>
@@ -152,6 +160,21 @@
     </div>
   </div>
 {/if}
+
+<style>
+  .save-btn:hover {
+    background-color: oklch(0.3042 0.0051 325.78);
+    box-shadow: none;
+
+  }
+  .save-btn:focus {
+    background-color: oklch(1 0 0 / 10%);
+    box-shadow: inset 0px 0px 1em oklch(0.1929 0.0048 325.72 / 60%);
+  }
+  .arrow {
+    position: fixed;
+  }
+</style>
 
 <!-- <Modal bind:showModal={showTestModal}>
     <div class="flex flex-col h-full w-full justify-center content-center align-center text-center dark:text-white gap-2.5">

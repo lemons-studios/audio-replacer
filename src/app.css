@@ -38,6 +38,10 @@
 
   --color-progress: oklch(0.5279 0.2131 321.35);
   --color-progress-shadow: oklch(0.5279 0.2131 321.35 / 20%);
+
+  --color-navigation-hover: oklch(0.3042 0.0051 325.78);
+  --color-navigation-focus: oklch(1 0 0 / 10%);
+  --color-navigation-focus-shadow: oklch(0.1929 0.0048 325.72 / 60%);
 }
 
 * {
@@ -84,13 +88,11 @@ body {
 }
 
 .nav-btn:hover {
-  background-color: oklch(1 0 0 / 30%);
+  background-color: oklch(0.3042 0.0051 325.78);
   box-shadow: none;
 }
 
 .nav-btn:focus {
   background-color: oklch(1 0 0 / 10%);
-  box-shadow: inset 0px 0px 1em ooklch(0.1929 0.0048 325.72 / 60%);
+  box-shadow: inset 0px 0px 1em oklch(0.1929 0.0048 325.72 / 60%);
 }
-
-
