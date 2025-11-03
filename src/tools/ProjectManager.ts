@@ -5,8 +5,6 @@ import { ask } from '@tauri-apps/plugin-dialog';
 import { mkdir, exists, remove, copyFile, rename, readDir, readTextFile } from '@tauri-apps/plugin-fs';
 import { info, error } from '@tauri-apps/plugin-log';
 
-// TODO: Implement project file modification in this file
-
 // currentProject contains project name, project path, files remaining as a JSON 
 export let currentProject: any;
 export let currentProjectFile: string;
@@ -56,28 +54,35 @@ export async function setAdditionalFolderLocs() {
 }
 
 /**
- * 
+ * @description Sets the current working directory for the requested project
  * @param project Object that contains properties of an audio replacer project file.
  */
-export async function setProjectData(project: any) {
+export async function setProjectData(projectPath: string, projectObject: any) {
+    // currentProject stores several variables that are extremely important to this file
+    currentProject = JSON.parse(await readTextFile(projectPath));
+
+    // currentProjectFile is a newer addition for the multi-project feature. It will
+    // be used to modify the object that shows stats about the project on the home page (Files Remaining)
+    // I'm not sure if this is the BEST way to implement this feature, so I may go back and forth between solutions
+    currentProjectFile = projectPath;
+    
     // Ensure validity of object
-    if(!await isArprojValid(project)) {
-        error(`Arproj not valid! ${project}`);
+    if(!await isArprojValid(currentProject)) {
+        error(`Arproj not valid! ${currentProject}`);
         return;
     }
 
-    // mark as unloaded each time project data is loaded
+    // Mark as unloaded each time project data is loaded
     isProjectLoaded = false;
 
-    info(`Attempting to set project data to ${project.path}`);
-    currentProject = project;
+    info(`Attempting to set project data to ${currentProject.path}`);
 
     try {
-        outputFolderPath = await path.join(outputFolder, project.name);
+        outputFolderPath = await path.join(outputFolder, currentProject.name);
         if(!await exists(outputFolderPath)) {
             await mkdir(outputFolderPath);
         }
-        projectFiles = (await getAllFiles()).filter(p => isAudioFile(p));
+        projectFiles = (await getAllFiles(currentProject.path)).filter(p => isAudioFile(p));
         
         await createInitialData();
         await setCurrentFile();
@@ -94,6 +99,9 @@ export async function setProjectData(project: any) {
     }
 }
 
+/**
+ * @description Creates folder structure in the project output directory identical to the one found in the project folder
+ */
 async function createInitialData() {
     try {
         const inputDirs = await readDir(currentProject.path);
@@ -113,9 +121,11 @@ async function createInitialData() {
     catch(e: any) {
         error(`createInitialData has failed with error ${e}`);
     }
-
 }
 
+/**
+ * @description Sets variables related to the current active file
+ */
 async function setCurrentFile() {
     if(currentProject.fileCount === 0) {
         // TODO: Maybe move some of this logic to the record page svelte file and make this a modal?
@@ -125,6 +135,7 @@ async function setCurrentFile() {
             kind: 'info'
         });
         if(response) {
+            // Go back to home page if user requested so
             goto('/');
             isProjectLoaded = false;
         }
@@ -152,6 +163,12 @@ async function getNextFile() {
     currentFile = projectFiles[0];
 }
 
+/**
+ * @description Truncates a directory
+ * @param path Path to the file/directory
+ * @param dirLevels how many levels "up" you want to include in the final result
+ * @returns A truncated directory
+ */
 export function truncateDirectory(path: string, dirLevels: number) {
     const delimiter = "/";
     if(!path || dirLevels <= 0) {
@@ -165,6 +182,9 @@ export function truncateDirectory(path: string, dirLevels: number) {
     return truncatedSegments.join(delimiter).slice(1);
 }
 
+/**
+ * @description Marks the file as complete and renames output file if necessary, then moves on to next file
+ */
 export async function submitFile() {
     if(currentFile) {
         await remove(currentFile);
@@ -187,27 +207,38 @@ export async function submitFile() {
     await setCurrentFile();
 }
 
+/**
+ * @description Removes the current output file
+ */
 export async function rejectFile() {
     await remove(currentOutFile);
 }
 
+/**
+ * @description Moves the current file in the project to the output directory and moves on to the next file
+ */
 export async function skipFile() {
     await copyFile(currentFile, currentOutFile);
     await remove(currentFile);
     await setCurrentFile();
 }
 
-async function getAllFiles(): Promise<string[]> {
+/**
+ * @description Counts files
+ * @param path path to directory
+ * @returns File count in directory + all subdirectories contained within that directory
+ */
+async function getAllFiles(path: string): Promise<string[]> {
     return new Promise((resolve) => {
         invoke("get_all_files", {
-            path: currentProject.path
+            path: path
         }).then((res) => {
             resolve(res as string[]);
         })
     })
 }
 
-async function getSubdirectories(folder: string): Promise<string[]> {
+/* async function getSubdirectories(folder: string): Promise<string[]> {
     return new Promise((resolve) => {
         invoke("get_subdirectories", {
             path: folder
@@ -215,8 +246,11 @@ async function getSubdirectories(folder: string): Promise<string[]> {
             resolve(res as string[]);
         })
     })
-}
+} */
 
+/**
+ * @description Gets the completion percentage of the currently open project
+ */
 export async function calculateCompletion(): Promise<number> {
     const files = await countFiles(outputFolderPath);
     return (files / await countFiles(outputFolderPath) + files) * 100;
@@ -233,11 +267,19 @@ export async function countFiles(path: string): Promise<number> {
 }
 
 
+/**
+ * @description Returns a boolean based on weather the file is an audio file (.wav, .mp3, .ogg, .flac) or not
+ * @param path File to check
+ */
 export function isAudioFile(path: string): boolean {
     const supportedTypes: string[] = ['.wav', '.mp3', '.ogg', '.flac'];
     return supportedTypes.some(ext => path.toLowerCase().endsWith(ext.toLowerCase()));
 }
 
+/**
+ * @description replaces all backslashes (on Windows systems) with forward slashes for display on ui
+ * @param p Path to "normalize"
+ */
 export function normalizePath(p: string): string {
   return p.replace(/[/\\]+$/, '');
 }
@@ -250,3 +292,7 @@ export const isArprojValid = (async(obj: Object) => {
   const properties = ['name', 'path', 'lastOpened', 'pitchList', 'effectList'];
   return properties.every(p => p in obj);
 });
+
+export function updateArproj(path: string, ) {
+
+}

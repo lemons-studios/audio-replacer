@@ -24,7 +24,6 @@ pub fn run() {
         .plugin(tauri_plugin_log::Builder::new().build())
         .invoke_handler(tauri::generate_handler![
             commands::project_manager::get_all_files,
-            commands::project_manager::get_subdirectories,
             commands::project_manager::calculate_completion,
             commands::project_manager::count_files,
             commands::project_manager::delete_empty_subdirectories,

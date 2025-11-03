@@ -4,12 +4,13 @@
   import { countFiles, isArprojValid, projectFilePath, setProjectData } from "../tools/ProjectManager";
   import { exists, readTextFile, writeTextFile } from "@tauri-apps/plugin-fs";
   import { goto } from "$app/navigation";
-  import { selectFile, selectFolder } from "../tools/OsTools";
+  import { selectFile, selectFolder, timestampToLegible } from "../tools/OsTools";
   import { info, error } from "@tauri-apps/plugin-log";
   import { invoke } from "@tauri-apps/api/core";
   import { basename, join } from "@tauri-apps/api/path";
   import ArrowRightRegular from 'phosphor-icons-svelte/IconArrowRightRegular.svelte';
   import { message } from "@tauri-apps/plugin-dialog";
+    import { path } from "@tauri-apps/api";
 
 
   /**
@@ -19,7 +20,6 @@
 
   let user = $state("");
   let isProjectLoading = $state(false);
-  let showTestModal = $state(false);
 
   onMount(async () => {
     await tick();
@@ -37,20 +37,29 @@
     info("App Loaded!");
   });
 
+  /**
+   * @description Sorts projects by last opened date (newest first)
+   */
   function sortProjects() {
     recentProjects.sort((a, b) => a[1].lastOpened - b[1].lastOpened);
     recentProjects.reverse();
   }
 
+
   async function createProject() {
     const folder = await selectFolder();
+    if(!exists(folder)) {
+      // TODO: show error popup
+      return;
+    }
+
     const name = await basename(folder);
     const fileCount = await countFiles(folder);
     
     const project = {
       name: name,
       path: folder,
-      lastOpened: new Date().toLocaleDateString(),
+      lastOpened: new Date().getTime(),
       fileCount: fileCount,
       pitchList: [],
       effectList: []
@@ -58,12 +67,15 @@
     const savePath = await join(projectFilePath, `${name}.arproj`);
     await writeTextFile(savePath, JSON.stringify(project));
     recentProjects.push([savePath, project]);
+    sortProjects();
+
+    await setProjectData(savePath);
   }
 
   async function loadProjectFromUI(index: number) {
     const selectedProject = recentProjects[index][1];
     // Update last accessed time
-    selectedProject.lastOpened = new Date().toLocaleString();
+    selectedProject.lastOpened = new Date().getTime();
 
     // Push back to arproj array and save
     recentProjects[index][1] = selectedProject;
@@ -95,30 +107,12 @@
     goto("/recordPage");
   }
 
-  async function createNewProject() {
-    const res = await selectFolder();
-    if (await exists(res)) {
-      // From this selected folder, construct an object and save it to the app settings
-      const obj = {
-        name: await basename(res),
-        path: res,
-        lastOpened: new Date().toLocaleString(),
-        fileCount: await countFiles(res),
-        pitchList: [],
-        effectList: [],
-      }
-      
-    } else {
-      // TODO: Show a toast here
-      error(`${res} Does not exist`);
-    }
-  }
-
   function getMostRecentProjects() {
     const res = [];
     const length = recentProjects.length < 3 ? recentProjects.length : 3;
     for(let i = 0; i < length; i++) {
       res.push(recentProjects[i][1]);
+      res[i].lastOpened = timestampToLegible(res[i].lastOpened);
     }
     return res;
   }
@@ -133,28 +127,56 @@
 {#if !isProjectLoading}
   <div>
     <h1 class="text-center text-3xl mb-5">Welcome Back, {user}</h1>
-    <div class="flex flex-col justify-center content-center align-center gap-3">
-      <div class="flex flex-row gap-x-4 justify-evenly">
+    <div class="flex flex-col justify-center content-center align-center gap-y-7">
+      <div class="flex flex-row gap-x-5 gap-y-2 justify-center">
         <!--Load From Save Projects-->
-        <div class=" p-4 rounded-lg dark:bg-secondary-d bg-secondary min-w-125 min-h-80 dark:border-accent-shadow dark:hover:border-accent dark:hover:drop-shadow-accent-shadow hover:drop-shadow-xl transition border-2">
+        <div class="home-page-card">
           <h1 class="text-lg mb-5 underline-offset-2 underline">Open A Saved Project</h1>
           <!--Show the three most recent projects, then have a "view all button that shows a modal at the bottom"-->
-          {#each getMostRecentProjects() as rp}
-            <div class="group flex w-auto cursor-pointer items-center justify-between rounded-md border border-transparent p-4 transition-all duration-200 ">
-              
-            </div>
-          {/each}
-          <button class="save-btn rounded-sm w-125 dark:hover:bg-tertiary-d hover:bg-tertiary dark:focus:bg-tertiary-d dark:focus:drop-shadow-xl transition duration-300" onmouseleave={(e) => e.currentTarget.blur()} onmouseup={(e) => e.currentTarget.blur()}>
-            <div class="flex flex-col text-left p-3  mb-1.5 mt-1.5">
-                <p class="text-lg">Project Name</p>
-                <p class="text-gray-400 text-sm">Last Opened: 2025-10-30 2:08 PM</p>
-                <p class="text-gray-400 text-xs">Files Remaining: 25,101 (0% Complete)</p>
+          {#each getMostRecentProjects() as rp, index (rp)}
+            <button 
+              class="save-btn rounded-sm w-125 dark:hover:bg-tertiary-d hover:bg-tertiary dark:focus:bg-tertiary-d dark:focus:drop-shadow-xl transition duration-75" 
+              onmouseleave={(e) => e.currentTarget.blur()} 
+              onmouseup={(e) => e.currentTarget.blur()} 
+              onclick={() => loadProjectFromUI(index)}>
+              <div class="flex justify-between items-center text-left p-3 mb-1.5 mt-1.5">
+                <div class="flex flex-col">
+                  <p class="text-lg">{rp.name}</p>
+                  <p class="text-gray-400 text-sm">Last Opened: {rp.lastOpened}</p>
+                  {#await countFiles(rp.path)}
+                    <p class="text-gray-400 text-xs">Files Remaining: 0</p> <!--Placeholder value-->
+                  {:then res} 
+                    <p class="text-gray-400 text-xs">Files Remaining: {Intl.NumberFormat().format(res)}</p>
+                  {/await}
+                </div>
                 <ArrowRightRegular class="arrow"></ArrowRightRegular>
-            </div>
-          </button>
+              </div>
+            </button>
+          {/each}
+          
+          <button 
+            class="save-btn rounded-sm w-full dark:hover:bg-tertiary-d hover:bg-tertiary dark:focus:bg-tertiary-d dark:focus:drop-shadow-xl transition duration-75" 
+            onmouseleave={(e) => e.currentTarget.blur()} 
+            onmouseup={(e) => e.currentTarget.blur()}>
+              <div class="flex justify-between items-center text-left p-3 mb-1.5 mt-1.5">
+                <div class="flex flex-col">
+                  <p class="text-lg">Project Name</p>
+                  <p class="text-gray-400 text-sm">Last Opened: 2025-10-30 2:08 PM</p>
+                  <p class="text-gray-400 text-xs">Files Remaining: 25,101</p>
+                </div>
+                <ArrowRightRegular class="arrow w-5 h-5"></ArrowRightRegular>
+              </div>
+            </button>
+            <button class="bg-black p-2 rounded-md hover:bg-tertiary-d dark:focus:bg-secondary-d" 
+            onmouseleave={(e) => e.currentTarget.blur()} 
+            onmouseup={(e) => e.currentTarget.blur()}>Recent Projects</button>
+        </div>
+        <div class="home-page-card">
+          <h1 class="text-lg mb-5 underline-offset-2 underline">Start A New Project</h1>
         </div>
       </div>
-      <div>
+      <div class="home-page-card">
+        <h1 class="text-lg mb-5 underline-offset-2 underline">Wiki/Tutorials</h1>
 
       </div>
     </div>
@@ -175,10 +197,3 @@
     position: fixed;
   }
 </style>
-
-<!-- <Modal bind:showModal={showTestModal}>
-    <div class="flex flex-col h-full w-full justify-center content-center align-center text-center dark:text-white gap-2.5">
-      <h2>This is a test Modal!</h2>
-      <button>Wow!</button>
-    </div>
-  </Modal>-->

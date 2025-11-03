@@ -54,3 +54,8 @@ export function debounce<T extends Function>(cb: T, wait = 20) {
     };
     return <T>(<any>callable);
 }
+
+export function timestampToLegible(timestamp: number): string {
+    return new Date(timestamp).toLocaleString();
+}
+

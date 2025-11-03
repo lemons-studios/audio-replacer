@@ -59,8 +59,9 @@ body {
 }
 
 .home-page-card {
-  @apply bg-secondary dark:bg-secondary-d;
+  @apply p-4 rounded-lg dark:bg-secondary-d bg-secondary min-w-100 w-auto min-h-100 dark:border-accent transition border-2;
 }
+
 
 .media-control-button {
   @apply transition p-0.5;
@@ -85,6 +86,7 @@ body {
   align-items: center;
   column-gap: calc(0.25rem * 2.25);
   margin-bottom: 3px;
+  z-index: 999; /* Ensures that the notification overlay will be rendered in front of everything */
 }
 
 .nav-btn:hover {

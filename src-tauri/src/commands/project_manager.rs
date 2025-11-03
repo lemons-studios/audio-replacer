@@ -10,10 +10,11 @@ pub fn get_all_files(path: &str) -> Vec<String> {
             files.push(e.path().display().to_string());
         }
     }
-    files.sort(); // I don't think I'd ever want to not sort lists that come through this method
+    files.sort(); // Just sort them in alphabetical order
     files
 }
 
+/*
 #[command]
 pub fn get_subdirectories(path: &str) -> Vec<String> {
     let mut dirs = vec![];
@@ -24,6 +25,7 @@ pub fn get_subdirectories(path: &str) -> Vec<String> {
     }
     dirs
 }
+*/
 
 #[command]
 pub fn count_files(path: &str) -> i32 {

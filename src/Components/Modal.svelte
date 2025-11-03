@@ -35,9 +35,11 @@
     }
 </style>
 
-<div class="fixed inset-0 flex justify-center align-center content-center h-max w-max dark:text-white">
+<div class="fixed flex justify-center items-center h-screen">
     <dialog onclose={() => showModal = false} bind:this={dialog} class=" p-2 min-h-100 min-w-150 dark:border-tertiary-d border-tertiary dark:bg-secondary-d bg-secondary rounded-xl">
-        <button class="close-btn rounded-sm align-top" onclick={() => showModal = false} onmouseleave={(e) => e.currentTarget.blur()}><IconXRegular class="dark:text-white h-7 w-7"></IconXRegular></button>
+        <button class="close-btn rounded-sm align-top" 
+        onclick={() => showModal = false} 
+        onmouseleave={(e) => e.currentTarget.blur()}><IconXRegular class="dark:text-white h-7 w-7" /></button>
         {@render children?.()}
     </dialog>
 </div>
