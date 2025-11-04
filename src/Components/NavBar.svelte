@@ -65,7 +65,7 @@
 </style>
 
 <!--TODO: Implement icon rendering (probably by just downloading svgs i need and ditching the full icon lib installs that are taking up unneccesary space)-->
-<div class="flex flex-col items-stretch justify-between dark:bg-secondary-d bg-secondary min-w-[10rem] px-1 py-2 rounded-r-lg drop-shadow-xl ">
+<div class="flex flex-col items-stretch justify-between dark:bg-secondary-d bg-secondary min-w-40 px-1 py-2 rounded-r-lg drop-shadow-xl ">
     <!--Top Menu Items-->
     <div class="menu-container gap-0.5">
         {#each navbarContents.top as item}
