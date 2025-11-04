@@ -8,9 +8,8 @@
 
     async function loadProject() {
         await setProjectData(projectFilePath, project);
-        goto('/recordPAge');
+        goto('/recordPage');
     }
-
 
 </script>
 

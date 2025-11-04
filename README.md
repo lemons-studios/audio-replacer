@@ -1,7 +1,7 @@
 <h1 align="center">Audio Replacer</h1>
 
 <p align="center">
-<img alt="App Icon" src="https://raw.githubusercontent.com/lemons-studios/audio-replacer/refs/heads/4.x-legacy/Assets/AppIcon.ico" width="128">
+<img alt="App Icon" src="https://raw.githubusercontent.com/lemons-studios/audio-replacer/refs/heads/main/app-icon.png" width="128">
 </p>
 
 <p align="center">
