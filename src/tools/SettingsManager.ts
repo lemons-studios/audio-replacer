@@ -5,6 +5,8 @@ import { info, error } from "@tauri-apps/plugin-log";
 let settingsJson: any;
 let loaded: boolean = false;
 
+let settingsPath: string;
+
 async function loadSettings() {
     try {
         const path = await resolveResource("resources/settings.json");
@@ -15,12 +17,12 @@ async function loadSettings() {
     catch(e: any) {
         error(`Settings Load Failed: ${e}`);
     }
+    loaded = true;
 }
 
 export async function getValue(key: string): Promise<any> {
     if(!loaded) {
         await loadSettings();
-        loaded = true;
     }
     try {
         info(`Attempting to get key ${key}`)
@@ -38,13 +40,15 @@ export function setValue(key: string, value: any) {
 }
 
 async function saveJsonData() {
+    if(!loaded) {
+        await loadSettings();
+    }
     try {
         info("Saving Json Data");
         const content = JSON.stringify(settingsJson);
-        const file = await resolveResource("resources/settings.json");
-        info(`writing ${content} to ${file}`);
+        info(`writing ${content} to ${settingsPath}`);
 
-        await writeTextFile(file, content);
+        await writeTextFile(settingsPath, content);
         info("Json Data Save Successful.");
         await loadSettings(); // Reload settings json
     }

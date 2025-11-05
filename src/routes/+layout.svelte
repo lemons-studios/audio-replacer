@@ -13,6 +13,7 @@
   import Notification from "../Components/Notifications/Notification.svelte";
   import { NotificationTypes } from "../Components/Notifications/NotificationTypes";
   import { setAdditionalFolderLocs } from "../tools/ProjectManager";
+  import { startRichPresence } from "../tools/DiscordPresenceManager";
 
   let { children } = $props();
   let versionNumber = $state("");
@@ -51,15 +52,8 @@
         }
       }
     }
-    setTimeout(() => {
-      notificationRef.addToNotification(NotificationTypes.success, "Success!", "Test Toast", true, 3507);
-    }, 500);
-    setTimeout(() => {
-      notificationRef.addToNotification(NotificationTypes.warning, "Warning", "Test Toast", true, 3750);
-    }, 1000);
-    setTimeout(() => {
-      notificationRef.addToNotification(NotificationTypes.error, "Error", "Test Toast", true, 4900);
-    }, 1500);
+
+    await startRichPresence("1325340097234866297");
   });
 
   async function formatVersion(): Promise<string> {
