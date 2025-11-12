@@ -10,6 +10,7 @@
   import { basename, join } from "@tauri-apps/api/path";
   import { message } from "@tauri-apps/plugin-dialog";
   import RecentProjectItem from "../Components/RecentProjectItem.svelte";
+    import Slider from "../Components/Slider.svelte";
 
   /**
    * @description Index 0: Path, Index 1: JSON
@@ -109,29 +110,6 @@
 {#if isProjectLoading}
   <!--Add Load Spinner Component here-->
   <span>Loading Project...</span>
-{/if}
-
-{#if !isProjectLoading}
-  <div>
-    <h1 class="text-center text-3xl mb-5">Welcome Back, {user}</h1>
-    <div class="flex flex-col justify-center content-center align-center gap-y-7">
-      <div class="flex flex-row gap-x-5 gap-y-2 justify-center">
-        <!--Load From Save Projects-->
-        <div class="home-page-card">
-          <h1 class="text-lg mb-5 underline-offset-2 underline">Open A Saved Project</h1>
-          <!--Show the three most recent projects, then have a "view all button that shows a modal at the bottom"-->
-          {#each getMostRecentProjects() as rp}
-            <RecentProjectItem project={rp[1]} projectFilePath={rp[0]} />
-          {/each}
-        </div>
-        <div class="home-page-card">
-          <h1 class="text-lg mb-5 underline-offset-2 underline">Start A New Project</h1>
-        </div>
-      </div>
-      <div class="home-page-card">
-        <h1 class="text-lg mb-5 underline-offset-2 underline">Wiki/Tutorials</h1>
-
-      </div>
-    </div>
-  </div>
+{:else}
+  <!--Implement actual content after mocking up UI in figma-->
 {/if}

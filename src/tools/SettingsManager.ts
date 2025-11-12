@@ -5,7 +5,7 @@ import { info, error } from "@tauri-apps/plugin-log";
 let settingsJson: any;
 let loaded: boolean = false;
 
-let settingsPath: string;
+let settingsPath: string = "";
 
 async function loadSettings() {
     try {

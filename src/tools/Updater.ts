@@ -12,9 +12,8 @@ export async function isUpdateAvailable(): Promise<boolean> {
 }
 
 export async function downloadUpdates() {
-    // In practice, this should only run after an update is found to exist, but I'll add some guardrails just in case.
     if(update) {
-        if(platform() === "linux") {
+        if(platform() !== 'windows') {
             const releases = "https://github.com/lemons-studios/audio-replacer/releases/latest";
             open(releases);
             return;
