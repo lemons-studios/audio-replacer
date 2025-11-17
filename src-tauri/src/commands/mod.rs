@@ -5,3 +5,4 @@
 pub mod app_functions;
 pub mod project_manager;
 pub mod whisper_utils;
+pub mod discord_rpc;

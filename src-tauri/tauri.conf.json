@@ -48,8 +48,6 @@
       "binaries/whisper.bin",
       "binaries/noiseSuppression.rnnn",
       "resources/settings.json",
-      "resources/effectData.json",
-      "resources/pitchData.json",
       "resources/releaseData.md"
     ],
     "externalBin": [

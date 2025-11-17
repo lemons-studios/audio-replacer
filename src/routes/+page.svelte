@@ -10,7 +10,8 @@
   import { basename, join } from "@tauri-apps/api/path";
   import { message } from "@tauri-apps/plugin-dialog";
   import RecentProjectItem from "../Components/RecentProjectItem.svelte";
-    import Slider from "../Components/Slider.svelte";
+  import Slider from "../Components/Slider.svelte";
+    import { startRichPresence } from "../tools/DiscordPresenceManager";
 
   /**
    * @description Index 0: Path, Index 1: JSON
@@ -33,6 +34,7 @@
 
     sortProjects();
     console.log(recentProjects);
+
 
     info("App Loaded!");
   });

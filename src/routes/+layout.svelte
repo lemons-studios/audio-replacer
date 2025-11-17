@@ -52,8 +52,8 @@
         }
       }
     }
-
-    await startRichPresence("1325340097234866297");
+    
+    startRichPresence();
   });
 
   async function formatVersion(): Promise<string> {

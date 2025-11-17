@@ -1,22 +1,20 @@
 <script lang="ts">
-  import * as ProjectManager from "../../tools/ProjectManager"
   import AudioPlayer from "../../Components/AudioPlayer.svelte";
   import { onDestroy, onMount } from "svelte";
-  import { transcribeFile } from "./WhisperUtils";
-  import { effectDataNames, effectDataValues, pitchDataNames, pitchDataValues } from "./EffectManager";
-  import { setEffect, setPitch } from "./FFMpegManager";
-  import { cancelRecording, endRecording, startRecording } from "./AudioRecorder";
+  import { cancelRecording, effectFilterNames, endRecording, pitchFilterNames, startRecording } from "./AudioManager";
   import { register, unregisterAll } from "@tauri-apps/plugin-global-shortcut";
-  import { getValue } from "../../tools/SettingsManager";
+  import { calculateCompletion, countInputFiles, countOutputFiles, currentFile, discardfile, fileTranscription, localPath, outputFile, skipFile, submitFile } from "../../tools/ProjectHandler";
   
-  let currentPathTrunc = $state(ProjectManager.currentFileLocalPath || "Select a folder to begin");
-  let currentAudioPath = $state(ProjectManager.currentFile || "");
+  let activeAudioPath = $state(currentFile || "");
+  let currentPathTrunc = $state(localPath || "No File Selected");
 
-  let completionValue = $state(0);
-  let completionPercentage = $state("0%");
-  let filesRemaining = $state(ProjectManager.filesRemaining || 0);
-  let currentTranscription = $state("Transcription Unavailable")
-  let extraEditsFlagged = $state(ProjectManager.extraEditsFlagged);
+
+  let completionPercentage = $state(`${calculateCompletion().toFixed(2)}%` || "0%");
+  let completionValue = $state(calculateCompletion() / 100)
+
+  let filesRemaining = $state(new Intl.NumberFormat().format(countInputFiles() - countOutputFiles()) || 0);
+  let extraEditsFlagged = $state(false);
+  let transcription = $state(fileTranscription);
 
   let idle = $state(true);
   let recording = $state(false);
@@ -26,20 +24,24 @@
   let pitchDropdown: HTMLSelectElement;
   let effectDropdown: HTMLSelectElement;
 
+  let selectedPitchIndex = 0; 
+  let selectedEffectIndex = 0;
+
   const discardOptions = {
     discarding: true,
     notDiscarding: false
   } as const
 
-  onMount(async() => {
-    setFileData();
+  $effect(() => {
+    activeAudioPath = currentFile;
+    currentPathTrunc = localPath;
+    completionValue = calculateCompletion() / 100;
+    completionPercentage = `${calculateCompletion().toFixed(2)}%`;
+    filesRemaining = new Intl.NumberFormat().format(countInputFiles() - countOutputFiles());
+    transcription = fileTranscription;
+  })
 
-    const allowTranscription = await getValue("enableTranscription") as boolean;
-    if(allowTranscription) {
-        currentTranscription = ProjectManager.isProjectLoaded ? `Transcription: ${await transcribeFile(currentAudioPath)}` : "";
-    }
-    else currentTranscription = `Speech-To-Text Transcription Disabled.`;
-    
+  onMount(async() => {
     const shortcuts = [
       {
         keybind: "CommandOrControl+R",
@@ -78,7 +80,7 @@
       {
         keybind: "CommandOrControl+F",
         action: () => {
-          ProjectManager.toggleExtraEdits();
+          extraEditsFlagged = !extraEditsFlagged;
         }
       }
     ];
@@ -98,17 +100,7 @@
   }
 
   async function stopRecord() {
-    await endRecording(ProjectManager.currentOutFile);
-    const autoAccept = await getValue("autoAcceptRecordings") as boolean;
-    if(autoAccept) {
-      // Quickly enter the review state, then automatically accept it
-      switchStates();
-      finalizeRecording(false);
-    }
-    else {
-      currentAudioPath = ProjectManager.currentOutFile;
-      switchStates();
-    }
+
   }
 
   function cancelRecord() {
@@ -119,40 +111,18 @@
 
   async function finalizeRecording(isDiscarding: boolean) {
     switchStates();
-    if(isDiscarding) {
-      await ProjectManager.rejectFile();
-    }
-    else {
-      await ProjectManager.submitFile();
-      const allowTranscription = await getValue("enableTranscription") as boolean;
-
-      currentTranscription = allowTranscription ? await transcribeFile(currentAudioPath) : "Speech-To-Text Transcription Disabled.";
-    }
-    setFileData();
+    isDiscarding ? await discardfile() : await submitFile(extraEditsFlagged);
   }
 
-  async function skipFile() {
-    await ProjectManager.skipFile();
-    setFileData();
-    currentTranscription = await transcribeFile(currentAudioPath); // do NOT wait for file transcription
-  }
-
-  function setFileData() {
-    if(ProjectManager.isProjectLoaded) {
-      currentAudioPath = ProjectManager.currentFile;
-      currentPathTrunc = ProjectManager.currentFileLocalPath.replaceAll("\\", "/").slice(1);
-      completionValue = ProjectManager.completionPercentage;
-      filesRemaining = ProjectManager.filesRemaining;
-      completionPercentage = `${completionValue.toFixed(2)}%`;
-      audioPlayer.playAudio();
-    }
+  async function skipCurrentFile() {
+    await skipFile(true); // Hardcoded for now, change later
   }
 
   function switchAudio() {
-    const outputPath = ProjectManager.currentOutFile;
-    const currentFile = ProjectManager.currentFile;
+    const outputPath = outputFile;
+    const inputPath = currentFile;
 
-    currentAudioPath = currentAudioPath == outputPath ? currentFile : outputPath; 
+    activeAudioPath = activeAudioPath == outputPath ? currentFile : outputPath; 
   }
 
   // Best solution I can think of for now. There is most certainly a better way to do this
@@ -171,15 +141,13 @@
       idle = true;
     }
   }
-
+  
   function selectPitchValue() {
-    const index = pitchDropdown.selectedIndex;
-    setPitch(pitchDataValues[index]);
+    selectedPitchIndex = pitchDropdown.selectedIndex;
   }
 
   function selectEffectValue() {
-    const index = effectDropdown.selectedIndex;
-    setEffect(effectDataValues[index]);
+    selectedEffectIndex = effectDropdown.selectedIndex;
   }
 </script>
 
@@ -189,7 +157,7 @@
     <h1 class="title-text mb-5 font-semibold">{currentPathTrunc}</h1>
     <h2 class="text-center text-lg font-medium">Files Remaining: {filesRemaining} ({completionPercentage})</h2>
     <progress value={completionValue} class="mb-3.5 progress progress-primary m-auto" max="100"></progress>
-    <AudioPlayer source={currentAudioPath} bind:this={audioPlayer}/>
+    <AudioPlayer source={activeAudioPath} bind:this={audioPlayer}/>
     <div class="flex flex-row justify-center gap-5 mb-2.5 mt-2.5">
       {#if idle}
         <button class="btn btn-primary w-25" onclick={() => skipFile()}>Skip</button>
@@ -205,19 +173,19 @@
         <button class="btn btn-primary w-25" onclick={() => finalizeRecording(discardOptions.notDiscarding)}>Submit</button>
       {/if}
     </div>
-    <h2 class="text-center text-lg font-medium">{currentTranscription}</h2>
+    <h2 class="text-center text-lg font-medium">{transcription}</h2>
   </fieldset>
   <fieldset class="w-2/4 pane content-center">
     <legend class="fieldset-legend">Recording Filters</legend>
     <h2 class="title-text mb-[2rem] font-semibold">Pitch Filters</h2>
     <select class="select select-primary select-md m-auto" bind:this={pitchDropdown} onchange={selectPitchValue}>
-      {#each pitchDataNames as name }
+      {#each pitchFilterNames as name }
         <option>{name}</option>
       {/each}
     </select>
     <h2 class="title-text mb-[2rem] font-semibold">Audio Effects</h2>
     <select class="select select-primary select-md m-auto" bind:this={effectDropdown} onchange={selectEffectValue}>
-      {#each effectDataNames as name }
+      {#each effectFilterNames as name }
         <option>{name}</option>
       {/each}
     </select>

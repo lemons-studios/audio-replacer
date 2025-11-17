@@ -24,13 +24,12 @@ pub fn run() {
         .plugin(tauri_plugin_log::Builder::new().build())
         .invoke_handler(tauri::generate_handler![
             commands::project_manager::get_all_files,
-            commands::project_manager::calculate_completion,
-            commands::project_manager::count_files,
             commands::project_manager::delete_empty_subdirectories,
             commands::whisper_utils::transcribe_file,
             commands::app_functions::get_install_directory,
             commands::app_functions::in_dev_env,
             commands::app_functions::get_username,
+            commands::discord_rpc::start_discord_rpc,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
