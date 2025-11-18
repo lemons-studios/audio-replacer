@@ -39,6 +39,9 @@ export function populateFFMpegFilters(loadedProject: any) {
     }
 }
 
+/**
+ * @description Starts capturing audio from the microphone
+ */
 export async function startRecording() {
     if(!encoderInitialized) {
         // Create media encoder if it doesn't already exist
@@ -64,6 +67,7 @@ export async function startRecording() {
 /**
  * @param selectedPitchIndex index of pitch dropdown
  * @param selectedEffectIndex index of effect dropdown
+ * @description ends microphone capture and saves to the current output file as a wav, followed by applying any ffmpeg effects requested by the user
  */
 export async function endRecording(selectedPitchIndex: number, selectedEffectIndex: number): Promise<void> {
     // Just in case something funny happened
@@ -119,6 +123,8 @@ export function cancelRecording() {
  * @param effect list of effects you want to apply (Write it as if you were directly interacting with FFMpeg in the CLI)
  */
 export async function applyFFMpegFilter(file: string, effect: string) {
+    // In the future, I MIGHT switch this to a wasm binary. The reason it isn't right now is because custom compiling a custom FFMpeg WASM binary is extremely time consuming
+    // I need a custom wasm binary because if I were to use the regular one provided, it would also include features this app does not need, inflating app size by about 20-30Mb, while this custom binary is 6-8 
     const tempFile = `${file}.wav`;
     await Command.sidecar('binaries/ffmpeg', [
         '-i',

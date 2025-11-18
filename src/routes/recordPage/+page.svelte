@@ -9,12 +9,12 @@
   let currentPathTrunc = $state(localPath || "No File Selected");
 
 
-  let completionPercentage = $state(`${calculateCompletion().toFixed(2)}%` || "0%");
-  let completionValue = $state(calculateCompletion() / 100)
+  let completionPercentage = $state("0%");
+  let completionValue = $state(0)
 
-  let filesRemaining = $state(new Intl.NumberFormat().format(countInputFiles() - countOutputFiles()) || 0);
+  let filesRemaining = $state('0');
   let extraEditsFlagged = $state(false);
-  let transcription = $state(fileTranscription);
+  let transcription = $state('');
 
   let idle = $state(true);
   let recording = $state(false);
@@ -177,13 +177,13 @@
   </fieldset>
   <fieldset class="w-2/4 pane content-center">
     <legend class="fieldset-legend">Recording Filters</legend>
-    <h2 class="title-text mb-[2rem] font-semibold">Pitch Filters</h2>
+    <h2 class="title-text mb-8font-semibold">Pitch Filters</h2>
     <select class="select select-primary select-md m-auto" bind:this={pitchDropdown} onchange={selectPitchValue}>
       {#each pitchFilterNames as name }
         <option>{name}</option>
       {/each}
     </select>
-    <h2 class="title-text mb-[2rem] font-semibold">Audio Effects</h2>
+    <h2 class="title-text mb-8 font-semibold">Audio Effects</h2>
     <select class="select select-primary select-md m-auto" bind:this={effectDropdown} onchange={selectEffectValue}>
       {#each effectFilterNames as name }
         <option>{name}</option>

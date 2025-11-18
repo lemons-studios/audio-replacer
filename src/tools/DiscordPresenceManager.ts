@@ -1,39 +1,36 @@
-import { invoke } from "@tauri-apps/api/core";
+// Writing here because I forget this a LOT: DETAILS is the first line of small text, STATE is the second. No clue why it trips me up this bad
+import { setActivity, start, stop } from "tauri-plugin-drpc";
+import { Activity, ActivityType, Assets, Button, Timestamps } from "tauri-plugin-drpc/activity";
+import { formatVersion } from "./OsTools";
 
-// Writing here because I forget this a LOT: DETAILS are the first line of text, STATE is the second. No clue why it trips me up this bad
-let currentDetails = "Test Details";
-let currentState = "Test State";
-let startTime: number | undefined = undefined;
+const clientId = "1325340097234866297";
+let currentActivity: Activity;
+export async function startRichPresence() {
+    await start(clientId); 
+    const version = await formatVersion();
 
-/**
- * @description (Re)Initializes the Discord rich presence connection, and (effectively) gets the app launch time of startTime is undefined
- */
-export function startRichPresence() {
-    if(startTime === undefined) {
-        startTime = Date.now();
-    }
+    currentActivity = new Activity()
+    .setActivity(ActivityType.Listening)
+    .setDetails("Home Page")
+    .setTimestamps(new Timestamps(Date.now()))
+    .setAssets(new Assets()
+        .setLargeImage('appicon')
+        .setLargeText(`Version ${version}`))
+    .setButton([ new Button("View Project", "https://github.com/lemons-studios/audio-replacer") ]);
 
-    invoke('start_discord_rpc', {
-        details: currentDetails,
-        state: currentState,
-        startTime: startTime
-    });
+    await setActivity(currentActivity);
 }
 
-/**
- * @description Updates the details (first small text) and re-initializes the rich presence
- * @param newState New details (first small text) value
- */
-export function setDetails(newDetails: string) {
-    currentDetails = newDetails;
-    startRichPresence();
+export async function setPresenceDetails(newDetails: string) {
+    currentActivity.setDetails(newDetails);
+    await setActivity(currentActivity);
 }
 
-/**
- * @description Updates the state (second small text) and re-initializes the rich presence
- * @param newState New state (second small text) value
- */
-export function setState(newState: string) {
-    currentState = newState;
-    startRichPresence();
+export async function setPresenceState(newState: string) {
+    currentActivity.setState(newState);
+    await setActivity(currentActivity);
+}
+
+export async function stopRichPresence() {
+    await stop();
 }

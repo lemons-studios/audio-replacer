@@ -5,7 +5,7 @@
   import IconWarningOctagonRegular from "phosphor-icons-svelte/IconWarningOctagonRegular.svelte";
   import IconHourglassMediumRegular from "phosphor-icons-svelte/IconHourglassMediumRegular.svelte";
   import IconXNormal from "phosphor-icons-svelte/IconXRegular.svelte";
-  import { fade, fly, slide } from "svelte/transition";
+  import { fade, fly } from "svelte/transition";
 
   let queue: any[] = $state([]); // Too lazy to figure out the type
   let notificationId: number = $state(0);

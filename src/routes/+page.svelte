@@ -1,17 +1,17 @@
 <script lang="ts">
   import { onMount, tick } from "svelte";
   import { getValue, setValue } from "../tools/SettingsManager";
-  import { countFiles, isArprojValid, projectFilePath, setProjectData } from "../tools/ProjectManager";
   import { exists, readTextFile, writeTextFile } from "@tauri-apps/plugin-fs";
   import { goto } from "$app/navigation";
   import { selectFile, selectFolder } from "../tools/OsTools";
   import { info, error } from "@tauri-apps/plugin-log";
   import { invoke } from "@tauri-apps/api/core";
   import { basename, join } from "@tauri-apps/api/path";
-  import { message } from "@tauri-apps/plugin-dialog";
+  import { message, save } from "@tauri-apps/plugin-dialog";
   import RecentProjectItem from "../Components/RecentProjectItem.svelte";
   import Slider from "../Components/Slider.svelte";
-    import { startRichPresence } from "../tools/DiscordPresenceManager";
+  import { startRichPresence } from "../tools/DiscordPresenceManager";
+  import { getAllFiles, setActiveProject } from "../tools/ProjectHandler";
 
   /**
    * @description Index 0: Path, Index 1: JSON
@@ -54,24 +54,31 @@
       // TODO: show error popup
       return;
     }
-
     const name = await basename(folder);
-    const fileCount = await countFiles(folder);
     
     const project = {
       name: name,
       path: folder,
       lastOpened: new Date().getTime(),
-      fileCount: fileCount,
       pitchList: [],
       effectList: []
     }
-    const savePath = await join(projectFilePath, `${name}.arproj`);
-    await writeTextFile(savePath, JSON.stringify(project));
-    recentProjects.push([savePath, project]);
-    sortProjects();
+    const savePath = await save({
+      filters: [
+        {
+          name: "Audio Replacer File",
+          extensions: ['arproj'] 
+        },
+      ],
+    }) as string;
+    if(savePath) {
+      await writeTextFile(savePath, JSON.stringify(project));
+      recentProjects.push([savePath, project]);
+      sortProjects();
 
-    await setProjectData(savePath, project);
+      await setActiveProject(savePath);
+    }
+
   }
 
   async function loadProjectFromFilePicker() {
@@ -93,7 +100,7 @@
     sortProjects();
 
     // Now, Load the project
-    await setProjectData(file, json);
+    await setActiveProject(file);
     goto("/recordPage");
   }
 
@@ -105,6 +112,16 @@
       res.push([recentProjects[i][0], recentProjects[i][1]]);
     }
     return res;
+  }
+
+  function isArprojValid(project: any): boolean {
+    return (
+      'name' in project && typeof project.name === 'string' &&
+      'path' in project && typeof project.path === 'string' &&
+      'lastOpened' in project && typeof project.lastOpened === 'number' &&
+      'pitchList' in project && Array.isArray(project.pitchList) &&
+      'effectList' in project && Array.isArray(project.effectList)
+    );
   }
 
 </script>

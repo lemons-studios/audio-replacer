@@ -2,7 +2,7 @@
 name = "audio_replacer"
 version = "5.0.0"
 description = "Easily dub video game voice-overs"
-authors = ["Shob3r"]
+authors = ["Shob3r (Andrew Pinter) <andrewpinter23@gmail.com>", "Lemon Studios"]
 edition = "2024"
 license = "BSD-3-Clause"
 
@@ -22,16 +22,20 @@ futures-lite = "2.6.1"
 tauri-plugin-os = "2.3.2"
 tauri-plugin-fs = "2.4.4"
 tauri-plugin-shell = "2.3.3"
-walkdir = "2.5.0"
-whisper-rs = {git = "https://github.com/Shob3r/whisper-rs.git", version ="0.15.1"} # The person who develops this 
-hound = "3.5.1"
 tauri-plugin-log = { version = "2.7.1", features = ["colored"] }
 tauri-plugin-process = "2.3.1"
 tauri-plugin-upload = "2.3.2"
 tauri-plugin-dialog = "2.4.2"
+
+# The person who develops this hasn't fixed a whisper.cpp build issue in whisper-rs which causes whisper models to run up to 10 times slower on release builds. My fork fixes this
+whisper-rs = {git = "https://github.com/Shob3r/whisper-rs.git", version ="0.15.1"} 
+
 num_cpus = "1.17.0"
 whoami = "1.6.1"
-discord-rich-presence = "1.0.0"
+hound = "3.5.1"
+walkdir = "2.5.0"
+tauri-plugin-drpc = "*"
+
 
 [target.'cfg(not(any(target_os = "android", target_os = "ios")))'.dependencies]
 tauri-plugin-global-shortcut = "2.3.1"

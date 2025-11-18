@@ -2,18 +2,15 @@
   import "../app.css";
   import { invoke } from "@tauri-apps/api/core";
   import { onMount, tick } from "svelte";
-  import { populateCustomData } from "./recordPage/EffectManager";
-  import { loadFFMpeg } from "./recordPage/FFMpegManager";
-  import { getVersion } from "@tauri-apps/api/app";
   import { downloadUpdates, getUpdateVersion, isUpdateAvailable } from "../tools/Updater";
   import { ask } from "@tauri-apps/plugin-dialog";
   import { getValue } from "../tools/SettingsManager";
   import { onNavigate } from '$app/navigation';
   import NavBar from "../Components/NavBar.svelte";
   import Notification from "../Components/Notifications/Notification.svelte";
-  import { NotificationTypes } from "../Components/Notifications/NotificationTypes";
-  import { setAdditionalFolderLocs } from "../tools/ProjectManager";
   import { startRichPresence } from "../tools/DiscordPresenceManager";
+  import { setAdditionalFolders } from "../tools/ProjectHandler";
+  import { formatVersion } from "../tools/OsTools";
 
   let { children } = $props();
   let versionNumber = $state("");
@@ -24,11 +21,9 @@
     await tick();
 
     // Initialize some variables related to project managment
-    await setAdditionalFolderLocs();
+    await setAdditionalFolders();
 
     versionNumber = await formatVersion();
-    await populateCustomData();
-    await loadFFMpeg();
 
     // Prevent right click context menu from showing up (unneeded in production builds)
     const isDev = await invoke("in_dev_env") as boolean;
@@ -56,11 +51,6 @@
     startRichPresence();
   });
 
-  async function formatVersion(): Promise<string> {
-    const [major, minor, patch] = (await getVersion()).split(".");
-    return `${major}.${minor}${patch == "0" ? '' : `.${patch}`}`;
-  }
-
   onNavigate((navigation) => {
     if(!document.startViewTransition) return;
 
@@ -81,7 +71,7 @@
   }
 </style>
 
-<main class="dark:bg-primary-d bg-primary flex flex-row grow-1 dark:text-white items-stretch w-screen h-screen overflow-y-hidden">
+<main class="dark:bg-primary-d bg-primary flex flex-row grow dark:text-white items-stretch w-screen h-screen overflow-y-hidden">
   <div class="notification-overlay">
     <Notification bind:this={notificationRef}/>
   </div>

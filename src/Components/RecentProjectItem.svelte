@@ -1,14 +1,14 @@
 <script lang="ts">
     import ArrowRightRegular from "phosphor-icons-svelte/IconArrowRightRegular.svelte";
     import { timestampToLegible } from "../tools/OsTools";
-    import { setProjectData } from "../tools/ProjectManager";
     import { goto } from "$app/navigation";
+    import { setActiveProject } from "../tools/ProjectHandler";
 
     let { project, projectFilePath } = $props();
 
     async function loadProject() {
-        await setProjectData(projectFilePath, project);
-        goto('/recordPage');
+      await setActiveProject(project);
+      goto('/recordPage');
     }
 
 </script>

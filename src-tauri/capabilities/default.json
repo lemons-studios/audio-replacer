@@ -27,23 +27,25 @@
         "**"
       ]
     },
-    "shell:allow-open",
-    "opener:default",
-    "os:default",
-    "fs:default",
-    "shell:default",
+
     "core:window:default",
     "core:window:allow-start-dragging",
-    "log:default",
-    "process:default",
-    "upload:default",
+    "core:app:allow-set-app-theme",
+    "dialog:default",
+    "drpc:default",
+    "drpc:allow-clear-activity",
+    "global-shortcut:allow-register",
+    "global-shortcut:allow-unregister-all",
+    "fs:default",
     "fs:allow-resource-read-recursive",
     "fs:read-all",
     "fs:write-all",
-    "core:app:allow-set-app-theme",
-    "dialog:default",
-    "fs:allow-read-text-file",
-    "global-shortcut:allow-register",
-    "global-shortcut:allow-unregister-all"
+    "log:default",
+    "opener:default",
+    "os:default",
+    "process:default",
+    "shell:default",
+    "shell:allow-open",
+    "upload:default"
   ]
 }

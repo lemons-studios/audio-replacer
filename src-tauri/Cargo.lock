@@ -290,7 +290,6 @@ checksum = "1505bd5d3d116872e7271a6d4e16d81d0c8570876c8de68093a09ac269d8aac0"
 name = "audio_replacer"
 version = "5.0.0"
 dependencies = [
- "discord-rich-presence",
  "futures-lite",
  "hound",
  "num_cpus",
@@ -299,6 +298,7 @@ dependencies = [
  "tauri",
  "tauri-build",
  "tauri-plugin-dialog",
+ "tauri-plugin-drpc",
  "tauri-plugin-fs",
  "tauri-plugin-global-shortcut",
  "tauri-plugin-log",
@@ -968,21 +968,6 @@ dependencies = [
  "option-ext",
  "redox_users",
  "windows-sys 0.60.2",
-]
-
-[[package]]
-name = "discord-rich-presence"
-version = "1.0.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "ead3c5edc7e048c317c6fc4a7e24aff0c7e4c136918e2ba38106a385b2cc53a5"
-dependencies = [
- "log",
- "serde",
- "serde_derive",
- "serde_json",
- "serde_repr",
- "thiserror 2.0.12",
- "uuid 0.8.2",
 ]
 
 [[package]]
@@ -3758,6 +3743,19 @@ dependencies = [
 ]
 
 [[package]]
+name = "rpcdiscord"
+version = "0.2.6"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "71aa9a2097dc0176805e24debcb5d3ea5a17b796cd1d28e76b29f78fb49d7d5d"
+dependencies = [
+ "serde",
+ "serde_derive",
+ "serde_json",
+ "serde_repr",
+ "uuid 0.8.2",
+]
+
+[[package]]
 name = "rust_decimal"
 version = "1.37.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -4671,6 +4669,22 @@ dependencies = [
  "tauri-plugin-fs",
  "thiserror 2.0.12",
  "url",
+]
+
+[[package]]
+name = "tauri-plugin-drpc"
+version = "0.1.6"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "7b291669b7dbc05471fba380eeecf31e3f733ae6013aaa5216a43ca376027e5a"
+dependencies = [
+ "log",
+ "rpcdiscord",
+ "serde",
+ "serde_json",
+ "tauri",
+ "tauri-plugin",
+ "thiserror 2.0.12",
+ "tokio",
 ]
 
 [[package]]

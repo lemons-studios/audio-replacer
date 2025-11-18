@@ -79,7 +79,7 @@ async function getNextFile() {
     fileTranscription = await transcribeFile();
 }
 
-async function getAllFiles(folder: string): Promise<string[]> {
+export async function getAllFiles(folder: string): Promise<string[]> {
     return new Promise((resolve) => {
         invoke('get_all_files', {
             path: folder

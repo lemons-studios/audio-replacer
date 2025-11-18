@@ -1,3 +1,4 @@
+import { getVersion } from "@tauri-apps/api/app";
 import { basename, dirname, extname, join } from "@tauri-apps/api/path";
 import { open } from "@tauri-apps/plugin-dialog";
 import { platform } from "@tauri-apps/plugin-os"; 
@@ -59,3 +60,7 @@ export function timestampToLegible(timestamp: number): string {
     return new Date(timestamp).toLocaleString();
 }
 
+ export async function formatVersion(): Promise<string> {
+    const [major, minor, patch] = (await getVersion()).split(".");
+    return `${major}.${minor}${patch == "0" ? '' : `.${patch}`}`;
+}
