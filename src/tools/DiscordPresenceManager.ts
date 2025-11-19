@@ -5,6 +5,7 @@ import { formatVersion } from "./OsTools";
 
 const clientId = "1325340097234866297";
 let currentActivity: Activity;
+
 export async function startRichPresence() {
     await start(clientId); 
     const version = await formatVersion();
@@ -22,6 +23,7 @@ export async function startRichPresence() {
 }
 
 export async function setPresenceDetails(newDetails: string) {
+    if(!currentActivity) return;
     currentActivity.setDetails(newDetails);
     await setActivity(currentActivity);
 }

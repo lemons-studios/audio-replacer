@@ -21,11 +21,11 @@
                 name: 'Record',
                 icon: IconMicrophoneRegular,
                 route: '/recordPage'
-            }, 
+            },
             {
-                name: 'Data Editor',
+                name: 'Effect Editor',
                 icon: IconPencilRegular,
-                route: '/dataEditor'
+                route: '/effectEditor',
             }
         ],
         bottom: [

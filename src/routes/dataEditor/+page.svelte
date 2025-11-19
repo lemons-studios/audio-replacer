@@ -1,1 +1,0 @@
-<h1>This page will be merged with the record page in a future commit</h1>

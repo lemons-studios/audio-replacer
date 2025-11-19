@@ -4,10 +4,6 @@
 
 @plugin "@tailwindcss/typography";
 
-@plugin "daisyui" {
-  themes: "dark";
-}
-
 @theme {
   /* Light Mode */
   --color-primary: oklch(0.97 0 0);
@@ -15,9 +11,9 @@
   --color-tertiary: oklch(0.94 0 0);
 
   /* Dark Mode */
-  --color-primary-d: oklch(0.1955 0.0051 325.78);
-  --color-secondary-d: oklch(0.2423 0.0048 325.72);
-  --color-tertiary-d: oklch(0.3042 0.0051 325.78);
+  --color-primary-d: oklch(0.196 0 325);
+  --color-secondary-d: oklch(0.242 0 325);
+  --color-tertiary-d: oklch(0.304 0 325);
 
   /* Shared Dark/Light Mode colours */
   --color-accent: oklch(0.5998 0.1398 289.83);
@@ -28,8 +24,8 @@
   --color-success: oklch(0.67 0.1732 143.19);
   --color-success-shadow: oklch(0.7227 0.2058 142.98 / 20%);
 
-  --color-warning: oklch(0.7072 0.1791 46.94);
-  --color-warning-shadow: oklch(0.7072 0.1791 46.94 / 20%);
+  --color-warning: oklch(0.9 0.1727 103.76);
+  --color-warning-shadow: oklch(0.9 0.1727 103.76 / 20%);
 
   --color-error: oklch(0.5506 0.1828 29.12);
   --color-error-shadow: oklch(0.5506 0.1828 29.12 / 20%);
@@ -74,6 +70,14 @@ body {
   left: 50%;
   translate: -50%, 0;
   align-content: center;
+}
+
+.app-btn {
+  @apply transition bg-accent dark:hover:bg-tertiary-d hover:bg-tertiary p-1.5 rounded-sm text-lg focus:bg-navigation-focus
+}
+
+.checkbox {
+  @apply w-5 h-5 border rounded-xs bg-accent focus:bg-accent focus:ring-accent-secondary
 }
 
 .nav-btn {

@@ -30,7 +30,7 @@ export const settings = {
     },
     {
       name: "Enable Audio Transcription",
-      description: "Uses the whisper text transcription model to transcribe the current file you are on. Little to no performance impact",
+      description: "Enable Whisper audio-to-text transcription. Runs 100% locally on your device",
       type: "boolean",
       onChange: (value: boolean) => {
         setValue("enableTranscription", value);
@@ -98,96 +98,5 @@ export const settings = {
         return (await getValue("autoAcceptRecordings")) as boolean;
       },
     },
-    {
-      name: "Import Pitch Data",
-      description: "Import a json file containing custom pitch values that will be applied on record completion",
-      type: "button",
-      buttonText: "Import",
-      onClick: async () => {
-        const pitchPath = await resolveResource("resources/pitchData.json");
-        const filePath = await selectFile(["json"], "Audio Replacer Custom Data Files");
-        const fileContents = await readTextFile(filePath);
-
-        await writeTextFile(pitchPath, fileContents);
-        await relaunch();
-      },
-      
-    },
-    {
-      name: "Import Effect Data",
-      description: "Import a json file containing custom ffmpeg effect filter that will be applied on record completion",
-      type: "button",
-      buttonText: "Import",
-      onClick: async () => {
-        const pitchPath = await resolveResource("resources/effectData.json");
-        const filePath = await selectFile(["json"], "Audio Replacer Custom Data Files");
-        const fileContents = await readTextFile(filePath);
-
-        await writeTextFile(pitchPath, fileContents);
-        await relaunch();
-      },
-    },
-  ],
-  "Danger Zone": [
-    {
-      name: "Delete custom pitch data",
-      description: "Pitch data file will reset to default",
-      type: "button",
-      buttonText: "Delete",
-      onClick: async () => {
-        const file = await resolveResource("resources/pitchData.json");
-        await writeTextFile(file, JSON.stringify(defaultPitchData));
-        await relaunch();
-      },
-    },
-    {
-      name: "Delete custom effect data",
-      description: "Effect data file will reset to default",
-      type: "button",
-      buttonText: "Delete",
-      onClick: async () => {
-        const file = await resolveResource("resources/effectData.json");
-        await writeTextFile(file, JSON.stringify(defaultEffectData));
-        await relaunch();
-      },
-    },
-    {
-      name: "Delete All Custom Data",
-      description: "Deletes custom effect and pitch data",
-      type: "button",
-      buttonText: "Delete",
-      onClick: async () => {
-        const pitchData = await resolveResource("resources/pitchData.json");
-        const effectData = await resolveResource("resources/effectData.json");
-        await writeTextFile(pitchData, JSON.stringify(defaultPitchData));
-        await writeTextFile(effectData, JSON.stringify(defaultEffectData));
-        await relaunch();
-      },
-    },
-    {
-      name: "Delete EVERYTHING",
-      description: "Deletes custom effect and pitch data, and resets your statistics",
-      type: "button",
-      buttonText: "Delete",
-      onClick: async () => {
-        const pitchData = await resolveResource("resources/pitchData.json");
-        const effectData = await resolveResource("resources/effectData.json");
-        await writeTextFile(pitchData, JSON.stringify(defaultPitchData));
-        await writeTextFile(effectData, JSON.stringify(defaultEffectData));
-
-        await relaunch();
-      },
-    },
-  ],
+  ]
 } as const;
-
-const defaultEffectData = [
-  ["", "Default"],
-  ["aecho=0.8:0.35:17", "Flashback"],
-] as const;
-
-const defaultPitchData = [
-  ["1.00", "Default"],
-  ["2.00", "Super High Pitch"],
-  ["0.25", "Super Low Pitch"],
-] as const;

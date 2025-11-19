@@ -3,6 +3,7 @@
   import SvelteMarkdown from "@humanspeak/svelte-markdown";
   import { resolveResource } from "@tauri-apps/api/path";
   import { readTextFile } from "@tauri-apps/plugin-fs";
+    import { setPresenceDetails } from "../../tools/DiscordPresenceManager";
 
   let markdown = $state("wuh oh");
 
@@ -10,6 +11,8 @@
     const releasePath = await resolveResource("resources/releaseData.md");
     const releaseData = await readTextFile(releasePath);
     markdown = releaseData;
+
+    await setPresenceDetails("Viewing Release Notes")
   });
 </script>
 
