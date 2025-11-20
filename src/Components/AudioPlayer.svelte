@@ -1,6 +1,8 @@
 <script lang="ts">
-  
-  import { Pause, Play, Repeat } from "@lucide/svelte";
+  import IconPlayRegular from 'phosphor-icons-svelte/IconPlayRegular.svelte';
+  import IconPauseRegular from 'phosphor-icons-svelte/IconPauseRegular.svelte';
+  import IconRepeatRegular from 'phosphor-icons-svelte/IconRepeatRegular.svelte';
+
   import { convertFileSrc } from "@tauri-apps/api/core";
   import { exists } from "@tauri-apps/plugin-fs";
   import { error, warn } from "@tauri-apps/plugin-log";
@@ -108,14 +110,14 @@
     </audio>
     <div class="flex flex-row gap-3 items-center">
         {#if audioPlaying}
-          <Pause size="23" onclick={toggleAudio} class="media-control-button hover:fill-white"/>
-          {:else}
-          <Play size="23" onclick={toggleAudio} class="media-control-button hover:fill-white"/>
+          <button onclick={toggleAudio}><IconPauseRegular class="media-control-button hover:fill-white w-5.5 h-5.5"/></button>
+        {:else}
+          <button onclick={toggleAudio}><IconPlayRegular class="media-control-button hover:fill-white w-5.5 h-5.5"/></button>
         {/if}
         {#if loopEnabled}
-          <Repeat size="19" color="#25ef1a" onclick={() => loopEnabled = false} class="media-control-button hover:fill-green-500"/>
+          <button onclick={() => loopEnabled = false}><IconRepeatRegular class="media-control-button hover:fill-green-500 fill-green-400 w-5.5 h-5.5"/></button>
           {:else}
-          <Repeat size="19" color="white" onclick={() => loopEnabled = true} class="media-control-button hover:fill-white"/>
+          <button onclick={() => loopEnabled = true}><IconRepeatRegular class="media-control-button hover:fill-white fill-gray-200"/></button>
         {/if}
     </div>
     <div class="flex flex-row gap-5">

@@ -15,6 +15,6 @@
     })
 </script>
 
-<div class="dark:bg-secondary-d bg-secondary rounded-lg w-full h-full">
-
+<div class="dark:bg-secondary-d bg-secondary rounded-lg w-full h-full p-2">
+    
 </div>

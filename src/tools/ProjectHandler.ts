@@ -25,6 +25,8 @@ export let outputFile: string;
 
 export let fileTranscription: string;
 export let localPath: string;
+export let projectLoaded: boolean;
+
 
 // Initial setup functions
 export async function setAdditionalFolders() {
@@ -38,6 +40,7 @@ export async function setAdditionalFolders() {
  * @param projectFile Path to the .arproj file that the user wants to open
  */
 export async function setActiveProject(projectFile: string) {
+    projectLoaded = false;
     if(appOutputFolder === undefined) await setAdditionalFolders();
     const object = JSON.parse(await readTextFile(projectFile));
 
@@ -61,8 +64,11 @@ export async function setActiveProject(projectFile: string) {
     // Also get the audio manager to populate the ffmpeg pitch and effect filters from the arproj file
     populateFFMpegFilters(object);
 
-    // Finally, set some variables for the first file
+    // Set some variables for the first file
     getNextFile();
+
+    // Mark project Loaded
+    projectLoaded = true;
 }
 
 async function getNextFile() {

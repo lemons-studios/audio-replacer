@@ -55,10 +55,6 @@ body {
   overflow: auto;
 }
 
-.home-page-card {
-  @apply p-4 rounded-lg dark:bg-secondary-d bg-secondary min-w-100 w-auto min-h-100 dark:border-accent transition border-2;
-}
-
 
 .media-control-button {
   @apply transition p-0.5;
@@ -74,6 +70,9 @@ body {
 
 .app-btn {
   @apply transition bg-accent dark:hover:bg-tertiary-d hover:bg-tertiary p-1.5 rounded-sm text-lg focus:bg-navigation-focus
+}
+.app-btn:disabled {
+  @apply bg-tertiary-d
 }
 
 .checkbox {
@@ -102,4 +101,8 @@ body {
 .nav-btn:focus {
   background-color: oklch(1 0 0 / 10%);
   box-shadow: inset 0px 0px 1em oklch(0.1929 0.0048 325.72 / 60%);
+}
+
+.dropdown {
+  @apply bg-tertiary dark:bg-tertiary-d p-2 px-1.5 rounded-md text-center
 }
