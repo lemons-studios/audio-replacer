@@ -124,7 +124,7 @@
   </div>
 </div>
 {:else}
-<div class="w-full h-full rounded-lg dark:bg-secondary-d bg-secondary flex flex-col gap-5 justify-center text-center items-center">
+<div class="w-full h-full rounded-lg card flex flex-col gap-5 justify-center text-center items-center">
   <h1 class="text-center text-5xl font-bold">No Project Loaded</h1>
   <h2 class="text-3xl font-medium">Go Load One</h2>
   <div class="flex flex-row justify-center gap-3">

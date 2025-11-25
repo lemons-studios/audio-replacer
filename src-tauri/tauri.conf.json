@@ -48,7 +48,8 @@
       "binaries/whisper.bin",
       "binaries/noiseSuppression.rnnn",
       "resources/settings.json",
-      "resources/releaseData.md"
+      "resources/releaseData.md",
+      "resources/stats.json"
     ],
     "externalBin": [
       "binaries/ffmpeg"

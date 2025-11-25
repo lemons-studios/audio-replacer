@@ -68,6 +68,10 @@ body {
   align-content: center;
 }
 
+.card {
+  @apply dark:bg-secondary-d dark:border-tertiary-d border-tertiary border-2 bg-secondary
+}
+
 .app-btn {
   @apply transition bg-accent dark:hover:bg-tertiary-d hover:bg-tertiary p-1.5 rounded-sm text-lg focus:bg-navigation-focus
 }

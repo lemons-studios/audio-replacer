@@ -3,7 +3,7 @@
   import SvelteMarkdown from "@humanspeak/svelte-markdown";
   import { resolveResource } from "@tauri-apps/api/path";
   import { readTextFile } from "@tauri-apps/plugin-fs";
-    import { setPresenceDetails } from "../../tools/DiscordPresenceManager";
+  import { setPresenceDetails } from "../../tools/DiscordPresenceManager";
 
   let markdown = $state("wuh oh");
 
@@ -32,7 +32,7 @@
   }
 </style>
 
-<div class="flex items-stretch flex-grow justify-center scrollbar-hide" style="overflow:auto">
+<div class="flex items-stretch grow text-white justify-center scrollbar-hide" style="overflow:auto">
   <div class="prose">
     <SvelteMarkdown source={markdown} class="dark:prose-invert text-center w-screen" />
   </div>

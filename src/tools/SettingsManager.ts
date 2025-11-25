@@ -5,8 +5,6 @@ import { info, error } from "@tauri-apps/plugin-log";
 let settingsJson: any;
 let loaded: boolean = false;
 
-let settingsPath: string = "";
-
 async function loadSettings() {
     try {
         const path = await resolveResource("resources/settings.json");
@@ -46,8 +44,7 @@ async function saveJsonData() {
     try {
         info("Saving Json Data");
         const content = JSON.stringify(settingsJson);
-        info(`writing ${content} to ${settingsPath}`);
-
+        const settingsPath = await resolveResource("resources/settings.json");
         await writeTextFile(settingsPath, content);
         info("Json Data Save Successful.");
         await loadSettings(); // Reload settings json

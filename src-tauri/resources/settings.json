@@ -6,5 +6,6 @@
     "recordEndDelay": 250,
     "enableTranscription": true,
     "enableRichPresence": true,
-    "allowNoiseSuppression": true
+    "allowNoiseSuppression": true,
+    "trackStats": true
 }

@@ -50,6 +50,17 @@ export const settings = {
         return (await getValue("enableRichPresence")) as boolean;
       },
     },
+    {
+      name: "Track Statistics",
+      description: "Tracks basic statistics about your app usage to display on home screen. All data stays on device",
+      type: "boolean",
+      onchange: (value: boolean) => {
+        setValue("trackStats", value);
+      },
+      getValue: async (): Promise<boolean> => {
+        return (await getValue("trackStats")) as boolean;
+      }
+    }
   ],
   Recording: [
     {
