@@ -1,7 +1,10 @@
 <script lang="ts">
   import { onDestroy, onMount } from "svelte";
   import { setPresenceDetails, setPresenceState } from "../../tools/DiscordPresenceManager";
-  import { calculateCompletion, countInputFiles, countOutputFiles, currentFile, discardfile, fileTranscription, projectLoaded, skipFile, submitFile } from "../../tools/ProjectHandler";
+  import {
+    calculateCompletion, countInputFiles, countOutputFiles, currentFile, discardFile, fileTranscription,
+    localPath, projectLoaded, skipFile, submitFile
+  } from "../../tools/ProjectHandler";
   import { cancelRecording, effectFilterNames, endRecording, pitchFilterNames, startRecording } from "./AudioManager";
   import AudioPlayer from "../../Components/AudioPlayer.svelte";
   import ProgressBar from "../../Components/ProgressBar.svelte";
@@ -27,7 +30,7 @@
 
   $effect(() => {
     if(!projectLoaded) return;
-    file = currentFile.replaceAll("\\", "/");
+    file = localPath.replaceAll("\\", "/").substring(1);
     progressDecimal = calculateCompletion() / 100;
     progressPercentage = `${calculateCompletion()}%`;
     filesRemaining = new Intl.NumberFormat().format(countInputFiles() - countOutputFiles());
@@ -52,13 +55,12 @@
 
 {#if projectLoaded}
 <div class="flex flex-row gap-5 h-full">
-  <div class="flex flex-col justify-center items-center w-5/8 dark:bg-secondary-d bg-secondary rounded-lg">
-    <h1 class="font-medium text-2xl">{file}</h1>
-    <h3 class="font-light text-sm text-gray-400 mb-25">Files Remaining: {filesRemaining}</h3>
+  <div class="flex flex-col justify-center items-center w-5/8 card rounded-lg">
+    <h1 class="font-medium text-2xl text-center">{file}</h1>
+    <h3 class="font-light text-sm text-gray-400 mb-25">Files Remaining: {filesRemaining} ({progressPercentage})</h3>
 
     <div class="flex flex-row gap-1.5">
       <ProgressBar progress={progressDecimal}></ProgressBar>
-      <h2>Files Remaining: {filesRemaining} ({progressPercentage})</h2>
     </div>
     <AudioPlayer source={currentFile}></AudioPlayer>
     <h3 class="font-light text-gray-300 mb-5">{transcription}</h3>
@@ -85,7 +87,7 @@
       <button class="app-btn min-w-30" onclick={async() => {
         reviewing = false;
         idle = true;
-        await discardfile();
+        await discardFile();
       }}>Reject</button>
       <button class="app-btn min-w-30" onclick={async() => {
         reviewing = false;
@@ -95,7 +97,7 @@
       {/if}
     </div>
   </div>
-  <div class="flex flex-col justify-center items-center w-3/8 dark:bg-secondary-d bg-secondary rounded-lg">
+  <div class="flex flex-col justify-center items-center w-3/8 card rounded-lg">
     <h1 class="text-2xl">Filters</h1>
     <h3>Pitch</h3>
     {#if pitch.length !== 0}

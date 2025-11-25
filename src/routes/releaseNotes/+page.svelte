@@ -1,16 +1,15 @@
 <script lang="ts">
-  import { onMount } from "svelte";
+  import {onMount} from "svelte";
   import SvelteMarkdown from "@humanspeak/svelte-markdown";
-  import { resolveResource } from "@tauri-apps/api/path";
-  import { readTextFile } from "@tauri-apps/plugin-fs";
-  import { setPresenceDetails } from "../../tools/DiscordPresenceManager";
+  import {resolveResource} from "@tauri-apps/api/path";
+  import {readTextFile} from "@tauri-apps/plugin-fs";
+  import {setPresenceDetails} from "../../tools/DiscordPresenceManager";
 
   let markdown = $state("wuh oh");
 
   onMount(async () => {
     const releasePath = await resolveResource("resources/releaseData.md");
-    const releaseData = await readTextFile(releasePath);
-    markdown = releaseData;
+    markdown = await readTextFile(releasePath);
 
     await setPresenceDetails("Viewing Release Notes")
   });

@@ -49,7 +49,7 @@ export async function startRecording() {
         encoderInitialized = true;
     }
 
-    // Too much of a hassle to get other file formats working. wav is among the best file formats anyways
+    // Too much of a hassle to get other file formats working. wav is among the best file formats anyway
     const options = { mimeType: "audio/wav" };
     const stream = await navigator.mediaDevices.getUserMedia({audio: true});
     if(!audioRecorder) {
@@ -73,10 +73,10 @@ export async function endRecording(selectedPitchIndex: number, selectedEffectInd
     // Just in case something funny happened
     if(!audioRecorder || audioRecorder.state !== 'recording') {
         return;
-    };
+    }
 
     const allowNoiseSuppression = await getValue("allowNoiseSuppression") as boolean;
-    // No clue why I wrote this function thlike this. TODO: remove this return new promise thing
+    // No clue why I wrote this function like this. TODO: remove this return new promise thing
     return new Promise((resolve) => {
         audioRecorder.onstop = async () => {
             const audio = new Blob(recordedChunks, { type: 'audio/wav' });
@@ -88,8 +88,8 @@ export async function endRecording(selectedPitchIndex: number, selectedEffectInd
 
                 // Apply noise suppression first (if enabled)
                 if(allowNoiseSuppression) {
-                    const noiseSupressionFile = await resolveResource('binaries/noiseSuppression.rnnn');
-                    await applyFFMpegFilter(outputFile, `arnndn=model=${noiseSupressionFile}:mix=0.8`);
+                    const noiseSuppressionFile = await resolveResource('binaries/noiseSuppression.rnnn');
+                    await applyFFMpegFilter(outputFile, `arnndn=model=${noiseSuppressionFile}:mix=0.8`);
                 }
 
                 // Next, apply pitch
@@ -118,12 +118,12 @@ export function cancelRecording() {
 }
 
 /**
- * @description Applys an FFMpeg effect filter (-af)
+ * @description Applies an FFMpeg effect filter (-af)
  * @param file Path to the file you want to apply effects to
  * @param effect list of effects you want to apply (Write it as if you were directly interacting with FFMpeg in the CLI)
  */
 export async function applyFFMpegFilter(file: string, effect: string) {
-    // In the future, I MIGHT switch this to a wasm binary. The reason it isn't right now is because custom compiling a custom FFMpeg WASM binary is extremely time consuming
+    // In the future, I MIGHT switch this to a wasm binary. The reason it isn't right now is that custom compiling a custom FFMpeg WASM binary is extremely time-consuming
     // I need a custom wasm binary because if I were to use the regular one provided, it would also include features this app does not need, inflating app size by about 20-30Mb, while this custom binary is 6-8 
     const tempFile = `${file}.wav`;
     await Command.sidecar('binaries/ffmpeg', [

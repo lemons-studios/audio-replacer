@@ -14,5 +14,3 @@ export async function writeStats() {
     const filePath = await resolveResource("resources/stats.json");
     await writeTextFile(filePath, str);
 }
-
-

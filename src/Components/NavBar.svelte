@@ -44,7 +44,7 @@
 
     onMount(async() => {
         await tick();
-        buildText = `Audio Replacer ${getBuildNumber()}`;
+        buildText = `Audio Replacer ${await getBuildNumber()}`;
     });
 
     async function getBuildNumber(): Promise<string> {
@@ -60,7 +60,7 @@
         align-items: center;
         text-align: center;
         vertical-align: center;
-        padding: 2.5px;
+        padding: 3px;
     }
 </style>
 
@@ -77,5 +77,6 @@
         {#each navbarContents.bottom as item}
             <button class="nav-btn transition" onmouseleave={(e) => e.currentTarget.blur()} onclick={async() => await goto(item.route)}><item.icon />{item.name}</button>
         {/each}
+        <p class="text-xs text-gray-400">{buildText}</p>
     </div>
 </div>

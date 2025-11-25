@@ -1,4 +1,7 @@
 use tauri::Manager;
+use crate::commands::app_functions::{get_install_directory, get_username, in_dev_env};
+use crate::commands::project_manager::{delete_empty_subdirectories, get_all_files};
+use crate::commands::whisper_utils::transcribe_file;
 
 mod commands;
 
@@ -24,12 +27,12 @@ pub fn run() {
         .plugin(tauri_plugin_log::Builder::new().build())
         .plugin(tauri_plugin_drpc::init()) // This line missing was causing me such a headache holy hell
         .invoke_handler(tauri::generate_handler![
-            commands::project_manager::get_all_files,
-            commands::project_manager::delete_empty_subdirectories,
-            commands::whisper_utils::transcribe_file,
-            commands::app_functions::get_install_directory,
-            commands::app_functions::in_dev_env,
-            commands::app_functions::get_username,
+            get_all_files,
+            delete_empty_subdirectories,
+            transcribe_file,
+            get_install_directory,
+            in_dev_env,
+            get_username,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

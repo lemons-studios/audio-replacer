@@ -19,19 +19,19 @@
             <p class="font-medium">{setting.name}</p>
             <p class="text-sm text-gray-400 text-wrap">{setting.description}</p>
           </div>
-          {#if setting.type == "boolean"}
+          {#if setting.type === "boolean"}
             {#await setting.getValue() then value}
               <input type="checkbox" class="checkbox" checked={value} onchange={() => setting.onChange(value)}> 
             {/await}
-          {:else if setting.type == "string"}
+          {:else if setting.type === "string"}
             {#await setting.getValue()}
               <input type="text" placeholder={setting.defaultValue} class="max-w-1/12">
             {:then value} 
               <input type="text" value={value} class="max-w-1/12 bg-tertiary dark:bg-tertiary-d py-1.5 px-2 rounded-sm" onchange={() => setting.onChange(value)}>
             {/await}
-          {:else if setting.type == "button"}
+          {:else if setting.type === "button"}
             <button class="app-btn" onclick={setting.onClick}>{setting.buttonText}</button>
-         {:else if setting.type == "dropdown"}
+         {:else if setting.type === "dropdown"}
             <div class="dropdown">
               <li>
                 {#each setting.choices as choice}

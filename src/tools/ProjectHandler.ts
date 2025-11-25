@@ -1,13 +1,13 @@
 // This file handles everything related to projects, From moving files around to recording audio for a project
-import { invoke } from "@tauri-apps/api/core";
-import { basename, dirname, extname, join, resolveResource } from "@tauri-apps/api/path";
-import { copyFile, exists, mkdir, readDir, readTextFile, remove } from "@tauri-apps/plugin-fs";
-import { populateFFMpegFilters } from "../routes/recordPage/AudioManager";
-import { error } from "@tauri-apps/plugin-log";
-import { getValue } from "./SettingsManager";
+import {invoke} from "@tauri-apps/api/core";
+import {basename, dirname, extname, join, resolveResource} from "@tauri-apps/api/path";
+import {copyFile, exists, mkdir, readDir, readTextFile, remove} from "@tauri-apps/plugin-fs";
+import {populateFFMpegFilters} from "../routes/recordPage/AudioManager";
+import {error} from "@tauri-apps/plugin-log";
+import {getValue} from "./SettingsManager";
 
 /**
- * @description points to the output folder in the install directory (installDir/output)
+ * @description points to the output folder in the installation directory (installDir/output)
  */
 let appOutputFolder: string;
 
@@ -65,7 +65,7 @@ export async function setActiveProject(projectFile: string) {
     populateFFMpegFilters(object);
 
     // Set some variables for the first file
-    getNextFile();
+    await getNextFile();
 
     // Mark project Loaded
     projectLoaded = true;
@@ -112,7 +112,7 @@ const transcribeFile = async() => {
         })
     }
     catch(e: any) {
-        error(`Error while transcribing file: ${e}`);
+        await error(`Error while transcribing file: ${e}`);
         return "An Error Occurred while transcribing this file!"
     }
 }
@@ -133,7 +133,7 @@ export async function skipFile(moveToOutput: boolean = false) {
     }
 }
 
-export async function discardfile() {
+export async function discardFile() {
     await remove(outputFile);
 }
 
@@ -144,9 +144,8 @@ export async function submitFile(requiresExtraEdits: boolean) {
         const dir = await dirname(outputFile);
         const name = await basename(outputFile);
         const ext = await extname(outputFile);
-        
-        const res = await join(dir, `${name}-ExtraEditsRequired.${ext}`);
-        return res;
+
+        return await join(dir, `${name}-ExtraEditsRequired.${ext}`);
     })() : outputFile; 
     await moveFile(currentFile, fileName);
     outputFiles.push(fileName);
@@ -178,4 +177,34 @@ function isAudioFile(path: string): boolean {
 export async function moveFile(path: string, newPath: string) {
     await copyFile(path, newPath);
     await remove(path);
+}
+
+export async function createArProj(inputFolder: string) {
+    return {
+        name: await basename(inputFolder),
+        path: inputFolder,
+        lastOpened: Date.now(),
+        filesRemaining: (await getAllFiles(inputFolder)).length,
+        // Default pitch and effect filters because why not
+        pitchFilters: [
+            {
+                name: "Default",
+                value: 1.00
+            },
+            {
+                name: "Super Low",
+                value: 0.5
+            },
+            {
+                name: "Super High",
+                value: 1.5
+            }
+        ],
+        effectFilters: [
+            {
+                name: "reverb",
+                value: "aecho=0.8:0.9:40|50|70:0.4|0.3|0.2"
+            }
+        ]
+    }
 }

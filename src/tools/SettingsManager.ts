@@ -10,10 +10,10 @@ async function loadSettings() {
         const path = await resolveResource("resources/settings.json");
         const contents = await readTextFile(path);
         settingsJson = JSON.parse(contents);
-        info("Settings load successful");
+        await info("Settings load successful");
     } 
     catch(e: any) {
-        error(`Settings Load Failed: ${e}`);
+        await error(`Settings Load Failed: ${e}`);
     }
     loaded = true;
 }
@@ -23,11 +23,11 @@ export async function getValue(key: string): Promise<any> {
         await loadSettings();
     }
     try {
-        info(`Attempting to get key ${key}`)
+        await info(`Attempting to get key ${key}`)
         const value = settingsJson[key];
         return value;
     } catch(e: any) {
-        error(`Error while trying to get key ${key}: ${e}`)
+        await error(`Error while trying to get key ${key}: ${e}`)
     }
 }
 
@@ -42,14 +42,14 @@ async function saveJsonData() {
         await loadSettings();
     }
     try {
-        info("Saving Json Data");
+        await info("Saving Json Data");
         const content = JSON.stringify(settingsJson);
         const settingsPath = await resolveResource("resources/settings.json");
         await writeTextFile(settingsPath, content);
-        info("Json Data Save Successful.");
+        await info("Json Data Save Successful.");
         await loadSettings(); // Reload settings json
     }
     catch(e: any) {
-        error(`Error whilst saving settings data: ${e}`)
+        await error(`Error whilst saving settings data: ${e}`)
     }
 }

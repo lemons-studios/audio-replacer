@@ -1,7 +1,7 @@
 {
     "autoAcceptRecordings": false,
     "updateCheck": true,
-    "recentProjects": [],
+    "recentProjectPaths": [],
     "recordStartDelay": 250,
     "recordEndDelay": 250,
     "enableTranscription": true,

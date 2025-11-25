@@ -1,7 +1,7 @@
-import { getVersion } from "@tauri-apps/api/app";
-import { basename, dirname, extname, join } from "@tauri-apps/api/path";
-import { open } from "@tauri-apps/plugin-dialog";
-import { platform } from "@tauri-apps/plugin-os"; 
+import {getVersion} from "@tauri-apps/api/app";
+import {basename, dirname, extname, join} from "@tauri-apps/api/path";
+import {open, save} from "@tauri-apps/plugin-dialog";
+import {platform} from "@tauri-apps/plugin-os";
 
 export async function selectFile(allowedTypes: string[] = [], filterName = "Any file"): Promise<string> {
     return new Promise((resolve) => {
@@ -38,6 +38,17 @@ export async function changeFileExtension(input: string, newExtension: string) {
     const newFile = `${fileName}${newExtension}`;
 
     return join(dir, newFile);
+}
+
+export async function saveFile(allowedTypes: string[] = [], filterName = "Any File") {
+    return await save({
+        filters: [
+            {
+                name: filterName,
+                extensions: allowedTypes
+            }
+        ]
+    });
 }
 
 // Might be needed in the future

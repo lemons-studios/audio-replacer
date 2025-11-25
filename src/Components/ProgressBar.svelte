@@ -2,6 +2,6 @@
 <script lang="ts">
     let { intermediate = false, progress = 10 } = $props();
     let formattedProgress = $derived(() => {
-        return typeof progress === 'number' ? progress > 100 ? 100 : progress < 0 ? 0 : progress : null; 
+        return progress > 100 ? 100 : progress < 0 ? 0 : progress;
     })
 </script>

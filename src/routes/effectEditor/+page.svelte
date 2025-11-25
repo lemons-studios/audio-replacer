@@ -1,15 +1,15 @@
 <script lang="ts">
     import { pitchFilters, pitchFilterNames, effectFilters, effectFilterNames } from "../recordPage/AudioManager";
-    import {onMount} from "svelte";
-    import {projectLoaded} from "../../tools/ProjectHandler";
-    import {goto} from "$app/navigation";
-    import {selectFile} from "../../tools/OsTools";
-    import {exists} from "@tauri-apps/plugin-fs";
-    let pitchValues = $state();
-    let pitchNames = $state();
+    import { onMount } from "svelte";
+    import { projectLoaded } from "../../tools/ProjectHandler";
+    import { goto } from "$app/navigation";
+    import { selectFile } from "../../tools/OsTools";
+    import { exists } from "@tauri-apps/plugin-fs";
+    let pitchValues: string[] = $state([]);
+    let pitchNames: string[] = $state([]);
 
-    let effectValues = $state();
-    let effectNames = $state();
+    let effectValues: string[] = $state([]);
+    let effectNames: string[] = $state([]);
 
     $effect(() => {
         pitchValues = pitchFilters;

@@ -1,8 +1,4 @@
 import { getValue, setValue } from "../../tools/SettingsManager";
-import { resolveResource } from "@tauri-apps/api/path";
-import { relaunch } from "@tauri-apps/plugin-process";
-import { readTextFile, writeTextFile } from "@tauri-apps/plugin-fs";
-import { selectFile } from "../../tools/OsTools";
 
 export const settings = {
   General: [
@@ -40,7 +36,7 @@ export const settings = {
       },
     },
     {
-      name: "Enabe Discord Rich Presence",
+      name: "Enable Discord Rich Presence",
       description: "Displays general info on what you're doing to all your friends on Discord",
       type: "boolean",
       onChange: (value: boolean) => {

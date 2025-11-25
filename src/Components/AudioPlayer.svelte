@@ -50,7 +50,7 @@
 
   async function toggleAudio() {    
     if(!trueSource || !(await doesAudioExist())) {
-      warn("Audio Doesn't Exist")
+      await warn("Audio Doesn't Exist")
       audioPlaying = false;
       return;
     }
@@ -59,10 +59,10 @@
         if(audioPlayer.paused ) {
         audioPlaying = true;
         try {
-          audioPlayer.play();
+          await audioPlayer.play();
         }
         catch(e: any) {
-          error(`Audio playback failed: ${e}`);
+          await error(`Audio playback failed: ${e}`);
         }
       }
       else {
@@ -71,7 +71,7 @@
       }
     }
     else {
-      warn(`Ready state too low ${audioPlayer.readyState}`)
+      await warn(`Ready state too low ${audioPlayer.readyState}`)
     }
   }
 
@@ -92,16 +92,6 @@
   async function doesAudioExist(): Promise<boolean> {
     return source !== "" || await exists(source);
   }
-
-  export function playAudio() {
-    audioPlayer.play();
-    audioPlaying = true;
-  }
-
-  export function pauseAudio() {
-    audioPlayer.pause();
-    audioPlaying = false;
-  }
 </script>
 
 <div class="flex flex-row justify-center gap-4 bg-neutral-900 rounded-lg mx-auto items-center shadow-lg pl-3 pr-4 py-2">
@@ -117,7 +107,7 @@
         {#if loopEnabled}
           <button onclick={() => loopEnabled = false}><IconRepeatRegular class="media-control-button hover:fill-green-500 fill-green-400 w-5.5 h-5.5"/></button>
           {:else}
-          <button onclick={() => loopEnabled = true}><IconRepeatRegular class="media-control-button hover:fill-white fill-gray-200"/></button>
+          <button onclick={() => loopEnabled = true}><IconRepeatRegular class="media-control-button hover:fill-white fill-gray-200 w-5.5 h-5.5"/></button>
         {/if}
     </div>
     <div class="flex flex-row gap-5">

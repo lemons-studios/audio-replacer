@@ -64,7 +64,7 @@ body {
   position: fixed !important; 
   top: 1em;
   left: 50%;
-  translate: -50%, 0;
+  translate: -50%;
   align-content: center;
 }
 

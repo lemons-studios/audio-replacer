@@ -20,7 +20,7 @@
   onMount(async() => {
     await tick();
 
-    // Initialize some variables related to project managment
+    // Initialize some variables related to project management
     await setAdditionalFolders();
 
     versionNumber = await formatVersion();
@@ -48,7 +48,7 @@
       }
     }
     
-    startRichPresence();
+    await startRichPresence();
   });
 
   onNavigate((navigation) => {

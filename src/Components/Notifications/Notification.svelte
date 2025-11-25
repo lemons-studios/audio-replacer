@@ -4,7 +4,7 @@
   import IconWarningRegular from "phosphor-icons-svelte/IconWarningRegular.svelte";
   import IconWarningOctagonRegular from "phosphor-icons-svelte/IconWarningOctagonRegular.svelte";
   import IconHourglassMediumRegular from "phosphor-icons-svelte/IconHourglassMediumRegular.svelte";
-  import IconXNormal from "phosphor-icons-svelte/IconXRegular.svelte";
+  import IconXRegular from "phosphor-icons-svelte/IconXRegular.svelte";
   import { fade, fly } from "svelte/transition";
 
   let queue: any[] = $state([]); // Too lazy to figure out the type
@@ -56,7 +56,6 @@
     for (let i = 0; i < queue.length; i++) {
       if (queue[i].id === id) {
         return i;
-        break;
       }
     }
     return 0; // fallback
@@ -93,9 +92,8 @@
           <button
             class="close-btn w-8 h-8 rounded-lg"
             onmouseleave={(e) => e.currentTarget.blur()}
-            onclick={() => closeNotification(n.id)}
-            ><IconXNormal class="h-8 w-8 p-1 text-center" /></button
-          >
+            onclick={() => closeNotification(n.id)}><IconXRegular class="h-8 w-8 p-1 text-center"></IconXRegular>
+          </button>
         </div>
       {/if}
 
@@ -130,6 +128,6 @@
 
   .close-btn:focus {
     background-color: oklch(1 0 0 / 10%);
-    box-shadow: inset 0px 0px 1em ooklch(0.1929 0.0048 325.72 / 60%);
+    box-shadow: inset 0 0 1em oklch(0.1929 0.0048 325.72 / 60%);
   }
 </style>
