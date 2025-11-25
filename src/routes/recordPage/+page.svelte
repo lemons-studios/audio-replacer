@@ -12,6 +12,7 @@
   import { selectFile } from "../../tools/OsTools";
 
   let file = $state("No Project Opened");
+  let fullSource = $state("");
   let progressDecimal = $state(0);
   let progressPercentage = $state("0%");
   let filesRemaining = $state("0");
@@ -28,11 +29,14 @@
   let selectedPitch = 0;
   let selectedEffect = 0;
 
+  let audioPlayer: AudioPlayer;
+
   $effect(() => {
     if(!projectLoaded) return;
     file = localPath.replaceAll("\\", "/").substring(1);
+    fullSource = currentFile;
     progressDecimal = calculateCompletion() / 100;
-    progressPercentage = `${calculateCompletion()}%`;
+    progressPercentage = `${calculateCompletion().toFixed(2)}%`;
     filesRemaining = new Intl.NumberFormat().format(countInputFiles() - countOutputFiles());
     transcription = fileTranscription;
     setPresenceState(`Files Remaining: ${filesRemaining}`);
@@ -62,7 +66,7 @@
     <div class="flex flex-row gap-1.5">
       <ProgressBar progress={progressDecimal}></ProgressBar>
     </div>
-    <AudioPlayer source={currentFile}></AudioPlayer>
+    <AudioPlayer bind:this={audioPlayer} source={fullSource}></AudioPlayer>
     <h3 class="font-light text-gray-300 mb-5">{transcription}</h3>
     <div class="flex flex-row gap-5">
       {#if idle}

@@ -4,4 +4,8 @@
     let formattedProgress = $derived(() => {
         return progress > 100 ? 100 : progress < 0 ? 0 : progress;
     })
+
+    function getWidth() {
+        return `w-${progress}/100`
+    }
 </script>
