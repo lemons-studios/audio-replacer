@@ -5,6 +5,7 @@ import { getValue } from "../../tools/SettingsManager";
 import { outputFile } from '../../tools/ProjectHandler';
 import { Command } from "@tauri-apps/plugin-shell";
 import { resolveResource } from "@tauri-apps/api/path";
+import {stats, updateStatistic} from "../../tools/StatisticManager";
 
 let audioRecorder: any; 
 let recordedChunks: BlobPart[] = [];
@@ -75,6 +76,8 @@ export async function endRecording(selectedPitchIndex: number, selectedEffectInd
         return;
     }
 
+    await updateStatistic("filesRecorded", stats.filesRecorded + 1);
+
     const allowNoiseSuppression = await getValue("allowNoiseSuppression") as boolean;
     // No clue why I wrote this function like this. TODO: remove this return new promise thing
     return new Promise((resolve) => {
@@ -113,6 +116,9 @@ export async function endRecording(selectedPitchIndex: number, selectedEffectInd
  * @description Stops the current recording and discards any data associated with it
  */
 export function cancelRecording() {
+    (async() => {
+       await updateStatistic("recordingsCanceled", stats.recordingsCanceled + 1)
+    })();
     audioRecorder?.stop();
     recordedChunks = [];
 }

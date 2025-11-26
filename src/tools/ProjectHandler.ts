@@ -1,10 +1,11 @@
 // This file handles everything related to projects, From moving files around to recording audio for a project
 import {invoke} from "@tauri-apps/api/core";
 import {basename, dirname, extname, join, resolveResource} from "@tauri-apps/api/path";
-import {copyFile, exists, mkdir, readDir, readTextFile, remove} from "@tauri-apps/plugin-fs";
+import {copyFile, exists, mkdir, readDir, readTextFile, remove, writeTextFile} from "@tauri-apps/plugin-fs";
 import {populateFFMpegFilters} from "../routes/recordPage/AudioManager";
 import {error} from "@tauri-apps/plugin-log";
 import {getValue} from "./SettingsManager";
+import {stats, updateStatistic} from "./StatisticManager";
 
 /**
  * @description points to the output folder in the installation directory (installDir/output)
@@ -27,6 +28,8 @@ export let fileTranscription: string;
 export let localPath: string;
 export let projectLoaded: boolean;
 
+let currentLoadedProject: string = "";
+
 
 // Initial setup functions
 export async function setAdditionalFolders() {
@@ -42,7 +45,8 @@ export async function setAdditionalFolders() {
 export async function setActiveProject(projectFile: string) {
     projectLoaded = false;
     if(appOutputFolder === undefined) await setAdditionalFolders();
-    const object = JSON.parse(await readTextFile(projectFile));
+    currentLoadedProject = projectFile
+    const object = JSON.parse(await readTextFile(currentLoadedProject));
 
     inputFolder = object.path;
     outputFolder = await join(appOutputFolder, object.name);
@@ -124,6 +128,9 @@ const transcribeFile = async() => {
  */
 export async function skipFile(moveToOutput: boolean = false) {
     inputFiles.splice(0, 1);
+    await updateArprojStats("filesRemaining", inputFiles.length);
+    await updateStatistic("filesSkipped", stats.filesSkipped + 1);
+
     if(moveToOutput) {
         await moveFile(currentFile, outputFile);
         outputFiles.push(currentFile);
@@ -133,12 +140,23 @@ export async function skipFile(moveToOutput: boolean = false) {
     }
 }
 
+/**
+ * @description Review phase: User decided that the recording should be discarded
+ */
 export async function discardFile() {
+    const discardedFiles = stats.filesRejected;
+    await updateStatistic("filesRejected", discardedFiles + 1);
     await remove(outputFile);
 }
 
+/**
+ * @description Review Phase: User accepts their recording
+ * @param requiresExtraEdits weather or not ExtraEditsRequired should be appended to the end of the file name
+ */
 export async function submitFile(requiresExtraEdits: boolean) {
     inputFiles.splice(0, 1);
+    await updateArprojStats("filesRemaining", inputFiles.length);
+    await updateStatistic("filesAccepted", stats.filesAccepted + 1)
 
     const fileName = requiresExtraEdits ? await (async() => {
         const dir = await dirname(outputFile);
@@ -170,7 +188,7 @@ export function countOutputFiles() {
 }
 
 function isAudioFile(path: string): boolean {
-    const types: string[] = ['.wav', 'mp3', '.ogg', '.flac'];
+    const types: string[] = ['.wav', 'mp3', '.flac', ".m4a"]; // Maybe I should make this a bit more robust in the future
     return types.some(ext => path.toLowerCase().endsWith(ext.toLowerCase()));
 }
 
@@ -207,4 +225,11 @@ export async function createArProj(inputFolder: string) {
             }
         ]
     }
+}
+
+export async function updateArprojStats(key: string, value: any) {
+    const arproj = JSON.parse(await readTextFile(currentLoadedProject));
+    arproj[key] = value;
+
+    await writeTextFile(currentLoadedProject, JSON.stringify(arproj));
 }

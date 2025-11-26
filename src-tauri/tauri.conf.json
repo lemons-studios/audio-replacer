@@ -73,7 +73,7 @@
         "startMenuFolder": "LemonStudios",
         "installerIcon": "icons/icon.ico",
         "template": "./windows/win-installer.nsi",
-        "installerHooks": "./windows/hooks.nsi"
+        "installerHooks": "./windows/hooks.nsh"
       },
       "signCommand": null,
       "timestampUrl": null,

@@ -9,6 +9,18 @@ export async function loadStats() {
 
 }
 
+/**
+ *
+ * @description Update value of a statistic and immediately save the file
+ * @param stat name of statistic
+ * @param newValue new value of statistic
+ */
+export async function updateStatistic(stat: string, newValue: any) {
+    if(!stats) await loadStats();
+    stats[stat] = newValue;
+    await writeStats();
+}
+
 export async function writeStats() {
     const str = JSON.stringify(stats);
     const filePath = await resolveResource("resources/stats.json");
