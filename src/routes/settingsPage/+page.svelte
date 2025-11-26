@@ -7,21 +7,22 @@
     await setPresenceDetails("Tweaking Settings");
   });
 </script>
-<h1 class="text-center text-5xl font-bold mt-10">App Settings</h1>
+<h1 class="text-center text-5xl font-bold mb-5">App Settings</h1>
+
 <!--Ignore any errors below if any are visible, they only show up because not all elements in the javascript object share the same list of properties-->
-<div class="flex grow justify-center flex-col gap-y-2.5 items-center overflow-y-auto p-5">
+<div class="flex grow justify-center flex-col gap-y-2.5 items-center overflow-y-auto p-5 settings-container">
   {#each Object.entries(settings) as [name, settingCategory], sIndex}
     <div class="dark:bg-secondary-d bg-secondary rounded-xl p-3 w-3/4 gap-3">
       <h2 class="text-center">{name}</h2>
       {#each settingCategory as setting}
         <div class="flex justify-between items-center px-4 mb-3 mt-3">
-          <div>
+          <div class="w-full">
             <p class="font-medium">{setting.name}</p>
-            <p class="text-sm text-gray-400 text-wrap">{setting.description}</p>
+            <p class="text-sm text-gray-400 text-wrap max-w-2/3">{setting.description}</p>
           </div>
           {#if setting.type === "boolean"}
             {#await setting.getValue() then value}
-              <input type="checkbox" class="checkbox" checked={value} onchange={() => setting.onChange(value)}> 
+              <input type="checkbox" class="checkbox" checked={value} onchange={() => setting.onChange(value)}>
             {/await}
           {:else if setting.type === "string"}
             {#await setting.getValue()}
@@ -45,3 +46,9 @@
     </div>
   {/each}
 </div>
+
+<style>
+  .settings-container::-webkit-scrollbar {
+    display: none;
+  }
+</style>
