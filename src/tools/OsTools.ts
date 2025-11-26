@@ -71,7 +71,15 @@ export function timestampToLegible(timestamp: number): string {
     return new Date(timestamp).toLocaleString();
 }
 
- export async function formatVersion(): Promise<string> {
+export async function formatVersion(): Promise<string> {
     const [major, minor, patch] = (await getVersion()).split(".");
     return `${major}.${minor}${patch == "0" ? '' : `.${patch}`}`;
+}
+
+/**
+ * @description wait x milliseconds to continue executing code
+ * @param ms time to wait (in milliseconds)
+ */
+export async function sleep(ms: number) {
+    return new Promise(resolve => setTimeout(resolve, ms));
 }

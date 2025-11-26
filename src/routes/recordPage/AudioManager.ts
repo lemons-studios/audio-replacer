@@ -6,6 +6,7 @@ import { outputFile } from '../../tools/ProjectHandler';
 import { Command } from "@tauri-apps/plugin-shell";
 import { resolveResource } from "@tauri-apps/api/path";
 import {stats, updateStatistic} from "../../tools/StatisticManager";
+import {sleep} from "../../tools/OsTools";
 
 let audioRecorder: any; 
 let recordedChunks: BlobPart[] = [];
@@ -44,11 +45,13 @@ export function populateFFMpegFilters(loadedProject: any) {
  * @description Starts capturing audio from the microphone
  */
 export async function startRecording() {
+
     if(!encoderInitialized) {
         // Create media encoder if it doesn't already exist
         await register(await connect());
         encoderInitialized = true;
     }
+    await sleep(await getValue("recordStartDelay"));
 
     // Too much of a hassle to get other file formats working. wav is among the best file formats anyway
     const options = { mimeType: "audio/wav" };
@@ -75,6 +78,7 @@ export async function endRecording(selectedPitchIndex: number, selectedEffectInd
     if(!audioRecorder || audioRecorder.state !== 'recording') {
         return;
     }
+    await sleep(await getValue("recordEndDelay"));
 
     await updateStatistic("filesRecorded", stats.filesRecorded + 1);
 

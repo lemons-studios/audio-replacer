@@ -10,6 +10,7 @@
   import ProgressBar from "../../Components/ProgressBar.svelte";
   import { goto } from "$app/navigation";
   import { selectFile } from "../../tools/OsTools";
+  import {getValue} from "../../tools/SettingsManager";
 
   let file = $state("No Project Opened");
   let fullSource = $state("");
@@ -84,8 +85,12 @@
       }}>Discard</button>
       <button class="app-btn min-w-30" onclick={async() => {
         recording = false;
-        reviewing = true;
-        await endRecording(selectedPitch, selectedEffect)
+        await endRecording(selectedPitch, selectedEffect);
+        if(await getValue("autoAcceptRecording")) {
+          await submitFile(extraEdits);
+          idle = true;
+        }
+        else reviewing = true;
       }}>End</button>
       {:else if reviewing}
       <button class="app-btn min-w-30" onclick={async() => {
