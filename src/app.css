@@ -36,13 +36,17 @@
   --color-progress: oklch(0.5279 0.2131 321.35);
   --color-progress-shadow: oklch(0.5279 0.2131 321.35 / 20%);
 
-  --color-navigation-hover: oklch(0.3042 0.0051 325.78);
-  --color-navigation-focus: oklch(1 0 0 / 10%);
-  --color-navigation-focus-shadow: oklch(0.1929 0.0048 325.72 / 60%);
+  --color-navigation-hover: oklch(0.8932 0.0051 325.78);
+  --color-navigation-hover-d: oklch(0.3042 0.0051 325.78);
+
+  --color-navigation-focus-shadow: oklch(0.9228 0.0048 325.72 / 60%);
+  --color-navigation-focus-shadow-d: oklch(0.1929 0.0048 325.72 / 60%);
+
+  --color-navigation-focus: oklch(1 0 0 / 10%); /* Works on both light and dark mode */
 }
 
 * {
-  font-family: "Work Sans";
+  font-family: "Work Sans", sans-serif;
 }
 
 html {
@@ -85,6 +89,7 @@ body {
 
 .nav-btn {
   @apply transition;
+  background: none;
   width: 10rem;
   border-radius: 5px;
   padding: 6px 8px;
@@ -98,13 +103,22 @@ body {
 }
 
 .nav-btn:hover {
-  background-color: oklch(0.3042 0.0051 325.78);
-  box-shadow: none;
+  @media (prefers-color-scheme: dark) {
+    background-color: oklch(0.3042 0.0051 325.78);
+  }
+  @media (prefers-color-scheme: light) {
+    background-color: oklch(0.8932 0.0051 325.78);
+  }
 }
 
 .nav-btn:focus {
   background-color: oklch(1 0 0 / 10%);
-  box-shadow: inset 0px 0px 1em oklch(0.1929 0.0048 325.72 / 60%);
+  @media (prefers-color-scheme: dark) {
+    box-shadow: inset 0 0 1em oklch(0.1929 0.0048 325.72 / 60%);
+  }
+  @media (prefers-color-scheme: light) {
+    box-shadow: inset 0 0 1em oklch(0.9228 0.0048 325.72 / 90%);
+  }
 }
 
 .dropdown {
