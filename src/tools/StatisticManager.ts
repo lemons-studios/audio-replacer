@@ -1,6 +1,6 @@
 import { resolveResource } from "@tauri-apps/api/path";
 import { readTextFile, writeTextFile } from '@tauri-apps/plugin-fs'
-import {getValue} from "./SettingsManager";
+import { getValue } from "./SettingsManager";
 
 export let stats: any; // It's an object
 

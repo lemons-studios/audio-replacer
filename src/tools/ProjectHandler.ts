@@ -1,11 +1,11 @@
 // This file handles everything related to projects, From moving files around to recording audio for a project
-import {invoke} from "@tauri-apps/api/core";
-import {basename, dirname, extname, join, resolveResource} from "@tauri-apps/api/path";
-import {copyFile, exists, mkdir, readDir, readTextFile, remove, writeTextFile} from "@tauri-apps/plugin-fs";
-import {populateFFMpegFilters} from "../routes/recordPage/AudioManager";
-import {error} from "@tauri-apps/plugin-log";
-import {getValue} from "./SettingsManager";
-import {stats, updateStatistic} from "./StatisticManager";
+import { invoke } from "@tauri-apps/api/core";
+import { basename, dirname, extname, join, resolveResource } from "@tauri-apps/api/path";
+import {copyFile, exists, mkdir, readDir, readTextFile, remove, rename, writeTextFile} from "@tauri-apps/plugin-fs";
+import { populateFFMpegFilters } from "../routes/recordPage/AudioManager";
+import { error } from "@tauri-apps/plugin-log";
+import { getValue } from "./SettingsManager";
+import { stats, updateStatistic } from "./StatisticManager";
 
 /**
  * @description points to the output folder in the installation directory (installDir/output)
@@ -132,7 +132,7 @@ export async function skipFile(moveToOutput: boolean = false) {
     await updateStatistic("filesSkipped", stats.filesSkipped + 1);
 
     if(moveToOutput) {
-        await moveFile(currentFile, outputFile);
+        await rename(currentFile, outputFile);
         outputFiles.push(currentFile);
     }
     else {
@@ -165,7 +165,7 @@ export async function submitFile(requiresExtraEdits: boolean) {
 
         return await join(dir, `${name}-ExtraEditsRequired.${ext}`);
     })() : outputFile; 
-    await moveFile(currentFile, fileName);
+    await rename(currentFile, fileName);
     outputFiles.push(fileName);
 
     await getNextFile();
@@ -190,11 +190,6 @@ export function countOutputFiles() {
 function isAudioFile(path: string): boolean {
     const types: string[] = ['.wav', 'mp3', '.flac', ".m4a"]; // Maybe I should make this a bit more robust in the future
     return types.some(ext => path.toLowerCase().endsWith(ext.toLowerCase()));
-}
-
-export async function moveFile(path: string, newPath: string) {
-    await copyFile(path, newPath);
-    await remove(path);
 }
 
 export async function createArProj(inputFolder: string) {

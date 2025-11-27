@@ -2,10 +2,10 @@ import { platform } from "@tauri-apps/plugin-os";
 import { relaunch } from "@tauri-apps/plugin-process";
 import { check, Update } from "@tauri-apps/plugin-updater";
 
-export let update: (Update | null | undefined) = undefined;
+export let update: Update | null;
 
 export async function isUpdateAvailable(): Promise<boolean> {
-    if(update === undefined) {
+    if(!update) {
         update = await check();
     }
     return update != null;

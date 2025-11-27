@@ -71,9 +71,7 @@
         "compression": "lzma",
         "installMode": "currentUser",
         "startMenuFolder": "LemonStudios",
-        "installerIcon": "icons/icon.ico",
-        "template": "./windows/win-installer.nsi",
-        "installerHooks": "./windows/hooks.nsh"
+        "installerIcon": "icons/icon.ico"
       },
       "signCommand": null,
       "timestampUrl": null,

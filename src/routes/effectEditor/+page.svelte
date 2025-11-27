@@ -46,7 +46,6 @@
                                     <button class="hover:bg-accent focus:bg-accent-tertiary transition p-2 rounded-md"
                                     onmouseleave={(e) => e.currentTarget.blur()}
                                     onclick={(e) => e.currentTarget.blur()}><IconPenNibRegular class="w-5 h-5"></IconPenNibRegular></button>
-
                                 </div>
                             </div>
                         {/each}

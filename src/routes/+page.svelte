@@ -6,12 +6,11 @@
   import {exists, readTextFile, writeTextFile} from "@tauri-apps/plugin-fs";
   import {getValue, setValue} from "../tools/SettingsManager";
   import {saveFile, selectFolder, timestampToLegible} from "../tools/OsTools";
-  import {createArProj, setActiveProject} from "../tools/ProjectHandler";
+  import {createArProj, setActiveProject, updateArprojStats} from "../tools/ProjectHandler";
   import {goto} from "$app/navigation";
   import IconArrowRightRegular from "phosphor-icons-svelte/IconArrowRightRegular.svelte"
 
   let username = $state("");
-  let stats = $state(null);
   let recentProjectPaths: string[] = $state([]);
   let recentProjectObjs: any[] = $state([]);
 
@@ -26,12 +25,9 @@
     await loadStats();
   });
 
-  async function getProjectData(path: string) {
-    return await JSON.parse(await readTextFile(path));
-  }
-
   async function loadProject(path: string) {
     await setActiveProject(path);
+    await updateArprojStats("lastOpened", Date.now());
     await goto("/recordPage");
   }
 
