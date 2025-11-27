@@ -73,7 +73,7 @@ body {
 }
 
 .card {
-  @apply dark:bg-secondary-d dark:border-tertiary-d border-tertiary border-2 bg-secondary
+  @apply dark:bg-secondary-d dark:border-tertiary-d border-tertiary border-2 bg-secondary rounded-xl
 }
 
 .app-btn {

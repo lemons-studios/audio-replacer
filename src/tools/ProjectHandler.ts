@@ -220,7 +220,7 @@ export async function createArProj(inputFolder: string) {
         ],
         effectFilters: [
             {
-                name: "reverb",
+                name: "Reverb",
                 value: "aecho=0.8:0.9:40|50|70:0.4|0.3|0.2"
             }
         ]
