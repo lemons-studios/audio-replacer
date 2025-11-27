@@ -222,6 +222,11 @@ export async function createArProj(inputFolder: string) {
     }
 }
 
+export async function getArprojProperty(key: string) {
+    if(projectLoaded) return null;
+    return (JSON.parse(await readTextFile(currentLoadedProject)))[key];
+}
+
 export async function updateArprojStats(key: string, value: any) {
     const arproj = JSON.parse(await readTextFile(currentLoadedProject));
     arproj[key] = value;

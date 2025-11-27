@@ -9,6 +9,7 @@
   import {createArProj, setActiveProject, updateArprojStats} from "../tools/ProjectHandler";
   import {goto} from "$app/navigation";
   import IconArrowRightRegular from "phosphor-icons-svelte/IconArrowRightRegular.svelte"
+  import Modal from "../Components/Modal.svelte";
 
   let username = $state("");
   let recentProjectPaths: string[] = $state([]);

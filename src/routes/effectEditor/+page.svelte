@@ -1,8 +1,10 @@
 <script lang="ts">
     import { pitchFilters, pitchFilterNames, effectFilters, effectFilterNames } from "../recordPage/AudioManager";
-    import { projectLoaded } from "../../tools/ProjectHandler";
+    import {getArprojProperty, projectLoaded, updateArprojStats} from "../../tools/ProjectHandler";
     import { goto } from "$app/navigation";
     import IconPenNibRegular from 'phosphor-icons-svelte/IconPenNibRegular.svelte';
+    import {selectFile} from "../../tools/OsTools";
+    import {readTextFile} from "@tauri-apps/plugin-fs";
 
     let pitchValues: string[] = $state([]);
     let pitchNames: string[] = $state([]);
@@ -19,6 +21,32 @@
         effectValues = effectFilters;
         effectNames = effectFilterNames;
     });
+
+    async function importData(importEffects: boolean, overwrite: boolean = false) {
+        const key = importEffects ? "effectFilters" : "pitchFilters";
+
+        const filePath = await selectFile(["json"], "JSON Files");
+        if(!filePath) return;
+
+        const obj = JSON.parse(await readTextFile(filePath));
+        const validProperties = [];
+
+        for(let i = 0; i < obj.length; i++) {
+            const o = obj[i]
+            if(o.hasOwnProperty("name") && o.hasOwnProperty("value")) {
+                validProperties.push(o);
+            }
+        }
+
+        if(!overwrite) {
+            const currentValues = await getArprojProperty(key);
+            validProperties.push(currentValues);
+            validProperties.sort((a, b) => a.name.localeCompare(b.name));
+        }
+        await updateArprojStats(key, validProperties)
+    }
+
+    // TODO: Add edit effect function
 
 </script>
 

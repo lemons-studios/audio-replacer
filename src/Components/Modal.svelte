@@ -10,9 +10,11 @@
 </script>
 
 <style>
-
     ::backdrop {
-        background-color: oklch(0.1574 0 82 / 75%);
+        /* TODO: Figure out background blur */
+        filter: blur(10px) ;
+        -webkit-filter: blur(8px);
+        background-color: oklch(0.1574 0 82 / 65%);
     }
 
     .close-btn {
@@ -22,8 +24,8 @@
         top: 50%;
         transform: translateY(-50%);
         display: flex;
-        justify-content: top;
     }
+
     .close-btn:hover {
         background-color: oklch(1 0 0 / 30%);
         box-shadow: none;
@@ -35,11 +37,9 @@
     }
 </style>
 
-<div class="fixed flex justify-center items-center h-screen">
-    <dialog onclose={() => showModal = false} bind:this={dialog} class=" p-2 min-h-100 min-w-150 dark:border-tertiary-d border-tertiary dark:bg-secondary-d bg-secondary rounded-xl">
-        <button class="close-btn rounded-sm align-top" 
-        onclick={() => showModal = false} 
-        onmouseleave={(e) => e.currentTarget.blur()}><IconXRegular class="dark:text-white h-7 w-7" /></button>
-        {@render children?.()}
-    </dialog>
-</div>
+<dialog onclose={() => showModal = false} bind:this={dialog} class="flex justify-center align-middle items-center p-5 min-h-1/2 min-w-3/5 dark:text-white dark:border-tertiary-d border-tertiary dark:bg-secondary-d bg-secondary rounded-xl">
+    <button class="close-btn rounded-sm align-top mr-2.5"
+            onclick={() => showModal = false}
+            onmouseleave={(e) => e.currentTarget.blur()}><IconXRegular class=" h-7 w-7" /></button>
+    {@render children?.()}
+</dialog>
