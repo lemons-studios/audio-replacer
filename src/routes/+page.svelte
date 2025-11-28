@@ -50,6 +50,10 @@
   }
 </script>
 
+<Modal showModal={true}>
+  <h1>This is a test modal</h1>
+</Modal>
+
 <div class="flex flex-col gap-3 h-full w-full p-3">
   <h1 class="text-center text-3xl">Welcome, {username}</h1>
   <div class="flex flex-row gap-5 h-full">

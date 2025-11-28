@@ -11,9 +11,8 @@
 
 <style>
     ::backdrop {
-        /* TODO: Figure out background blur */
-        filter: blur(10px) ;
-        -webkit-filter: blur(8px);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
         background-color: oklch(0.1574 0 82 / 65%);
     }
 
