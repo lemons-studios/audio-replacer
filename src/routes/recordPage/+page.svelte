@@ -1,19 +1,18 @@
 <script lang="ts">
   import { onDestroy, onMount } from "svelte";
   import { setPresenceDetails, setPresenceState } from "../../tools/DiscordPresenceManager";
-  import {
-    calculateCompletion, countInputFiles, countOutputFiles, currentFile, discardFile, fileTranscription,
-    localPath, projectLoaded, skipFile, submitFile
-  } from "../../tools/ProjectHandler";
+  import { calculateCompletion, countInputFiles, countOutputFiles, currentFile, discardFile, fileTranscription, localPath, outputFile, projectLoaded, skipFile, submitFile } from "../../tools/ProjectHandler";
   import { cancelRecording, effectFilterNames, endRecording, pitchFilterNames, startRecording } from "./AudioManager";
-  import AudioPlayer from "../../Components/AudioPlayer.svelte";
-  import ProgressBar from "../../Components/ProgressBar.svelte";
   import { goto } from "$app/navigation";
   import { selectFile } from "../../tools/OsTools";
-  import {getValue} from "../../tools/SettingsManager";
+  import AudioPlayer from "../../Components/AudioPlayer.svelte";
+  import ProgressBar from "../../Components/ProgressBar.svelte";
+    import { register, unregisterAll } from "@tauri-apps/plugin-global-shortcut";
+    import { exists } from "@tauri-apps/plugin-fs";
+  import {getValue} from "../../tools/DataInterface";
 
   let file = $state("No Project Opened");
-  let fullSource = $state("");
+  let audioSource = $state("");
   let progressDecimal = $state(0);
   let progressPercentage = $state("0%");
   let filesRemaining = $state("0");
@@ -30,12 +29,29 @@
   let selectedPitch = 0;
   let selectedEffect = 0;
 
+  // svelte-ignore non_reactive_update
   let audioPlayer: AudioPlayer;
+
+  const shortcuts = [
+    {
+      combination: 'CommandOrControl+R',
+      action: async() => {
+        if(idle) {
+
+        }
+        else if(recording) {
+
+        }
+        else if(reviewing) {
+
+        }
+      }
+    }
+  ];
 
   $effect(() => {
     if(!projectLoaded) return;
     file = localPath.replaceAll("\\", "/").substring(1);
-    fullSource = currentFile;
     progressDecimal = calculateCompletion() / 100;
     progressPercentage = `${calculateCompletion().toFixed(2)}%`;
     filesRemaining = new Intl.NumberFormat().format(countInputFiles() - countOutputFiles());
@@ -43,10 +59,17 @@
     setPresenceState(`Files Remaining: ${filesRemaining}`);
   });
 
-  onMount(() => {
+  onMount(async() => {
     // Only refresh on page refresh since the only way they would change is if someone navigated to the editor route
     effects = effectFilterNames;
     pitch = pitchFilterNames;
+
+    // Initial Audio Load. Subsequent are handled by the app
+    audioSource = currentFile;
+
+    for(let i = 0; i < shortcuts.length; i++) {
+      await register(shortcuts[i].combination, shortcuts[i].action);
+    }
   });
 
   onMount(async() => {
@@ -54,7 +77,8 @@
   });
 
   onDestroy(async() => {
-    await setPresenceState("");
+    await setPresenceState(""); // Remove presence state as the rest of the app doesn't use it
+    await unregisterAll(); // Unregister all shortcuts
   });
 </script>
 
@@ -67,7 +91,7 @@
     <div class="flex flex-row gap-1.5">
       <ProgressBar progress={progressDecimal}></ProgressBar>
     </div>
-    <AudioPlayer bind:this={audioPlayer} source={fullSource}></AudioPlayer>
+    <AudioPlayer bind:this={audioPlayer} source={audioSource}></AudioPlayer>
     <h3 class="font-light text-gray-300 mb-5">{transcription}</h3>
     <div class="flex flex-row gap-5">
       {#if idle}
@@ -86,7 +110,8 @@
       <button class="app-btn min-w-30" onclick={async() => {
         recording = false;
         await endRecording(selectedPitch, selectedEffect);
-        if(await getValue("autoAcceptRecording")) {
+        const autoAcceptRecordings = getValue('settings.autoAcceptRecordings')
+        if(autoAcceptRecordings) {
           await submitFile(extraEdits);
           idle = true;
         }
@@ -99,9 +124,14 @@
         await discardFile();
       }}>Reject</button>
       <button class="app-btn min-w-30" onclick={async() => {
+        if(!(await exists(outputFile))) return;
+        audioSource = (audioSource === outputFile) ? currentFile : outputFile;
+      }}>Switch</button>
+      <button class="app-btn min-w-30" onclick={async() => {
         reviewing = false;
         idle = true;
         await submitFile(extraEdits);
+        audioSource = currentFile;
       }}>Accept</button>
       {/if}
     </div>
@@ -142,6 +172,8 @@
     <button class="app-btn" onclick={async() => {
       // File popup for project selection
       const file = await selectFile(['arproj'], 'Audio Replacer Projects');
+
+      // TODO: Finish this part
     }} onmouseleave={(e) => e.currentTarget.blur} onmouseup={(e) => e.currentTarget.blur()}>Load Project</button>
     <button class="app-btn" onclick={() => goto('/')} onmouseleave={(e) => e.currentTarget.blur} onfocus={(e) => e.currentTarget.blur()}>Return Home</button>
   </div>

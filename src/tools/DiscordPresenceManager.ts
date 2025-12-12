@@ -2,7 +2,7 @@
 import { setActivity, start } from "tauri-plugin-drpc";
 import { Activity, ActivityType, Assets, Button, Timestamps } from "tauri-plugin-drpc/activity";
 import { formatVersion } from "./OsTools";
-import {getValue} from "./SettingsManager";
+import {getValue} from "./DataInterface";
 
 let currentActivity: Activity;
 
@@ -10,7 +10,7 @@ let currentActivity: Activity;
  * @description Activates the connection to the Discord Rich Presence server, if the user has it enabled in their settings
  */
 export async function startRichPresence() {
-    if((await getValue("enableRichPresence"))) {
+    if((await getValue('settings.enableRichPresence'))) {
         await start("1325340097234866297");
         const version = await formatVersion();
 

@@ -1,6 +1,6 @@
 use std::{env, path::PathBuf};
-
-use tauri::{command, is_dev};
+use std::process::exit;
+use tauri::{command, is_dev, AppHandle};
 
 #[command]
 pub fn get_install_directory() -> Result<PathBuf, String> {
@@ -24,4 +24,9 @@ pub fn in_dev_env() -> bool {
 #[command] 
 pub fn get_username() -> String {
     whoami::username()
+}
+
+#[command]
+pub fn close_app() {
+    exit(1);
 }

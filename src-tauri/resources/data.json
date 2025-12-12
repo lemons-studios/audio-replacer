@@ -1,0 +1,22 @@
+{
+    "settings": {
+        "autoAcceptRecordings": false,
+        "updateCheck": true,
+        "recentProjectPaths": [],
+        "recordStartDelay": 250,
+        "recordEndDelay": 250,
+        "enableTranscription": true,
+        "enableRichPresence": true,
+        "allowNoiseSuppression": true,
+        "randomizeInput": false,
+        "sortingMethod": "alphabetical"
+    },
+    "statistics": {
+        "appOpenTime": 0,
+        "filesRecorded": 0,
+        "filesAccepted": 0,
+        "filesRejected": 0,
+        "filesSkipped": 0,
+        "recordingsCancelled": 0
+    }
+}

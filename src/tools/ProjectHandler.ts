@@ -1,11 +1,11 @@
 // This file handles everything related to projects, From moving files around to recording audio for a project
 import { invoke } from "@tauri-apps/api/core";
 import { basename, dirname, extname, join, resolveResource } from "@tauri-apps/api/path";
-import {copyFile, exists, mkdir, readDir, readTextFile, remove, rename, writeTextFile} from "@tauri-apps/plugin-fs";
+import { exists, mkdir, readDir, readTextFile, remove, rename, writeTextFile } from "@tauri-apps/plugin-fs";
 import { populateFFMpegFilters } from "../routes/recordPage/AudioManager";
 import { error } from "@tauri-apps/plugin-log";
-import { getValue } from "./SettingsManager";
-import { stats, updateStatistic } from "./StatisticManager";
+import { listen } from "@tauri-apps/api/event";
+import {getValue, setValue} from "./DataInterface";
 
 /**
  * @description points to the output folder in the installation directory (installDir/output)
@@ -32,7 +32,7 @@ let currentLoadedProject: string = "";
 
 
 // Initial setup functions
-export async function setAdditionalFolders() {
+export async function createAdditionalData() {
     const installFolder = await invoke('get_install_directory') as string;
     appOutputFolder = await join(installFolder, 'output');
     if(!(await exists(appOutputFolder))) await mkdir(appOutputFolder);
@@ -44,7 +44,6 @@ export async function setAdditionalFolders() {
  */
 export async function setActiveProject(projectFile: string) {
     projectLoaded = false;
-    if(appOutputFolder === undefined) await setAdditionalFolders();
     currentLoadedProject = projectFile
     const object = JSON.parse(await readTextFile(currentLoadedProject));
 
@@ -102,7 +101,7 @@ export async function getAllFiles(folder: string): Promise<string[]> {
 
 const transcribeFile = async() => {
     try {
-        const allowTranscription = await getValue("enableTranscription") as boolean;
+        const allowTranscription = await getValue('settings.enableTranscription') as boolean;
         if(!allowTranscription) return "Transcription Service Is Disabled";
 
         const model = await resolveResource('binaries/whisper.bin');
@@ -129,7 +128,9 @@ const transcribeFile = async() => {
 export async function skipFile(moveToOutput: boolean = false) {
     inputFiles.splice(0, 1);
     await updateArprojStats("filesRemaining", inputFiles.length);
-    await updateStatistic("filesSkipped", stats.filesSkipped + 1);
+
+    const filesSkipped = await getValue('statistics.filesSkipped')
+    await setValue('statistics.filesSkipped', filesSkipped + 1);
 
     if(moveToOutput) {
         await rename(currentFile, outputFile);
@@ -144,8 +145,8 @@ export async function skipFile(moveToOutput: boolean = false) {
  * @description Review phase: User decided that the recording should be discarded
  */
 export async function discardFile() {
-    const discardedFiles = stats.filesRejected;
-    await updateStatistic("filesRejected", discardedFiles + 1);
+    const discardedFiles = await getValue('statistics.filesRejected');
+    await setValue('statistics.filesRejected', discardedFiles + 1);
     await remove(outputFile);
 }
 
@@ -156,7 +157,9 @@ export async function discardFile() {
 export async function submitFile(requiresExtraEdits: boolean) {
     inputFiles.splice(0, 1);
     await updateArprojStats("filesRemaining", inputFiles.length);
-    await updateStatistic("filesAccepted", stats.filesAccepted + 1)
+
+    const filesAccepted = await getValue("statistics.filesAccepted");
+    await setValue('statistics.filesAccepted', filesAccepted + 1);
 
     const fileName = requiresExtraEdits ? await (async() => {
         const dir = await dirname(outputFile);

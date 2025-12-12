@@ -1,29 +1,71 @@
 <script lang="ts">
-  import { onMount } from "svelte";
+  import {getValue, setValue} from "../tools/DataInterface";
+  import {onMount, tick} from "svelte";
   import { setPresenceDetails } from "../tools/DiscordPresenceManager";
-  import { invoke } from "@tauri-apps/api/core";
-  import {loadStats} from "../tools/StatisticManager";
-  import {exists, readTextFile, writeTextFile} from "@tauri-apps/plugin-fs";
-  import {getValue, setValue} from "../tools/SettingsManager";
-  import {saveFile, selectFolder, timestampToLegible} from "../tools/OsTools";
-  import {createArProj, setActiveProject, updateArprojStats} from "../tools/ProjectHandler";
-  import {goto} from "$app/navigation";
+  import { exists, readTextFile, writeTextFile } from "@tauri-apps/plugin-fs";
+  import {saveFile, selectFolder, sleep, timestampToLegible} from "../tools/OsTools";
+  import { createArProj, setActiveProject, updateArprojStats } from "../tools/ProjectHandler";
+  import { goto } from "$app/navigation";
   import IconArrowRightRegular from "phosphor-icons-svelte/IconArrowRightRegular.svelte"
   import Modal from "../Components/Modal.svelte";
+  import {initializeData} from "../tools/DataInterface";
 
-  let username = $state("");
   let recentProjectPaths: string[] = $state([]);
   let recentProjectObjs: any[] = $state([]);
 
-  onMount(async() => {
-    await setPresenceDetails("");
-    username = await invoke("get_username");
+  const format = (x: number) => {
+    return new Intl.NumberFormat().format(x);
+  }
 
-    recentProjectPaths = await getValue("recentProjectPaths");
+  const statistics = [
+    {
+      name: "Time with Audio Replacer Open",
+      getValue: (): string => {
+        const rawTime = getValue("statistics.appOpenTime"); // Time statistic will be measured in seconds
+        return rawTime === 0 ? '0 Hours' : `${(rawTime / 3600).toFixed(1)} Hours`; // Similar to how Steam displays time played in games
+      }
+    },
+    {
+      name: "Files Recorded",
+      getValue: (): string => {
+        return format(getValue("statistics.filesRecorded"));
+      }
+    },
+    {
+      name: "Files Accepted",
+      getValue: (): string => {
+        return format(getValue('statistics.filesAccepted'));
+      }
+    },
+    {
+      name: "Files Rejected",
+      getValue: (): string => {
+        return format(getValue('statistics.filesRejected'));
+      }
+    },
+    {
+      name: "Files Skipped",
+      getValue: (): string => {
+        return format(getValue('statistics.filesSkipped'));
+      }
+    },
+    {
+      name: "Recordings Cancelled",
+      getValue: (): string => {
+        return format(getValue('statistics.recordingsCancelled'));
+      }
+    }
+  ] as const;
+
+  onMount(async() => {
+    await tick();
+    await setPresenceDetails("Home Page");
+    await initializeData();
+
+    recentProjectPaths = await getValue("settings.recentProjectPaths");
     for(let i = 0; i < recentProjectPaths.length; i++) {
       recentProjectObjs.push(JSON.parse(await readTextFile(recentProjectPaths[i])));
     }
-    await loadStats();
   });
 
   async function loadProject(path: string) {
@@ -41,7 +83,7 @@
         recentProjectPaths.push(path);
         recentProjectObjs.push(arProj);
         await writeTextFile(path, JSON.stringify(arProj));
-        setValue("recentProjectPaths", recentProjectPaths);
+        await setValue('settings.recentProjectPaths', recentProjectPaths);
 
         await setActiveProject(path);
         await goto("/recordPage");
@@ -50,12 +92,7 @@
   }
 </script>
 
-<Modal showModal={true}>
-  <h1>This is a test modal</h1>
-</Modal>
-
 <div class="flex flex-col gap-3 h-full w-full p-3">
-  <h1 class="text-center text-3xl">Welcome, {username}</h1>
   <div class="flex flex-row gap-5 h-full">
     <div class="flex flex-col w-1/2 card rounded-xl p-3">
       <h1 class="text-center text-3xl font-medium">Projects</h1>
@@ -84,10 +121,16 @@
     </div>
     <div class="flex flex-col gap-y-5 w-1/2">
       <div class="card h-1/2 rounded-xl p-3">
-        <h1 class="text-center text-3xl font-medium">Wiki</h1>
+        <h1 class="text-center text-3xl font-medium mb-5">Tutorials</h1>
       </div>
       <div class="card h-1/2 p-3 rounded-xl">
-        <h1 class="text-center text-3xl font-medium">Stats</h1>
+        <h1 class="text-center text-3xl font-medium mb-2">Statistics</h1>
+        {#each statistics as stat}
+        <div class="flex flex-row align-middle items-center justify-between text-left mb-2.5">
+          <h2>{stat.name}</h2>
+          <p>{stat.getValue()}</p>
+        </div>
+        {/each}
       </div>
     </div>
   </div>
@@ -98,11 +141,11 @@
   .save-btn:hover {
     background-color: oklch(0.3042 0.0051 325.78);
     box-shadow: none;
-
   }
+
   .save-btn:focus {
     background-color: oklch(1 0 0 / 10%);
-    box-shadow: inset 0px 0px 1em oklch(0.1929 0.0048 325.72 / 60%);
+    box-shadow: inset 0 0 1em oklch(0.1929 0.0048 325.72 / 60%);
   }
   .arrow {
     position: fixed;

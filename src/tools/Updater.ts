@@ -1,13 +1,15 @@
+import { listen } from "@tauri-apps/api/event";
 import { platform } from "@tauri-apps/plugin-os";
 import { relaunch } from "@tauri-apps/plugin-process";
 import { check, Update } from "@tauri-apps/plugin-updater";
 
 export let update: Update | null;
 
+listen('tauri://window-created', async() => {
+    update = await check();
+});
+
 export async function isUpdateAvailable(): Promise<boolean> {
-    if(!update) {
-        update = await check();
-    }
     return update != null;
 }
 

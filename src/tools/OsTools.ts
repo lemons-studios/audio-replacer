@@ -1,7 +1,7 @@
 import { getVersion } from "@tauri-apps/api/app";
 import { basename, dirname, extname, join } from "@tauri-apps/api/path";
-import { open, save } from "@tauri-apps/plugin-dialog";
-
+import {message, open, save} from "@tauri-apps/plugin-dialog";
+import {invoke} from "@tauri-apps/api/core";
 
 /**
  * @description Open a file selection dialog
@@ -98,4 +98,49 @@ export async function formatVersion(): Promise<string> {
  */
 export async function sleep(ms: number) {
     return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+/**
+ * @description Converts programming variable names to human-readable names. Works with camelCase, PascalCase, and snake_case
+ * @param str string to be normalized
+ * @param capitalizeAll Make all separated words capital or not
+ * @returns human-readable string
+ */
+export function normalizePropertyName(str: string, capitalizeAll: boolean = true) {
+    let res = "";
+    const split = str.split("");
+    const isWordSplit = ((c: string) => {
+        // This checks for snake_case, camelCase, and PascalCase
+        return c === c.toUpperCase() || c === "_" ;
+    });
+
+    // Manually add upper case character to first letter in string 
+    res += split[0].toUpperCase();
+
+    for(let i = 1; i < str.length; i++) {
+        if(!capitalizeAll && isWordSplit(str[i])) {
+            res += str[i].toLowerCase();
+        }
+        else res += str[i];
+
+        if(i !== str.length - 1) {
+            if(isWordSplit(str[i + 1])) str += " ";
+        }
+    }
+    return res;
+}
+
+export async function getMic() {
+    if(localStorage.getItem('mic_granted') !== 'true') {
+        try {
+            await message("In order to function properly, you will need to allow this app to access your microphone");
+            await navigator.mediaDevices.getUserMedia({audio: true});
+            localStorage.setItem("mic_granted", 'true');
+        }
+        catch(e: any) {
+            await message('Audio Replacer requires access to the microphone to function. App will now close', { title: "Mic Required", kind: 'error' });
+            await invoke("close_app");
+        }
+    }
+    else console.log("Mic permission given")
 }

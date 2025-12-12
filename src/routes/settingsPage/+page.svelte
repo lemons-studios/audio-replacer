@@ -21,20 +21,15 @@
             <p class="text-sm text-gray-400 text-wrap max-w-2/3">{setting.description}</p>
           </div>
           {#if setting.type === "boolean"}
-            {#await setting.getValue() then value}
-              <input type="checkbox" class="checkbox" checked={value} onchange={() => setting.onChange(value)}>
-            {/await}
+            <input type="checkbox" class="checkbox" checked={setting.getValue()} onchange={async(e) => await setting.onChange(e.currentTarget.checked)}>
           {:else if setting.type === "string"}
-            {#await setting.getValue()}
-              <input type="text" placeholder={setting.defaultValue} class="max-w-1/12">
-            {:then value} 
-              <input type="text" value={value} class="max-w-1/12 bg-tertiary dark:bg-tertiary-d py-1.5 px-2 rounded-sm" onchange={() => setting.onChange(value)}>
-            {/await}
+            <input type="text" value={setting.getValue()} class="max-w-1/12 bg-tertiary dark:bg-tertiary-d py-1.5 px-2 rounded-sm" onchange={async(e) => await setting.onChange(e.currentTarget.value)}>
           {:else if setting.type === "button"}
             <button class="app-btn" onclick={setting.onClick}>{setting.buttonText}</button>
          {:else if setting.type === "dropdown"}
             <div class="dropdown">
-              <li>
+              <!--This one is WIP. I will implement properly once I have dropdown setting elements-->
+              <li class="min-w-35">
                 {#each setting.choices as choice}
                   <ul>{choice}</ul>
                 {/each}

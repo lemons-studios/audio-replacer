@@ -1,13 +1,18 @@
-use tauri::Manager;
-use crate::commands::app_functions::{get_install_directory, get_username, in_dev_env};
+extern crate core;
+
+use crate::commands::app_functions::{close_app, get_install_directory, get_username, in_dev_env};
 use crate::commands::project_manager::{delete_empty_subdirectories, get_all_files};
 use crate::commands::whisper_utils::transcribe_file;
-
+use core::error::Error;
+use core::option::Option::Some;
+use log::error;
+use tauri::Manager;
+use webkit2gtk::glib::Cast;
+use webkit2gtk::{SettingsExt, UserMediaPermissionRequest, WebViewExt};
 mod commands;
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
-    // Holy moly that's a lot of plugins
     tauri::Builder::default()
         .plugin(tauri_plugin_updater::Builder::new().build())
         .plugin(tauri_plugin_dialog::init())
@@ -25,7 +30,7 @@ pub fn run() {
         .plugin(tauri_plugin_os::init())
         .plugin(tauri_plugin_opener::init())
         .plugin(tauri_plugin_log::Builder::new().build())
-        .plugin(tauri_plugin_drpc::init()) // This line missing was causing me such a headache holy hell
+        .plugin(tauri_plugin_drpc::init())
         .invoke_handler(tauri::generate_handler![
             get_all_files,
             delete_empty_subdirectories,
@@ -33,7 +38,41 @@ pub fn run() {
             get_install_directory,
             in_dev_env,
             get_username,
+            close_app
         ])
+        .setup(|app| {
+            let window = app
+                .get_webview_window("audio-replacer")
+                .expect("Main window not found!");
+            #[cfg(target_os = "linux")]
+            {
+                use webkit2gtk::{
+                    PermissionRequestExt, SettingsExt, UserMediaPermissionRequest, WebView,
+                };
+
+                window.with_webview(|webview| {
+                    let inner_webview = webview.inner();
+                    if let Some(wk) = inner_webview.downcast_ref::<WebView>() {
+                        if let Some(settings) = wk.settings() {
+                            settings.set_enable_webrtc(true);
+                        }
+
+                        wk.connect_permission_request(move |_wk, request| {
+                            if let Some(_media_request) =
+                                request.downcast_ref::<UserMediaPermissionRequest>()
+                            {
+                                request.allow();
+                                return true; // We handled this request
+                            }
+                            request.deny();
+                            true // We handled this request
+                        });
+                    }
+                })?;
+            }
+
+            Ok(())
+        })
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }

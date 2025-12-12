@@ -3,8 +3,8 @@
     import {getArprojProperty, projectLoaded, updateArprojStats} from "../../tools/ProjectHandler";
     import { goto } from "$app/navigation";
     import IconPenNibRegular from 'phosphor-icons-svelte/IconPenNibRegular.svelte';
-    import {selectFile} from "../../tools/OsTools";
-    import {readTextFile} from "@tauri-apps/plugin-fs";
+    import { selectFile } from "../../tools/OsTools";
+    import { readTextFile } from "@tauri-apps/plugin-fs";
 
     let pitchValues: string[] = $state([]);
     let pitchNames: string[] = $state([]);

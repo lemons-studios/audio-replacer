@@ -1,4 +1,4 @@
-import { getValue, setValue } from "../../tools/SettingsManager";
+import { getValue, setValue } from "../../tools/DataInterface";
 
 export const settings = {
   General: [
@@ -6,56 +6,34 @@ export const settings = {
       name: "Check for updates",
       description: "You will be prompted to install the update after the update is downloaded",
       type: "boolean",
-      onChange: (value: boolean) => {
-        setValue("updateCheck", value);
+      onChange: async(value: boolean) => {
+        await setValue('settings.updateCheck', value);
       },
-      getValue: async (): Promise<boolean> => {
-        return (await getValue("updateCheck")) as boolean;
-      },
-    },
-    {
-      name: "Autoload last project",
-      description: "Load your last project automatically on app launch instead of loading into the home menu",
-      type: "boolean",
-      onChange: (value: boolean) => {
-        setValue("autoloadProject", value);
-      },
-      getValue: async (): Promise<boolean> => {
-        return (await getValue("autoloadProject")) as boolean;
+      getValue: (): boolean => {
+        return getValue('settings.updateCheck')
       },
     },
     {
       name: "Enable Audio Transcription",
       description: "Enable Whisper audio-to-text transcription. Runs 100% locally on your device",
       type: "boolean",
-      onChange: (value: boolean) => {
-        setValue("enableTranscription", value);
+      onChange: async(value: boolean) => {
+        await setValue("settings.enableTranscription", value);
       },
-      getValue: async (): Promise<boolean> => {
-        return (await getValue("enableTranscription")) as boolean;
+      getValue: (): boolean => {
+        return getValue('settings.enableTranscription');
       },
     },
     {
       name: "Enable Discord Rich Presence",
       description: "Displays general info on what you're doing to all your friends on Discord",
       type: "boolean",
-      onChange: (value: boolean) => {
-        setValue("enableRichPresence", value);
+      onChange: async(value: boolean) => {
+        await setValue('settings.enableRichPresence', value);
       },
-      getValue: async (): Promise<boolean> => {
-        return (await getValue("enableRichPresence")) as boolean;
+      getValue: (): boolean => {
+        return getValue('settings.enableRichPresence');
       },
-    },
-    {
-      name: "Track Statistics",
-      description: "Tracks basic statistics about your app usage to display on home screen. All data stays on device",
-      type: "boolean",
-      onchange: (value: boolean) => {
-        setValue("trackStats", value);
-      },
-      getValue: async (): Promise<boolean> => {
-        return (await getValue("trackStats")) as boolean;
-      }
     }
   ],
   Recording: [
@@ -63,47 +41,61 @@ export const settings = {
       name: "Record Start Delay",
       description: "Measured in milliseconds",
       type: "string",
-      defaultValue: "10",
-      onChange: (value: string) => {
-        setValue("recordStartDelay", value);
+      onChange: async(value: string) => {
+        await setValue('settings.recordStartDelay', +value);
       },
-      getValue: async (): Promise<string> => {
-        return (await getValue("recordStartDelay")) as string;
+      getValue: (): string => {
+        return getValue('settings.recordStartDelay')
       },
     },
     {
       name: "Record End Delay",
       description: "Measured in milliseconds",
       type: "string",
-      defaultValue: "50",
-      onChange: (value: string) => {
-        setValue("recordEndDelay", value);
+      onChange: async(value: string) => {
+        await setValue('settings.recordEndDelay', +value);
       },
-      getValue: async (): Promise<string> => {
-        return (await getValue("recordEndDelay")) as string;
+      getValue: (): string => {
+        return getValue('settings.recordEndDelay');
       },
     },
     {
       name: "Enable Noise Suppression",
       description: "Apply noise suppression on your recordings",
       type: "boolean",
-      onchange: (value: boolean) => {
-        setValue("allowNoiseSuppression", value);
+      onChange: async(value: boolean) => {
+        await setValue('settings.allowNoiseSuppression', value);
       },
-      getValue: async (): Promise<boolean> => {
-        return (await getValue("allowNoiseSuppression")) as boolean;
+      getValue: (): boolean => {
+        return getValue('settings.allowNoiseSuppression');
       },
     },
     {
       name: "Auto-Accept Recordings",
       description: "You are committed!",
       type: "boolean",
-      onChange: (value: boolean) => {
-        setValue("autoAcceptRecordings", value);
+      onChange: async(value: boolean) => {
+        await setValue('settings.autoAcceptRecordings', value);
       },
-      getValue: async (): Promise<boolean> => {
-        return (await getValue("autoAcceptRecordings")) as boolean;
+      getValue: (): boolean => {
+        return getValue('settings.autoAcceptRecordings');
       },
     },
+    {
+      name: "File Sorting Order",
+      description: "What order Audio Replacer will sort audio files in",
+      type: "dropdown",
+      choices: [
+          "Alphabetical (A-Z)",
+          "Reverse-Alphabetical (Z-A)",
+          "Random"
+      ],
+      getValue: (): string => {
+        return getValue('settings.sortingMethod');
+      },
+      onChange: async(value: string) => {
+        await setValue('settings.sortingMethod', value);
+      }
+    }
   ]
 } as const;

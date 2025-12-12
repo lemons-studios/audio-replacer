@@ -1,18 +1,27 @@
 <script lang="ts">
     import IconXRegular from "phosphor-icons-svelte/IconXRegular.svelte";
-    let { children, showModal = $bindable() } = $props();
+    let { children } = $props();
+    let modalEnabled = $state(true);
+    
+    // svelte-ignore non_reactive_update
     let dialog: HTMLDialogElement;
 
+
+    export function toggleModal() {
+        modalEnabled = !modalEnabled;
+    }
+
     $effect(() => {
-        if(showModal) dialog.showModal();
-        if(!showModal) dialog.close();
-    })
+        if(modalEnabled) dialog.showModal();
+        if(!modalEnabled) dialog.close();
+    });
+    
 </script>
 
 <style>
     ::backdrop {
         backdrop-filter: blur(10px);
-        -webkit-backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px); /*For Linux (Webkit2Gtk) and MacOS (Regular Webkit)*/
         background-color: oklch(0.1574 0 82 / 65%);
     }
 
@@ -36,9 +45,11 @@
     }
 </style>
 
-<dialog onclose={() => showModal = false} bind:this={dialog} class="flex justify-center align-middle items-center p-5 min-h-1/2 min-w-3/5 dark:text-white dark:border-tertiary-d border-tertiary dark:bg-secondary-d bg-secondary rounded-xl">
+{#if modalEnabled}
+<dialog onclose={() => modalEnabled} bind:this={dialog} class="flex justify-center align-middle items-center p-5 min-h-1/2 min-w-3/5 dark:text-white dark:border-tertiary-d border-tertiary dark:bg-secondary-d bg-secondary rounded-xl">
     <button class="close-btn rounded-sm align-top mr-2.5"
-            onclick={() => showModal = false}
+            onclick={() => modalEnabled = false}
             onmouseleave={(e) => e.currentTarget.blur()}><IconXRegular class=" h-7 w-7" /></button>
     {@render children?.()}
 </dialog>
+{/if}

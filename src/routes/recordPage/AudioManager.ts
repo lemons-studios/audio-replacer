@@ -1,22 +1,25 @@
 import { rename, writeFile } from "@tauri-apps/plugin-fs";
 import { MediaRecorder as MediaRecorderEx, register } from "extendable-media-recorder";
 import { connect } from 'extendable-media-recorder-wav-encoder';
-import { getValue } from "../../tools/SettingsManager";
 import { outputFile } from '../../tools/ProjectHandler';
 import { Command } from "@tauri-apps/plugin-shell";
 import { resolveResource } from "@tauri-apps/api/path";
-import {stats, updateStatistic} from "../../tools/StatisticManager";
-import {sleep} from "../../tools/OsTools";
+import { sleep } from "../../tools/OsTools";
+import { listen } from "@tauri-apps/api/event";
+import {getValue, setValue} from "../../tools/DataInterface";
 
 let audioRecorder: any; 
 let recordedChunks: BlobPart[] = [];
-let encoderInitialized: boolean = false;
 
 export let pitchFilters: string[] = [];
 export let pitchFilterNames: string[] = [];
 
 export let effectFilters: string[] = [];
 export let effectFilterNames: string[] = [];
+
+(async() => {
+    await register(await connect());
+})()
 
 /**
  * @description (Re)Populates pitch/effect values and names to their designated variables upon a project load
@@ -45,13 +48,7 @@ export function populateFFMpegFilters(loadedProject: any) {
  * @description Starts capturing audio from the microphone
  */
 export async function startRecording() {
-
-    if(!encoderInitialized) {
-        // Create media encoder if it doesn't already exist
-        await register(await connect());
-        encoderInitialized = true;
-    }
-    await sleep(await getValue("recordStartDelay"));
+    await sleep(getValue("settings.recordStartDelay"));
 
     // Too much of a hassle to get other file formats working. wav is among the best file formats anyway
     const options = { mimeType: "audio/wav" };
@@ -78,11 +75,12 @@ export async function endRecording(selectedPitchIndex: number, selectedEffectInd
     if(!audioRecorder || audioRecorder.state !== 'recording') {
         return;
     }
-    await sleep(await getValue("recordEndDelay"));
+    await sleep(getValue("settings.recordEndDelay"));
 
-    await updateStatistic("filesRecorded", stats.filesRecorded + 1);
+    const filesRecorded = getValue('statistics.filesRecorded')
+    await setValue('statistics.filesRecorded', filesRecorded + 1);
 
-    const allowNoiseSuppression = await getValue("allowNoiseSuppression") as boolean;
+    const allowNoiseSuppression = getValue('settings.allowNoiseSuppression');
     // No clue why I wrote this function like this. TODO: remove this return new promise thing
     return new Promise((resolve) => {
         audioRecorder.onstop = async () => {
@@ -119,10 +117,9 @@ export async function endRecording(selectedPitchIndex: number, selectedEffectInd
 /**
  * @description Stops the current recording and discards any data associated with it
  */
-export function cancelRecording() {
-    (async() => {
-       await updateStatistic("recordingsCanceled", stats.recordingsCanceled + 1)
-    })();
+export async function cancelRecording() {
+    const recordingsCanceled = getValue('statistics.recordingsCancelled');
+    await setValue("statistics.recordingsCancelled", recordingsCanceled + 1);
     audioRecorder?.stop();
     recordedChunks = [];
 }

@@ -1,27 +1,33 @@
 <script lang="ts">
+  import {getValue, initializeData, setValue} from "../tools/DataInterface";
   import "../app.css";
   import { invoke } from "@tauri-apps/api/core";
   import { onMount, tick } from "svelte";
   import { downloadUpdates, getUpdateVersion, isUpdateAvailable } from "../tools/Updater";
   import { ask } from "@tauri-apps/plugin-dialog";
-  import { getValue } from "../tools/SettingsManager";
   import { onNavigate } from '$app/navigation';
+  import { startRichPresence } from "../tools/DiscordPresenceManager";
+  import {formatVersion, getMic, sleep} from "../tools/OsTools";
+  import { listen } from "@tauri-apps/api/event";
+  import { info } from "@tauri-apps/plugin-log";
   import NavBar from "../Components/NavBar.svelte";
   import Notification from "../Components/Notifications/Notification.svelte";
-  import { startRichPresence } from "../tools/DiscordPresenceManager";
-  import { setAdditionalFolders } from "../tools/ProjectHandler";
-  import { formatVersion } from "../tools/OsTools";
+  import {createAdditionalData} from "../tools/ProjectHandler";
+
 
   let { children } = $props();
   let versionNumber = $state("");
   let isUpdating = $state(false);
   let notificationRef: Notification;
+  const appLaunchTime = Date.now(); // For app open time statistic tracking
+
   
   onMount(async() => {
     await tick();
-
-    // Initialize some variables related to project management
-    await setAdditionalFolders();
+    // Populate additional variables
+    await getMic();
+    await initializeData();
+    await createAdditionalData();
 
     versionNumber = await formatVersion();
 
@@ -34,7 +40,7 @@
     }
 
     // Only check for updates if the user wants to
-    const allowUpdates = await getValue("updateCheck");
+    const allowUpdates = getValue('settings.updateCheck');
     if(allowUpdates && !isDev) {
       if(await isUpdateAvailable()) {
         const response = await ask(`There is an update available for Audio Replacer.\nLatest Version: ${getUpdateVersion()}\nCurrent Version: ${versionNumber}`, {
@@ -60,6 +66,13 @@
         await navigation.complete;
       });
     });
+  });
+  
+  listen('tauri://close-requested', async() => {
+    info("App close requested");
+    const currentTime = await getValue("statistics.appOpenTime");
+    const appCloseTime = Date.now() - appLaunchTime;
+    await setValue("statistics.appOpenTime", currentTime + appCloseTime);
   });
 </script>
 
