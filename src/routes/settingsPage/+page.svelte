@@ -26,14 +26,14 @@
             <input type="text" value={setting.getValue()} class="max-w-1/12 bg-tertiary dark:bg-tertiary-d py-1.5 px-2 rounded-sm" onchange={async(e) => await setting.onChange(e.currentTarget.value)}>
           {:else if setting.type === "button"}
             <button class="app-btn" onclick={setting.onClick}>{setting.buttonText}</button>
-         {:else if setting.type === "dropdown"}
+          {:else if setting.type === "dropdown"}
             <div class="dropdown">
               <!--This one is WIP. I will implement properly once I have dropdown setting elements-->
-              <li class="min-w-35">
+              <select class="w-45">
                 {#each setting.choices as choice}
-                  <ul>{choice}</ul>
+                  <option value={choice}>{choice}</option>
                 {/each}
-              </li>
+              </select>
             </div>
           {/if}
         </div>

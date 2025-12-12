@@ -20,6 +20,7 @@ export function getValue(name: ValidData) {
         console.log("Data is not initialized");
         return;
     }
+
     const split = name.split(".");
     return dataContents[split[0]][split[1]];
 }

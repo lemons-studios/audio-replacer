@@ -19,7 +19,6 @@ tauri-plugin-opener = "2.5.2"
 serde = { version = "1.0.228", features = ["derive"] }
 serde_json = "1.0.145"
 futures-lite = "2.6.1"
-webkit2gtk = "2.0.1"
 tauri-plugin-os = "2.3.2"
 tauri-plugin-fs = "2.4.4"
 tauri-plugin-shell = "2.3.3"
@@ -27,7 +26,6 @@ tauri-plugin-log = { version = "2.7.1", features = ["colored"] }
 tauri-plugin-process = "2.3.1"
 tauri-plugin-upload = "2.3.2"
 tauri-plugin-dialog = "2.4.2"
-
 
 # The person who develops this hasn't fixed a whisper.cpp build issue in whisper-rs which causes whisper models to run up to 10 times slower on release builds. My fork fixes this
 whisper-rs = {git = "https://github.com/Shob3r/whisper-rs.git", version ="0.15.1"} 
@@ -43,3 +41,6 @@ log = "0.4.27"
 tauri-plugin-global-shortcut = "2.3.1"
 tauri-plugin-single-instance = "2.3.6"
 tauri-plugin-updater = "2.9.0"
+
+[target.'cfg(target_os = "linux")'.dependencies]
+webkit2gtk = "2.0.1" # Project needs a dependency on this specifically on linux because WebKit2Gtk has a funny issue where it automatically rejects permission requests for the webview for god knows what reason

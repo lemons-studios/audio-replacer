@@ -1,6 +1,6 @@
 use std::{env, path::PathBuf};
 use std::process::exit;
-use tauri::{command, is_dev, AppHandle};
+use tauri::{command, is_dev};
 
 #[command]
 pub fn get_install_directory() -> Result<PathBuf, String> {

@@ -22,7 +22,7 @@
       }
     ],
     "security": {
-      "csp": "default-src 'self' blob: data: media:; script-src 'self' 'unsafe-eval';",
+      "csp": null,
       "assetProtocol": {
         "enable": true,
         "scope": [

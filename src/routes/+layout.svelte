@@ -1,5 +1,5 @@
 <script lang="ts">
-  import {getValue, initializeData, setValue} from "../tools/DataInterface";
+  import { getValue, initializeData, setValue } from "../tools/DataInterface";
   import "../app.css";
   import { invoke } from "@tauri-apps/api/core";
   import { onMount, tick } from "svelte";
@@ -23,10 +23,8 @@
 
   
   onMount(async() => {
-    await tick();
     // Populate additional variables
     await getMic();
-    await initializeData();
     await createAdditionalData();
 
     versionNumber = await formatVersion();

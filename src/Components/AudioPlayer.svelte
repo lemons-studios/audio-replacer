@@ -13,16 +13,13 @@
   let audioPlaying = $state(false);
   let loopEnabled = $state(true);
   
-  let trueSource = $derived(() => { 
-    if(!source) return null;
-    return convertFileSrc(source);
-  });
+  let trueSource = $derived(source ? convertFileSrc(source) : null);
 
   let audioPlayer: HTMLAudioElement;
   let seekBar: HTMLInputElement;
 
   $effect(() => {
-    if(audioPlayer && trueSource()) {
+    if(audioPlayer && trueSource) {
       audioPlayer.pause();
       audioPlayer.load();
       
@@ -95,8 +92,8 @@
 </script>
 
 <div class="flex flex-row justify-center gap-4 bg-neutral-900 rounded-lg mx-auto items-center shadow-lg pl-3 pr-4 py-2">
-    <audio ontimeupdate={audioPlayerTimeUpdate} onended={onAudioEnded} bind:this={audioPlayer}>
-        <source src={trueSource()}>
+    <audio ontimeupdate={audioPlayerTimeUpdate} onended={onAudioEnded} bind:this={audioPlayer} preload="auto">
+        <source src={trueSource}>
     </audio>
     <div class="flex flex-row gap-3 items-center">
         {#if audioPlaying}

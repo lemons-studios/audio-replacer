@@ -3,12 +3,10 @@ extern crate core;
 use crate::commands::app_functions::{close_app, get_install_directory, get_username, in_dev_env};
 use crate::commands::project_manager::{delete_empty_subdirectories, get_all_files};
 use crate::commands::whisper_utils::transcribe_file;
-use core::error::Error;
 use core::option::Option::Some;
-use log::error;
 use tauri::Manager;
 use webkit2gtk::glib::Cast;
-use webkit2gtk::{SettingsExt, UserMediaPermissionRequest, WebViewExt};
+use webkit2gtk::{WebViewExt};
 mod commands;
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
@@ -44,7 +42,7 @@ pub fn run() {
             let window = app
                 .get_webview_window("audio-replacer")
                 .expect("Main window not found!");
-            #[cfg(target_os = "linux")]
+            #[cfg(target_os = "linux")] // Fix webkit2gtk permission issues
             {
                 use webkit2gtk::{
                     PermissionRequestExt, SettingsExt, UserMediaPermissionRequest, WebView,
