@@ -1,4 +1,5 @@
 use std::{fs, path::Path, str, vec};
+use rand::seq::SliceRandom;
 use tauri::command;
 use walkdir::WalkDir;
 
@@ -46,4 +47,11 @@ pub fn delete_empty_subdirectories(project_path: &str) {
             }
         }
     }
+}
+
+#[command]
+pub fn randomize_file_order(mut arr: Vec<String>) -> Vec<String> {
+    let mut rng = rand::rng();
+    arr.shuffle(&mut rng);
+    arr
 }

@@ -4,8 +4,7 @@ import { basename, dirname, extname, join, resolveResource } from "@tauri-apps/a
 import { exists, mkdir, readDir, readTextFile, remove, rename, writeTextFile } from "@tauri-apps/plugin-fs";
 import { populateFFMpegFilters } from "../routes/recordPage/AudioManager";
 import { error } from "@tauri-apps/plugin-log";
-import { listen } from "@tauri-apps/api/event";
-import {getValue, setValue} from "./DataInterface";
+import { getValue, setValue } from "./DataInterface";
 
 /**
  * @description points to the output folder in the installation directory (installDir/output)
@@ -52,6 +51,8 @@ export async function setActiveProject(projectFile: string) {
     if(!(await exists(outputFolder))) await mkdir(outputFolder);
 
     inputFiles = await getAllFiles(inputFolder);
+    await sortInputFiles();
+
     outputFiles = await getAllFiles(outputFolder);
 
     // Replicate folder structure of input folder
@@ -190,6 +191,26 @@ export function countOutputFiles() {
     return outputFiles.length;
 }
 
+async function sortInputFiles() {
+    const sortingMethod: number = await getValue('settings.sortingMethod');
+    switch (sortingMethod) {
+        default: // Sort Alphabetically
+            inputFiles.sort();
+            break;
+        case 1: // Reverse-Alphabetical
+            inputFiles.reverse();
+            break;
+        case 2: // Randomise
+            // This sorting method is probably very computationally expensive, so I made a rust command that should cut down on quite a bit of sorting time
+            await invoke<string[]>("randomizeFileOrder", {
+                arr: inputFiles
+            }).then((res) => {
+                inputFiles = res;
+            });
+            break;
+    }
+}
+
 function isAudioFile(path: string): boolean {
     const types: string[] = ['.wav', 'mp3', '.flac', ".m4a"]; // Maybe I should make this a bit more robust in the future
     return types.some(ext => path.toLowerCase().endsWith(ext.toLowerCase()));
@@ -236,3 +257,4 @@ export async function updateArprojStats(key: string, value: any) {
 
     await writeTextFile(currentLoadedProject, JSON.stringify(arproj));
 }
+

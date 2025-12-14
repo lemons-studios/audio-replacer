@@ -294,6 +294,7 @@ dependencies = [
  "hound",
  "log",
  "num_cpus",
+ "rand 0.9.2",
  "serde",
  "serde_json",
  "tauri",

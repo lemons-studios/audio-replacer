@@ -1,9 +1,9 @@
 <script lang="ts">
-  import {getValue, setValue} from "../tools/DataInterface";
+  import { getValue, setValue } from "../tools/DataInterface";
   import {onMount, tick} from "svelte";
   import { setPresenceDetails } from "../tools/DiscordPresenceManager";
   import { exists, readTextFile, writeTextFile } from "@tauri-apps/plugin-fs";
-  import {saveFile, selectFile, selectFolder, sleep, timestampToLegible} from "../tools/OsTools";
+  import { saveFile, selectFile, selectFolder, sleep, timestampToLegible } from "../tools/OsTools";
   import { createArProj, setActiveProject, updateArprojStats } from "../tools/ProjectHandler";
   import { goto } from "$app/navigation";
   import IconArrowRightRegular from "phosphor-icons-svelte/IconArrowRightRegular.svelte"
@@ -67,8 +67,6 @@
     }
   });
 
-
-
   async function loadProject(path: string) {
     await setActiveProject(path);
     await updateArprojStats("lastOpened", Date.now());
@@ -95,11 +93,11 @@
 
 <div class="flex flex-col gap-3 h-full w-full p-3">
   <div class="flex flex-row gap-5 h-full">
-    <div class="flex flex-col w-1/2 card rounded-xl p-3">
+    <div class="flex flex-col w-1/2 h-full card rounded-xl p-3">
       <h1 class="text-center text-3xl font-medium">Projects</h1>
-      <div class="flex flex-col justify-apart text-center items-center mt-15 h-full gap-y-3">
+      <div class="flex flex-col text-center items-center mt-15 h-full gap-y-3">
         {#if recentProjectObjs.length === 0}
-          <h1>No Recent Projects</h1>
+          <h1 class="text-center text-gray-400">No Recent Projects</h1>
         {:else}
         {#each recentProjectObjs as rp, i}
           <button class="save-btn rounded-sm w-full dark:hover:bg-tertiary-d hover:bg-tertiary dark:focus:bg-tertiary-d dark:focus:drop-shadow-xl transition duration-75"
@@ -110,24 +108,33 @@
               <div class="flex flex-col">
                 <p class="text-lg">{rp.name}</p>
                 <p class="text-gray-400 text-sm">Last Opened: {timestampToLegible(rp.lastOpened)}</p>
-                <!--<p class="text-gray-400 text-xs">Files Remaining: {Intl.NumberFormat().format(rp.fileCount)}</p>-->
+                <p class="text-gray-400 text-xs">Files Remaining: {Intl.NumberFormat().format(rp.fileCount)}</p>
               </div>
               <IconArrowRightRegular class="arrow w-5 h-5"></IconArrowRightRegular>
             </div>
           </button>
         {/each}
         {/if}
-        <button class="nav-btn text-center bg-primary-d" onclick={newProject} onmouseleave={(e) => e.currentTarget.blur()} onmouseup={(e) => e.currentTarget.blur()}>New Project</button>
-        <button class="nav-btn text-center bg-primary-d" onclick={async() => {
-          const file = await selectFile(["arproj"], "Audio Replacer Project Files");
-          const project = JSON.parse(await readTextFile(file));
-          recentProjectPaths.push(file);
-          recentProjectObjs.push(project);
-
-          await setValue('settings.recentProjectPaths', recentProjectPaths);
-          await loadProject(file);
-        }} onmouseleave={(e) => e.currentTarget.blur()} onmouseup={(e) => e.currentTarget.blur()}>Load Project</button>
-
+        <div class="flex row w-[105%] h-auto p-2 rounded-b-lg bg-tertiary-d justify-end align-bottom items-end gap-x-5">
+          <button class="text-center p-1.5 hover:bg-accent focus:bg-accent-secondary focus:drop-shadow-accent-shadow focus:drop-shadow-md rounded-md transition"
+                  onclick={newProject} onmouseleave={(e) => e.currentTarget.blur()}
+                  onmouseup={(e) => e.currentTarget.blur()}>
+            New Project
+          </button>
+          <button class="text-center p-1.5 hover:bg-accent focus:bg-accent-secondary focus:drop-shadow-accent-shadow focus:drop-shadow-md rounded-md transition"
+                  onclick={async() => {
+                  const file = await selectFile(["arproj"], "Audio Replacer Project Files");
+                  const project = JSON.parse(await readTextFile(file));
+                  recentProjectPaths.push(file);
+                  recentProjectObjs.push(project);
+                  await setValue('settings.recentProjectPaths', recentProjectPaths);
+                  await loadProject(file);
+                }}
+                  onmouseleave={(e) => e.currentTarget.blur()}
+                  onmouseup={(e) => e.currentTarget.blur()}>
+            Load Project
+          </button>
+        </div>
       </div>
     </div>
     <div class="flex flex-col gap-y-5 w-1/2">

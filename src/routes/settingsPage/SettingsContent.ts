@@ -1,4 +1,6 @@
 import { getValue, setValue } from "../../tools/DataInterface";
+import { isUpdateAvailable } from "../../tools/Updater";
+import { clearRichPresence, startRichPresence } from "../../tools/DiscordPresenceManager";
 
 export const settings = {
   General: [
@@ -8,6 +10,9 @@ export const settings = {
       type: "boolean",
       onChange: async(value: boolean) => {
         await setValue('settings.updateCheck', value);
+        if(value) {
+          await isUpdateAvailable();
+        }
       },
       getValue: (): boolean => {
         return getValue('settings.updateCheck')
@@ -30,6 +35,12 @@ export const settings = {
       type: "boolean",
       onChange: async(value: boolean) => {
         await setValue('settings.enableRichPresence', value);
+        if(value) {
+          await startRichPresence();
+        }
+        else {
+          await clearRichPresence();
+        }
       },
       getValue: (): boolean => {
         return getValue('settings.enableRichPresence');
@@ -83,7 +94,7 @@ export const settings = {
     },
     {
       name: "File Sorting Order",
-      description: "What order Audio Replacer will sort audio files in",
+      description: "What order Audio Replacer will sort audio files in. Takes effect after reloading a project",
       type: "dropdown",
       choices: [
           "Alphabetical (A-Z)",

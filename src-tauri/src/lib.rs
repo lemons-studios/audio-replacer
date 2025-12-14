@@ -1,7 +1,7 @@
 extern crate core;
 
-use crate::commands::app_functions::{close_app, get_install_directory, get_username, in_dev_env};
-use crate::commands::project_manager::{delete_empty_subdirectories, get_all_files};
+use crate::commands::app_functions::{ close_app, get_install_directory, get_username, in_dev_env };
+use crate::commands::project_manager::{ delete_empty_subdirectories, get_all_files, randomize_file_order };
 use crate::commands::whisper_utils::transcribe_file;
 use core::option::Option::Some;
 use tauri::Manager;
@@ -36,13 +36,14 @@ pub fn run() {
             get_install_directory,
             in_dev_env,
             get_username,
-            close_app
+            close_app,
+            randomize_file_order
         ])
         .setup(|app| {
             let window = app
                 .get_webview_window("audio-replacer")
                 .expect("Main window not found!");
-            #[cfg(target_os = "linux")] // Fix webkit2gtk permission issues
+            #[cfg(target_os = "linux")] // Fix WebKit2Gtk permission issues (I have no clue why this is necessary for a frontend permission fix)
             {
                 use webkit2gtk::{
                     PermissionRequestExt, SettingsExt, UserMediaPermissionRequest, WebView,

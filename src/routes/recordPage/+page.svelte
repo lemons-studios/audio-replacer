@@ -7,9 +7,9 @@
   import { selectFile } from "../../tools/OsTools";
   import AudioPlayer from "../../Components/AudioPlayer.svelte";
   import ProgressBar from "../../Components/ProgressBar.svelte";
-    import { register, unregisterAll } from "@tauri-apps/plugin-global-shortcut";
-    import { exists } from "@tauri-apps/plugin-fs";
-  import {getValue} from "../../tools/DataInterface";
+  import { register, unregisterAll } from "@tauri-apps/plugin-global-shortcut";
+  import { exists } from "@tauri-apps/plugin-fs";
+  import { getValue } from "../../tools/DataInterface";
 
   let file = $state("No Project Opened");
   let audioSource = $state("");
@@ -21,7 +21,6 @@
   let recording = $state(false);
   let reviewing = $state(false);
   let extraEdits = false;
-  
 
   let effects: string[] = $state([]);
   let pitch: string[] = $state([]);

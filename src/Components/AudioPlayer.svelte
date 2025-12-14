@@ -83,7 +83,7 @@
   }
 
   function isAudioValid(): boolean {
-    return !isNaN(audioPlayer.duration);
+    return !isNaN(audioPlayer.duration) && audioPlayer.duration >= 0;
   }
 
   async function doesAudioExist(): Promise<boolean> {
