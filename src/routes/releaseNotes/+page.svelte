@@ -36,5 +36,3 @@
     <SvelteMarkdown source={markdown} class="dark:prose-invert text-center w-screen" />
   </div>
 </div>
-
-

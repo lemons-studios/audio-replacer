@@ -44,23 +44,6 @@
   // svelte-ignore non_reactive_update
   let audioPlayer: AudioPlayer | undefined = undefined;
 
-  const shortcuts = [
-    {
-      combination: 'CommandOrControl+R',
-      action: async() => {
-        if(idle) {
-
-        }
-        else if(recording) {
-
-        }
-        else if(reviewing) {
-
-        }
-      }
-    }
-  ];
-
   const buttons = {
     idle: [
       {
@@ -81,7 +64,7 @@
     ],
     recording: [
       {
-        label: 'Discard',
+        label: 'Cancel',
         action: async() => {
           recording = false;
           idle = true;
@@ -130,6 +113,52 @@
       }
     ]
   }
+
+  const shortcuts = [
+    {
+      combination: 'CommandOrControl+R',
+      action: async() => {
+        if(idle) {
+          await buttons.idle[1].action();
+        }
+        else if(recording) {
+          await buttons.recording[1].action();
+        }
+        else {
+          await buttons.reviewing[2].action();
+        }
+      }
+    },
+    {
+      combination: 'CommandOrControl+Q',
+      action: async() => {
+        if(idle) {
+          await buttons.idle[0].action();
+        }
+        else if(recording) {
+          await buttons.recording[0].action();
+        }
+        else {
+          await buttons.reviewing[0].action();
+        }
+      }
+    },
+    {
+      combination: 'CommandOrControl+E',
+      action: async() => {
+        if(reviewing) {
+          await buttons.reviewing[1].action();
+        }
+      }
+    },
+    {
+      combination: 'CommandOrControl+F',
+      action: () => {
+        extraEdits = true;
+      }
+    }
+  ];
+
 
   function updateContent() {
     if(!projectLoaded) return;

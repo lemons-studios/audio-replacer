@@ -1,4 +1,3 @@
-<!--Adapted component from https://github.com/dave22r/RegionalOutbreakPredictor/blob/main/frontend/src/components/Loading.css and https://github.com/dave22r/RegionalOutbreakPredictor/blob/main/frontend/src/components/Loading.jsx-->
 <script lang="ts">
     let { intermediate = false, progress = 10 } = $props();
     let formattedProgress = $derived(() => {
@@ -9,3 +8,9 @@
         return `w-${progress}/100`
     }
 </script>
+
+<div class="w-full dark:bg-tertiary-d bg-tertiary">
+    <div class={`${getWidth()} bg-accent h-full`}>
+
+    </div>
+</div>

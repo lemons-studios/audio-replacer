@@ -260,4 +260,3 @@ export async function updateArprojStats(key: string, value: any) {
 
     await writeTextFile(currentLoadedProject, JSON.stringify(arproj));
 }
-
