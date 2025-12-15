@@ -25,7 +25,7 @@ export let outputFile: string;
 
 export let fileTranscription: string;
 export let localPath: string;
-export let projectLoaded: boolean;
+export let projectLoaded: boolean = false;
 
 let currentLoadedProject: string = "";
 
@@ -43,7 +43,9 @@ export async function createAdditionalData() {
  */
 export async function setActiveProject(projectFile: string) {
     projectLoaded = false;
-    currentLoadedProject = projectFile
+    if(currentFile === projectFile) return; // Prevents unnecessary computation if a user is just clicking on a loaded project
+
+    currentLoadedProject = projectFile;
     const object = JSON.parse(await readTextFile(currentLoadedProject));
 
     inputFolder = object.path;

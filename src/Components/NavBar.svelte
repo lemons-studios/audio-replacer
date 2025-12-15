@@ -7,6 +7,7 @@
     import { onMount, tick } from 'svelte';
     import { getVersion } from "@tauri-apps/api/app";
     import { goto } from '$app/navigation';
+    import {error} from "@tauri-apps/plugin-log";
 
     let buildText = $state('Audio Replacer 5');
 
@@ -51,6 +52,15 @@
         const [mj, mn, p] = (await getVersion()).split(".");
         return `${mj}.${mn}${p == "0" ? '' : `.${p}`}`;
     }
+
+    async function navigateToPage(route: string) {
+        try {
+            await goto(route);
+        } catch(e: any) {
+            await error(`error whilst loading ${route}: ${e}`);
+        }
+    }
+
 </script>
 
 <style>
@@ -69,13 +79,13 @@
     <!--Top Menu Items-->
     <div class="menu-container gap-0.5">
         {#each navbarContents.top as item}
-            <button class="nav-btn transition" onmouseleave={(e) => e.currentTarget.blur()} onclick={async() => await goto(item.route)}><item.icon class="w-5 h-5" />{item.name}</button>
+            <button class="nav-btn transition" onmouseleave={(e) => e.currentTarget.blur()} onclick={async() => await navigateToPage(item.route)}><item.icon class="w-5 h-5" />{item.name}</button>
         {/each}
     </div>
     <!--Bottom Menu Items-->
     <div class="menu-container gap-0.5">
         {#each navbarContents.bottom as item}
-            <button class="nav-btn transition" onmouseleave={(e) => e.currentTarget.blur()} onclick={async() => await goto(item.route)}><item.icon />{item.name}</button>
+            <button class="nav-btn transition" onmouseleave={(e) => e.currentTarget.blur()} onclick={async() => await navigateToPage(item.route)}><item.icon />{item.name}</button>
         {/each}
         <p class="text-xs text-gray-400">{buildText}</p>
     </div>

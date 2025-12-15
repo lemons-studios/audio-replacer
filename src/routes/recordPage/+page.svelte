@@ -29,7 +29,7 @@
   let selectedEffect = 0;
 
   // svelte-ignore non_reactive_update
-  let audioPlayer: AudioPlayer;
+  let audioPlayer: AudioPlayer | undefined = undefined;
 
   const shortcuts = [
     {
@@ -59,6 +59,9 @@
   });
 
   onMount(async() => {
+    if(!projectLoaded) return;
+    await setPresenceDetails("Recording Audio");
+
     // Only refresh on page refresh since the only way they would change is if someone navigated to the editor route
     effects = effectFilterNames;
     pitch = pitchFilterNames;
@@ -69,10 +72,6 @@
     for(let i = 0; i < shortcuts.length; i++) {
       await register(shortcuts[i].combination, shortcuts[i].action);
     }
-  });
-
-  onMount(async() => {
-    await setPresenceDetails("Recording Audio");
   });
 
   onDestroy(async() => {

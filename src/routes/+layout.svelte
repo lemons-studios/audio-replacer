@@ -24,7 +24,10 @@
   
   onMount(async() => {
     // Populate additional variables
+    await info("Getting/Asking for Microphone Permission");
     await getMic();
+
+    await info("Creating Additional Directories");
     await createAdditionalData();
 
     versionNumber = await formatVersion();

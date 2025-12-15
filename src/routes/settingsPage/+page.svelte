@@ -13,8 +13,9 @@
 <!--Ignore any errors below if any are visible, they only show up because not all elements in the javascript object share the same list of properties-->
 <div class="flex grow justify-center flex-col gap-y-2.5 items-center overflow-y-auto p-5 settings-container">
   {#each Object.entries(settings) as [name, settingCategory], sIndex}
-    <div class="dark:bg-secondary-d bg-secondary rounded-xl p-3 w-3/4 gap-3">
-      <h2 class="text-center">{name}</h2>
+    <div class="card w-3/4 p-2">
+      <h2 class="text-center text-3xl mb-2.5">{name}</h2>
+      <hr class="border-accent-secondary mb-1">
       {#each settingCategory as setting}
         <div class="flex justify-between items-center px-4 mb-3 mt-3">
           <div class="w-full">
