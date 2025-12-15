@@ -142,6 +142,7 @@ export async function skipFile(moveToOutput: boolean = false) {
     else {
         await remove(currentFile);
     }
+    await getNextFile();
 }
 
 /**

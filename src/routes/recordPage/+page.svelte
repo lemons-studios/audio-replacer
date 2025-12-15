@@ -1,7 +1,20 @@
 <script lang="ts">
   import { onDestroy, onMount } from "svelte";
   import { setPresenceDetails, setPresenceState } from "../../tools/DiscordPresenceManager";
-  import { calculateCompletion, countInputFiles, countOutputFiles, currentFile, discardFile, fileTranscription, localPath, outputFile, projectLoaded, skipFile, submitFile } from "../../tools/ProjectHandler";
+  import {
+    calculateCompletion,
+    countInputFiles,
+    countOutputFiles,
+    currentFile,
+    discardFile,
+    fileTranscription,
+    localPath,
+    outputFile,
+    projectLoaded,
+    setActiveProject,
+    skipFile,
+    submitFile
+  } from "../../tools/ProjectHandler";
   import { cancelRecording, effectFilterNames, endRecording, pitchFilterNames, startRecording } from "./AudioManager";
   import { goto } from "$app/navigation";
   import { selectFile } from "../../tools/OsTools";
@@ -48,15 +61,86 @@
     }
   ];
 
-  $effect(() => {
+  const buttons = {
+    idle: [
+      {
+        label: "Skip",
+        action: async() => {
+          await skipFile();
+          updateContent();
+        }
+      },
+      {
+        label: "Record",
+        action: async() => {
+          idle = false;
+          recording = true;
+          await startRecording();
+        }
+      }
+    ],
+    recording: [
+      {
+        label: 'Discard',
+        action: async() => {
+          recording = false;
+          idle = true;
+          await cancelRecording();
+        }
+      },
+      {
+        label: 'End',
+        action: async() => {
+          recording = false;
+          await endRecording(selectedPitch, selectedEffect);
+          const autoAcceptRecordings = getValue('settings.autoAcceptRecordings')
+          if(autoAcceptRecordings) {
+            await submitFile(extraEdits);
+            idle = true;
+          }
+          else reviewing = true;
+        }
+      }
+    ],
+    reviewing: [
+      {
+        label: 'Reject',
+        action: async() => {
+          reviewing = false;
+          idle = true;
+          await discardFile();
+        }
+      },
+      {
+        label: 'Switch',
+        action: async() => {
+          if(!(await exists(outputFile))) return;
+          audioSource = (audioSource === outputFile) ? currentFile : outputFile;
+        }
+      },
+      {
+        label: 'Accept',
+        action: async() => {
+          reviewing = false;
+          idle = true;
+          await submitFile(extraEdits);
+          audioSource = currentFile;
+          updateContent();
+        }
+      }
+    ]
+  }
+
+  function updateContent() {
     if(!projectLoaded) return;
     file = localPath.replaceAll("\\", "/").substring(1);
     progressDecimal = calculateCompletion() / 100;
     progressPercentage = `${calculateCompletion().toFixed(2)}%`;
     filesRemaining = new Intl.NumberFormat().format(countInputFiles() - countOutputFiles());
     transcription = fileTranscription;
+    audioSource = currentFile;
     setPresenceState(`Files Remaining: ${filesRemaining}`);
-  });
+  }
 
   onMount(async() => {
     if(!projectLoaded) return;
@@ -66,18 +150,21 @@
     effects = effectFilterNames;
     pitch = pitchFilterNames;
 
-    // Initial Audio Load. Subsequent are handled by the app
-    audioSource = currentFile;
-
     for(let i = 0; i < shortcuts.length; i++) {
       await register(shortcuts[i].combination, shortcuts[i].action);
     }
+
+    updateContent();
   });
 
   onDestroy(async() => {
     await setPresenceState(""); // Remove presence state as the rest of the app doesn't use it
     await unregisterAll(); // Unregister all shortcuts
   });
+
+  function getActiveState() {
+    return (idle ? buttons.idle : recording ? buttons.recording : buttons.reviewing)
+  }
 </script>
 
 {#if projectLoaded}
@@ -92,46 +179,13 @@
     <AudioPlayer bind:this={audioPlayer} source={audioSource}></AudioPlayer>
     <h3 class="font-light text-gray-300 mb-5">{transcription}</h3>
     <div class="flex flex-row gap-5">
-      {#if idle}
-      <button class="app-btn min-w-30" disabled onclick={() => {skipFile()}}>Skip</button>
-      <button class="app-btn min-w-30" onclick={async() => {
-        idle = false;
-        recording = true;
-        await startRecording();
-      }}>Record</button>
-      {:else if recording}
-      <button class="app-btn min-w-30" onclick={() => {
-        recording = false;
-        idle = true;
-        cancelRecording();
-      }}>Discard</button>
-      <button class="app-btn min-w-30" onclick={async() => {
-        recording = false;
-        await endRecording(selectedPitch, selectedEffect);
-        const autoAcceptRecordings = getValue('settings.autoAcceptRecordings')
-        if(autoAcceptRecordings) {
-          await submitFile(extraEdits);
-          idle = true;
-        }
-        else reviewing = true;
-      }}>End</button>
-      {:else if reviewing}
-      <button class="app-btn min-w-30" onclick={async() => {
-        reviewing = false;
-        idle = true;
-        await discardFile();
-      }}>Reject</button>
-      <button class="app-btn min-w-30" onclick={async() => {
-        if(!(await exists(outputFile))) return;
-        audioSource = (audioSource === outputFile) ? currentFile : outputFile;
-      }}>Switch</button>
-      <button class="app-btn min-w-30" onclick={async() => {
-        reviewing = false;
-        idle = true;
-        await submitFile(extraEdits);
-        audioSource = currentFile;
-      }}>Accept</button>
-      {/if}
+      {#each getActiveState() as button}
+        <button class="app-btn min-w-30"
+                onmouseleave={(e) => e.currentTarget.blur}
+                onclick={async(e) => {e.currentTarget.blur(); await button.action()
+                }}>
+          {button.label}</button>
+      {/each}
     </div>
   </div>
   <div class="flex flex-col justify-center items-center w-3/8 card rounded-lg">
@@ -167,13 +221,19 @@
   <h1 class="text-center text-5xl font-bold">No Project Loaded</h1>
   <h2 class="text-3xl font-medium">Go Load One</h2>
   <div class="flex flex-row justify-center gap-3">
-    <button class="app-btn" onclick={async() => {
-      // File popup for project selection
-      const file = await selectFile(['arproj'], 'Audio Replacer Projects');
-
-      // TODO: Finish this part
-    }} onmouseleave={(e) => e.currentTarget.blur} onmouseup={(e) => e.currentTarget.blur()}>Load Project</button>
-    <button class="app-btn" onclick={() => goto('/')} onmouseleave={(e) => e.currentTarget.blur} onfocus={(e) => e.currentTarget.blur()}>Return Home</button>
+    <button class="app-btn"
+            onclick={async(e) => {
+              e.currentTarget.blur();
+              const file = await selectFile(['arproj'], 'Audio Replacer Projects');
+              await setActiveProject(file);
+            }}
+            onmouseleave={(e) => e.currentTarget.blur}>
+            Load Project
+    </button>
+    <button class="app-btn"
+            onclick={async(e) => {e.currentTarget.blur(); await goto('/')}}
+            onmouseleave={(e) => e.currentTarget.blur}>Return Home
+    </button>
   </div>
 </div>
 {/if}
