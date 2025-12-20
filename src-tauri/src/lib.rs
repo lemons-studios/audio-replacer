@@ -5,8 +5,6 @@ use crate::commands::project_manager::{ delete_empty_subdirectories, get_all_fil
 use crate::commands::whisper_utils::transcribe_file;
 use core::option::Option::Some;
 use tauri::Manager;
-use webkit2gtk::glib::Cast;
-use webkit2gtk::{WebViewExt};
 mod commands;
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
@@ -45,6 +43,8 @@ pub fn run() {
                 .expect("Main window not found!");
             #[cfg(target_os = "linux")] // Fix WebKit2Gtk permission issues (I have no clue why this is necessary for a frontend permission fix)
             {
+                use webkit2gtk::glib::Cast;
+                use webkit2gtk::{WebViewExt};
                 use webkit2gtk::{
                     PermissionRequestExt, SettingsExt, UserMediaPermissionRequest, WebView,
                 };

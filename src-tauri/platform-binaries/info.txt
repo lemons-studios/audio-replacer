@@ -1,0 +1,56 @@
+FFMpeg is compiled with gpl v2 or later libraries enabled. I have not modified the libraries themselves in any way whatsoever. Below are the compile flags used on the Linux version of the app:
+./configure \
+--arch=x86_64 \
+--disable-x86asm \
+--disable-inline-asm \
+--disable-doc \
+--disable-htmlpages \
+--disable-manpages \
+--disable-podpages \
+--disable-txtpages \
+--disable-network \
+--disable-dwt \
+--disable-lsp \
+--disable-faan \
+--disable-pixelutils \
+--disable-sdl2 \
+--disable-xlib \
+--disable-zlib \
+--disable-bzlib \
+--disable-iconv \
+--disable-swscale \
+--disable-swscale-alpha \
+--disable-devices \
+--disable-os2threads \
+--disable-ffplay \
+--disable-ffprobe \
+--optflags="-O3 -ffunction-sections -fdata-sections" \
+--extra-cflags="-O3 -ffunction-sections -fdata-sections" \
+--extra-cxxflags="-O3 -ffunction-sections -fdata-sections" \
+--extra-ldflags="-Wl,--gc-sections -s" \
+--disable-debug \
+--disable-w32threads \
+--disable-hwaccels \
+--enable-small \
+--enable-lto \
+--enable-libmp3lame \
+--enable-libopus \
+--enable-libvorbis \
+--enable-libsoxr \
+--enable-gpl \
+--enable-librubberband \
+--disable-everything \
+--enable-filter='acompressor,acrossover,adeclick,adelay,adynamicsmooth,aecho,afade,afftdn,afir,afreqshift,agate,aintegral,alimiter,allpass,aloop,amerge,amix,anull,apad,aphaser,aresample,areverse,aselect,asetpts,asetnsamples,asetrate,ashowinfo,asplit,astats,atempo,atrim,avectorscope,avsynctest,bandpass,bandreject,bass,biquad,channelmap,channelsplit,chorus,compand,crossfeed,dcshift,deesser,dialoguenhance,dynaudnorm,earwax,equalizer,extrastereo,firequalizer,flanger,haas,headphone,highpass,highshelf,join,loudnorm,lowpass,lowshelf,mcompand,midequalizer,mix,noise,normalize,pan,realtime,remap,replaygain,resample,reverse,rubberband,sidechaincompress,sidechaingate,silencedetect,silenceremove,sine,speechnorm,stereotools,stereowiden,superequalizer,surround,tiltshelf,treble,tremolo,vibrato,virtualbass,volume,volumedetect' \
+--enable-decoder='aac,mp3,opus,vorbis,flac,wav,pcm_s16le,pcm_s16be,pcm_s24le,pcm_s24be,pcm_s32le,pcm_s32be,pcm_f32le,pcm_f32be,pcm_f64le,pcm_f64be' \
+--enable-encoder='aac,libmp3lame,opus,vorbis,flac,pcm_s16le,pcm_s16be,pcm_s24le,pcm_s24be,pcm_s32le,pcm_s32be,pcm_f32le,pcm_f32be,pcm_f64le,pcm_f64be' \
+--enable-demuxer='aac,mp3,ogg,wav,flac,m4a' \
+--enable-muxer='mp3,ogg,opus,wav,flac' \
+--enable-parser='aac,mpegaudio,opus,vorbis,flac' \
+--enable-bsf='aac_adtstoasc,mp3_header_decompress' \
+--enable-protocol=file \
+--disable-autodetect \
+--disable-doc \
+--enable-static \
+--disable-shared
+
+Below are the windows flags:
