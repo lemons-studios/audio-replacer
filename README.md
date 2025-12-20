@@ -6,7 +6,7 @@
 
 <p align="center">
   <img src="https://img.shields.io/badge/Tauri-FFC131?style=for-the-badge&logo=Tauri&logoColor=000" alt="Tauri Badge">
-  <img src="https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white" alr="TypeScript Badge">
+  <img src="https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white" alt="TypeScript Badge">
   <img src="https://img.shields.io/badge/Rust-000000?style=for-the-badge&logo=rust&logoColor=white" alt="Rust Badge">
   <img src="https://img.shields.io/badge/SvelteKit-FF3E00?style=for-the-badge&logo=Svelte&logoColor=white" alt="SvelteKit Badge">
 </p>
@@ -43,7 +43,7 @@ You can download the [**latest release here**](https://github.com/lemons-studios
 
 ### Requirements
 
-- Windows 10/11 or Linux (MacOS is currently __unsupported__)
+- Windows 10/11 or Linux (macOS is currently __unsupported__)
 
 > [!WARNING]  
 > Windows 10 will be unsupported (aside from extended security updates) starting **__October 14th, 2025__**. Issues that only affect Windows 10 will not be fixed after this date
@@ -52,8 +52,7 @@ You can download the [**latest release here**](https://github.com/lemons-studios
 > Linux users can find install guides for their distribution/package manager [here](https://github.com/lemons-studios/audio-replacer/wiki/Install-Audio-Replacer)
 
 - A 64-bit CPU
-- ~100Mb of free storage space
-- At least 20Mb of RAM
+- 25-60Mb of free storage space, depending on platform
 
 ## ⚙️ Build From Source
 Refer to the [wiki](https://github.com/lemons-studios/audio-replacer/wiki/Developing-Audio-Replacer)

@@ -1,0 +1,9 @@
+id: org.lemon-studios.audio-replacer
+runtime: org.gnome.Platform
+runtime-version: '48'
+sdk: org.gnome.Sdk
+command: audio-replacer
+
+finish-args:
+  - --socket=wayland
+  - --filesystem=host

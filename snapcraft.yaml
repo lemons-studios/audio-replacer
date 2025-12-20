@@ -1,0 +1,68 @@
+name: audio-replacer
+base: core24
+version: '5.0.0'
+summary: Easily dub over voicelines
+description: |
+  Audio Replacer aims to make creating video game dub mods (i.e translation mods) easier to produce by centralizing everything that goes into dubbing, from data-driven FFMpeg filters to automatic text transcription
+grade: devel
+confinement: strict
+apps:
+  audio-replacer:
+    command: /usr/bin/audio-replacer
+    desktop: /usr/share/applications/audio-replacer.desktop
+    extensions: [gnome]
+    plugs:
+      - network
+      - single-instance-plug
+    slots:
+      - single-instance-plug
+
+slots:
+  single-instance:
+    interface: dbus
+    bus: session
+    name: org.lemon_studios_audio_replacer.SingleInstance
+plugs:
+  single-instance-plug:
+    interface: dbus
+    bus: session
+    name: org.lemon_studios_audio_replacer.SingleInstance
+
+package-repositories:
+  - type: apt
+    components: [main]
+    suites: [noble]
+    key-id: 78E1918602959B9C59103100F1831DDAFC42E99D
+    url: http://ppa.launchpad.net/snappy-dev/snapcraft-daily/ubuntu
+
+build-base: devel
+parts:
+  build-app:
+    plugin: dump
+    build-snaps:
+      - node/latest/stable
+      - rustup/latest/stable
+    build-packages:
+      - libwebkit2gtk-4.1-dev
+      - build-essential
+      - curl
+      - wget
+      - file
+      - libxdo-dev
+      - libssl-dev
+      - libayatana-appindicator3-dev
+      - librsvg2-dev
+      - dpkg
+      - cmake
+      - libclang-dev
+      - llvm
+      - lld
+    stage-packages:
+      - libwebkit2gtk-4.1-0
+      - libayatana-appindicator3-1
+    source: .
+    override-build: |
+      set -eu
+      npm install
+      npm run tauri build -- --bundles deb
+      dpkg -x src-tauri/target/release/bundle/deb/*.deb $SNAPCRAFT_PART_INSTALL/

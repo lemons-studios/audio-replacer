@@ -15,13 +15,6 @@ async function download() {
       name: "whisper.bin"
     },
     {
-      path: `${binDir}/${platform === "win32" ? "ffmpeg-x86_64-pc-windows-msvc.exe" : "ffmpeg-x86_64-unknown-linux-gnu"}`,
-      url: platform === "win32" 
-      ? "https://github.com/ChakornK/audio-min-ffmpeg-win-crosscompile/releases/download/v8.0/ffmpeg.exe" 
-      : "https://github.com/ChakornK/audio-min-ffmpeg-win-crosscompile/releases/download/v8.0/ffmpeg",
-      name: `ffmpeg-${platform === "win32" ? "windows" : "linux"}`
-    },
-    {
       path: `${binDir}/noiseSuppression.rnnn`,
       url:  "https://raw.githubusercontent.com/richardpl/arnndn-models/refs/heads/master/std.rnnn",
       name: "noiseSuppression.rnnn"

@@ -1,4 +1,4 @@
-name: "Create Audio Replacer Package (.deb, .exe, .msi, .AppImage, .rpm)"
+name: "Create Audio Replacer Package (.deb, .exe, .msi, .AppImage)"
 
 on:
   push:
