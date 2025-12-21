@@ -12,8 +12,7 @@
   import { info } from "@tauri-apps/plugin-log";
   import NavBar from "../Components/NavBar.svelte";
   import Notification from "../Components/Notifications/Notification.svelte";
-  import {createAdditionalData} from "../tools/ProjectHandler";
-
+  import { createAdditionalData } from "../tools/ProjectHandler";
 
   let { children } = $props();
   let versionNumber = $state("");

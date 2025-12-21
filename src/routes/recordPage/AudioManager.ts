@@ -1,15 +1,16 @@
 import { rename, writeFile } from "@tauri-apps/plugin-fs";
-import { MediaRecorder as MediaRecorderEx, register } from "extendable-media-recorder";
+import {type IMediaRecorder, MediaRecorder, register} from "extendable-media-recorder";
 import { connect } from 'extendable-media-recorder-wav-encoder';
 import { outputFile } from '../../tools/ProjectHandler';
 import { Command } from "@tauri-apps/plugin-shell";
 import { resolveResource } from "@tauri-apps/api/path";
 import { sleep } from "../../tools/OsTools";
-import { listen } from "@tauri-apps/api/event";
-import {getValue, setValue} from "../../tools/DataInterface";
+import { getValue, setValue } from "../../tools/DataInterface";
+import { info } from "@tauri-apps/plugin-log";
 
-let audioRecorder: any; 
 let recordedChunks: BlobPart[] = [];
+let audioRecorder: IMediaRecorder;
+let encoderRegistered = false;
 
 export let pitchFilters: string[] = [];
 export let pitchFilterNames: string[] = [];
@@ -17,9 +18,6 @@ export let pitchFilterNames: string[] = [];
 export let effectFilters: string[] = [];
 export let effectFilterNames: string[] = [];
 
-(async() => {
-    await register(await connect());
-})()
 
 /**
  * @description (Re)Populates pitch/effect values and names to their designated variables upon a project load
@@ -50,11 +48,15 @@ export function populateFFMpegFilters(loadedProject: any) {
 export async function startRecording() {
     await sleep(getValue("settings.recordStartDelay"));
 
-    // Too much of a hassle to get other file formats working. wav is among the best file formats anyway
-    const options = { mimeType: "audio/wav" };
-    const stream = await navigator.mediaDevices.getUserMedia({audio: true});
-    if(!audioRecorder) {
-        audioRecorder = new MediaRecorderEx(stream, options);
+    if(typeof audioRecorder === 'undefined') {
+        if(!encoderRegistered) {
+            await register(await connect());
+            encoderRegistered = true;
+        }
+
+        const options = { mimeType: "audio/wav" };
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        audioRecorder = new MediaRecorder(stream, options);
     }
 
     audioRecorder.ondataavailable = (e: any) => {
@@ -70,48 +72,46 @@ export async function startRecording() {
  * @param selectedEffectIndex index of effect dropdown
  * @description ends microphone capture and saves to the current output file as a wav, followed by applying any ffmpeg effects requested by the user
  */
-export async function endRecording(selectedPitchIndex: number, selectedEffectIndex: number): Promise<void> {
-    // Just in case something funny happened
-    if(!audioRecorder || audioRecorder.state !== 'recording') {
-        return;
-    }
+export async function endRecording(selectedPitchIndex: number, selectedEffectIndex: number) {
+    if(!audioRecorder || audioRecorder.state !== 'recording') return;
+
+    console.log("Delaying record end")
     await sleep(getValue("settings.recordEndDelay"));
 
+    await audioRecorder.stop();
+    const audio = new Blob(recordedChunks, { type: 'audio/wav' });
+    if(audio.size > 0) {
+        console.log("Writing file")
+        const buffer = await audio.arrayBuffer();
+        const uint8Arr = new Uint8Array(buffer);
+        await writeFile(outputFile, uint8Arr);
+
+        // Apply noise suppression first (if enabled)
+        // console.log("Checking for noise suppression support")
+        // const allowNoiseSuppression = getValue('settings.allowNoiseSuppression');
+        // if(allowNoiseSuppression) {
+        //    const noiseSuppressionFile = await resolveResource('binaries/noiseSuppression.rnnn');
+        //    await applyFFMpegFilter(outputFile, `arnndn=model=${noiseSuppressionFile}:mix=0.8`);
+        // }
+
+        // Next, apply pitch
+        console.log("Applying Pitch Filter");
+        await applyFFMpegFilter(outputFile, `rubberband=pitch=${pitchFilters[selectedPitchIndex]}`);
+
+        // Finally, Apply effect filters
+        console.log("Applying effect filters");
+        await applyFFMpegFilter(outputFile, effectFilters[selectedEffectIndex]);
+    }
+    else {
+        console.warn("Blob is empty");
+    }
+
+    console.log("Clearing Recorded Chunks")
+    recordedChunks = [];
+
+    console.log("Setting Statistic")
     const filesRecorded = getValue('statistics.filesRecorded')
     await setValue('statistics.filesRecorded', filesRecorded + 1);
-
-    const allowNoiseSuppression = getValue('settings.allowNoiseSuppression');
-    // No clue why I wrote this function like this. TODO: remove this return new promise thing
-    return new Promise((resolve) => {
-        audioRecorder.onstop = async () => {
-            const audio = new Blob(recordedChunks, { type: 'audio/wav' });
-            if(audio.size > 0) {
-                const buffer = await audio.arrayBuffer();
-                const uint8Arr = new Uint8Array(buffer);
-
-                await writeFile(outputFile, uint8Arr);
-
-                // Apply noise suppression first (if enabled)
-                if(allowNoiseSuppression) {
-                    const noiseSuppressionFile = await resolveResource('binaries/noiseSuppression.rnnn');
-                    await applyFFMpegFilter(outputFile, `arnndn=model=${noiseSuppressionFile}:mix=0.8`);
-                }
-
-                // Next, apply pitch
-                await applyFFMpegFilter(outputFile, `rubberband=pitch=${pitchFilters[selectedPitchIndex]}`);
-
-                // Finally, Apply effect filters
-                await applyFFMpegFilter(outputFile, effectFilters[selectedEffectIndex]);
-            }
-            else {
-                console.warn("Blob is empty");
-            }
-
-            recordedChunks = [];
-            resolve();
-        }
-        audioRecorder.stop();
-    });
 }
 
 /**
@@ -130,9 +130,11 @@ export async function cancelRecording() {
  * @param effect list of effects you want to apply (Write it as if you were directly interacting with FFMpeg in the CLI)
  */
 export async function applyFFMpegFilter(file: string, effect: string) {
-    // In the future, I MIGHT switch this to a wasm binary. The reason it isn't right now is that custom compiling a custom FFMpeg WASM binary is extremely time-consuming
-    // I need a custom wasm binary because if I were to use the regular one provided, it would also include features this app does not need, inflating app size by about 20-30Mb, while this custom binary is 6-8 
     const tempFile = `${file}.wav`;
+    await info(`Input File: ${file}`);
+    await info(`Output File: ${tempFile}`);
+    await info(`Effect Filter(s): ${effect}`);
+
     await Command.sidecar('binaries/ffmpeg', [
         '-i',
         file,

@@ -58,6 +58,7 @@
         action: async() => {
           idle = false;
           recording = true;
+          console.log("Starting Recording!");
           await startRecording();
         }
       }
