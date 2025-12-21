@@ -122,6 +122,7 @@ body {
 }
 
 .dropdown {
+  color: black;
   @apply bg-tertiary dark:bg-tertiary-d p-2 px-1.5 rounded-md text-center
 }
 

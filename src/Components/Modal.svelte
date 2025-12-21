@@ -6,7 +6,6 @@
     // svelte-ignore non_reactive_update
     let dialog: HTMLDialogElement;
 
-
     export function toggleModal() {
         modalEnabled = !modalEnabled;
     }
@@ -27,7 +26,7 @@
 
     .close-btn {
         position: absolute;
-        align-self: top;
+        align-self: auto;
         right: 0.25em;
         top: 50%;
         transform: translateY(-50%);
@@ -41,7 +40,7 @@
 
     .close-btn:focus {
         background-color: oklch(1 0 0 / 10%);
-        box-shadow: inset 0px 0px 1em oklch(0.1929 0.0048 325.72 / 60%);
+        box-shadow: inset 0 0 1em oklch(0.1929 0.0048 325.72 / 60%);
     }
 </style>
 

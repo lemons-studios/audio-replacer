@@ -32,7 +32,7 @@
 </style>
 
 <div class="flex items-stretch grow text-white justify-center scrollbar-hide" style="overflow:auto">
-  <div class="prose">
-    <SvelteMarkdown source={markdown} class="dark:prose-invert text-center w-screen" />
+  <div class="prose dark:prose-invert">
+    <SvelteMarkdown source={markdown} class="text-center w-screen" />
   </div>
 </div>

@@ -4,10 +4,11 @@
     import IconRepeatRegular from 'phosphor-icons-svelte/IconRepeatRegular.svelte';
     import { exists, readFile } from "@tauri-apps/plugin-fs";
     import { error, warn } from "@tauri-apps/plugin-log";
-    import { untrack } from "svelte";
+    import {onMount, untrack} from "svelte";
 
     let { source } = $props();
     let audioCompletion = $state(0.0);
+    let audioVolume = $state(1);
     let currentAudioTime = $state("00:00")
     let audioPlaying = $state(false);
     let loopEnabled = $state(true);
@@ -126,14 +127,18 @@
     }
 </script>
 
-<div class="flex flex-row justify-center gap-4 bg-neutral-900 rounded-lg mx-auto items-center shadow-lg pl-3 pr-4 py-2">
-    <audio ontimeupdate={audioPlayerTimeUpdate} onended={onAudioEnded} bind:this={audioPlayer} preload="auto"></audio>
+<div class="flex flex-row justify-center gap-4 bg-neutral-900 rounded-lg mx-auto items-center shadow-lg pl-3 pr-4 py-2 mb-2">
+    <audio ontimeupdate={audioPlayerTimeUpdate} onended={onAudioEnded} bind:this={audioPlayer} preload="auto" volume={audioVolume}></audio>
     <div class="flex flex-row gap-3 items-center">
+        <!--Play/Pause Button-->
         {#if audioPlaying}
             <button onclick={toggleAudio}><IconPauseRegular class="media-control-button hover:fill-white w-5.5 h-5.5"/></button>
         {:else}
             <button onclick={toggleAudio}><IconPlayRegular class="media-control-button hover:fill-white w-5.5 h-5.5"/></button>
         {/if}
+        <!--Volume Slider-->
+
+        <!--Loop Button-->
         {#if loopEnabled}
             <button onclick={() => loopEnabled = false}><IconRepeatRegular class="media-control-button hover:fill-green-500 fill-green-400 w-5.5 h-5.5"/></button>
         {:else}
