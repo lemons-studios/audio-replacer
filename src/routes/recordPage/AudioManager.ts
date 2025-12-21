@@ -1,15 +1,15 @@
-import { rename, writeFile } from "@tauri-apps/plugin-fs";
-import {type IMediaRecorder, MediaRecorder, register} from "extendable-media-recorder";
-import { connect } from 'extendable-media-recorder-wav-encoder';
+import { remove, rename } from "@tauri-apps/plugin-fs";
 import { outputFile } from '../../tools/ProjectHandler';
 import { Command } from "@tauri-apps/plugin-shell";
 import { resolveResource } from "@tauri-apps/api/path";
 import { sleep } from "../../tools/OsTools";
 import { getValue, setValue } from "../../tools/DataInterface";
 import { info } from "@tauri-apps/plugin-log";
+import { startRecording, stopRecording, getStatus, getDevices, checkPermission, requestPermission } from "tauri-plugin-audio-recorder-api";
+import {message} from "@tauri-apps/plugin-dialog";
+import {invoke} from "@tauri-apps/api/core";
 
 let recordedChunks: BlobPart[] = [];
-let audioRecorder: IMediaRecorder;
 let encoderRegistered = false;
 
 export let pitchFilters: string[] = [];
@@ -17,7 +17,6 @@ export let pitchFilterNames: string[] = [];
 
 export let effectFilters: string[] = [];
 export let effectFilterNames: string[] = [];
-
 
 /**
  * @description (Re)Populates pitch/effect values and names to their designated variables upon a project load
@@ -45,26 +44,21 @@ export function populateFFMpegFilters(loadedProject: any) {
 /**
  * @description Starts capturing audio from the microphone
  */
-export async function startRecording() {
+export async function startCapture() {
+    const permission = await checkPermission();
+    if(!permission.granted) {
+        const result = await requestPermission();
+        if(!result.granted) {
+            await message('Audio Replacer requires access to the microphone to function. App will now close', { title: "Mic Required", kind: 'error' });
+            await invoke("close_app");
+        }
+    }
     await sleep(getValue("settings.recordStartDelay"));
-
-    if(typeof audioRecorder === 'undefined') {
-        if(!encoderRegistered) {
-            await register(await connect());
-            encoderRegistered = true;
-        }
-
-        const options = { mimeType: "audio/wav" };
-        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-        audioRecorder = new MediaRecorder(stream, options);
-    }
-
-    audioRecorder.ondataavailable = (e: any) => {
-        if(e.data.size > 0) {
-            recordedChunks.push(e.data);
-        }
-    }
-    audioRecorder.start(); // Start recording
+    await startRecording({
+        outputPath: outputFile.substring(0, outputFile.length - 4), // Removes ".wav" from end extension
+        quality: "high",
+        maxDuration: 0 // Unlimited Length
+    });
 }
 
 /**
@@ -73,74 +67,58 @@ export async function startRecording() {
  * @description ends microphone capture and saves to the current output file as a wav, followed by applying any ffmpeg effects requested by the user
  */
 export async function endRecording(selectedPitchIndex: number, selectedEffectIndex: number) {
-    if(!audioRecorder || audioRecorder.state !== 'recording') return;
-
     console.log("Delaying record end")
     await sleep(getValue("settings.recordEndDelay"));
+    const status = await getStatus();
+    if(status.state === 'recording') {
+        const result = await stopRecording();
+        console.log(`Saved to: ${result.filePath}`);
 
-    await audioRecorder.stop();
-    const audio = new Blob(recordedChunks, { type: 'audio/wav' });
-    if(audio.size > 0) {
-        console.log("Writing file")
-        const buffer = await audio.arrayBuffer();
-        const uint8Arr = new Uint8Array(buffer);
-        await writeFile(outputFile, uint8Arr);
+        // Apply FFMpeg Filters
+        // Noise suppression, if enabled
+        const allowNoiseSuppression = await getValue('settings.allowNoiseSuppression');
+        if(allowNoiseSuppression) {
+            const noiseSuppressionFile = await resolveResource('binaries/noiseSuppression.rnnn');
+            await applyFFMpegFilter(`arnndn=model=${noiseSuppressionFile}:mix=0.8`);
+        }
 
-        // Apply noise suppression first (if enabled)
-        // console.log("Checking for noise suppression support")
-        // const allowNoiseSuppression = getValue('settings.allowNoiseSuppression');
-        // if(allowNoiseSuppression) {
-        //    const noiseSuppressionFile = await resolveResource('binaries/noiseSuppression.rnnn');
-        //    await applyFFMpegFilter(outputFile, `arnndn=model=${noiseSuppressionFile}:mix=0.8`);
-        // }
+        // Pitch Shift
+        await applyFFMpegFilter(`rubberband=pitch=${pitchFilters[selectedPitchIndex]}`);
 
-        // Next, apply pitch
-        console.log("Applying Pitch Filter");
-        await applyFFMpegFilter(outputFile, `rubberband=pitch=${pitchFilters[selectedPitchIndex]}`);
+        // Effect Filters
+        await applyFFMpegFilter(effectFilters[selectedEffectIndex]);
 
-        // Finally, Apply effect filters
-        console.log("Applying effect filters");
-        await applyFFMpegFilter(outputFile, effectFilters[selectedEffectIndex]);
+        console.log("Setting Statistic")
+        const filesRecorded = getValue('statistics.filesRecorded')
+        await setValue('statistics.filesRecorded', filesRecorded + 1);
     }
-    else {
-        console.warn("Blob is empty");
-    }
-
-    console.log("Clearing Recorded Chunks")
-    recordedChunks = [];
-
-    console.log("Setting Statistic")
-    const filesRecorded = getValue('statistics.filesRecorded')
-    await setValue('statistics.filesRecorded', filesRecorded + 1);
 }
 
 /**
  * @description Stops the current recording and discards any data associated with it
  */
 export async function cancelRecording() {
-    const recordingsCanceled = getValue('statistics.recordingsCancelled');
-    await setValue("statistics.recordingsCancelled", recordingsCanceled + 1);
-    audioRecorder?.stop();
-    recordedChunks = [];
+    const status = await getStatus();
+    if(status.state === 'recording') {
+        await stopRecording();
+        await remove(outputFile);
+        const recordingsCanceled = getValue('statistics.recordingsCancelled');
+        await setValue("statistics.recordingsCancelled", recordingsCanceled + 1);
+    }
 }
 
 /**
  * @description Applies an FFMpeg effect filter (-af)
- * @param file Path to the file you want to apply effects to
  * @param effect list of effects you want to apply (Write it as if you were directly interacting with FFMpeg in the CLI)
  */
-export async function applyFFMpegFilter(file: string, effect: string) {
-    const tempFile = `${file}.wav`;
-    await info(`Input File: ${file}`);
-    await info(`Output File: ${tempFile}`);
-    await info(`Effect Filter(s): ${effect}`);
-
+export async function applyFFMpegFilter(effect: string) {
+    const tempFile = `${outputFile}.wav`;
     await Command.sidecar('binaries/ffmpeg', [
         '-i',
-        file,
+        outputFile,
         '-af',
         effect,
         tempFile
     ]).execute();
-    await rename(tempFile, file);
+    await rename(tempFile, outputFile);
 }

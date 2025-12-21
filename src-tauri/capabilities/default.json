@@ -21,6 +21,7 @@
         }
       ]
     },
+    "audio-recorder:default",
     "core:window:default",
     "core:window:allow-start-dragging",
     "core:app:allow-set-app-theme",

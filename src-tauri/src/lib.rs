@@ -27,6 +27,7 @@ pub fn run() {
         .plugin(tauri_plugin_opener::init())
         .plugin(tauri_plugin_log::Builder::new().build())
         .plugin(tauri_plugin_drpc::init())
+        .plugin(tauri_plugin_audio_recorder::init())
         .invoke_handler(tauri::generate_handler![
             get_all_files,
             delete_empty_subdirectories,

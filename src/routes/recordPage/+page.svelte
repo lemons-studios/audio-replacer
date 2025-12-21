@@ -15,7 +15,7 @@
     skipFile,
     submitFile
   } from "../../tools/ProjectHandler";
-  import { cancelRecording, effectFilterNames, endRecording, pitchFilterNames, startRecording } from "./AudioManager";
+  import { cancelRecording, effectFilterNames, endRecording, pitchFilterNames, startCapture } from "./AudioManager";
   import { goto } from "$app/navigation";
   import { selectFile } from "../../tools/OsTools";
   import AudioPlayer from "../../Components/AudioPlayer.svelte";
@@ -59,7 +59,7 @@
           idle = false;
           recording = true;
           console.log("Starting Recording!");
-          await startRecording();
+          await startCapture();
         }
       }
     ],
