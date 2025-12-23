@@ -2,9 +2,7 @@
   import { getValue, initializeData, setValue } from "../tools/DataInterface";
   import "../app.css";
   import { invoke } from "@tauri-apps/api/core";
-  import { onMount, tick } from "svelte";
-  import { downloadUpdates, getUpdateVersion, isUpdateAvailable } from "../tools/Updater";
-  import { ask } from "@tauri-apps/plugin-dialog";
+  import { onMount } from "svelte";
   import { onNavigate } from '$app/navigation';
   import { startRichPresence } from "../tools/DiscordPresenceManager";
   import {formatVersion, getMic, sleep} from "../tools/OsTools";
@@ -22,6 +20,8 @@
 
   
   onMount(async() => {
+    await initializeData();
+
     // Populate additional variables
     await info("Getting/Asking for Microphone Permission");
     await getMic();
@@ -41,18 +41,7 @@
 
     // Only check for updates if the user wants to
     const allowUpdates = getValue('settings.updateCheck');
-    if(allowUpdates && !isDev) {
-      if(await isUpdateAvailable()) {
-        const response = await ask(`There is an update available for Audio Replacer.\nLatest Version: ${getUpdateVersion()}\nCurrent Version: ${versionNumber}`, {
-          title: 'Update Available',
-          kind: 'warning'
-        });
-        if(response) {
-          isUpdating = true;
-          await downloadUpdates();
-        }
-      }
-    }
+    // TODO: Add new updater functionality
     
     await startRichPresence();
   });

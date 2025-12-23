@@ -1,9 +1,5 @@
 <script lang="ts">
-    import IconHouseRegular from 'phosphor-icons-svelte/IconHouseRegular.svelte';
-    import IconMicrophoneRegular from 'phosphor-icons-svelte/IconMicrophoneRegular.svelte';
-    import IconMegaphoneRegular from 'phosphor-icons-svelte/IconMegaphoneRegular.svelte';
-    import IconGearSixRegular from 'phosphor-icons-svelte/IconGearSixRegular.svelte';
-    import IconPencilRegular from 'phosphor-icons-svelte/IconPencilRegular.svelte';
+    import { House, Mic, PencilLine, Megaphone, Settings } from '@lucide/svelte';
     import { onMount, tick } from 'svelte';
     import { getVersion } from "@tauri-apps/api/app";
     import { goto } from '$app/navigation';
@@ -15,29 +11,29 @@
         top: [
             {
                 name: 'Home',
-                icon: IconHouseRegular,
+                icon: House,
                 route: '/'
             }, 
             {
                 name: 'Record',
-                icon: IconMicrophoneRegular,
+                icon: Mic,
                 route: '/recordPage'
             },
             {
                 name: 'Effect Editor',
-                icon: IconPencilRegular,
+                icon: PencilLine,
                 route: '/effectEditor',
             }
         ],
         bottom: [
             {
                 name: 'Release Notes',
-                icon: IconMegaphoneRegular,
+                icon: Megaphone,
                 route: '/releaseNotes'
             },
             {
                 name: 'Settings',
-                icon: IconGearSixRegular,
+                icon: Settings,
                 route: '/settingsPage'
             }
         ]
@@ -74,18 +70,17 @@
     }
 </style>
 
-<!--TODO: Implement icon rendering (probably by just downloading svgs i need and ditching the full icon lib installs that are taking up unneccesary space)-->
 <div class="flex flex-col items-stretch justify-between dark:bg-secondary-d bg-secondary min-w-40 px-1 py-2 rounded-r-lg drop-shadow-xl ">
     <!--Top Menu Items-->
     <div class="menu-container gap-0.5">
         {#each navbarContents.top as item}
-            <button class="nav-btn transition" onmouseleave={(e) => e.currentTarget.blur()} onclick={async() => await navigateToPage(item.route)}><item.icon class="w-5 h-5" />{item.name}</button>
+            <button class="nav-btn min-w-30 flex flex-row text-center items-center justify-stretch gap-2" onmouseleave={(e) => e.currentTarget.blur()} onclick={async() => await navigateToPage(item.route)}><item.icon class="w-5 h-5" />{item.name}</button>
         {/each}
     </div>
     <!--Bottom Menu Items-->
     <div class="menu-container gap-0.5">
         {#each navbarContents.bottom as item}
-            <button class="nav-btn transition" onmouseleave={(e) => e.currentTarget.blur()} onclick={async() => await navigateToPage(item.route)}><item.icon />{item.name}</button>
+            <button class="nav-btn min-w-30 flex flex-row text-center items-center justify-start gap-2" onmouseleave={(e) => e.currentTarget.blur()} onclick={async() => await navigateToPage(item.route)}><item.icon class="w-5 h-5" />{item.name}</button>
         {/each}
         <p class="text-xs text-gray-400">{buildText}</p>
     </div>

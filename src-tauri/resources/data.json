@@ -8,7 +8,6 @@
         "enableTranscription": true,
         "enableRichPresence": true,
         "allowNoiseSuppression": true,
-        "randomizeInput": false,
         "sortingMethod": "alphabetical"
     },
     "statistics": {

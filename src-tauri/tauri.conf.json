@@ -35,9 +35,8 @@
   "bundle": {
     "copyright": "Lemon Studios",
     "publisher": "Lemon Studios",
-    "createUpdaterArtifacts": true,
     "active": true,
-    "targets": ["deb", "nsis", "appimage"],
+    "targets": ["deb", "nsis", "msi"],
     "icon": [
       "icons/32x32.png",
       "icons/128x128.png",
@@ -79,17 +78,5 @@
     },
     "license": "BSD-3-Clause",
     "category": "Utility"
-  },
-  "plugins": {
-    "updater": {
-      "active": true,
-      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IEY4OThGMUMxMThGOEJBNUYKUldSZnV2Z1l3ZkdZK1A0R2VVS0Jmck1tbFpGeVNERERaMW9ZdGRlaXFmSEtPTWlKTXFETVdJMU8K",
-      "endpoints": [
-        "https://github.com/lemons-studios/audio-replacer/releases/latest"
-      ],
-      "windows": {
-        "installMode": "passive"
-      }
-    }
   }
 }

@@ -195,17 +195,17 @@ export function countOutputFiles() {
 }
 
 async function sortInputFiles() {
-    const sortingMethod: number = await getValue('settings.sortingMethod');
+    const sortingMethod: string = await getValue('settings.sortingMethod');
     switch (sortingMethod) {
-        default: // Sort Alphabetically
+        default: // Sort Alphabetically (The default value in the app settings)
             inputFiles.sort();
             break;
-        case 1: // Reverse-Alphabetical
+        case "reverseAlphabetical":
             inputFiles.reverse();
             break;
-        case 2: // Randomise
+        case "random":
             // This sorting method is probably very computationally expensive, so I made a rust command that should cut down on quite a bit of sorting time
-            await invoke<string[]>("randomizeFileOrder", {
+            await invoke<string[]>("randomize_file_order", {
                 arr: inputFiles
             }).then((res) => {
                 inputFiles = res;
@@ -241,6 +241,10 @@ export async function createArProj(inputFolder: string) {
             }
         ],
         effectFilters: [
+            {
+              name: "Default",
+              value: ""
+            },
             {
                 name: "Reverb",
                 value: "aecho=0.8:0.9:40|50|70:0.4|0.3|0.2"

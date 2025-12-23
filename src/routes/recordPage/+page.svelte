@@ -23,6 +23,14 @@
   import { register, unregisterAll } from "@tauri-apps/plugin-global-shortcut";
   import { exists } from "@tauri-apps/plugin-fs";
   import { getValue } from "../../tools/DataInterface";
+  import {
+    ArrowRightLeft,
+    X,
+    Mic,
+    SkipForward,
+    Slash,
+    Square, Check
+  } from "@lucide/svelte";
 
   let file = $state("No Project Opened");
   let audioSource = $state("");
@@ -42,12 +50,13 @@
   let selectedEffect = 0;
 
   // svelte-ignore non_reactive_update
-  let audioPlayer: AudioPlayer | undefined = undefined;
+  let audioPlayer: AudioPlayer;
 
   const buttons = {
     idle: [
       {
         label: "Skip",
+        icon: SkipForward,
         action: async() => {
           await skipFile();
           updateContent();
@@ -55,6 +64,7 @@
       },
       {
         label: "Record",
+        icon: Mic,
         action: async() => {
           idle = false;
           recording = true;
@@ -66,6 +76,7 @@
     recording: [
       {
         label: 'Cancel',
+        icon: Slash,
         action: async() => {
           recording = false;
           idle = true;
@@ -74,29 +85,34 @@
       },
       {
         label: 'End',
+        icon: Square,
         action: async() => {
           recording = false;
           await endRecording(selectedPitch, selectedEffect);
-          const autoAcceptRecordings = getValue('settings.autoAcceptRecordings')
+          const autoAcceptRecordings = await getValue('settings.autoAcceptRecordings')
           if(autoAcceptRecordings) {
             await submitFile(extraEdits);
             idle = true;
           }
           else reviewing = true;
+          audioSource = outputFile; // Automatically switch to output file
         }
       }
     ],
     reviewing: [
       {
         label: 'Reject',
+        icon: X,
         action: async() => {
           reviewing = false;
           idle = true;
           await discardFile();
+          audioSource = currentFile; // If cancelled whilst reviewing recorded audio
         }
       },
       {
         label: 'Switch',
+        icon: ArrowRightLeft,
         action: async() => {
           if(!(await exists(outputFile))) return;
           audioSource = (audioSource === outputFile) ? currentFile : outputFile;
@@ -104,6 +120,7 @@
       },
       {
         label: 'Accept',
+        icon: Check,
         action: async() => {
           reviewing = false;
           idle = true;
@@ -160,7 +177,6 @@
     }
   ];
 
-
   function updateContent() {
     if(!projectLoaded) return;
     file = localPath.replaceAll("\\", "/").substring(1);
@@ -207,14 +223,14 @@
       <ProgressBar progress={progressDecimal}></ProgressBar>
     </div>
     <AudioPlayer bind:this={audioPlayer} source={audioSource}></AudioPlayer>
-    <h3 class="font-light text-gray-300 mb-5">{transcription}</h3>
+    <h3 class="font-light text-gray-300 text-center w-4/5 mb-5">{transcription}</h3>
     <div class="flex flex-row gap-5">
       {#each getActiveState() as button}
-        <button class="app-btn min-w-30"
+        <button class="app-btn min-w-30 flex flex-row text-center items-center justify-center gap-2"
                 onmouseleave={(e) => e.currentTarget.blur}
-                onclick={async(e) => {e.currentTarget.blur(); await button.action()
-                }}>
-          {button.label}</button>
+                onclick={async(e) => {e.currentTarget.blur(); await button.action()}}>
+                <button.icon class="w-4 h-4"/>{button.label}
+        </button>
       {/each}
     </div>
   </div>

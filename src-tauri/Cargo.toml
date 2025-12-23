@@ -16,9 +16,6 @@ tauri-build = { version = "2.5.3", features = [] }
 [dependencies]
 tauri = { version = "2.9.5", features = ["protocol-asset", "tray-icon"] }
 tauri-plugin-opener = "2.5.2"
-serde = { version = "1.0.228", features = ["derive"] }
-serde_json = "1.0.145"
-futures-lite = "2.6.1"
 tauri-plugin-os = "2.3.2"
 tauri-plugin-fs = "2.4.4"
 tauri-plugin-shell = "2.3.3"
@@ -35,14 +32,13 @@ whoami = "1.6.1"
 hound = "3.5.1"
 walkdir = "2.5.0"
 tauri-plugin-drpc = "*"
-log = "0.4.29"
 rand = "0.9.2"
-tauri-plugin-audio-recorder = "0.1"
+tauri-plugin-audio-recorder = "0.1.0"
 
 [target.'cfg(not(any(target_os = "android", target_os = "ios")))'.dependencies]
 tauri-plugin-global-shortcut = "2.3.1"
 tauri-plugin-single-instance = "2.3.6"
-tauri-plugin-updater = "2.9.0"
 
+# Project needs a dependency on this specifically on linux because WebKit2Gtk has a funny issue where it automatically rejects permission requests for the webview for god knows what reason
 [target.'cfg(target_os = "linux")'.dependencies]
-webkit2gtk = "2.0.1" # Project needs a dependency on this specifically on linux because WebKit2Gtk has a funny issue where it automatically rejects permission requests for the webview for god knows what reason
+webkit2gtk = "2.0.1" # DO NOT UPDATE. For whatever reason, tauri itself is incompatible with 2.0.2

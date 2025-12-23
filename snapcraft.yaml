@@ -1,5 +1,5 @@
 name: audio-replacer
-base: core24
+base: core22
 version: '5.0.0'
 summary: Easily dub over voicelines
 description: |
@@ -40,7 +40,6 @@ parts:
   build-app:
     plugin: dump
     build-snaps:
-      - node/latest/stable
       - rustup/latest/stable
     build-packages:
       - libwebkit2gtk-4.1-dev
@@ -53,16 +52,21 @@ parts:
       - libayatana-appindicator3-dev
       - librsvg2-dev
       - dpkg
+      - nodejs
+      - npm
       - cmake
       - libclang-dev
       - llvm
       - lld
+      - libsecret-1-dev
+      - libatk-bridge2.0-0
     stage-packages:
       - libwebkit2gtk-4.1-0
       - libayatana-appindicator3-1
     source: .
     override-build: |
       set -eu
+      rustup default stable
       npm install
       npm run tauri build -- --bundles deb
       dpkg -x src-tauri/target/release/bundle/deb/*.deb $SNAPCRAFT_PART_INSTALL/

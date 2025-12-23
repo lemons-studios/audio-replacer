@@ -2,6 +2,7 @@ import { getVersion } from "@tauri-apps/api/app";
 import { basename, dirname, extname, join } from "@tauri-apps/api/path";
 import {message, open, save} from "@tauri-apps/plugin-dialog";
 import {invoke} from "@tauri-apps/api/core";
+import {relaunch} from "@tauri-apps/plugin-process";
 
 /**
  * @description Open a file selection dialog
@@ -73,8 +74,6 @@ export async function saveFile(allowedTypes: string[] = [], filterName = "Any Fi
     });
 }
 
-
-
 /**
  * @description Converts Date timestamps to human-legible dates
  * @param timestamp Time since Unix epoch (1/1/1970) in milliseconds
@@ -143,4 +142,15 @@ export async function getMic() {
         }
     }
     else console.log("Mic permission given")
+}
+
+export async function attemptRelaunch() {
+    const isDev = await invoke("in_dev_env");
+    if(isDev) {
+        await message("You are running a developer build of this app. This app will not restart.", {
+            title: "Super Secret Developer Popup",
+            kind: 'info'
+        })
+    }
+    else await relaunch();
 }

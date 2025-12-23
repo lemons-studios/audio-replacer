@@ -1,6 +1,7 @@
-import { getValue, setValue } from "../../tools/DataInterface";
-import { isUpdateAvailable } from "../../tools/Updater";
+import {getValue, resetAll, resetSettings, resetStatistics, setValue} from "../../tools/DataInterface";
 import { clearRichPresence, startRichPresence } from "../../tools/DiscordPresenceManager";
+import {ask, message} from "@tauri-apps/plugin-dialog";
+import {attemptRelaunch} from "../../tools/OsTools";
 
 export const settings = {
   General: [
@@ -9,13 +10,11 @@ export const settings = {
       description: "You will be prompted to install the update after the update is downloaded",
       type: "boolean",
       onChange: async(value: boolean) => {
+        // Updates checked on next restart, no need to check
         await setValue('settings.updateCheck', value);
-        if(value) {
-          await isUpdateAvailable();
-        }
       },
-      getValue: (): boolean => {
-        return getValue('settings.updateCheck')
+      getValue: async(): Promise<boolean> => {
+        return (await getValue('settings.updateCheck'));
       },
     },
     {
@@ -25,8 +24,8 @@ export const settings = {
       onChange: async(value: boolean) => {
         await setValue("settings.enableTranscription", value);
       },
-      getValue: (): boolean => {
-        return getValue('settings.enableTranscription');
+      getValue: async(): Promise<boolean> => {
+        return (await getValue('settings.enableTranscription'));
       },
     },
     {
@@ -42,8 +41,8 @@ export const settings = {
           await clearRichPresence();
         }
       },
-      getValue: (): boolean => {
-        return getValue('settings.enableRichPresence');
+      getValue: async(): Promise<boolean> => {
+        return (await getValue('settings.enableRichPresence'));
       },
     }
   ],
@@ -55,8 +54,8 @@ export const settings = {
       onChange: async(value: string) => {
         await setValue('settings.recordStartDelay', +value);
       },
-      getValue: (): string => {
-        return getValue('settings.recordStartDelay')
+      getValue: async(): Promise<string> => {
+        return (await getValue('settings.recordStartDelay'));
       },
     },
     {
@@ -66,8 +65,8 @@ export const settings = {
       onChange: async(value: string) => {
         await setValue('settings.recordEndDelay', +value);
       },
-      getValue: (): string => {
-        return getValue('settings.recordEndDelay');
+      getValue: async(): Promise<string> => {
+        return (await getValue('settings.recordEndDelay'));
       },
     },
     {
@@ -77,8 +76,8 @@ export const settings = {
       onChange: async(value: boolean) => {
         await setValue('settings.allowNoiseSuppression', value);
       },
-      getValue: (): boolean => {
-        return getValue('settings.allowNoiseSuppression');
+      getValue: async(): Promise<boolean> => {
+        return (await getValue('settings.allowNoiseSuppression'));
       },
     },
     {
@@ -88,8 +87,8 @@ export const settings = {
       onChange: async(value: boolean) => {
         await setValue('settings.autoAcceptRecordings', value);
       },
-      getValue: (): boolean => {
-        return getValue('settings.autoAcceptRecordings');
+      getValue: async(): Promise<boolean> => {
+        return (await getValue('settings.autoAcceptRecordings'));
       },
     },
     {
@@ -101,12 +100,69 @@ export const settings = {
           "Reverse-Alphabetical (Z-A)",
           "Random"
       ],
-      getValue: (): string => {
-        return getValue('settings.sortingMethod');
+      choiceValues: [
+          "alphabetical",
+          "reverseAlphabetical",
+          "random"
+      ],
+      getValue: async(): Promise<string> => {
+        return (await getValue('settings.sortingMethod'));
       },
       onChange: async(value: string) => {
+        console.log(`Setting sorting method to ${value}`)
         await setValue('settings.sortingMethod', value);
+      }
+    }
+  ],
+  "Danger Zone": [
+    {
+      name: "Reset Statistics",
+      description: "Changes will only occur after a restart",
+      type: "button",
+      buttonText: "Reset",
+      onClick: async() => {
+        await deletionConfirmation('Statistics');
+      }
+    },
+    {
+      name: "Reset Settings",
+      description: "Changes will only occur after a restart",
+      type: "button",
+      buttonText: "Reset",
+      onClick: async () => {
+        await deletionConfirmation("Settings");
+      }
+    },
+    {
+      name: "Reset Settings & Statistics",
+      description: "Changes will only occur after a restart",
+      type: "button",
+      buttonText: "Reset",
+      onClick: async () => {
+        await deletionConfirmation("All data");
       }
     }
   ]
 } as const;
+
+const deletionConfirmation = async(dataType: string) => {
+  const confirmation = await ask('Are you sure? This action cannot be reverted', {
+    title: 'Confirm?',
+    kind: 'warning'
+  });
+  if(confirmation) {
+    switch(dataType) {
+      case "Statistics":
+        await resetStatistics();
+        break;
+      case "Settings":
+        await resetSettings();
+        break;
+      case "All Data":
+        await resetAll();
+        break;
+    }
+    await message(`${dataType} reset completed. App will now restart`);
+    await attemptRelaunch();
+  }
+}

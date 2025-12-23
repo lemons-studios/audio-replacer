@@ -14,8 +14,9 @@
   },
   "license": "BSD-3-Clause",
   "dependencies": {
-    "@fontsource/work-sans": "5.2.8",
+    "@fontsource/poppins": "^5.2.7",
     "@humanspeak/svelte-markdown": "0.8.13",
+    "@lucide/svelte": "^0.562.0",
     "@rollup/plugin-node-resolve": "16.0.3",
     "@tailwindcss/vite": "4.1.18",
     "@tauri-apps/api": "2.9.1",
@@ -27,7 +28,6 @@
     "@tauri-apps/plugin-os": "2.3.2",
     "@tauri-apps/plugin-process": "2.3.1",
     "@tauri-apps/plugin-shell": "2.3.3",
-    "@tauri-apps/plugin-updater": "2.9.0",
     "@tauri-apps/plugin-upload": "2.3.2",
     "phosphor-icons-svelte": "2.1.0",
     "tailwind-scrollbar-hide": "4.0.0",
@@ -42,8 +42,8 @@
     "@tailwindcss/typography": "0.5.19",
     "@tauri-apps/cli": "2.9.6",
     "svelte": "5.46.0",
-    "svelte-check": "4.3.4",
+    "svelte-check": "4.3.5",
     "typescript": "5.9.3",
-    "vite": "7.2.7"
+    "vite": "7.3.0"
   }
 }

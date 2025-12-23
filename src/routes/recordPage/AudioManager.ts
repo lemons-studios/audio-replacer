@@ -4,13 +4,9 @@ import { Command } from "@tauri-apps/plugin-shell";
 import { resolveResource } from "@tauri-apps/api/path";
 import { sleep } from "../../tools/OsTools";
 import { getValue, setValue } from "../../tools/DataInterface";
-import { info } from "@tauri-apps/plugin-log";
-import { startRecording, stopRecording, getStatus, getDevices, checkPermission, requestPermission } from "tauri-plugin-audio-recorder-api";
-import {message} from "@tauri-apps/plugin-dialog";
-import {invoke} from "@tauri-apps/api/core";
-
-let recordedChunks: BlobPart[] = [];
-let encoderRegistered = false;
+import { startRecording, stopRecording, getStatus, checkPermission, requestPermission } from "tauri-plugin-audio-recorder-api"; // This plugin is a godsend. Thank you to whoever made this
+import { message } from "@tauri-apps/plugin-dialog";
+import { invoke } from "@tauri-apps/api/core";
 
 export let pitchFilters: string[] = [];
 export let pitchFilterNames: string[] = [];
@@ -53,7 +49,7 @@ export async function startCapture() {
             await invoke("close_app");
         }
     }
-    await sleep(getValue("settings.recordStartDelay"));
+    await sleep(await getValue("settings.recordStartDelay"));
     await startRecording({
         outputPath: outputFile.substring(0, outputFile.length - 4), // Removes ".wav" from end extension
         quality: "high",
@@ -68,7 +64,7 @@ export async function startCapture() {
  */
 export async function endRecording(selectedPitchIndex: number, selectedEffectIndex: number) {
     console.log("Delaying record end")
-    await sleep(getValue("settings.recordEndDelay"));
+    await sleep(await getValue("settings.recordEndDelay"));
     const status = await getStatus();
     if(status.state === 'recording') {
         const result = await stopRecording();
@@ -89,7 +85,7 @@ export async function endRecording(selectedPitchIndex: number, selectedEffectInd
         await applyFFMpegFilter(effectFilters[selectedEffectIndex]);
 
         console.log("Setting Statistic")
-        const filesRecorded = getValue('statistics.filesRecorded')
+        const filesRecorded = await getValue('statistics.filesRecorded')
         await setValue('statistics.filesRecorded', filesRecorded + 1);
     }
 }
@@ -102,7 +98,7 @@ export async function cancelRecording() {
     if(status.state === 'recording') {
         await stopRecording();
         await remove(outputFile);
-        const recordingsCanceled = getValue('statistics.recordingsCancelled');
+        const recordingsCanceled = await getValue('statistics.recordingsCancelled');
         await setValue("statistics.recordingsCancelled", recordingsCanceled + 1);
     }
 }

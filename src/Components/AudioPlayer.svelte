@@ -1,14 +1,12 @@
 <script lang="ts">
-    import IconPlayRegular from 'phosphor-icons-svelte/IconPlayRegular.svelte';
-    import IconPauseRegular from 'phosphor-icons-svelte/IconPauseRegular.svelte';
-    import IconRepeatRegular from 'phosphor-icons-svelte/IconRepeatRegular.svelte';
+    import { Pause, Play, Infinity, Volume2 } from '@lucide/svelte';
     import { exists, readFile } from "@tauri-apps/plugin-fs";
     import { error, warn } from "@tauri-apps/plugin-log";
-    import {onMount, untrack} from "svelte";
+    import { untrack } from "svelte";
 
     let { source } = $props();
     let audioCompletion = $state(0.0);
-    let audioVolume = $state(1);
+    let audioVolume = $state(0.5);
     let currentAudioTime = $state("00:00")
     let audioPlaying = $state(false);
     let loopEnabled = $state(true);
@@ -35,6 +33,7 @@
 
                 audioPlaying = false;
                 audioCompletion = 0.0;
+                loadAudioChunks();
             }
         });
     });
@@ -48,11 +47,39 @@
     function audioPlayerTimeUpdate() {
         if(isAudioValid()) {
             audioCompletion = audioPlayer.currentTime / audioPlayer.duration;
-            seekBar.value = String(audioCompletion);
+            seekBar.value = String(Math.round(audioCompletion));
 
             const min = Math.floor(audioPlayer.currentTime / 60);
             const sec = Math.floor(audioPlayer.currentTime % 60);
             currentAudioTime = `${String(min).padStart(2, '0')}:${String(sec).padStart(2, '0')}`;
+        }
+    }
+
+    export async function loadAudioChunks() {
+        const mimeType = () => {
+            return source.endsWith('.wav') ? 'audio/wav' :
+                   source.endsWith('.mp3') ? 'audio/mpeg' :
+                   source.endsWith('.ogg') ? 'audio/ogg' :
+                   source.endsWith('.flac') ? 'audio/flac' :
+                   'application/octet-stream' // Unknown type
+        }
+        try {
+            const fileContents = await readFile(source);
+            const type = mimeType();
+            if(type === 'application/octet-stream') {
+                await error(`${source} does not contain a mime type supported by this component`);
+                return;
+            }
+            const audioBlob = new Blob([fileContents], { type: type });
+            currentAudioURL = URL.createObjectURL(audioBlob);
+            audioPlayer.src = currentAudioURL;
+
+            await audioPlayer.play();
+            audioPlaying = true;
+        }
+        catch(e: any) {
+            await error(`Error while loading audio at path ${source}: ${e}`);
+            return;
         }
     }
 
@@ -64,28 +91,7 @@
         }
 
         if(typeof currentAudioURL === 'undefined') {
-            const mimeType = () => {
-                return source.endsWith('.wav') ? 'audio/wav' :
-                source.endsWith('.mp3') ? 'audio/mpeg' :
-                source.endsWith('.ogg') ? 'audio/ogg' :
-                source.endsWith('.flac') ? 'audio/flac' :
-                'application/octet-stream' // Unknown type
-            }
-            try {
-                const fileContents = await readFile(source);
-                const type = mimeType();
-                if(type === 'application/octet-stream') {
-                    await error(`${source} does not contain a mime type supported by this component`);
-                    return;
-                }
-                const audioBlob = new Blob([fileContents], { type: type });
-                currentAudioURL = URL.createObjectURL(audioBlob);
-                audioPlayer.src = currentAudioURL;
-            }
-            catch(e: any) {
-                await error(`Error while loading audio at path ${source}: ${e}`);
-                return;
-            }
+            await loadAudioChunks(); // Only if audio chunks don't exist by now should they be loaded. From my testing, this should never happen. This is only here in case it somehow does
         }
 
         if(audioPlayer.readyState >= HTMLMediaElement.HAVE_FUTURE_DATA) {
@@ -127,26 +133,30 @@
     }
 </script>
 
-<div class="flex flex-row justify-center gap-4 bg-neutral-900 rounded-lg mx-auto items-center shadow-lg pl-3 pr-4 py-2 mb-2">
+<div class="flex flex-row justify-center gap-4 bg-neutral-300 dark:bg-neutral-900 rounded-lg mx-auto items-center shadow-lg pl-3 pr-4 py-2 mb-2 w-3/4">
     <audio ontimeupdate={audioPlayerTimeUpdate} onended={onAudioEnded} bind:this={audioPlayer} preload="auto" volume={audioVolume}></audio>
     <div class="flex flex-row gap-3 items-center">
         <!--Play/Pause Button-->
-        {#if audioPlaying}
-            <button onclick={toggleAudio}><IconPauseRegular class="media-control-button hover:fill-white w-5.5 h-5.5"/></button>
-        {:else}
-            <button onclick={toggleAudio}><IconPlayRegular class="media-control-button hover:fill-white w-5.5 h-5.5"/></button>
-        {/if}
-        <!--Volume Slider-->
+        <div class="transition hover:bg-navigation-hover dark:hover:bg-navigation-hover-d focus:bg-navigation-focus rounded-sm p-0.5">
+            {#if audioPlaying}
+                <Pause class="w-5 h-5" onclick={toggleAudio}></Pause>
+            {:else}
+                <Play class="w-5 h-5" onclick={toggleAudio}></Play>
+            {/if}
+        </div>
 
+        <!--Volume Slider-->
+        <Volume2 class="w-5 h-5"></Volume2>
         <!--Loop Button-->
+
         {#if loopEnabled}
-            <button onclick={() => loopEnabled = false}><IconRepeatRegular class="media-control-button hover:fill-green-500 fill-green-400 w-5.5 h-5.5"/></button>
+            <Infinity class="w-5.5 h-5.5 text-accent-secondary hover:text-accent transition duration-200" onclick={() => loopEnabled = false} />
         {:else}
-            <button onclick={() => loopEnabled = true}><IconRepeatRegular class="media-control-button hover:fill-white fill-gray-200 w-5.5 h-5.5"/></button>
+            <Infinity class="w-5.5 h-5.5 text-white hover:text-gray-400 transition duration-200" onclick={() => loopEnabled = true} />
         {/if}
     </div>
-    <div class="flex flex-row gap-5">
-        <input type="range" class="range range-primary range-xs" min="0" max="1" step="0.01" value={audioCompletion} oninput={updateSeekbar} bind:this={seekBar}>
+    <div class="flex flex-row gap-5 w-full">
+        <input type="range" class="w-[95%]" min="0" max="1" step="0.001" value={audioCompletion} oninput={updateSeekbar} bind:this={seekBar}>
         <h2>{currentAudioTime}</h2>
     </div>
 </div>

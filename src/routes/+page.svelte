@@ -1,14 +1,14 @@
 <script lang="ts">
   import { getValue, setValue } from "../tools/DataInterface";
-  import {onMount, tick} from "svelte";
+  import { onMount } from "svelte";
   import { setPresenceDetails } from "../tools/DiscordPresenceManager";
   import { exists, readTextFile, writeTextFile } from "@tauri-apps/plugin-fs";
   import { saveFile, selectFile, selectFolder, sleep, timestampToLegible } from "../tools/OsTools";
   import { createArProj, setActiveProject, updateArprojStats } from "../tools/ProjectHandler";
   import { goto } from "$app/navigation";
-  import IconArrowRightRegular from "phosphor-icons-svelte/IconArrowRightRegular.svelte"
   import Modal from "../Components/Modal.svelte";
   import {initializeData} from "../tools/DataInterface";
+  import { ArrowRight, Save, FilePlus } from "@lucide/svelte";
 
   let recentProjectPaths: string[] = $state([]);
   let recentProjectObjs: any[] = $state([]);
@@ -20,39 +20,39 @@
   const statistics = [
     {
       name: "Time with Audio Replacer Open",
-      getValue: (): string => {
-        const rawTime = getValue("statistics.appOpenTime"); // Time statistic will be measured in seconds
+      getValue: async(): Promise<string> => {
+        const rawTime = await getValue("statistics.appOpenTime"); // Time statistic will be measured in seconds
         return rawTime === 0 ? '0 Hours' : `${(rawTime / 3600).toFixed(1)} Hours`; // Similar to how Steam displays time played in games
       }
     },
     {
       name: "Files Recorded",
-      getValue: (): string => {
-        return format(getValue("statistics.filesRecorded"));
+      getValue: async(): Promise<string> => {
+        return format(await getValue("statistics.filesRecorded"));
       }
     },
     {
       name: "Files Accepted",
-      getValue: (): string => {
-        return format(getValue('statistics.filesAccepted'));
+      getValue: async(): Promise<string> => {
+        return format(await getValue('statistics.filesAccepted'));
       }
     },
     {
       name: "Files Rejected",
-      getValue: (): string => {
-        return format(getValue('statistics.filesRejected'));
+      getValue: async(): Promise<string> => {
+        return format(await getValue('statistics.filesRejected'));
       }
     },
     {
       name: "Files Skipped",
-      getValue: (): string => {
-        return format(getValue('statistics.filesSkipped'));
+      getValue: async(): Promise<string> => {
+        return format(await getValue('statistics.filesSkipped'));
       }
     },
     {
       name: "Recordings Cancelled",
-      getValue: (): string => {
-        return format(getValue('statistics.recordingsCancelled'));
+      getValue: async(): Promise<string> => {
+        return format(await getValue('statistics.recordingsCancelled'));
       }
     }
   ] as const;
@@ -95,12 +95,13 @@
   <div class="flex flex-row gap-5 h-full">
     <div class="flex flex-col w-1/2 h-full card rounded-xl p-3">
       <h1 class="text-center text-3xl font-medium">Projects</h1>
-      <div class="flex flex-col text-center items-center mt-15 h-full gap-y-3">
+      <div class="flex flex-col text-center justify-between items-center mt-15 h-full gap-y-3">
         {#if recentProjectObjs.length === 0}
           <h1 class="text-center text-gray-400">No Recent Projects</h1>
         {:else}
+        <div class="w-full">
         {#each recentProjectObjs as rp, i}
-          <button class="save-btn rounded-sm w-full dark:hover:bg-tertiary-d hover:bg-tertiary dark:focus:bg-tertiary-d dark:focus:drop-shadow-xl transition duration-75"
+          <button class="save-btn rounded-sm w-full mb-1 dark:hover:bg-tertiary-d hover:bg-tertiary dark:focus:bg-tertiary-d dark:focus:drop-shadow-xl transition duration-75"
                   onclick={async() => await loadProject(recentProjectPaths[i])}
                   onmouseleave={(e) => e.currentTarget.blur()}
                   onmouseup={(e) => e.currentTarget.blur()}>
@@ -110,18 +111,19 @@
                 <p class="text-gray-400 text-sm">Last Opened: {timestampToLegible(rp.lastOpened)}</p>
                 <p class="text-gray-400 text-xs">Files Remaining: {Intl.NumberFormat().format(rp.fileCount)}</p>
               </div>
-              <IconArrowRightRegular class="arrow w-5 h-5"></IconArrowRightRegular>
+              <ArrowRight class="arrow w-5 h-5"></ArrowRight>
             </div>
           </button>
         {/each}
+        </div>
         {/if}
-        <div class="flex row w-[105%] h-auto p-2 rounded-b-lg bg-tertiary-d justify-end align-bottom items-end gap-x-5">
-          <button class="text-center p-1.5 hover:bg-accent focus:bg-accent-secondary focus:drop-shadow-accent-shadow focus:drop-shadow-md rounded-md transition"
+        <div class="flex row w-max mb-1 h-auto p-2 rounded-lg bg-tertiary-d justify-end align-bottom items-end gap-x-5">
+          <button class="text-center p-1.5 flex flex-row items-center justify-center gap-2 hover:bg-accent focus:bg-accent-tertiary rounded-md transition"
                   onclick={newProject} onmouseleave={(e) => e.currentTarget.blur()}
                   onmouseup={(e) => e.currentTarget.blur()}>
-            New Project
+            <FilePlus class="w-4 h-4" /> New Project
           </button>
-          <button class="text-center p-1.5 hover:bg-accent focus:bg-accent-secondary focus:drop-shadow-accent-shadow focus:drop-shadow-md rounded-md transition"
+          <button class="text-center p-1.5 flex flex-row items-center justify-center gap-2 hover:bg-accent focus:bg-accent-tertiary rounded-md transition"
                   onclick={async() => {
                   const file = await selectFile(["arproj"], "Audio Replacer Project Files");
                   const project = JSON.parse(await readTextFile(file));
@@ -132,7 +134,7 @@
                 }}
                   onmouseleave={(e) => e.currentTarget.blur()}
                   onmouseup={(e) => e.currentTarget.blur()}>
-            Load Project
+            <Save class="w-4 h-4" /> Load Project
           </button>
         </div>
       </div>
@@ -146,7 +148,9 @@
         {#each statistics as stat}
         <div class="flex flex-row align-middle items-center justify-between text-left mb-2.5">
           <h2>{stat.name}</h2>
-          <p>{stat.getValue()}</p>
+          {#await stat.getValue() then value}
+            <p>{value}</p>
+          {/await}
         </div>
         {/each}
       </div>

@@ -2,7 +2,7 @@
     import { pitchFilters, pitchFilterNames, effectFilters, effectFilterNames } from "../recordPage/AudioManager";
     import {getArprojProperty, projectLoaded, updateArprojStats} from "../../tools/ProjectHandler";
     import { goto } from "$app/navigation";
-    import IconPenNibRegular from 'phosphor-icons-svelte/IconPenNibRegular.svelte';
+    import { PenTool } from "@lucide/svelte";
     import { selectFile } from "../../tools/OsTools";
     import { readTextFile } from "@tauri-apps/plugin-fs";
 
@@ -61,7 +61,7 @@
                                     <h2 class="text-center">Pitch Multiplier: <p class="text-gray-500 text-sm">{pitchValues[index]}x</p></h2>
                                     <button class="hover:bg-accent focus:bg-accent-tertiary transition p-2 rounded-md"
                                     onmouseleave={(e) => e.currentTarget.blur()}
-                                    onclick={(e) => e.currentTarget.blur()}><IconPenNibRegular class="w-5 h-5"></IconPenNibRegular></button>
+                                    onclick={(e) => e.currentTarget.blur()}><PenTool class="w-5 h-5"></PenTool></button>
                                 </div>
                             </div>
                         {/each}
@@ -73,7 +73,7 @@
                                     <h2 class="text-center">Effect Value: <p class="text-gray-500 text-sm">{effectValues[index]}</p></h2>
                                     <button class="hover:bg-accent focus:bg-accent-tertiary transition p-2 rounded-md"
                                     onmouseleave={(e) => e.currentTarget.blur()}
-                                    onclick={(e) => e.currentTarget.blur()}><IconPenNibRegular class="w-5 h-5"></IconPenNibRegular></button>
+                                    onclick={(e) => e.currentTarget.blur()}><PenTool class="w-5 h-5"></PenTool></button>
                                 </div>
                             </div>
                         {/each}

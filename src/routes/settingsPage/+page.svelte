@@ -8,11 +8,9 @@
     await setPresenceDetails("Tweaking Settings");
   });
 </script>
-<h1 class="text-center text-5xl font-bold mb-5">App Settings</h1>
 
-<!--Ignore any errors below if any are visible, they only show up because not all elements in the javascript object share the same list of properties-->
-<div class="flex grow justify-center flex-col gap-y-2.5 items-center overflow-y-auto p-5 settings-container">
-  {#each Object.entries(settings) as [name, settingCategory], sIndex}
+<div class="flex grow justify-center flex-col gap-y-2.5 items-center overflow-y-auto">
+  {#each Object.entries(settings) as [name, settingCategory]}
     <div class="card w-3/4 p-2">
       <h2 class="text-center text-3xl mb-2.5">{name}</h2>
       <hr class="border-accent-secondary mb-1">
@@ -23,19 +21,25 @@
             <p class="text-sm text-gray-400 text-wrap max-w-2/3">{setting.description}</p>
           </div>
           {#if setting.type === "boolean"}
-            <ToggleSwitch onClick={async() => {await setting.onChange(setting.getValue())}} enabled={setting.getValue()}></ToggleSwitch>
+            {#await setting.getValue() then value}
+              <ToggleSwitch onClick={async() => {await setting.onChange(value)}} enabled={value}></ToggleSwitch>
+            {/await}
           {:else if setting.type === "string"}
-            <input type="text" value={setting.getValue()} class="max-w-1/12 bg-tertiary dark:bg-tertiary-d py-1.5 px-2 rounded-sm" onchange={async(e) => await setting.onChange(e.currentTarget.value)}>
+            {#await setting.getValue() then value}
+              <input type="text" value={value} class="max-w-1/12 bg-tertiary dark:bg-tertiary-d py-1.5 px-2 rounded-sm"
+                     onchange={async(e) => await setting.onChange(e.currentTarget.value)}>
+            {/await}
           {:else if setting.type === "button"}
             <button class="app-btn" onclick={setting.onClick}>{setting.buttonText}</button>
           {:else if setting.type === "dropdown"}
             <div class="dropdown">
-              <!--This one is WIP. I will implement properly once I have dropdown setting elements-->
-              <select class="w-45">
-                {#each setting.choices as choice}
-                  <option value={choice}>{choice}</option>
-                {/each}
-              </select>
+              {#await setting.getValue() then value}
+                <select class="w-45" value={value} onchange={async(e) => {await setting.onChange(e.currentTarget.value)}}>
+                  {#each setting.choices as choice, i}
+                    <option value={setting.choiceValues[i]}>{choice}</option>
+                  {/each}
+                </select>
+              {/await}
             </div>
           {/if}
         </div>
@@ -43,9 +47,3 @@
     </div>
   {/each}
 </div>
-
-<style>
-  .settings-container::-webkit-scrollbar {
-    display: none;
-  }
-</style>
