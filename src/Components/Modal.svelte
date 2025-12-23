@@ -1,9 +1,9 @@
 <script lang="ts">
-    import IconXRegular from "phosphor-icons-svelte/IconXRegular.svelte";
-    let { children } = $props();
+    import { X } from "@lucide/svelte";
+
+    let { children, closeable } = $props();
     let modalEnabled = $state(true);
     
-    // svelte-ignore non_reactive_update
     let dialog: HTMLDialogElement;
 
     export function toggleModal() {
@@ -14,14 +14,22 @@
         if(modalEnabled) dialog.showModal();
         if(!modalEnabled) dialog.close();
     });
-    
 </script>
 
 <style>
+    dialog {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        margin: 0
+    }
+
     ::backdrop {
-        backdrop-filter: blur(10px);
-        -webkit-backdrop-filter: blur(10px); /*For Linux (Webkit2Gtk) and MacOS (Regular Webkit)*/
+        backdrop-filter: blur(7px);
+        -webkit-backdrop-filter: blur(7px); /*For Linux (Webkit2Gtk) and MacOS (Regular Webkit)*/
         background-color: oklch(0.1574 0 82 / 65%);
+        z-index: 1000;
     }
 
     .close-btn {
@@ -31,6 +39,7 @@
         top: 50%;
         transform: translateY(-50%);
         display: flex;
+        z-index: 10;
     }
 
     .close-btn:hover {
@@ -45,10 +54,14 @@
 </style>
 
 {#if modalEnabled}
-<dialog onclose={() => modalEnabled} bind:this={dialog} class="flex justify-center align-middle items-center p-5 min-h-1/2 min-w-3/5 dark:text-white dark:border-tertiary-d border-tertiary dark:bg-secondary-d bg-secondary rounded-xl">
-    <button class="close-btn rounded-sm align-top mr-2.5"
-            onclick={() => modalEnabled = false}
-            onmouseleave={(e) => e.currentTarget.blur()}><IconXRegular class=" h-7 w-7" /></button>
-    {@render children?.()}
-</dialog>
+    <dialog bind:this={dialog} class="flex border-2 text-wrap justify-center align-middle items-center p-5 h-1/2 w-3/5 dark:text-white dark:border-tertiary-d border-tertiary dark:bg-secondary-d bg-secondary rounded-xl">
+        {#if closeable}
+        <button class="close-btn rounded-sm align-top mr-2.5"
+                onclick={() => modalEnabled = false}
+                onmouseleave={(e) => e.currentTarget.blur()}><X class=" h-6 w-6" /></button>
+        {/if}
+        <div class="text-wrap px-2 py-4">
+            {@render children?.()}
+        </div>
+    </dialog>
 {/if}

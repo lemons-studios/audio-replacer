@@ -158,7 +158,6 @@
   </div>
 </div>
 
-
 <style>
   .save-btn:hover {
     background-color: oklch(0.3042 0.0051 325.78);
@@ -169,6 +168,7 @@
     background-color: oklch(1 0 0 / 10%);
     box-shadow: inset 0 0 1em oklch(0.1929 0.0048 325.72 / 60%);
   }
+
   .arrow {
     position: fixed;
   }
