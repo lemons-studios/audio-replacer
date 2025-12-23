@@ -29,8 +29,11 @@
     Mic,
     SkipForward,
     Slash,
-    Square, Check
+    Square,
+    Check,
+    Home
   } from "@lucide/svelte";
+  import NoProjectLoaded from "../../Components/NoProjectLoaded.svelte";
 
   let file = $state("No Project Opened");
   let audioSource = $state("");
@@ -226,10 +229,10 @@
     <h3 class="font-light text-gray-300 text-center w-4/5 mb-5">{transcription}</h3>
     <div class="flex flex-row gap-5">
       {#each getActiveState() as button}
-        <button class="app-btn min-w-30 flex flex-row text-center items-center justify-center gap-2"
+        <button class="app-btn min-w-30"
                 onmouseleave={(e) => e.currentTarget.blur}
                 onclick={async(e) => {e.currentTarget.blur(); await button.action()}}>
-                <button.icon class="w-4 h-4"/>{button.label}
+                <button.icon class="button-icon"/>{button.label}
         </button>
       {/each}
     </div>
@@ -263,23 +266,5 @@
   </div>
 </div>
 {:else}
-<div class="w-full h-full rounded-lg card flex flex-col gap-5 justify-center text-center items-center">
-  <h1 class="text-center text-5xl font-bold">No Project Loaded</h1>
-  <h2 class="text-3xl font-medium">Go Load One</h2>
-  <div class="flex flex-row justify-center gap-3">
-    <button class="app-btn"
-            onclick={async(e) => {
-              e.currentTarget.blur();
-              const file = await selectFile(['arproj'], 'Audio Replacer Projects');
-              await setActiveProject(file);
-            }}
-            onmouseleave={(e) => e.currentTarget.blur}>
-            Load Project
-    </button>
-    <button class="app-btn"
-            onclick={async(e) => {e.currentTarget.blur(); await goto('/')}}
-            onmouseleave={(e) => e.currentTarget.blur}>Return Home
-    </button>
-  </div>
-</div>
+  <NoProjectLoaded/>
 {/if}

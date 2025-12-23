@@ -2,6 +2,7 @@ import {getValue, resetAll, resetSettings, resetStatistics, setValue} from "../.
 import { clearRichPresence, startRichPresence } from "../../tools/DiscordPresenceManager";
 import {ask, message} from "@tauri-apps/plugin-dialog";
 import {attemptRelaunch} from "../../tools/OsTools";
+import { Trash2 } from "@lucide/svelte";
 
 export const settings = {
   General: [
@@ -120,6 +121,7 @@ export const settings = {
       description: "Changes will only occur after a restart",
       type: "button",
       buttonText: "Reset",
+      icon: Trash2,
       onClick: async() => {
         await deletionConfirmation('Statistics');
       }
@@ -129,6 +131,7 @@ export const settings = {
       description: "Changes will only occur after a restart",
       type: "button",
       buttonText: "Reset",
+      icon: Trash2,
       onClick: async () => {
         await deletionConfirmation("Settings");
       }
@@ -138,6 +141,7 @@ export const settings = {
       description: "Changes will only occur after a restart",
       type: "button",
       buttonText: "Reset",
+      icon: Trash2,
       onClick: async () => {
         await deletionConfirmation("All data");
       }

@@ -9,7 +9,7 @@
   });
 </script>
 
-<div class="flex grow justify-center flex-col gap-y-2.5 items-center overflow-y-auto">
+<div class="flex grow justify-center flex-col gap-y-3.5 items-center overflow-y-auto">
   {#each Object.entries(settings) as [name, settingCategory]}
     <div class="card w-3/4 p-2">
       <h2 class="text-center text-3xl mb-2.5">{name}</h2>
@@ -30,7 +30,7 @@
                      onchange={async(e) => await setting.onChange(e.currentTarget.value)}>
             {/await}
           {:else if setting.type === "button"}
-            <button class="app-btn" onclick={setting.onClick}>{setting.buttonText}</button>
+            <button class="app-btn" onclick={setting.onClick}><setting.icon class="button-icon" /> {setting.buttonText}</button>
           {:else if setting.type === "dropdown"}
             <div class="dropdown">
               {#await setting.getValue() then value}
