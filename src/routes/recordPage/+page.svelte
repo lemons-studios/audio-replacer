@@ -34,6 +34,7 @@
     Home
   } from "@lucide/svelte";
   import NoProjectLoaded from "../../Components/NoProjectLoaded.svelte";
+  import ToggleSwitch from "../../Components/ToggleSwitch.svelte";
 
   let file = $state("No Project Opened");
   let audioSource = $state("");
@@ -183,8 +184,11 @@
   function updateContent() {
     if(!projectLoaded) return;
     file = localPath.replaceAll("\\", "/").substring(1);
-    progressDecimal = calculateCompletion() / 100;
-    progressPercentage = `${calculateCompletion().toFixed(2)}%`;
+
+    const completion = calculateCompletion();
+
+    progressDecimal = completion / 100;
+    progressPercentage = `${completion.toFixed(2)}%`;
     filesRemaining = new Intl.NumberFormat().format(countInputFiles() - countOutputFiles());
     transcription = fileTranscription;
     audioSource = currentFile;
@@ -237,21 +241,23 @@
       {/each}
     </div>
   </div>
-  <div class="flex flex-col justify-center items-center w-3/8 card rounded-lg">
-    <h1 class="text-2xl">Filters</h1>
-    <h3>Pitch</h3>
-    {#if pitch.length !== 0}
-    <select class="min-w-50 dropdown" onchange={(e) => {selectedPitch = e.currentTarget.selectedIndex}}>
-      {#each pitch as p}
-        <option>{p}</option>
-      {/each}
-    </select>
-    {:else}
-    <select class="min-w-50 dropdown" disabled>
-      <option>No Pitch Filters</option>
-    </select>
-    {/if}
-    <h3 class="mt-25 text-lg">Effects</h3>
+  <div class="flex flex-col justify-center items-center w-3/8 card rounded-lg gap-y-10">
+    <div>
+      <h1 class="text-2xl text-center">Pitch Shift</h1>
+      {#if pitch.length !== 0}
+        <select class="min-w-50 dropdown" onchange={(e) => {selectedPitch = e.currentTarget.selectedIndex}}>
+          {#each pitch as p}
+            <option>{p}</option>
+          {/each}
+        </select>
+      {:else}
+        <select class="min-w-50 dropdown" disabled>
+          <option>No Pitch Filters</option>
+        </select>
+      {/if}
+    </div>
+    <div>
+    <h1 class="text-2xl text-center">Effect Filters</h1>
     {#if effects.length !== 0}
       <select class="min-w-50 dropdown" onchange={(e) => {selectedEffect = e.currentTarget.selectedIndex}}>
         {#each effects as e}
@@ -263,6 +269,11 @@
       <option>No Effect Filters</option>
     </select>
     {/if}
+    </div>
+    <div class="flex flex-row gap-x-3.5">
+      <ToggleSwitch onClick={extraEdits = !extraEdits} enabled={extraEdits}/>
+      <p>Extra Edits Required?</p>
+    </div>
   </div>
 </div>
 {:else}

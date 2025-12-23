@@ -99,7 +99,7 @@
         {#if recentProjectObjs.length === 0}
           <h1 class="text-center text-gray-400">No Recent Projects</h1>
         {:else}
-        <div class="w-full">
+        <div class="w-full overflow-y-auto">
         {#each recentProjectObjs as rp, i}
           <button class="save-btn rounded-sm w-full mb-1 dark:hover:bg-tertiary-d hover:bg-tertiary dark:focus:bg-tertiary-d dark:focus:drop-shadow-xl transition duration-75"
                   onclick={async() => await loadProject(recentProjectPaths[i])}
@@ -109,7 +109,7 @@
               <div class="flex flex-col">
                 <p class="text-lg">{rp.name}</p>
                 <p class="text-gray-400 text-sm">Last Opened: {timestampToLegible(rp.lastOpened)}</p>
-                <p class="text-gray-400 text-xs">Files Remaining: {Intl.NumberFormat().format(rp.fileCount)}</p>
+                <p class="text-gray-400 text-xs">Files Remaining: {format(rp.filesRemaining)}</p>
               </div>
               <ArrowRight class="arrow w-5 h-5"></ArrowRight>
             </div>

@@ -63,8 +63,9 @@
                             <button
                                 class="hover:bg-accent focus:bg-accent-tertiary transition p-2 rounded-md"
                                 onmouseleave={(e) => e.currentTarget.blur()}
-                                onclick={(e) => e.currentTarget.blur()}
-                                ><PenTool class="w-5 h-5"></PenTool></button>
+                                onclick={(e) => e.currentTarget.blur()}>
+                                <PenTool class="w-5 h-5"/>
+                            </button>
                         </div>
                     </div>
                 {/each}

@@ -128,7 +128,7 @@ const transcribeFile = async() => {
  * @description Moves the current active file to the output folder or deletes it
  * @param moveToOutput weather or not to move the original file to the output folder or to delete it
  */
-export async function skipFile(moveToOutput: boolean = false) {
+export async function skipFile(moveToOutput: boolean = true) {
     inputFiles.splice(0, 1);
     await updateArprojStats("filesRemaining", inputFiles.length);
 
@@ -194,6 +194,9 @@ export function countOutputFiles() {
     return outputFiles.length;
 }
 
+/**
+ * @description sorts project files based on selected sorting method on project load
+ */
 async function sortInputFiles() {
     const sortingMethod: string = await getValue('settings.sortingMethod');
     switch (sortingMethod) {
@@ -214,6 +217,10 @@ async function sortInputFiles() {
     }
 }
 
+/**
+ * @description Checks if a given file has the .wav, .mp3, .flac, or .m4a extension
+ * @param path Path to the file
+ */
 function isAudioFile(path: string): boolean {
     const types: string[] = ['.wav', 'mp3', '.flac', ".m4a"]; // Maybe I should make this a bit more robust in the future
     return types.some(ext => path.toLowerCase().endsWith(ext.toLowerCase()));
@@ -261,6 +268,5 @@ export async function getArprojProperty(key: string) {
 export async function updateArprojStats(key: string, value: any) {
     const arproj = JSON.parse(await readTextFile(currentLoadedProject));
     arproj[key] = value;
-
     await writeTextFile(currentLoadedProject, JSON.stringify(arproj));
 }
