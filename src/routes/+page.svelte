@@ -168,8 +168,4 @@
     background-color: oklch(1 0 0 / 10%);
     box-shadow: inset 0 0 1em oklch(0.1929 0.0048 325.72 / 60%);
   }
-
-  .arrow {
-    position: fixed;
-  }
 </style>
