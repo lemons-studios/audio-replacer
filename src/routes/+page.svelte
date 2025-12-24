@@ -89,6 +89,7 @@
       }
     }
   }
+  
 </script>
 
 <div class="flex flex-col gap-3 h-full w-full p-3">
@@ -117,7 +118,7 @@
         {/each}
         </div>
         {/if}
-        <div class="flex row w-max mb-1 h-auto p-2 rounded-lg bg-tertiary-d justify-end align-bottom items-end gap-x-5">
+        <div class="flex row w-max mb-1 h-auto p-2 rounded-lg bg-tertiary dark:bg-tertiary-d justify-end align-bottom items-end gap-x-5">
           <button class="text-center p-1.5 flex flex-row items-center justify-center gap-2 hover:bg-accent focus:bg-accent-tertiary rounded-md transition"
                   onclick={newProject} onmouseleave={(e) => e.currentTarget.blur()}
                   onmouseup={(e) => e.currentTarget.blur()}>

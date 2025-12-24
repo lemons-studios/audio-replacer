@@ -1,10 +1,5 @@
 <script lang="ts">
-  import IconInfoRegular from "phosphor-icons-svelte/IconInfoRegular.svelte";
-  import IconCheckCricleRegular from "phosphor-icons-svelte/IconCheckCircleRegular.svelte";
-  import IconWarningRegular from "phosphor-icons-svelte/IconWarningRegular.svelte";
-  import IconWarningOctagonRegular from "phosphor-icons-svelte/IconWarningOctagonRegular.svelte";
-  import IconHourglassMediumRegular from "phosphor-icons-svelte/IconHourglassMediumRegular.svelte";
-  import IconXRegular from "phosphor-icons-svelte/IconXRegular.svelte";
+  import { Info, Check, TriangleAlert, OctagonAlert, X, Hourglass  } from "@lucide/svelte";
   import { fade, fly } from "svelte/transition";
 
   let queue: any[] = $state([]); // Too lazy to figure out the type
@@ -20,15 +15,15 @@
     const iconType = (() => {
       switch (type) {
         case 0:
-          return IconInfoRegular;
+          return Info;
         case 1:
-          return IconCheckCricleRegular;
+          return Check;
         case 2:
-          return IconWarningRegular;
+          return TriangleAlert;
         case 3:
-          return IconWarningOctagonRegular;
+          return OctagonAlert;
         case 4:
-          return IconHourglassMediumRegular;
+          return Hourglass;
       }
     })();
 
@@ -92,7 +87,7 @@
           <button
             class="close-btn w-8 h-8 rounded-lg"
             onmouseleave={(e) => e.currentTarget.blur()}
-            onclick={() => closeNotification(n.id)}><IconXRegular class="h-8 w-8 p-1 text-center"></IconXRegular>
+            onclick={() => closeNotification(n.id)}><X class="h-8 w-8 p-1 text-center"></X>
           </button>
         </div>
       {/if}

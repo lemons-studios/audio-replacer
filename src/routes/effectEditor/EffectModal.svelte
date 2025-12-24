@@ -1,0 +1,96 @@
+<script lang="ts">
+    import { Check, Ban } from "@lucide/svelte";
+    import { Command } from "@tauri-apps/plugin-shell";
+    import Modal from "../../Components/Modal.svelte";
+    import { effectFilterNames, effectFilters, pitchFilterNames, pitchFilters } from "../recordPage/AudioManager";
+    import { updateArprojStats } from "../../tools/ProjectHandler";
+    import { message } from "@tauri-apps/plugin-dialog";
+
+    let { isEffect, selectedIndex = null } = $props();
+    let modal: Modal;
+    let selectedName: HTMLInputElement;
+    let selectedValue: HTMLInputElement;
+
+    async function modifyEffect() {
+        const effectName = selectedName.value;
+        const effect = selectedValue.value;
+        const filters = isEffect ? effectFilters : pitchFilters ;
+        const names = isEffect ? effectFilterNames : pitchFilterNames
+
+        if(!(await validateFilter(effect))) {
+            await message('Selected filter list is not valid', {
+                title: 'Error',
+                kind: 'error'
+            });
+            return;
+        }
+
+        if(selectedIndex === null) {
+            // Creating Effect
+            names.push(effectName);
+            filters.push(effect);
+        }
+        else {
+            // Modifying Effect
+            names[selectedIndex] = effectName;
+            filters[selectedIndex] = effect;
+        }
+
+        const newList = [];
+        for(let i = 0; i < filters.length; i++) {
+            newList.push({
+                name: names[i],
+                value: filters[i]
+            });
+        }
+
+        await updateArprojStats((isEffect ? 'effectFilters' : 'pitchFilters'), newList)
+        modal.toggleModal();
+    }
+
+    function cancelAction() {
+        modal.toggleModal();
+    }
+
+    async function validateFilter(filterList: string): Promise<boolean> {
+        // Pretty much is an effect application BUT on a null audio source. if the effect is valid, the process should exit with code 0
+        const flags = ['-f', 'lavfi', '-i', 'anullsrc', '-af', filterList, '-f', 'null', '-t', '0.01', '-'];
+        const command = Command.sidecar('binaries/ffmpeg', flags);
+
+        const result = await command.execute();
+        return result.code === 0;
+    }
+</script>
+
+<Modal closeable={false} bind:this={modal}>
+    <div class="flex flex-col items-stretch justify-between w-full h-full">
+        <h1 class="text-center text-4xl font-bold">{selectedIndex === null ? 'Create' : 'Edit'} {isEffect ? 'Effect' : 'Filter'}</h1>
+       <!--Options-->
+        <div class="flex flex-col justify-center text-left w-full h-full gap-y-5 mb-5">
+            <div class="w-full">
+                <h1 class="text-xl font-bold mb-2">Name</h1>
+                <input bind:this={selectedName} type="text" maxlength="16" placeholder="Epic Filter Name" class="bg-tertiary w-full dark:bg-tertiary-d py-1.5 px-2 rounded-sm">
+            </div>
+            <div>
+                <h1 class="text-xl font-bold mb-2">Value</h1>
+                <input bind:this={selectedValue} type="text" placeholder={isEffect ? 'equalizer=f=1000' : '1.0x'} class="bg-tertiary w-full dark:bg-tertiary-d py-1.5 px-2 rounded-sm">
+            </div>
+        </div>
+
+       <!--Ok/Cancel Button-->
+        <div class="flex flex-row justify-end items-end gap-x-5">
+            <button
+                class="w-1/5 text-center p-1.5 flex flex-row items-center justify-center gap-2 hover:bg-accent focus:bg-accent-secondary dark:focus:bg-accent-tertiary rounded-md transition"
+                onclick={async(e) => { e.currentTarget.blur(); await modifyEffect() }}
+                onmouseleave={(e) => { e.currentTarget.blur(); }}>
+                <Check class="button-icon"/>Ok
+            </button>
+            <button
+                    class="w-1/5 text-center p-1.5 flex flex-row items-center justify-center gap-2 hover:bg-accent focus:bg-accent-secondary dark:focus:bg-accent-tertiary rounded-md transition"
+                    onclick={(e) => {e.currentTarget.blur(); cancelAction()}}
+                    onmouseleave={(e) => {e.currentTarget.blur()}}>
+                <Ban class="button-icon"/>Cancel
+            </button>
+        </div>
+    </div>
+</Modal>
