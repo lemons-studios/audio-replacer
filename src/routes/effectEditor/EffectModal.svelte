@@ -5,6 +5,7 @@
     import { effectFilterNames, effectFilters, pitchFilterNames, pitchFilters } from "../recordPage/AudioManager";
     import { updateArprojStats } from "../../tools/ProjectHandler";
     import { message } from "@tauri-apps/plugin-dialog";
+    import { validateFilter } from "../../tools/OsTools";
 
     let { isEffect, selectedIndex = null } = $props();
     let modal: Modal;
@@ -50,15 +51,6 @@
 
     function cancelAction() {
         modal.toggleModal();
-    }
-
-    async function validateFilter(filterList: string): Promise<boolean> {
-        // Pretty much is an effect application BUT on a null audio source. if the effect is valid, the process should exit with code 0
-        const flags = ['-f', 'lavfi', '-i', 'anullsrc', '-af', filterList, '-f', 'null', '-t', '0.01', '-'];
-        const command = Command.sidecar('binaries/ffmpeg', flags);
-
-        const result = await command.execute();
-        return result.code === 0;
     }
 </script>
 

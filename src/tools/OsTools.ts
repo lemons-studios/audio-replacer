@@ -3,6 +3,7 @@ import { basename, dirname, extname, join } from "@tauri-apps/api/path";
 import {message, open, save} from "@tauri-apps/plugin-dialog";
 import {invoke} from "@tauri-apps/api/core";
 import {relaunch} from "@tauri-apps/plugin-process";
+import {Command} from "@tauri-apps/plugin-shell";
 
 /**
  * @description Open a file selection dialog
@@ -153,4 +154,13 @@ export async function attemptRelaunch() {
         })
     }
     else await relaunch();
+}
+
+export async function validateFilter(filterList: string): Promise<boolean> {
+    // Pretty much is an effect application BUT on a null audio source. if the effect is valid, the process should exit with code 0
+    const flags = ['-f', 'lavfi', '-i', 'anullsrc', '-af', filterList, '-f', 'null', '-t', '0.01', '-'];
+    const command = Command.sidecar('binaries/ffmpeg', flags);
+
+    const result = await command.execute();
+    return result.code === 0;
 }
