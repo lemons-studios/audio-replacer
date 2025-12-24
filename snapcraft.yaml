@@ -1,5 +1,5 @@
 name: audio-replacer
-base: core22
+base: core24
 version: '5.0.0'
 summary: Easily dub over voicelines
 description: |
@@ -41,6 +41,7 @@ parts:
     plugin: dump
     build-snaps:
       - rustup/latest/stable
+      - node/25/stable
     build-packages:
       - libwebkit2gtk-4.1-dev
       - build-essential
@@ -60,6 +61,8 @@ parts:
       - lld
       - libsecret-1-dev
       - libatk-bridge2.0-0
+      - pkg-config
+      - libasound2-dev
     stage-packages:
       - libwebkit2gtk-4.1-0
       - libayatana-appindicator3-1

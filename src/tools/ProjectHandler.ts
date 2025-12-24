@@ -259,7 +259,6 @@ export async function createArProj(inputFolder: string) {
         ]
     }
 }
-
 export async function getArprojProperty(key: string) {
     if(projectLoaded) return null;
     return (JSON.parse(await readTextFile(currentLoadedProject)))[key];
