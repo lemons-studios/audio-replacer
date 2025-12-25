@@ -1,20 +1,7 @@
 <script lang="ts">
   import { onDestroy, onMount } from "svelte";
   import { setPresenceDetails, setPresenceState } from "../../tools/DiscordPresenceManager";
-  import {
-    calculateCompletion,
-    countInputFiles,
-    countOutputFiles,
-    currentFile,
-    discardFile,
-    fileTranscription,
-    localPath,
-    outputFile,
-    projectLoaded,
-    setActiveProject,
-    skipFile,
-    submitFile
-  } from "../../tools/ProjectHandler";
+  import { calculateCompletion, countInputFiles, countOutputFiles, currentFile, discardFile, fileTranscription, localPath, outputFile, projectLoaded, skipFile, submitFile } from "../../tools/ProjectHandler";
   import { cancelRecording, effectFilterNames, endRecording, pitchFilterNames, startCapture } from "./AudioManager";
   import { goto } from "$app/navigation";
   import { selectFile } from "../../tools/OsTools";
@@ -23,19 +10,11 @@
   import { register, unregisterAll } from "@tauri-apps/plugin-global-shortcut";
   import { exists } from "@tauri-apps/plugin-fs";
   import { getValue } from "../../tools/DataInterface";
-  import {
-    ArrowRightLeft,
-    X,
-    Mic,
-    SkipForward,
-    Slash,
-    Square,
-    Check,
-    Home
-  } from "@lucide/svelte";
+  import { ArrowRightLeft, X, Mic, SkipForward, Slash, Square, Check } from "@lucide/svelte";
   import NoProjectLoaded from "../../Components/NoProjectLoaded.svelte";
   import ToggleSwitch from "../../Components/ToggleSwitch.svelte";
   import ProgressBar from "../../Components/ProgressBar.svelte";
+  import Notification from "../../Components/Notifications/Notification.svelte";
 
   let file = $state("No Project Opened");
   let audioSource = $state("");
@@ -53,6 +32,7 @@
   let selectedPitch = 0;
   let selectedEffect = 0;
   let extraEdits = false;
+  let notificationManager: Notification;
 
   // svelte-ignore non_reactive_update
   let audioPlayer: AudioPlayer;
@@ -64,6 +44,7 @@
         icon: SkipForward,
         action: async() => {
           await skipFile();
+          notificationManager.addToNotification('success', 'Success!', 'Skipped File', true, 5000);
           updateContent();
         }
       },
@@ -73,7 +54,7 @@
         action: async() => {
           idle = false;
           recording = true;
-          console.log("Starting Recording!");
+          notificationManager.addToNotification('info', "Recording Started!", "Good Luck!", false, 5000);
           await startCapture();
         }
       }
@@ -86,6 +67,7 @@
           recording = false;
           idle = true;
           await cancelRecording();
+          notificationManager.addToNotification('success', "Recording Canceled", "", true, 5000);
         }
       },
       {
@@ -94,13 +76,17 @@
         action: async() => {
           recording = false;
           await endRecording(selectedPitch, selectedEffect);
-          const autoAcceptRecordings = await getValue('settings.autoAcceptRecordings')
+          const autoAcceptRecordings = await getValue('settings.autoAcceptRecordings');
           if(autoAcceptRecordings) {
             await submitFile(extraEdits);
+            notificationManager.addToNotification('success', "Accepted!", "You Have Auto-accept Enabled!", true, 5000);
             idle = true;
           }
-          else reviewing = true;
-          audioSource = outputFile; // Automatically switch to output file
+          else {
+            reviewing = true;
+            notificationManager.addToNotification('info', "Recording Ended", "Entering Review Phase", true, 5000);
+            audioSource = outputFile; // Automatically switch to output file
+          }
         }
       }
     ],
@@ -112,6 +98,7 @@
           reviewing = false;
           idle = true;
           await discardFile();
+          notificationManager.addToNotification('info', "File Rejected", "", true, 5000);
           audioSource = currentFile; // If cancelled whilst reviewing recorded audio
         }
       },
@@ -121,6 +108,7 @@
         action: async() => {
           if(!(await exists(outputFile))) return;
           audioSource = (audioSource === outputFile) ? currentFile : outputFile;
+          notificationManager.addToNotification('info', "Switched", `You are now viewing ${audioSource === outputFile ? 'your recording' : 'the original file'}`, true, 5000);
         }
       },
       {
@@ -130,6 +118,7 @@
           reviewing = false;
           idle = true;
           await submitFile(extraEdits);
+          notificationManager.addToNotification('success', "File Accepted!", "Congratulations!", true, 5000);
           audioSource = currentFile;
           updateContent();
         }
@@ -220,7 +209,11 @@
 </script>
 
 {#if projectLoaded}
-<div class="flex flex-row gap-5 h-full">
+  <div class="notification-overlay">
+    <Notification bind:this={notificationManager} />
+  </div>
+
+  <div class="flex flex-row gap-5 h-full">
   <div class="flex flex-col justify-center items-center w-5/8 card rounded-lg">
     <h1 class="font-medium text-2xl text-center">{file}</h1>
     <h3 class="font-light text-sm text-gray-400 mb-5">Files Remaining: {filesRemaining} ({progressPercentage})</h3>

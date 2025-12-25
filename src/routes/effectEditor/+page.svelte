@@ -8,6 +8,7 @@
     import EffectModal from "./EffectModal.svelte";
     import { mount, onMount, unmount } from "svelte";
     import { ask } from "@tauri-apps/plugin-dialog";
+    import Notification from "../../Components/Notifications/Notification.svelte";
 
     let pitchValues: string[] = $state([]);
     let pitchNames: string[] = $state([]);
@@ -18,6 +19,7 @@
     let selectedTab = $state(0);
     let currentModal: null | EffectModal = null;
     let fastDeleteEnabled = false; // I'll add a toggle for this later
+    let notificationManager: Notification;
 
     onMount(() => {
         updateFilters();
@@ -73,9 +75,11 @@
             currentPitch.push(validProperties.pitchFilters).sort();
             currentEffect.push(validProperties.effectFilters).sort();
             await setProperties(currentPitch, currentEffect);
+            notificationManager.addToNotification('success', 'Success!', 'Imported filters');
         }
         else {
             await setProperties(validProperties.pitchFilters, validProperties.effectFilters);
+            notificationManager.addToNotification('success', 'Success!', 'Imported and overwritten filters');
         }
     }
 
@@ -128,6 +132,9 @@
 </script>
 
 {#if projectLoaded}
+    <div class="notification-overlay">
+        <Notification bind:this={notificationManager} />
+    </div>
     <div class="flex flex-row w-full justify-around px-4 py-2 gap-3 min-h-15 card mb-1.5">
         <button
             class={`w-1/2 text-center p-1.5 flex flex-row items-center justify-center gap-2 ${selectedTab === 0 ? 'bg-accent' : ''} hover:bg-accent focus:bg-accent-secondary dark:focus:bg-accent-tertiary rounded-md transition`}

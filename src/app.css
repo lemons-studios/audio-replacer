@@ -127,7 +127,6 @@ body {
 
 .dropdown {
   color: black;
-  @apply p-2 px-1.5 rounded-md text-center
 }
 
 .button-icon {

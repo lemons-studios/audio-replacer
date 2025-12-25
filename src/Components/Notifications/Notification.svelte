@@ -1,36 +1,32 @@
 <script lang="ts">
   import { Info, Check, TriangleAlert, OctagonAlert, X, Hourglass  } from "@lucide/svelte";
   import { fade, fly } from "svelte/transition";
-  import { onMount } from "svelte";
+  import IntermediateProgressBar from "../IntermediateProgressBar.svelte";
 
   let queue: any[] = $state([]);
   let notificationId: number = $state(0);
 
-  export function addToNotification(
-    type: number = 0,
-    title: string = "Title",
-    message: string = "",
-    closable: boolean = true,
-    timeout: number = 5000
-  ) {
+  type NotificationType = 'info' | 'success' | 'warning' | 'error' | 'progress';
+
+  export function addToNotification(type: NotificationType = 'info', title: string = "Title", message: string = "", closable: boolean = true, timeout: number = 5000) {
     const iconType = (() => {
       switch (type) {
-        case 0:
+        case 'info':
           return Info;
-        case 1:
+        case 'success':
           return Check;
-        case 2:
+        case 'warning':
           return TriangleAlert;
-        case 3:
+        case 'error':
           return OctagonAlert;
-        case 4:
+        case 'progress':
           return Hourglass;
       }
-    })();
+    });
 
     queue.push({
       type: type,
-      iconType: iconType,
+      iconType: iconType(),
       title: title,
       message: message,
       closable: closable,
@@ -63,46 +59,55 @@
 
   function getColourClasses(id: number): string {
     const index = getIdIndex(id);
-    switch (queue[index].type) {
-      case 0: // Info
+    const type: NotificationType = queue[index].type;
+    switch (type) {
+      case 'info': // Info
         return "bg-info drop-shadow-info-shadow";
-      case 1: // Success
+      case 'success': // Success
         return "bg-success drop-shadow-success-shadow";
-      case 2: // Warninr
+      case 'warning': // Warning
         return "bg-warning drop-shadow-warning-shadow";
-      case 3: // Error
+      case 'error': // Error
         return "bg-error drop-shadow-error-shadow";
-      case 4:
+      case 'progress':
         return "bg-progress drop-shadow-progress-shadow";
-      default:
-        return "bg-info drop-shadow-info-shadow";
     }
   }
 </script>
 
 <div class="h-auto w-120 flex flex-col justify-center gap-y-2.5" out:fly={{duration: 300}}>
-  {#each queue as n, index (n)}
-    <div class={`notification flex flex-row justify-apart h-auto min-w-120 gap-x-1.5 p-2.5 rounded-lg text-white drop-shadow-xl ${getColourClasses(n.id)}`} in:fade={{duration: 175}} out:fade={{duration: 175}}>
-      {#if n.closable}
-        <div class="close-btn items-center">
-          <button
-            class="close-btn w-8 h-8 rounded-lg"
-            onmouseleave={(e) => e.currentTarget.blur()}
-            onclick={() => closeNotification(n.id)}><X class="h-8 w-8 p-1 text-center"></X>
-          </button>
+  {#each queue as n}
+    <div class={`notification h-auto min-w-120 p-2.5 rounded-lg text-white drop-shadow-xl flex flex-col ${getColourClasses(n.id)}`} in:fade={{duration: 175}} out:fade={{duration: 175}}>
+      <div class="flex flex-row justify-apart items-center gap-x-1.5">
+        {#if n.closable}
+          <div class="close-btn items-center">
+            <button
+                    class="close-btn w-8 h-8 rounded-lg flex justify-center items-center"
+                    onmouseleave={(e) => e.currentTarget.blur()}
+                    onclick={() => closeNotification(n.id)}>
+              <X class="w-5 h-5 items-center" />
+            </button>
+          </div>
+        {/if}
+
+        <!--Left Side-->
+        <div class="flex flex-row gap-x-2.5 items-center mr-4">
+          <n.iconType class="button-icon" />
+          <h2>{n.title}</h2>
+        </div>
+
+        <!--Right Side-->
+        <div class="items-center flex">
+          <p class="text-sm text-center">{n.message}</p>
+        </div>
+      </div>
+      {#if n.type === 'progress'}
+        <div class="flex justify-center items-center">
+          <div class="w-3/4 mt-2">
+            <IntermediateProgressBar/>
+          </div>
         </div>
       {/if}
-
-      <!--Left Side-->
-      <div class="flex flex-row gap-x-0.5 items-center mr-4">
-        <n.iconType class="mr-1.5 h-8 w-8" />
-        <h2>{n.title}</h2>
-      </div>
-
-      <!--Right Side-->
-      <div class="items-center flex">
-        <p class="text-sm text-center">{n.message}</p>
-      </div>
     </div>
   {/each}
 </div>

@@ -18,10 +18,9 @@ A new option has been added that applies noise suppression on the current file w
 ### Linux Support
 I am now able to produce Linux builds for Audio Replacer after I switched the project to use Tauri, a change that will be described later on.
 
-Audio Replacer builds will provide (hopefully) the following official build formats:
+Audio Replacer builds will provide the following official build formats:
 - .deb
-- snapd/flatpak (Whichever one I can get to work first)
-- .AppImage
+- .rpm
 
 If anyone wants to make and distribute unofficial builds for a different package provider, you are free to do so, so long as you provide some sort of link to this repository on whatever site you distribute it.
 

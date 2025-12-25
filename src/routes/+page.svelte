@@ -9,10 +9,11 @@
   import Modal from "../Components/Modal.svelte";
   import {initializeData} from "../tools/DataInterface";
   import { ArrowRight, Save, FilePlus } from "@lucide/svelte";
+  import Notification from "../Components/Notifications/Notification.svelte";
 
   let recentProjectPaths: string[] = $state([]);
   let recentProjectObjs: any[] = $state([]);
-
+  let notificationManager: Notification;
   const format = (x: number) => {
     return new Intl.NumberFormat().format(x);
   }
@@ -68,6 +69,7 @@
   });
 
   async function loadProject(path: string) {
+    notificationManager.addToNotification('progress', "Loading", "", false, 150000);
     await setActiveProject(path);
     await updateArprojStats("lastOpened", Date.now());
     await goto("/recordPage");
@@ -76,6 +78,7 @@
   async function newProject() {
     const folder = await selectFolder();
     if(await exists(folder)) {
+      notificationManager.addToNotification('progress', "Loading", "", false, 150000);
       const arProj = await createArProj(folder);
       const path = await saveFile(["arproj"], "Audio Replacer Project");
       if(typeof path === 'string') {
@@ -93,6 +96,9 @@
 </script>
 
 <div class="flex flex-col gap-3 h-full w-full p-3">
+  <div class="notification-overlay">
+    <Notification bind:this={notificationManager} />
+  </div>
   <div class="flex flex-row gap-5 h-full">
     <div class="flex flex-col w-1/2 h-full card rounded-xl p-3">
       <h1 class="text-center text-3xl font-medium">Projects</h1>
