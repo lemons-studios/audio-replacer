@@ -6,15 +6,23 @@
     import { updateArprojStats } from "../../tools/ProjectHandler";
     import { message } from "@tauri-apps/plugin-dialog";
     import { validateFilter } from "../../tools/OsTools";
+    import {onMount} from "svelte";
 
     let { isEffect, selectedIndex = null } = $props();
     let modal: Modal;
     let selectedName: HTMLInputElement;
     let selectedValue: HTMLInputElement;
 
+    onMount(() => {
+        if(selectedIndex !== null) {
+            selectedValue.value = (isEffect ? effectFilters : pitchFilters)[selectedIndex];
+            selectedName.value = (isEffect ? effectFilterNames : pitchFilterNames)[selectedIndex];
+        }
+    })
+
     async function modifyEffect() {
         const effectName = selectedName.value;
-        const effect = selectedValue.value;
+        const effect = (isEffect ? selectedValue.value : `rubberband=pitch=${selectedValue.value}`);
         const filters = isEffect ? effectFilters : pitchFilters ;
         const names = isEffect ? effectFilterNames : pitchFilterNames
 

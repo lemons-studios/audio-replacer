@@ -1,8 +1,9 @@
 <script lang="ts">
   import { Info, Check, TriangleAlert, OctagonAlert, X, Hourglass  } from "@lucide/svelte";
   import { fade, fly } from "svelte/transition";
+  import { onMount } from "svelte";
 
-  let queue: any[] = $state([]); // Too lazy to figure out the type
+  let queue: any[] = $state([]);
   let notificationId: number = $state(0);
 
   export function addToNotification(

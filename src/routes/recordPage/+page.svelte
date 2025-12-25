@@ -19,7 +19,7 @@
   import { goto } from "$app/navigation";
   import { selectFile } from "../../tools/OsTools";
   import AudioPlayer from "../../Components/AudioPlayer.svelte";
-  import ProgressBar from "../../Components/ProgressBar.svelte";
+  import IntermediateProgressBar from "../../Components/IntermediateProgressBar.svelte";
   import { register, unregisterAll } from "@tauri-apps/plugin-global-shortcut";
   import { exists } from "@tauri-apps/plugin-fs";
   import { getValue } from "../../tools/DataInterface";
@@ -35,23 +35,24 @@
   } from "@lucide/svelte";
   import NoProjectLoaded from "../../Components/NoProjectLoaded.svelte";
   import ToggleSwitch from "../../Components/ToggleSwitch.svelte";
+  import ProgressBar from "../../Components/ProgressBar.svelte";
 
   let file = $state("No Project Opened");
   let audioSource = $state("");
-  let progressDecimal = $state(0);
+  let rawProgress = $state(0);
   let progressPercentage = $state("0%");
   let filesRemaining = $state("0");
   let transcription = $state("Transcription Unavailable");
   let idle = $state(true);
   let recording = $state(false);
   let reviewing = $state(false);
-  let extraEdits = false;
 
   let effects: string[] = $state([]);
   let pitch: string[] = $state([]);
 
   let selectedPitch = 0;
   let selectedEffect = 0;
+  let extraEdits = false;
 
   // svelte-ignore non_reactive_update
   let audioPlayer: AudioPlayer;
@@ -185,10 +186,8 @@
     if(!projectLoaded) return;
     file = localPath.replaceAll("\\", "/").substring(1);
 
-    const completion = calculateCompletion();
-
-    progressDecimal = completion / 100;
-    progressPercentage = `${completion.toFixed(2)}%`;
+    rawProgress = calculateCompletion();
+    progressPercentage = `${rawProgress.toFixed(2)}%`;
     filesRemaining = new Intl.NumberFormat().format(countInputFiles() - countOutputFiles());
     transcription = fileTranscription;
     audioSource = currentFile;
@@ -224,10 +223,9 @@
 <div class="flex flex-row gap-5 h-full">
   <div class="flex flex-col justify-center items-center w-5/8 card rounded-lg">
     <h1 class="font-medium text-2xl text-center">{file}</h1>
-    <h3 class="font-light text-sm text-gray-400 mb-25">Files Remaining: {filesRemaining} ({progressPercentage})</h3>
-
-    <div class="flex flex-row gap-1.5">
-      <ProgressBar progress={progressDecimal}></ProgressBar>
+    <h3 class="font-light text-sm text-gray-400 mb-5">Files Remaining: {filesRemaining} ({progressPercentage})</h3>
+    <div class="flex flex-row gap-1.5 w-8/10 justify-center mb-15 text-center items-center text-gray-500 text-sm">
+     0% <ProgressBar completion={rawProgress}/> 100%
     </div>
     <AudioPlayer bind:this={audioPlayer} source={audioSource}></AudioPlayer>
     <h3 class="font-light text-gray-300 text-center w-4/5 mb-5">{transcription}</h3>

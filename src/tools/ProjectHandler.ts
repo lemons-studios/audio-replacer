@@ -5,6 +5,7 @@ import { exists, mkdir, readDir, readTextFile, remove, rename, writeTextFile } f
 import { populateFFMpegFilters } from "../routes/recordPage/AudioManager";
 import { error } from "@tauri-apps/plugin-log";
 import { getValue, setValue } from "./DataInterface";
+import {message} from "@tauri-apps/plugin-dialog";
 
 /**
  * @description points to the output folder in the installation directory (installDir/output)
@@ -82,7 +83,19 @@ async function getNextFile() {
     await invoke('delete_empty_subdirectories', {
         projectPath: inputFolder
     });
-    
+
+    if(inputFiles.length === 0) {
+        await message('No more files remaining!', {
+            title: '',
+            kind: 'info'
+        });
+        await goto('/');
+        projectLoaded = false;
+        await updateArprojStats('completed', true);
+        currentLoadedProject = "";
+        return;
+    }
+
     currentFile = inputFiles[0];
 
     // Get the "Local path" of the current file, then join together with the path to the output folder
@@ -232,6 +245,7 @@ export async function createArProj(inputFolder: string) {
         path: inputFolder,
         lastOpened: Date.now(),
         filesRemaining: (await getAllFiles(inputFolder)).length,
+        completed: false,
         // Default pitch and effect filters because why not
         pitchFilters: [
             {

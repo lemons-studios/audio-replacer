@@ -17,7 +17,7 @@
 
     let selectedTab = $state(0);
     let currentModal: null | EffectModal = null;
-    let fastDeleteEnabled = false;
+    let fastDeleteEnabled = false; // I'll add a toggle for this later
 
     onMount(() => {
         updateFilters();
@@ -47,6 +47,7 @@
             effectFilters: []
         };
 
+        // Ignore errors here. It should work
         for (let i = 0; i < obj.pitchFilters.length; i++) {
             const o = obj.pitchFilters[i];
             if (o.hasOwnProperty("name") && o.hasOwnProperty("value") && (await validateFilter(o.pitchFilters[i].value))) {
@@ -60,18 +61,21 @@
             }
         }
 
+        const setProperties = async(pitch: any[], effect: any[]) => {
+            await updateArprojStats('pitchFilters', pitch);
+            await updateArprojStats('effectFilters', effect)
+        }
+
         if (!overwrite) {
             const currentPitch = await getArprojProperty("pitchFilters");
             const currentEffect = await getArprojProperty("effectFilters");
 
             currentPitch.push(validProperties.pitchFilters).sort();
             currentEffect.push(validProperties.effectFilters).sort();
-            await updateArprojStats('pitchFilters', currentPitch);
-            await updateArprojStats('effectFilters', currentEffect);
+            await setProperties(currentPitch, currentEffect);
         }
         else {
-            await updateArprojStats('pitchFilters', validProperties.pitchFilters);
-            await updateArprojStats('effectFilters', validProperties.effectFilters);
+            await setProperties(validProperties.pitchFilters, validProperties.effectFilters);
         }
     }
 
@@ -165,12 +169,12 @@
                 </div>
             {/each}
             <div class="flex justify-end items-center w-full h-auto gap-2.5">
-                <button class="w-1/12 transition duration-200 hover:bg-navigation-hover dark:hover:bg-navigation-hover-d focus:bg-navigation-focus drop-shadow-navigation-focus-shadow-d px-3 py-1.5 rounded-sm  flex flex-row text-center items-center justify-center gap-2 import-button"
+                <button class="w-1/8 transition duration-200 hover:bg-navigation-hover dark:hover:bg-navigation-hover-d focus:bg-navigation-focus drop-shadow-navigation-focus-shadow-d px-3 py-1.5 rounded-sm flex flex-row text-center items-center justify-center gap-2 import-button"
                         onclick={async(e) => {e.currentTarget.blur(); await importData()}}
                         onmouseleave={(e) => {e.currentTarget.blur()}}>
-                    <Import class="button-icon"/>Import File
+                    <Import class="button-icon"/>Import
                 </button>
-                <button class="w-1/12 transition duration-200 bg-accent hover:bg-accent-secondary dark:hover:bg-accent-tertiary dark:focus:bg-tertiary-d focus:bg-tertiary px-3 py-1.5 rounded-sm  flex flex-row text-center items-center justify-center gap-2"
+                <button class="w-1/10 transition duration-200 bg-accent hover:bg-accent-secondary dark:hover:bg-accent-tertiary dark:focus:bg-tertiary-d focus:bg-tertiary px-3 py-1.5 rounded-sm flex flex-row text-center items-center justify-center gap-2"
                         onclick={(e) => {e.currentTarget.blur(); editEffect(null)}}
                         onmouseleave={(e) => {e.currentTarget.blur()}}>
                     <Plus class="button-icon"/>New
