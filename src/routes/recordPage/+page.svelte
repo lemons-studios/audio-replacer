@@ -14,7 +14,7 @@
   import NoProjectLoaded from "../../Components/NoProjectLoaded.svelte";
   import ToggleSwitch from "../../Components/ToggleSwitch.svelte";
   import ProgressBar from "../../Components/ProgressBar.svelte";
-  import Notification from "../../Components/Notifications/Notification.svelte";
+  import Notification from "../../Components/Notification.svelte";
 
   let file = $state("No Project Opened");
   let audioSource = $state("");
@@ -217,7 +217,7 @@
   <div class="flex flex-col justify-center items-center w-5/8 card rounded-lg">
     <h1 class="font-medium text-2xl text-center">{file}</h1>
     <h3 class="font-light text-sm text-gray-400 mb-5">Files Remaining: {filesRemaining} ({progressPercentage})</h3>
-    <div class="flex flex-row gap-1.5 w-8/10 justify-center mb-15 text-center items-center text-gray-500 text-sm">
+    <div class="flex flex-row gap-1.5 w-8/10 justify-center mb-15 text-center items-center text-gray-500 text-xs">
      0% <ProgressBar completion={rawProgress}/> 100%
     </div>
     <AudioPlayer bind:this={audioPlayer} source={audioSource}></AudioPlayer>

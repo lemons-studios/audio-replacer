@@ -3,7 +3,6 @@
 @import "@fontsource/poppins";
 
 @plugin "@tailwindcss/typography";
-
 @theme {
   /* Light Mode */
   --color-primary: oklch(0.97 0 0);

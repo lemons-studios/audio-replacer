@@ -1,5 +1,6 @@
 <script lang="ts">
     import { X } from "@lucide/svelte";
+    import { fade, fly } from "svelte/transition";
 
     let { children, closeable } = $props();
     let modalEnabled = $state(true);
@@ -54,7 +55,7 @@
 </style>
 
 {#if modalEnabled}
-    <dialog bind:this={dialog} class="flex border-2 text-wrap justify-center align-middle items-center p-5 h-auto w-auto dark:text-white dark:border-tertiary-d border-tertiary dark:bg-secondary-d bg-secondary rounded-xl">
+    <dialog bind:this={dialog} class="duration-300 flex border-2 text-wrap justify-center align-middle items-center p-5 h-auto w-auto dark:text-white dark:border-tertiary-d border-tertiary dark:bg-secondary-d bg-secondary rounded-xl">
         {#if closeable}
         <button class="close-btn rounded-sm align-top mr-2.5"
                 onclick={() => modalEnabled = false}

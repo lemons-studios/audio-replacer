@@ -8,7 +8,7 @@
     import EffectModal from "./EffectModal.svelte";
     import { mount, onMount, unmount } from "svelte";
     import { ask } from "@tauri-apps/plugin-dialog";
-    import Notification from "../../Components/Notifications/Notification.svelte";
+    import Notification from "../../Components/Notification.svelte";
 
     let pitchValues: string[] = $state([]);
     let pitchNames: string[] = $state([]);

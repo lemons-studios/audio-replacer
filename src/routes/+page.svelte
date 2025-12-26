@@ -6,10 +6,9 @@
   import { saveFile, selectFile, selectFolder, sleep, timestampToLegible } from "../tools/OsTools";
   import { createArProj, setActiveProject, updateArprojStats } from "../tools/ProjectHandler";
   import { goto } from "$app/navigation";
-  import Modal from "../Components/Modal.svelte";
-  import {initializeData} from "../tools/DataInterface";
+  import { initializeData } from "../tools/DataInterface";
   import { ArrowRight, Save, FilePlus } from "@lucide/svelte";
-  import Notification from "../Components/Notifications/Notification.svelte";
+  import Notification from "../Components/Notification.svelte";
 
   let recentProjectPaths: string[] = $state([]);
   let recentProjectObjs: any[] = $state([]);
@@ -94,11 +93,14 @@
   }
   
 </script>
-
-<div class="flex flex-col gap-3 h-full w-full p-3">
+<!--Adding this #if block fixes a strange clipping/ghosting issue-->
+{#if true}
   <div class="notification-overlay">
     <Notification bind:this={notificationManager} />
   </div>
+{/if}
+
+<div class="flex flex-col gap-3 h-full w-full p-3">
   <div class="flex flex-row gap-5 h-full">
     <div class="flex flex-col w-1/2 h-full card rounded-xl p-3">
       <h1 class="text-center text-3xl font-medium">Projects</h1>
@@ -106,23 +108,23 @@
         {#if recentProjectObjs.length === 0}
           <h1 class="text-center text-gray-400">No Recent Projects</h1>
         {:else}
-        <div class="w-full overflow-y-auto">
-        {#each recentProjectObjs as rp, i}
-          <button class="save-btn rounded-sm w-full mb-1 dark:hover:bg-tertiary-d hover:bg-tertiary dark:focus:bg-tertiary-d dark:focus:drop-shadow-xl transition duration-75"
-                  onclick={async() => await loadProject(recentProjectPaths[i])}
-                  onmouseleave={(e) => e.currentTarget.blur()}
-                  onmouseup={(e) => e.currentTarget.blur()}>
-            <div class="flex justify-between items-center text-left p-3 mb-1.5 mt-1.5">
-              <div class="flex flex-col">
-                <p class="text-lg">{rp.name}</p>
-                <p class="text-gray-400 text-sm">Last Opened: {timestampToLegible(rp.lastOpened)}</p>
-                <p class="text-gray-400 text-xs">Files Remaining: {format(rp.filesRemaining)}</p>
-              </div>
-              <ArrowRight class="arrow w-5 h-5"></ArrowRight>
-            </div>
-          </button>
-        {/each}
-        </div>
+          <div class="w-full overflow-y-auto">
+            {#each recentProjectObjs as rp, i}
+              <button class="save-btn rounded-sm w-full mb-1 dark:hover:bg-tertiary-d hover:bg-tertiary dark:focus:bg-tertiary-d dark:focus:drop-shadow-xl transition duration-75"
+                      onclick={async() => await loadProject(recentProjectPaths[i])}
+                      onmouseleave={(e) => e.currentTarget.blur()}
+                      onmouseup={(e) => e.currentTarget.blur()}>
+                <div class="flex justify-between items-center text-left p-3 mb-1.5 mt-1.5">
+                  <div class="flex flex-col">
+                    <p class="text-lg">{rp.name}</p>
+                    <p class="text-gray-400 text-sm">Last Opened: {timestampToLegible(rp.lastOpened)}</p>
+                    <p class="text-gray-400 text-xs">Files Remaining: {format(rp.filesRemaining)}</p>
+                  </div>
+                  <ArrowRight class="arrow w-5 h-5"></ArrowRight>
+                </div>
+              </button>
+            {/each}
+          </div>
         {/if}
         <div class="flex row w-max mb-1 h-auto p-2 rounded-lg bg-tertiary dark:bg-tertiary-d justify-end align-bottom items-end gap-x-5">
           <button class="text-center p-1.5 flex flex-row items-center justify-center gap-2 hover:bg-accent focus:bg-accent-tertiary rounded-md transition"
@@ -153,12 +155,12 @@
       <div class="card h-1/2 p-3 rounded-xl">
         <h1 class="text-center text-3xl font-medium mb-2">Statistics</h1>
         {#each statistics as stat}
-        <div class="flex flex-row align-middle items-center justify-between text-left mb-2.5">
-          <h2>{stat.name}</h2>
-          {#await stat.getValue() then value}
-            <p>{value}</p>
-          {/await}
-        </div>
+          <div class="flex flex-row align-middle items-center justify-between text-left mb-2.5">
+            <h2>{stat.name}</h2>
+            {#await stat.getValue() then value}
+              <p>{value}</p>
+            {/await}
+          </div>
         {/each}
       </div>
     </div>

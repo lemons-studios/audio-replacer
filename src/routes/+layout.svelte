@@ -9,7 +9,7 @@
   import { listen } from "@tauri-apps/api/event";
   import { info } from "@tauri-apps/plugin-log";
   import NavBar from "../Components/NavBar.svelte";
-  import Notification from "../Components/Notifications/Notification.svelte";
+  import Notification from "../Components/Notification.svelte";
   import { createAdditionalData } from "../tools/ProjectHandler";
 
   let { children } = $props();

@@ -1,7 +1,7 @@
 <script lang="ts">
   import { Info, Check, TriangleAlert, OctagonAlert, X, Hourglass  } from "@lucide/svelte";
   import { fade, fly } from "svelte/transition";
-  import IntermediateProgressBar from "../IntermediateProgressBar.svelte";
+  import IntermediateProgressBar from "./IntermediateProgressBar.svelte";
 
   let queue: any[] = $state([]);
   let notificationId: number = $state(0);
