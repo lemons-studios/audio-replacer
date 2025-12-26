@@ -1,7 +1,7 @@
 extern crate core;
 
 use crate::commands::app_functions::{ close_app, get_install_directory, get_username, in_dev_env };
-use crate::commands::project_manager::{ delete_empty_subdirectories, get_all_files, randomize_file_order };
+use crate::commands::project_manager::{ delete_empty_subdirectories, get_all_files, get_all_directories, randomize_file_order };
 use crate::commands::whisper_utils::transcribe_file;
 use core::option::Option::Some;
 use tauri::Manager;
@@ -29,6 +29,7 @@ pub fn run() {
         .plugin(tauri_plugin_audio_recorder::init())
         .invoke_handler(tauri::generate_handler![
             get_all_files,
+            get_all_directories,
             delete_empty_subdirectories,
             transcribe_file,
             get_install_directory,

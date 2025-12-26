@@ -16,6 +16,21 @@ pub fn get_all_files(path: &str) -> Vec<String> {
 }
 
 #[command]
+pub fn get_all_directories(path: &str) -> Vec<String> {
+    let mut dirs = vec![];
+    for e in WalkDir::new(path).into_iter().filter_map(Result::ok) {
+        if e.metadata().unwrap().is_dir() {
+            if e.depth() == 0 {
+                continue;
+            }
+            dirs.push(e.path().display().to_string());
+        }
+    }
+    dirs.sort();
+    dirs
+}
+
+#[command]
 pub fn delete_empty_subdirectories(project_path: &str) {
     let path = Path::new(project_path);
     if !path.is_dir() {

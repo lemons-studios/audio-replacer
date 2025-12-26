@@ -1,11 +1,12 @@
 // This file handles everything related to projects, From moving files around to recording audio for a project
-import { invoke } from "@tauri-apps/api/core";
-import { basename, dirname, extname, join, resolveResource } from "@tauri-apps/api/path";
-import { exists, mkdir, readDir, readTextFile, remove, rename, writeTextFile } from "@tauri-apps/plugin-fs";
-import { populateFFMpegFilters } from "../routes/recordPage/AudioManager";
-import { error } from "@tauri-apps/plugin-log";
-import { getValue, setValue } from "./DataInterface";
+import {invoke} from "@tauri-apps/api/core";
+import {basename, dirname, extname, join, resolveResource} from "@tauri-apps/api/path";
+import {exists, mkdir, readTextFile, remove, rename, writeTextFile} from "@tauri-apps/plugin-fs";
+import {populateFFMpegFilters} from "../routes/recordPage/AudioManager";
+import {error} from "@tauri-apps/plugin-log";
+import {getValue, setValue} from "./DataInterface";
 import {message} from "@tauri-apps/plugin-dialog";
+import {goto} from '$app/navigation';
 
 /**
  * @description points to the output folder in the installation directory (installDir/output)
@@ -58,13 +59,15 @@ export async function setActiveProject(projectFile: string) {
 
     outputFiles = await getAllFiles(outputFolder);
 
-    // Replicate folder structure of input folder
-    const inputDirs = await readDir(inputFolder);
-    const outputDirs = await readDir(outputFolder);
 
-    const uncreatedFolders = inputDirs.filter(x => !new Set(outputDirs).has(x));
+    // Replicate folder structure of input folder
+    const inputDirs = await getAllDirectoryNames(inputFolder);
+    const outputDirs = await getAllDirectoryNames(outputFolder);
+
+    const uncreatedFolders = inputDirs.filter(i => !outputDirs.includes(i));
     for(let i = 0; i< uncreatedFolders.length; i++) {
-        const directory = await join(outputFolder, uncreatedFolders[i].name);
+        const directory = await join(outputFolder, uncreatedFolders[i]);
+        console.log(directory);
         if(!(await exists(directory))) await mkdir(directory);
     }
 
@@ -113,6 +116,28 @@ export async function getAllFiles(folder: string): Promise<string[]> {
             resolve(filtered);
         });
     });
+}
+
+async function getAllDirectoryNames(folder: string) {
+    const folders = (await getAllDirectories(folder));
+    const names = [];
+
+    if(folders.length === 0) {
+        return [];
+    }
+
+    for(let i = 0; i < folders.length; i++) {
+        names.push(folders[i].split(`${folder}/`)[1]);
+    }
+    return names
+}
+
+export async function getAllDirectories(folder: string): Promise<string[]> {
+    const res = await invoke('get_all_directories', {
+        path: folder
+    }) as string[];
+    console.log(res);
+    return res;
 }
 
 const transcribeFile = async() => {
