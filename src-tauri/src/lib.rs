@@ -58,14 +58,12 @@ pub fn run() {
                         }
 
                         wk.connect_permission_request(move |_wk, request| {
-                            if let Some(_media_request) =
-                                request.downcast_ref::<UserMediaPermissionRequest>()
-                            {
+                            if let Some(_media_request) = request.downcast_ref::<UserMediaPermissionRequest>() {
                                 request.allow();
-                                return true; // We handled this request
+                                return true;
                             }
                             request.deny();
-                            true // We handled this request
+                            true
                         });
                     }
                 })?;

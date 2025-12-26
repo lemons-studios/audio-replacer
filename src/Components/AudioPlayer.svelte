@@ -10,11 +10,13 @@
     let currentAudioTime = $state("00:00")
     let audioPlaying = $state(false);
     let loopEnabled = $state(true);
+    let volumeVisible = $state(false);
 
     let currentAudioURL: string | undefined = undefined;
 
     let audioPlayer: HTMLAudioElement;
     let seekBar: HTMLInputElement;
+    let volumeSlider: HTMLInputElement;
 
     $effect(() => {
         source;
@@ -131,7 +133,19 @@
     async function doesAudioExist(): Promise<boolean> {
         return source !== "" || await exists(source);
     }
+
+    function updateVolume() {
+        audioVolume = +volumeSlider.value / 100;
+    }
+
 </script>
+
+{#if volumeVisible}
+    <div class="min-w-50 rounded-lg bg-neutral-300 dark:bg-neutral-900 p-2 flex flex-row justify-between items-center text-center mb-2">
+        <input type="range" class="w-3/4" min="0" max="100" step="1" value={audioVolume * 100} oninput={updateVolume} bind:this={volumeSlider}>
+        <p>{Math.round(audioVolume * 100)}%</p>
+    </div>
+{/if}
 
 <div class="flex flex-row justify-center gap-4 bg-neutral-300 dark:bg-neutral-900 rounded-lg mx-auto items-center shadow-lg pl-3 pr-4 py-2 mb-2 w-3/4">
     <audio ontimeupdate={audioPlayerTimeUpdate} onended={onAudioEnded} bind:this={audioPlayer} preload="auto" volume={audioVolume}></audio>
@@ -144,11 +158,10 @@
                 <Play class="w-5 h-5" onclick={toggleAudio}></Play>
             {/if}
         </div>
-
         <!--Volume Slider-->
-        <Volume2 class="w-5 h-5"></Volume2>
-        <!--Loop Button-->
+        <Volume2 class="w-5 h-5" onclick={() => volumeVisible = !volumeVisible}/>
 
+        <!--Loop Button-->
         {#if loopEnabled}
             <Infinity class="w-5.5 h-5.5 text-accent-secondary hover:text-accent transition duration-200" onclick={() => loopEnabled = false} />
         {:else}
@@ -160,3 +173,4 @@
         <h2>{currentAudioTime}</h2>
     </div>
 </div>
+
