@@ -7,8 +7,9 @@
   import { createArProj, setActiveProject, updateArprojStats } from "../tools/ProjectHandler";
   import { goto } from "$app/navigation";
   import { initializeData } from "../tools/DataInterface";
-  import { ArrowRight, Save, FilePlus } from "@lucide/svelte";
+  import { ArrowRight, Save, FilePlus, BookOpenText } from "@lucide/svelte";
   import Notification from "../Components/Notification.svelte";
+  import {openUrl} from "@tauri-apps/plugin-opener";
 
   let recentProjectPaths: string[] = $state([]);
   let recentProjectObjs: any[] = $state([]);
@@ -149,8 +150,12 @@
       </div>
     </div>
     <div class="flex flex-col gap-y-5 w-1/2">
-      <div class="card h-1/2 rounded-xl p-3">
-        <h1 class="text-center text-3xl font-medium mb-5">Tutorials</h1>
+      <div class="card h-1/2 rounded-xl p-3 flex flex-col justify-center items-center">
+        <h1 class="text-center text-3xl font-medium mb-5">New To Audio Replacer?</h1>
+        <button class="app-btn"
+                onmouseleave={(e) => e.currentTarget.blur()}
+                onmouseup={(e) => e.currentTarget.blur()}
+                onclick={async() => {await openUrl("https://github.com/lemons-studios/audio-replacer/wiki")}}><BookOpenText class="button-icon"/> Check Out The Wiki!</button>
       </div>
       <div class="card h-1/2 p-3 rounded-xl">
         <h1 class="text-center text-3xl font-medium mb-2">Statistics</h1>
