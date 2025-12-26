@@ -1,4 +1,4 @@
-import {getValue, resetAll, resetSettings, resetStatistics, setValue} from "../../tools/DataInterface";
+import { getValue, resetAll, resetSettings, resetStatistics, setValue } from "../../tools/DataInterface";
 import { clearRichPresence, startRichPresence } from "../../tools/DiscordPresenceManager";
 import { ask, message } from "@tauri-apps/plugin-dialog";
 import { attemptRelaunch } from "../../tools/OsTools";

@@ -1,4 +1,4 @@
-name: "Create Audio Replacer Package (.deb, .exe, .msi, .AppImage)"
+name: "Create Audio Replacer Package (.deb, .rpm, .exe)"
 
 on:
   push:
@@ -40,12 +40,13 @@ jobs:
           winget source remove msstore
           winget upgrade Kitware.CMake --disable-interactivity --accept-source-agreements --accept-package-agreements --force || echo skipped
           winget upgrade --id=Microsoft.EdgeWebView2Runtime -e || echo skipped
+          winget upgrade LLVM.LLVM
 
       - name: install dependencies (Ubuntu)
         if: matrix.platform == 'ubuntu-22.04'
         run: |
           sudo apt-get update
-          sudo apt-get install -y build-essential libwebkit2gtk-4.1-dev libappindicator3-dev librsvg2-dev patchelf cmake llvm clang xdg-utils
+          sudo apt-get install -y build-essential libwebkit2gtk-4.1-dev libappindicator3-dev librsvg2-dev patchelf cmake llvm clang xdg-utils alsa-lib
       
       - name: install frontend dependencies
         run: npm install

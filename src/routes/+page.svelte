@@ -120,7 +120,7 @@
                     <p class="text-gray-400 text-sm">Last Opened: {timestampToLegible(rp.lastOpened)}</p>
                     <p class="text-gray-400 text-xs">Files Remaining: {format(rp.filesRemaining)}</p>
                   </div>
-                  <ArrowRight class="arrow w-5 h-5"></ArrowRight>
+                  <ArrowRight class="arrow w-5 h-5"/>
                 </div>
               </button>
             {/each}
@@ -140,7 +140,7 @@
                   recentProjectObjs.push(project);
                   await setValue('settings.recentProjectPaths', recentProjectPaths);
                   await loadProject(file);
-                }}
+                  }}
                   onmouseleave={(e) => e.currentTarget.blur()}
                   onmouseup={(e) => e.currentTarget.blur()}>
             <Save class="w-4 h-4" /> Load Project
