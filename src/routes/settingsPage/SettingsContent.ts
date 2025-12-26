@@ -1,9 +1,9 @@
 import {getValue, resetAll, resetSettings, resetStatistics, setValue} from "../../tools/DataInterface";
 import { clearRichPresence, startRichPresence } from "../../tools/DiscordPresenceManager";
-import {ask, message} from "@tauri-apps/plugin-dialog";
-import {attemptRelaunch} from "../../tools/OsTools";
+import { ask, message } from "@tauri-apps/plugin-dialog";
+import { attemptRelaunch } from "../../tools/OsTools";
 import { Trash2 } from "@lucide/svelte";
-import {setTheme} from "@tauri-apps/api/app";
+import { setTheme } from "@tauri-apps/api/app";
 
 export const settings = {
   General: [
@@ -23,7 +23,6 @@ export const settings = {
         return (await getValue('settings.theme'));
       },
       onChange: async(value: string) => {
-        console.log(`Setting sorting method to ${value}`)
         await setValue('settings.theme', value);
         await setTheme(value);
       }
