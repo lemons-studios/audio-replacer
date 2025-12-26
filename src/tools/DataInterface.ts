@@ -25,7 +25,7 @@ const defaultSettings = {
     }
 } as const
 
-type ValidData = 'settings.autoAcceptRecordings' | 'settings.updateCheck' | 'settings.recentProjectPaths' | 'settings.recordStartDelay' 
+type ValidData = 'settings.theme' | 'settings.autoAcceptRecordings' | 'settings.updateCheck' | 'settings.recentProjectPaths' | 'settings.recordStartDelay'
                 | 'settings.recordEndDelay'  | 'settings.enableTranscription' | 'settings.enableRichPresence' | 'settings.allowNoiseSuppression'
                 | 'settings.sortingMethod' | 'statistics.appOpenTime'  | 'statistics.filesRecorded' | 'statistics.filesAccepted'
                 | 'statistics.filesRejected' | 'statistics.filesSkipped'| 'statistics.recordingsCancelled';

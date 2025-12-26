@@ -32,8 +32,7 @@ pub fn transcribe_file(path: &str, model_path: &str) -> String {
         let (even_samples, _) = inter_samples.split_at(inter_samples.len() - 1);
         whisper_rs::convert_stereo_to_mono_audio(even_samples)
             .expect("failed to convert stereo to mono")
-    } 
-    else {
+    } else {
         whisper_rs::convert_stereo_to_mono_audio(&inter_samples)
             .expect("failed to convert stereo to mono")
     };

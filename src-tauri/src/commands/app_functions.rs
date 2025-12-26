@@ -1,5 +1,5 @@
-use std::{env, path::PathBuf};
 use std::process::exit;
+use std::{env, path::PathBuf};
 use tauri::{command, is_dev};
 
 #[command]
@@ -21,7 +21,7 @@ pub fn in_dev_env() -> bool {
     is_dev()
 }
 
-#[command] 
+#[command]
 pub fn get_username() -> String {
     whoami::username()
 }

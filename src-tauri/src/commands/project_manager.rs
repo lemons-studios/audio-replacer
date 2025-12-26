@@ -1,5 +1,5 @@
-use std::{fs, path::Path, str, vec};
 use rand::seq::SliceRandom;
+use std::{fs, path::Path, str, vec};
 use tauri::command;
 use walkdir::WalkDir;
 

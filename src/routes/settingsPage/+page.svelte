@@ -7,6 +7,7 @@
   onMount(async() => {
     await setPresenceDetails("Tweaking Settings");
   });
+
 </script>
 
 <div class="flex grow justify-center flex-col gap-y-3.5 items-center overflow-y-auto">

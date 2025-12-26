@@ -3,9 +3,31 @@ import { clearRichPresence, startRichPresence } from "../../tools/DiscordPresenc
 import {ask, message} from "@tauri-apps/plugin-dialog";
 import {attemptRelaunch} from "../../tools/OsTools";
 import { Trash2 } from "@lucide/svelte";
+import {setTheme} from "@tauri-apps/api/app";
 
 export const settings = {
   General: [
+    {
+      name: 'Theme',
+      description: 'Choose the app theme',
+      type: 'dropdown',
+      choices: [
+        "Light",
+        "Dark"
+      ],
+      choiceValues: [
+        "light",
+        "dark"
+      ],
+      getValue: async(): Promise<string> => {
+        return (await getValue('settings.theme'));
+      },
+      onChange: async(value: string) => {
+        console.log(`Setting sorting method to ${value}`)
+        await setValue('settings.theme', value);
+        await setTheme(value);
+      }
+    },
     {
       name: "Check for updates",
       description: "You will be prompted to install the update after the update is downloaded",

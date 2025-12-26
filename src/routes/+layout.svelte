@@ -2,24 +2,23 @@
   import { getValue, initializeData, setValue } from "../tools/DataInterface";
   import "../app.css";
   import { invoke } from "@tauri-apps/api/core";
-  import { onMount } from "svelte";
+  import { onDestroy, onMount } from "svelte";
   import { onNavigate } from '$app/navigation';
   import { startRichPresence } from "../tools/DiscordPresenceManager";
-  import {formatVersion, getMic, sleep} from "../tools/OsTools";
-  import { listen } from "@tauri-apps/api/event";
+  import { getMic } from "../tools/OsTools";
   import { info } from "@tauri-apps/plugin-log";
   import NavBar from "../Components/NavBar.svelte";
-  import Notification from "../Components/Notification.svelte";
   import { createAdditionalData } from "../tools/ProjectHandler";
+  import { checkForUpdates } from "../tools/UpdateManager";
+  import {setTheme} from "@tauri-apps/api/app";
 
   let { children } = $props();
-  let versionNumber = $state("");
-  let isUpdating = $state(false);
-  let notificationRef: Notification;
   const appLaunchTime = Date.now(); // For app open time statistic tracking
 
   
   onMount(async() => {
+    await setTheme(await getValue('settings.theme'));
+
     await initializeData();
 
     // Populate additional variables
@@ -29,8 +28,6 @@
     await info("Creating Additional Directories");
     await createAdditionalData();
 
-    versionNumber = await formatVersion();
-
     // Prevent right click context menu from showing up (unneeded in production builds)
     const isDev = await invoke("in_dev_env") as boolean;
     if(!isDev) {
@@ -39,12 +36,19 @@
       });
     }
 
-    // Only check for updates if the user wants to
-    const allowUpdates = getValue('settings.updateCheck');
-    // TODO: Add new updater functionality
-    
-    await startRichPresence();
+    const allowUpdates = await getValue('settings.updateCheck');
+    if(allowUpdates) await checkForUpdates();
+
+    const allowRichPresence = await getValue('settings.enableRichPresence');
+    if(allowRichPresence) await startRichPresence();
   });
+
+  onDestroy(async() => {
+    await info("App close requested");
+    const currentTime = await getValue("statistics.appOpenTime");
+    const appCloseTime = Date.now() - appLaunchTime;
+    await setValue("statistics.appOpenTime", currentTime + appCloseTime);
+  })
 
   onNavigate((navigation) => {
     if(!document.startViewTransition) return;
@@ -55,13 +59,6 @@
         await navigation.complete;
       });
     });
-  });
-  
-  listen('tauri://close-requested', async() => {
-    info("App close requested");
-    const currentTime = await getValue("statistics.appOpenTime");
-    const appCloseTime = Date.now() - appLaunchTime;
-    await setValue("statistics.appOpenTime", currentTime + appCloseTime);
   });
 </script>
 
@@ -74,18 +71,8 @@
 </style>
 
 <main class="dark:bg-primary-d bg-primary flex flex-row grow dark:text-white items-stretch w-screen h-screen overflow-y-hidden">
-  <div class="notification-overlay">
-    <Notification bind:this={notificationRef}/>
+  <NavBar />
+  <div class="flex-1 flex flex-col overflow-hidden w-screen h-screen p-5.5">
+    {@render children?.()}
   </div>
-  {#if !isUpdating}
-    <NavBar />
-    <div class="flex-1 flex flex-col overflow-hidden w-screen h-screen p-5.5">
-      {@render children?.()}
-    </div>    
-  {/if}
-  {#if isUpdating}
-    <div class="flex flex-row grow justify-center items-center gap-3 absolute inset-0">
-      <!--TODO: Re-add spinner and add a progress bar for download progress-->
-    </div>
-  {/if}
 </main>

@@ -1,7 +1,9 @@
 extern crate core;
 
-use crate::commands::app_functions::{ close_app, get_install_directory, get_username, in_dev_env };
-use crate::commands::project_manager::{ delete_empty_subdirectories, get_all_files, get_all_directories, randomize_file_order };
+use crate::commands::app_functions::{close_app, get_install_directory, get_username, in_dev_env};
+use crate::commands::project_manager::{
+    delete_empty_subdirectories, get_all_directories, get_all_files, randomize_file_order,
+};
 use crate::commands::whisper_utils::transcribe_file;
 use core::option::Option::Some;
 use tauri::Manager;
@@ -10,6 +12,7 @@ mod commands;
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tauri::Builder::default()
+        .plugin(tauri_plugin_updater::Builder::new().build())
         .plugin(tauri_plugin_dialog::init())
         .plugin(tauri_plugin_single_instance::init(|_app, _args, _cwd| {
             if let Some(window) = _app.get_webview_window("main") {
@@ -42,10 +45,11 @@ pub fn run() {
             let window = app
                 .get_webview_window("audio-replacer")
                 .expect("Main window not found!");
-            #[cfg(target_os = "linux")] // Fix WebKit2Gtk permission issues (I have no clue why this is necessary for a frontend permission fix)
+            #[cfg(target_os = "linux")]
+            // Fix WebKit2Gtk permission issues (I have no clue why this is necessary for a frontend permission fix)
             {
+                use webkit2gtk::WebViewExt;
                 use webkit2gtk::glib::Cast;
-                use webkit2gtk::{WebViewExt};
                 use webkit2gtk::{
                     PermissionRequestExt, SettingsExt, UserMediaPermissionRequest, WebView,
                 };
@@ -58,7 +62,9 @@ pub fn run() {
                         }
 
                         wk.connect_permission_request(move |_wk, request| {
-                            if let Some(_media_request) = request.downcast_ref::<UserMediaPermissionRequest>() {
+                            if let Some(_media_request) =
+                                request.downcast_ref::<UserMediaPermissionRequest>()
+                            {
                                 request.allow();
                                 return true;
                             }
