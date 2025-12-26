@@ -65,7 +65,7 @@ export async function setActiveProject(projectFile: string) {
     const outputDirs = await getAllDirectoryNames(outputFolder);
 
     const uncreatedFolders = inputDirs.filter(i => !outputDirs.includes(i));
-    for(let i = 0; i< uncreatedFolders.length; i++) {
+    for(let i = 0; i < uncreatedFolders.length; i++) {
         const directory = await join(outputFolder, uncreatedFolders[i]);
         console.log(directory);
         if(!(await exists(directory))) await mkdir(directory);
