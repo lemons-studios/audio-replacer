@@ -1,9 +1,9 @@
 <script lang="ts">
     import { pitchFilters, pitchFilterNames, effectFilters, effectFilterNames } from "../recordPage/AudioManager";
     import { getArprojProperty, projectLoaded, updateArprojStats } from "../../tools/ProjectHandler";
-    import {selectFile, validateFilter} from "../../tools/OsTools";
-    import { readTextFile } from "@tauri-apps/plugin-fs";
-    import { AudioLines, Sparkles, Plus, PencilLine, Import, Trash2 } from "@lucide/svelte";
+    import {saveFile, selectFile, validateFilter} from "../../tools/OsTools";
+    import {readTextFile, writeTextFile} from "@tauri-apps/plugin-fs";
+    import { AudioLines, Sparkles, Plus, PencilLine, Download, Trash2, Upload } from "@lucide/svelte";
     import NoProjectLoaded from "../../Components/NoProjectLoaded.svelte";
     import EffectModal from "./EffectModal.svelte";
     import { mount, onMount, unmount } from "svelte";
@@ -20,6 +20,7 @@
     let currentModal: null | EffectModal = null;
     let fastDeleteEnabled = false; // I'll add a toggle for this later
     let notificationManager: Notification;
+    type Filter = { name: string, value: string };
 
     onMount(() => {
         updateFilters();
@@ -44,7 +45,7 @@
 
         const obj = JSON.parse(await readTextFile(filePath));
 
-        const validProperties = {
+        const validProperties: { pitchFilters: Filter[], effectFilters: Filter[] } = {
             pitchFilters: [],
             effectFilters: []
         };
@@ -80,6 +81,30 @@
         else {
             await setProperties(validProperties.pitchFilters, validProperties.effectFilters);
             notificationManager.addToNotification('success', 'Success!', 'Imported and overwritten filters');
+        }
+    }
+
+    async function exportData() {
+        const location = await saveFile(["json"], "JSON Files");
+        if(location) {
+            const data: { pitchFilters: Filter[], effectFilters: Filter[] } = {
+                pitchFilters: [],
+                effectFilters: [],
+            }
+
+            for(let i = 0; i < pitchFilters.length; i++) {
+                data.pitchFilters.push({
+                    name: pitchFilterNames[i],
+                    value: pitchFilters[i],
+                });
+            }
+            for(let i = 0; i < effectFilters.length; i++) {
+                data.effectFilters.push({
+                    name: effectFilterNames[i],
+                    value: effectFilters[i],
+                });
+            }
+            await writeTextFile(location, JSON.stringify(data));
         }
     }
 
@@ -137,13 +162,13 @@
     </div>
     <div class="flex flex-row w-full justify-around px-4 py-2 gap-3 min-h-15 card mb-1.5">
         <button
-            class={`w-1/2 text-center p-1.5 flex flex-row items-center justify-center gap-2 ${selectedTab === 0 ? 'bg-accent' : ''} hover:bg-accent focus:bg-accent-secondary dark:focus:bg-accent-tertiary rounded-md transition`}
+            class={`w-1/2 text-center p-1.5 flex flex-row items-center justify-center gap-2 ${selectedTab === 0 ? 'bg-accent' : 'border-white/10 border'} hover:bg-accent focus:bg-accent-secondary dark:focus:bg-accent-tertiary rounded-md transition`}
             onclick={(e) => {e.currentTarget.blur(); selectedTab = 0}}
             onmouseleave={(e) => {e.currentTarget.blur()}}>
             <AudioLines class="button-icon"/> Pitch Modifiers
         </button>
         <button
-            class={`w-1/2 text-center p-1.5 flex flex-row items-center justify-center gap-2 ${selectedTab === 1 ? 'bg-accent' : ''} hover:bg-accent focus:bg-accent-secondary dark:focus:bg-accent-tertiary rounded-md transition`}
+            class={`w-1/2 text-center p-1.5 flex flex-row items-center justify-center gap-2 ${selectedTab === 1 ? 'bg-accent' : 'border-white/10 border'} hover:bg-accent focus:bg-accent-secondary dark:focus:bg-accent-tertiary rounded-md transition`}
             onclick={(e) => {e.currentTarget.blur(); selectedTab = 1}}
             onmouseleave={(e) => {e.currentTarget.blur()}}>
             <Sparkles class="button-icon"/> Effect Filters
@@ -158,7 +183,7 @@
                         {#if selectedTab === 0}
                             <h2>{pitchValues[index]}x</h2>
                         {:else}
-                            <h2 class="text-center">Effect Value: <p class="text-gray-500 text-sm">{effectValues[index]}</p></h2>
+                            <h2 class="text-center">{`${effectValues[index] === '' ? 'No Filter' : 'Effect Value:'}`} <p class="text-gray-500 text-sm">{effectValues[index]}</p></h2>
                         {/if}
                         <div class="flex flex-row w-auto">
                             <button class="hover:bg-accent focus:bg-accent-secondary dark:focus:bg-accent-tertiary transition p-2 rounded-md"
@@ -176,12 +201,17 @@
                 </div>
             {/each}
             <div class="flex justify-end items-center w-full h-auto gap-2.5">
-                <button class="w-1/8 transition duration-200 hover:bg-navigation-hover dark:hover:bg-navigation-hover-d focus:bg-navigation-focus drop-shadow-navigation-focus-shadow-d px-3 py-1.5 rounded-sm flex flex-row text-center items-center justify-center gap-2 import-button"
+                <button class="w-1/8 border-white/10 border transition duration-200 hover:bg-navigation-hover dark:hover:bg-navigation-hover-d focus:bg-navigation-focus drop-shadow-navigation-focus-shadow-d px-3 py-1.5 rounded-sm flex flex-row text-center items-center justify-center gap-2 import-button"
+                        onclick={async(e) => {e.currentTarget.blur(); await exportData()}}
+                        onmouseleave={(e) => {e.currentTarget.blur()}}>
+                    <Upload class="button-icon"/>Export
+                </button>
+                <button class="w-1/8 border-white/10 border transition duration-200 hover:bg-navigation-hover dark:hover:bg-navigation-hover-d focus:bg-navigation-focus drop-shadow-navigation-focus-shadow-d px-3 py-1.5 rounded-sm flex flex-row text-center items-center justify-center gap-2 import-button"
                         onclick={async(e) => {e.currentTarget.blur(); await importData()}}
                         onmouseleave={(e) => {e.currentTarget.blur()}}>
-                    <Import class="button-icon"/>Import
+                    <Download class="button-icon"/>Import
                 </button>
-                <button class="w-1/10 transition duration-200 bg-accent hover:bg-accent-secondary dark:hover:bg-accent-tertiary dark:focus:bg-tertiary-d focus:bg-tertiary px-3 py-1.5 rounded-sm flex flex-row text-center items-center justify-center gap-2"
+                <button class="w-1/10 border-white/10 border transition duration-200 bg-accent hover:bg-accent-secondary dark:hover:bg-accent-tertiary dark:focus:bg-tertiary-d focus:bg-tertiary px-3 py-1.5 rounded-sm flex flex-row text-center items-center justify-center gap-2"
                         onclick={(e) => {e.currentTarget.blur(); editEffect(null)}}
                         onmouseleave={(e) => {e.currentTarget.blur()}}>
                     <Plus class="button-icon"/>New

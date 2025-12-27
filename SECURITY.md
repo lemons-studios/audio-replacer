@@ -11,4 +11,3 @@ Same thing as Windows, Except it's for latest LTS and latest stable release for 
 
 ## Reporting a Vulnerability
 If you discover a vulnerability in Audio Replacer that may cause issues, please reach out via [Email](mailto:andrewpinter23@gmail.com). If there is a vulnerability with a project dependency, rest assured that I am probably working on updating Audio Replacer to use versions of the affected dependency that aren't affected by the vulnerability
-

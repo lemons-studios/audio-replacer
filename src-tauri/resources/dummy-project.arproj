@@ -1,5 +1,6 @@
 {
     "name": "example",
+    "completed": false,
     "path": "/this/is/just/an/example/for/my/future/reference/when/implementing/arproj",
     "lastOpened": 1761715716,
     "pitchFilters": [

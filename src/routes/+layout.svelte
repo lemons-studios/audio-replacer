@@ -1,24 +1,43 @@
 <script lang="ts">
   import { getValue, initializeData, setValue } from "../tools/DataInterface";
-  import "../app.css";
   import { invoke } from "@tauri-apps/api/core";
   import { onDestroy, onMount } from "svelte";
   import { onNavigate } from '$app/navigation';
   import { startRichPresence } from "../tools/DiscordPresenceManager";
-  import { getMic } from "../tools/OsTools";
+  import { attemptRelaunch, formatVersion, getMic } from "../tools/OsTools";
   import { info } from "@tauri-apps/plugin-log";
-  import NavBar from "../Components/NavBar.svelte";
   import { createAdditionalData } from "../tools/ProjectHandler";
-  import { checkForUpdates } from "../tools/UpdateManager";
-  import {setTheme} from "@tauri-apps/api/app";
+  import { setTheme } from "@tauri-apps/api/app";
+  import { check, Update } from "@tauri-apps/plugin-updater";
+  import { ask, message } from "@tauri-apps/plugin-dialog";
+  import "../app.css";
+  import NavBar from "../Components/NavBar.svelte";
 
   let { children } = $props();
   const appLaunchTime = Date.now(); // For app open time statistic tracking
 
-  
+  async function checkForUpdates() {
+    const update: Update | null = await check();
+    if(update) {
+      const confirmation = await ask(`Version Update Found\nCurrent: ${await formatVersion()}\nLatest: ${update.version}`, {
+        title: 'Update Found',
+        kind: 'info',
+      });
+      if(confirmation) {
+        await update.downloadAndInstall();
+        const restart = await ask('Update downloaded. Restart now?', {
+          title: 'Update Complete',
+          kind: 'info',
+        });
+
+        if(restart) await attemptRelaunch();
+        else await message('App will update on close.', { kind: 'info' });
+      }
+    }
+  }
+
   onMount(async() => {
     await setTheme(await getValue('settings.theme'));
-
     await initializeData();
 
     // Populate additional variables
@@ -60,6 +79,7 @@
       });
     });
   });
+
 </script>
 
 <style>

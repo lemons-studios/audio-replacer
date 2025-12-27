@@ -50,6 +50,11 @@ export async function setActiveProject(projectFile: string) {
     currentLoadedProject = projectFile;
     const object = JSON.parse(await readTextFile(currentLoadedProject));
 
+    if(object.completed) {
+        await message('This Project is Already Completed!', { kind: 'info' });
+        return;
+    }
+
     inputFolder = object.path;
     outputFolder = await join(appOutputFolder, object.name);
     if(!(await exists(outputFolder))) await mkdir(outputFolder);
@@ -235,7 +240,7 @@ export function countOutputFiles() {
 /**
  * @description sorts project files based on selected sorting method on project load
  */
-async function sortInputFiles() {
+export async function sortInputFiles() {
     const sortingMethod: string = await getValue('settings.sortingMethod');
     switch (sortingMethod) {
         default: // Sort Alphabetically (The default value in the app settings)
@@ -304,7 +309,9 @@ export async function getArprojProperty(key: string) {
 }
 
 export async function updateArprojStats(key: string, value: any) {
+    console.log(`Setting ${key} to ${value}`);
     const arproj = JSON.parse(await readTextFile(currentLoadedProject));
     arproj[key] = value;
     await writeTextFile(currentLoadedProject, JSON.stringify(arproj));
+    console.log(arproj);
 }

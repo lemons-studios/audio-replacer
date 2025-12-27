@@ -14,7 +14,7 @@
   {#each Object.entries(settings) as [name, settingCategory]}
     <div class="card w-3/4 p-2">
       <h2 class="text-center text-3xl mb-2.5">{name}</h2>
-      <hr class="border-accent-secondary mb-1">
+      <div class="bg-white/25 mb-5 w-full h-0.25 rounded-md"></div>
       {#each settingCategory as setting}
         <div class="flex justify-between items-center px-4 mb-3 mt-3">
           <div class="w-full">

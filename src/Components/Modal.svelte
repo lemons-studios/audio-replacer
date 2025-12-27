@@ -1,7 +1,5 @@
 <script lang="ts">
     import { X } from "@lucide/svelte";
-    import { fade, fly } from "svelte/transition";
-
     let { children, closeable } = $props();
     let modalEnabled = $state(true);
     
@@ -16,6 +14,21 @@
         if(!modalEnabled) dialog.close();
     });
 </script>
+
+{#if modalEnabled}
+    <dialog bind:this={dialog}
+            class="duration-300 flex border-2 text-wrap justify-center align-middle items-center p-5 h-auto w-auto dark:text-white dark:border-tertiary-d border-tertiary dark:bg-secondary-d bg-secondary rounded-xl"
+            oncancel={() => modalEnabled = false}>
+        {#if closeable}
+        <button class="close-btn rounded-sm align-top mr-2.5"
+                onclick={() => modalEnabled = false}
+                onmouseleave={(e) => e.currentTarget.blur()}><X/></button>
+        {/if}
+        <div class="text-wrap px-2 py-4 w-full h-full">
+            {@render children?.()}
+        </div>
+    </dialog>
+{/if}
 
 <style>
     dialog {
@@ -53,16 +66,3 @@
         box-shadow: inset 0 0 1em oklch(0.1929 0.0048 325.72 / 60%);
     }
 </style>
-
-{#if modalEnabled}
-    <dialog bind:this={dialog} class="duration-300 flex border-2 text-wrap justify-center align-middle items-center p-5 h-auto w-auto dark:text-white dark:border-tertiary-d border-tertiary dark:bg-secondary-d bg-secondary rounded-xl">
-        {#if closeable}
-        <button class="close-btn rounded-sm align-top mr-2.5"
-                onclick={() => modalEnabled = false}
-                onmouseleave={(e) => e.currentTarget.blur()}><X/></button>
-        {/if}
-        <div class="text-wrap px-2 py-4 w-full h-full">
-            {@render children?.()}
-        </div>
-    </dialog>
-{/if}

@@ -1,11 +1,8 @@
 import fs from "node:fs";
 import https from "node:https";
-import os from "node:os";
-
 https.globalAgent.keepAlive = false;
 
 async function download() {
-  const platform = os.platform();
   const binDir = "src-tauri/binaries";
 
   const files = [

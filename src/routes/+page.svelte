@@ -3,20 +3,17 @@
   import { onMount } from "svelte";
   import { setPresenceDetails } from "../tools/DiscordPresenceManager";
   import { exists, readTextFile, writeTextFile } from "@tauri-apps/plugin-fs";
-  import { saveFile, selectFile, selectFolder, sleep, timestampToLegible } from "../tools/OsTools";
+  import {format, saveFile, selectFile, selectFolder, sleep, timestampToLegible} from "../tools/OsTools";
   import { createArProj, setActiveProject, updateArprojStats } from "../tools/ProjectHandler";
   import { goto } from "$app/navigation";
   import { initializeData } from "../tools/DataInterface";
   import { ArrowRight, Save, FilePlus, BookOpenText } from "@lucide/svelte";
   import Notification from "../Components/Notification.svelte";
-  import {openUrl} from "@tauri-apps/plugin-opener";
+  import { openUrl } from "@tauri-apps/plugin-opener";
 
   let recentProjectPaths: string[] = $state([]);
   let recentProjectObjs: any[] = $state([]);
   let notificationManager: Notification;
-  const format = (x: number) => {
-    return new Intl.NumberFormat().format(x);
-  }
 
   const statistics = [
     {
@@ -127,13 +124,13 @@
             {/each}
           </div>
         {/if}
-        <div class="flex row w-max mb-1 h-auto p-2 rounded-lg bg-tertiary dark:bg-tertiary-d justify-end align-bottom items-end gap-x-5">
-          <button class="text-center p-1.5 flex flex-row items-center justify-center gap-2 hover:bg-accent focus:bg-accent-tertiary rounded-md transition"
+        <div class="flex row w-max mb-1 h-auto p-2 rounded-lgjustify-end align-bottom items-end gap-x-5">
+          <button class="text-center p-1.5 flex flex-row items-center justify-center gap-2 hover:bg-accent focus:bg-accent-tertiary rounded-md transition border-white/10 border"
                   onclick={newProject} onmouseleave={(e) => e.currentTarget.blur()}
                   onmouseup={(e) => e.currentTarget.blur()}>
-            <FilePlus class="w-4 h-4" /> New Project
+            <FilePlus class="w-4 h-4" />New Project
           </button>
-          <button class="text-center p-1.5 flex flex-row items-center justify-center gap-2 hover:bg-accent focus:bg-accent-tertiary rounded-md transition"
+          <button class="text-center p-1.5 flex flex-row items-center justify-center gap-2 hover:bg-accent focus:bg-accent-tertiary rounded-md transition border-white/10 border"
                   onclick={async() => {
                   const file = await selectFile(["arproj"], "Audio Replacer Project Files");
                   const project = JSON.parse(await readTextFile(file));

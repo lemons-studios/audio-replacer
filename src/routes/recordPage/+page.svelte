@@ -4,7 +4,7 @@
   import { calculateCompletion, countInputFiles, countOutputFiles, currentFile, discardFile, fileTranscription, localPath, outputFile, projectLoaded, skipFile, submitFile } from "../../tools/ProjectHandler";
   import { cancelRecording, effectFilterNames, endRecording, pitchFilterNames, startCapture } from "./AudioManager";
   import { goto } from "$app/navigation";
-  import { selectFile } from "../../tools/OsTools";
+  import {format, selectFile} from "../../tools/OsTools";
   import AudioPlayer from "../../Components/AudioPlayer.svelte";
   import IntermediateProgressBar from "../../Components/IntermediateProgressBar.svelte";
   import { register, unregisterAll } from "@tauri-apps/plugin-global-shortcut";
@@ -177,7 +177,7 @@
 
     rawProgress = calculateCompletion();
     progressPercentage = `${rawProgress.toFixed(2)}%`;
-    filesRemaining = new Intl.NumberFormat().format(countInputFiles() - countOutputFiles());
+    filesRemaining = format(countInputFiles());
     transcription = fileTranscription;
     audioSource = currentFile;
     setPresenceState(`Files Remaining: ${filesRemaining}`);

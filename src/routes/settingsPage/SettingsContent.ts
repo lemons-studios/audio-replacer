@@ -4,6 +4,8 @@ import { ask, message } from "@tauri-apps/plugin-dialog";
 import { attemptRelaunch } from "../../tools/OsTools";
 import { Trash2 } from "@lucide/svelte";
 import { setTheme } from "@tauri-apps/api/app";
+import { projectLoaded, sortInputFiles } from "../../tools/ProjectHandler";
+import type {Theme} from "@tauri-apps/api/window";
 
 export const settings = {
   General: [
@@ -24,7 +26,8 @@ export const settings = {
       },
       onChange: async(value: string) => {
         await setValue('settings.theme', value);
-        await setTheme(value);
+        const verifiedValue: Theme = value === 'dark' ? 'dark' : 'light';  // Fixes error
+        await setTheme(verifiedValue);
       }
     },
     {
@@ -133,6 +136,9 @@ export const settings = {
       onChange: async(value: string) => {
         console.log(`Setting sorting method to ${value}`)
         await setValue('settings.sortingMethod', value);
+        if(projectLoaded) {
+          await sortInputFiles();
+        }
       }
     }
   ],

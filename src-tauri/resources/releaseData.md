@@ -1,53 +1,34 @@
-<h1 align="center"> Audio Replacer 5 </h1> 
-The largest major update to Audio Replacer yet is here. Several massive additions, changes, and tweaks have been made to streamline your editing experience. This will likely be the last major update to this app for a long time, as this project is now in a state I am happy with and because I will be shifting my focus to other projects
+<h1 align="center"> Audio Replacer 5</h1>
+The largest release of Audio Replacer is finally ready after 8 months of development.
+
+This version initially focused on simply porting the app to Tauri for performance improvements, but has evolved to be a huge update on a whole different scale compared to previous version updates
 
 ## New Features
-
-### New UI
-Audio Replacer has a fresh lick of paint, completely made from scratch by me. While rather simplistic, I believe it does the job quite well.
-
 ### Multi-Project Support
-Audio Replacer 5 has support for multiple projects with the new .arproj format (it's just JSON but with a different extension). Audio Replacer Project files have added a few new features, such as individual-project pitch/effect support, which will be explained in their own sections
+Instead of there being one massive global project, Audio Replacer 5 stores projects in their own files, which can be loaded at any time from the home page. A history of all projects are visible in the home page. Custom pitch and effect filters have also moved to these custom project files, making them more modular than before
+### New UI
+Everything in Audio Replacer 5 is UI designed specifically for Audio Replacer 5. No more pre-made components made by Microsoft to follow their design standards. 
 
 ### Visual Effect Editor
-The text-based editor from 3.x has been replaced with a completely graphically-based editor, which makes adding custom pitch and effect values a lot more accessible to users. This new page will show each individual item in the pitch/effect file as an item, which can be edited. New filters have a wizard that makes adding effects require a lot less audio knowledge, unlike before, which required extensive knowledge of FFMpeg
+Instead of a clunky and hard-to-use text-based data editor, the new Effect Editor in Audio Replacer 5 is completely UI based, with simple and easy ways to add, modify, and delete effects. On top of that, you shouldn't need to reload Audio Replacer anymore to be able to select these effects. Additional safeguards have also been added, making sure that you don't insert invalid filters into the app
 
-### Noise Suppression
-A new option has been added that applies noise suppression on the current file when enabled using rnnoise. All noise-suppression is done on-device. This option is on by default
+### App Statistics
+Audio Replacer can (optionally) track your usage of the app and display it on the Home page as your stats. Don't worry, stats stay on your device and can be deleted at any time
 
 ### Linux Support
-I am now able to produce Linux builds for Audio Replacer after I switched the project to use Tauri, a change that will be described later on.
+The switch from the Windows App SDK to Tauri has enabled me to create builds for Linux. Currently, only .deb and .rpm packages are available. In the future, I may work on snapcraft of flatpak support, but probably not anytime soon
 
-Audio Replacer builds will provide the following official build formats:
-- .deb
-- .rpm
+## Changes
+### Improved App Performance
+Switching to Tauri has allowed me to rewrite the most intensive parts of Audio Replacer in Rust, allowing for text transcription times of less than 1-2 seconds on the CPU and project load times of only a few seconds at most.
 
-If anyone wants to make and distribute unofficial builds for a different package provider, you are free to do so, so long as you provide some sort of link to this repository on whatever site you distribute it.
+### Custom Audio Replacer FFMpeg build
+I have created a build of FFMpeg that has pretty much everything disabled except for audio filters and tools required to use them. This reduces the size of the binaries from 40Mb in Audio Replacer 4.3.2 to 2-4Mb in Audio Replacer 5, depending on platform.
 
-> [!IMPORTANT]  
-> Automatic updates are unavailable for Linux hosts. However, You *will* be notified of an available update so you can manually download the new file or use your package manager to install the updates
-
-## Improvements
-
-### App size reduction
-Thanks to the switch to Tauri, app install size has been reduced from 200-300Mb to just under 90Mb. 
-
-### New Audio-Only FFMpeg Build
-Contributing to the size reduction is a custom build of FFMpeg that only contains audio related filters and encoders has been built by [ChakornK](https://github.com/ChakornK) with some further size reductions from myself. This has resulted in the FFMpeg binary size being reduced from 100Mb to 2Mb-5Mb, depending on platform.
-
-### App Memory usage improvements
-Once again, thanks to the switch to Tauri, memory usage has dropped. You should expect to see about 20-50Mb of memory used, as opposed to the 300-1000Mb+ of memory that previous Audio Replacer versions would use
-
-### Improved project load & transcription speed
-Once more, Tauri has allowed me to write more performant code, which should be reflected in the faster transcription speed (A few seconds at most on CPU) and much faster project load times
-
-### Better Discord Rich Presence
-Everything is just slightly more descriptive of what you're doing
 
 ## Removed Features
-- Vulkan & CUDA support for audio transcription has been removed, as CPU transcription speeds are sufficient
-- First setup window has been removed, as there's not much of a reason to configure anything anymore
-- Global pitch/effect filter files have been removed. They are now per-project and are embedded in arproj files
+I have only removed one feature in Audio Replacer 5: Vulkan/CUDA support for whisper text transcription. Due to the speedups, I believe it is unnecessary to support those runtimes anymore, as 
+1) They are absolutely not needed
+2) App size would be inflated if they were to be included
 
-## Legal Changes
-Audio Replacer has been relicensed from MIT Licence to BSD 3-Clause. If you fork this package or use parts of this codebase for your own use, please make sure to follow the terms of the licence. All code from previous versions continue to use the MIT licence
+<p align="center">This will be the last major update to Audio Replacer for a long while, unless I get an idea and want to update it. I will probably release minor and regular updates that may or may not add features and/or fixes (albeit likely quite infrequently), but major updates are complete for the time being. I believe this is the best and final form of Audio Replacer yet, and this will likely be the last major version update that will be used for the reason this project was created in the first place.</p>

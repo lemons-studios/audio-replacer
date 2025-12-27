@@ -164,3 +164,7 @@ export async function validateFilter(filterList: string): Promise<boolean> {
     const result = await command.execute();
     return result.code === 0;
 }
+
+export const format = (x: number) => {
+    return new Intl.NumberFormat().format(x);
+}

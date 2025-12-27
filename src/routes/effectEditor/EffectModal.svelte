@@ -22,11 +22,12 @@
 
     async function modifyEffect() {
         const effectName = selectedName.value;
-        const effect = (isEffect ? selectedValue.value : `rubberband=pitch=${selectedValue.value}`);
+        const effect = (isEffect ? selectedValue.value : selectedValue.value);
         const filters = isEffect ? effectFilters : pitchFilters ;
         const names = isEffect ? effectFilterNames : pitchFilterNames
 
-        if(!(await validateFilter(effect))) {
+        const effectToVerify = (isEffect ? selectedValue.value : `rubberband=pitch=${selectedValue.value}`);
+        if(!(await validateFilter(effectToVerify))) {
             await message('Selected filter list is not valid', {
                 title: 'Error',
                 kind: 'error'
@@ -73,7 +74,7 @@
             </div>
             <div>
                 <h1 class="text-xl font-bold mb-2">Value</h1>
-                <input bind:this={selectedValue} type="text" placeholder={isEffect ? 'equalizer=f=1000' : '1.0x'} class="bg-tertiary w-full dark:bg-tertiary-d py-1.5 px-2 rounded-sm">
+                <input bind:this={selectedValue} type="text" placeholder={isEffect ? 'aecho=0.8:0.9:40|50|70:0.4|0.3|0.2' : '1.0'} class="bg-tertiary w-full dark:bg-tertiary-d py-1.5 px-2 rounded-sm">
             </div>
         </div>
 

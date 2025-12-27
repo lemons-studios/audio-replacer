@@ -76,7 +76,7 @@ body {
 }
 
 .app-btn {
-  @apply transition bg-accent dark:hover:bg-tertiary-d hover:bg-tertiary px-3 py-1.5 rounded-sm text-lg focus:bg-navigation-focus flex flex-row text-center items-center justify-center gap-2
+  @apply transition border-white/10 border bg-accent dark:hover:bg-tertiary-d hover:bg-tertiary px-3 py-1.5 rounded-sm text-lg focus:bg-navigation-focus flex flex-row text-center items-center justify-center gap-2
 }
 .app-btn:disabled {
   @apply bg-tertiary-d
