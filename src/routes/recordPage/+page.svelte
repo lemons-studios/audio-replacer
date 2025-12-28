@@ -1,19 +1,10 @@
 <script lang="ts">
   import { onDestroy, onMount } from "svelte";
   import { setPresenceDetails, setPresenceState } from "../../tools/DiscordPresenceManager";
-  import { calculateCompletion, countInputFiles, countOutputFiles, currentFile, discardFile, fileTranscription, localPath, outputFile, projectLoaded, skipFile, submitFile } from "../../tools/ProjectHandler";
-  import {
-    cancelRecording,
-    effectFilterNames,
-    effectFilters,
-    endRecording,
-    pitchFilterNames, pitchFilters,
-    startCapture
-  } from "./AudioManager";
-  import { goto } from "$app/navigation";
-  import {format, selectFile} from "../../tools/OsTools";
+  import { calculateCompletion, countInputFiles, currentFile, discardFile, fileTranscription, localPath, outputFile, projectLoaded, skipFile, submitFile } from "../../tools/ProjectHandler";
+  import { cancelRecording, effectFilterNames, endRecording, pitchFilterNames, startCapture } from "./AudioManager";
+  import { format } from "../../tools/OsTools";
   import AudioPlayer from "../../Components/AudioPlayer.svelte";
-  import IntermediateProgressBar from "../../Components/IntermediateProgressBar.svelte";
   import { register, unregisterAll } from "@tauri-apps/plugin-global-shortcut";
   import { exists } from "@tauri-apps/plugin-fs";
   import { getValue } from "../../tools/DataInterface";
@@ -39,7 +30,11 @@
 
   let selectedPitch = 0;
   let selectedEffect = 0;
+
+  // svelte-ignore non_reactive_update
   let extraEdits = false;
+
+  // svelte-ignore non_reactive_update
   let notificationManager: Notification;
 
   // svelte-ignore non_reactive_update

@@ -2,7 +2,8 @@
     import { X } from "@lucide/svelte";
     let { children, closeable } = $props();
     let modalEnabled = $state(true);
-    
+
+    // svelte-ignore non_reactive_update
     let dialog: HTMLDialogElement;
 
     export function toggleModal() {

@@ -14,6 +14,8 @@
 
   let recentProjectPaths: string[] = $state([]);
   let recentProjectObjs: any[] = $state([]);
+
+  // svelte-ignore non_reactive_update
   let notificationManager: Notification;
 
   const statistics = [

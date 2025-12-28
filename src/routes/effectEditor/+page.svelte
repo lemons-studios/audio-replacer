@@ -18,7 +18,9 @@
 
     let selectedTab = $state(0);
     let currentModal: null | EffectModal = null;
-    let fastDeleteEnabled = false; // I'll add a toggle for this later
+    let fastDeleteEnabled = false;
+
+    // svelte-ignore non_reactive_update
     let notificationManager: Notification;
     type Filter = { name: string, value: string };
 

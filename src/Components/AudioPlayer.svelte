@@ -16,6 +16,8 @@
 
     let audioPlayer: HTMLAudioElement;
     let seekBar: HTMLInputElement;
+
+    // svelte-ignore non_reactive_update
     let volumeSlider: HTMLInputElement;
 
     $effect(() => {
