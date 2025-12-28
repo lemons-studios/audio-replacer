@@ -3,7 +3,7 @@
     import { onMount, tick } from 'svelte';
     import { getVersion } from "@tauri-apps/api/app";
     import { goto } from '$app/navigation';
-    import {error} from "@tauri-apps/plugin-log";
+    import { error } from "@tauri-apps/plugin-log";
 
     let buildText = $state('Audio Replacer 5');
 
@@ -56,19 +56,7 @@
             await error(`error whilst loading ${route}: ${e}`);
         }
     }
-
 </script>
-
-<style>
-    .menu-container {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        text-align: center;
-        vertical-align: center;
-        padding: 3px;
-    }
-</style>
 
 <div class="flex flex-col items-stretch justify-between dark:bg-secondary-d bg-secondary min-w-40 px-1 py-2 rounded-r-lg drop-shadow-xl ">
     <!--Top Menu Items-->
@@ -85,3 +73,14 @@
         <p class="text-xs text-gray-400">{buildText}</p>
     </div>
 </div>
+
+<style>
+    .menu-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        vertical-align: center;
+        padding: 3px;
+    }
+</style>

@@ -34,7 +34,7 @@ walkdir = "2.5.0"
 tauri-plugin-drpc = "*"
 rand = "0.9.2"
 tauri-plugin-audio-recorder = "0.1.0"
-serde_json = "1.0.147" # Do not remove. Compile fails otherwise. RustRover says it's not used though. dunno why
+serde_json = "1.0.148" # Do not remove. Compile fails otherwise. RustRover says it's not used though. dunno why
 
 [target.'cfg(not(any(target_os = "android", target_os = "ios")))'.dependencies]
 tauri-plugin-global-shortcut = "2.3.1"

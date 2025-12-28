@@ -121,8 +121,8 @@ export const settings = {
       description: "What order Audio Replacer will sort audio files in. Takes effect after reloading a project",
       type: "dropdown",
       choices: [
-          "Alphabetical (A-Z)",
-          "Reverse-Alphabetical (Z-A)",
+          "Alphabetical",
+          "Reverse Alphabetical",
           "Random"
       ],
       choiceValues: [

@@ -10,6 +10,7 @@
   import { ArrowRight, Save, FilePlus, BookOpenText } from "@lucide/svelte";
   import Notification from "../Components/Notification.svelte";
   import { openUrl } from "@tauri-apps/plugin-opener";
+  import Dropdown from "../Components/Dropdown.svelte";
 
   let recentProjectPaths: string[] = $state([]);
   let recentProjectObjs: any[] = $state([]);

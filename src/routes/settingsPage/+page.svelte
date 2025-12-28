@@ -3,6 +3,7 @@
   import { settings } from "./SettingsContent";
   import { setPresenceDetails } from "../../tools/DiscordPresenceManager";
   import ToggleSwitch from "../../Components/ToggleSwitch.svelte";
+  import Dropdown from "../../Components/Dropdown.svelte";
 
   onMount(async() => {
     await setPresenceDetails("Tweaking Settings");
@@ -35,12 +36,12 @@
           {:else if setting.type === "dropdown"}
             <div class="dropdown">
               {#await setting.getValue() then value}
-                <select class="w-45" value={value} onchange={async(e) => {await setting.onChange(e.currentTarget.value)}}>
-                  {#each setting.choices as choice, i}
-                    <option value={setting.choiceValues[i]}>{choice}</option>
-                  {/each}
-                </select>
-              {/await}
+                <Dropdown values={setting.choices}
+                          startingIndex={setting.choiceValues.indexOf(value)}
+                          onChange={async(index, _label) => {
+                            await setting.onChange(setting.choiceValues[index])
+                          }}/>
+                {/await}
             </div>
           {/if}
         </div>

@@ -2,7 +2,14 @@
   import { onDestroy, onMount } from "svelte";
   import { setPresenceDetails, setPresenceState } from "../../tools/DiscordPresenceManager";
   import { calculateCompletion, countInputFiles, countOutputFiles, currentFile, discardFile, fileTranscription, localPath, outputFile, projectLoaded, skipFile, submitFile } from "../../tools/ProjectHandler";
-  import { cancelRecording, effectFilterNames, endRecording, pitchFilterNames, startCapture } from "./AudioManager";
+  import {
+    cancelRecording,
+    effectFilterNames,
+    effectFilters,
+    endRecording,
+    pitchFilterNames, pitchFilters,
+    startCapture
+  } from "./AudioManager";
   import { goto } from "$app/navigation";
   import {format, selectFile} from "../../tools/OsTools";
   import AudioPlayer from "../../Components/AudioPlayer.svelte";
@@ -15,6 +22,7 @@
   import ToggleSwitch from "../../Components/ToggleSwitch.svelte";
   import ProgressBar from "../../Components/ProgressBar.svelte";
   import Notification from "../../Components/Notification.svelte";
+  import Dropdown from "../../Components/Dropdown.svelte";
 
   let file = $state("No Project Opened");
   let audioSource = $state("");
@@ -234,32 +242,20 @@
   </div>
   <div class="flex flex-col justify-center items-center w-3/8 card rounded-lg gap-y-10">
     <div>
-      <h1 class="text-2xl text-center">Pitch Shift</h1>
-      {#if pitch.length !== 0}
-        <select class="min-w-50 dropdown" onchange={(e) => {selectedPitch = e.currentTarget.selectedIndex}}>
-          {#each pitch as p}
-            <option>{p}</option>
-          {/each}
-        </select>
-      {:else}
-        <select class="min-w-50 dropdown" disabled>
-          <option>No Pitch Filters</option>
-        </select>
-      {/if}
+      <h1 class="text-2xl text-center mb-2.5">Pitch Shift</h1>
+        <Dropdown values={pitch}
+                  startingIndex={0}
+                  onChange={(index) => {
+                    selectedPitch = index
+                  }}/>
     </div>
     <div>
-    <h1 class="text-2xl text-center">Effect Filters</h1>
-    {#if effects.length !== 0}
-      <select class="min-w-50 dropdown" onchange={(e) => {selectedEffect = e.currentTarget.selectedIndex}}>
-        {#each effects as e}
-          <option>{e}</option>
-        {/each}
-      </select>
-    {:else}
-    <select class="min-w-50 dropdown" disabled>
-      <option>No Effect Filters</option>
-    </select>
-    {/if}
+    <h1 class="text-2xl text-center mb-2.5">Effect Filters</h1>
+      <Dropdown values={effects}
+                startingIndex={0}
+                onChange={(index) => {
+                  selectedEffect = index;
+                }}/>
     </div>
     <div class="flex flex-row gap-x-3.5">
       <ToggleSwitch onClick={extraEdits = !extraEdits} enabled={extraEdits}/>

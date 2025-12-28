@@ -11,6 +11,11 @@
         {
             "name": "Super Low Pitch",
             "value": "0.45"
+        },
+        {
+            "name": "Default",
+            "value": "1.00",
+
         }
     ],
     "effectFilters": [
