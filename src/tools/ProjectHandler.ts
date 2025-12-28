@@ -7,6 +7,7 @@ import {error} from "@tauri-apps/plugin-log";
 import {getValue, setValue} from "./DataInterface";
 import {message} from "@tauri-apps/plugin-dialog";
 import {goto} from '$app/navigation';
+import {platform} from "@tauri-apps/plugin-os";
 
 /**
  * @description points to the output folder in the installation directory (installDir/output)
@@ -127,12 +128,16 @@ async function getAllDirectoryNames(folder: string) {
     const folders = (await getAllDirectories(folder));
     const names = [];
 
+    const directorySeparator = () => {
+        return platform() === 'windows' ? '\\' : '/'
+    }
+
     if(folders.length === 0) {
         return [];
     }
 
     for(let i = 0; i < folders.length; i++) {
-        names.push(folders[i].split(`${folder}/`)[1]);
+        names.push(folders[i].split(`${folder}${directorySeparator()}`)[1]);
     }
     return names
 }
