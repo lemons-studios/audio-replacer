@@ -75,7 +75,8 @@ export async function endRecording(selectedPitchIndex: number, selectedEffectInd
         const allowNoiseSuppression = await getValue('settings.allowNoiseSuppression');
         if(allowNoiseSuppression) {
             const noiseSuppressionFile = await resolveResource('binaries/noiseSuppression.rnnn');
-            await applyFFMpegFilter(`arnndn=model=${noiseSuppressionFile}:mix=0.8`);
+            const intensity = await getValue('settings.noiseSuppressionIntensity');
+            await applyFFMpegFilter(`arnndn=model=${noiseSuppressionFile}:mix=${intensity}`);
         }
 
         // Pitch Shift

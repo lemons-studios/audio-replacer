@@ -25,10 +25,9 @@ const defaultSettings = {
     }
 } as const
 
-type ValidData = 'settings.theme' | 'settings.autoAcceptRecordings' | 'settings.updateCheck' | 'settings.recentProjectPaths' | 'settings.recordStartDelay'
+type ValidData = 'settings.theme' | 'settings.autoAcceptRecordings' | 'settings.updateCheck' | 'settings.recentProjectPaths' | 'settings.recordStartDelay' | 'settings.noiseSuppressionIntensity'
                 | 'settings.recordEndDelay'  | 'settings.enableTranscription' | 'settings.enableRichPresence' | 'settings.allowNoiseSuppression' | 'settings.allowStatistics'
-                | 'settings.sortingMethod' | 'statistics.appOpenTime'  | 'statistics.filesRecorded' | 'statistics.filesAccepted'
-                | 'statistics.filesRejected' | 'statistics.filesSkipped'| 'statistics.recordingsCancelled';
+                | 'settings.sortingMethod' | 'statistics.filesRecorded' | 'statistics.filesAccepted' | 'statistics.filesRejected' | 'statistics.filesSkipped'| 'statistics.recordingsCancelled';
 
 export async function initializeData() {
     filePath = await resolveResource("resources/data.json");

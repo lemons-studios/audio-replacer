@@ -1,6 +1,6 @@
 [package]
 name = "audio_replacer"
-version = "5.0.0"
+version = "5.0.1"
 description = "Easily dub video game voice-overs"
 authors = ["Shob3r (Andrew Pinter) <andrewpinter23@gmail.com>", "Lemon Studios"]
 edition = "2024"

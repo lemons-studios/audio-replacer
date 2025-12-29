@@ -10,10 +10,10 @@
         "enableTranscription": true,
         "enableRichPresence": true,
         "allowNoiseSuppression": true,
-        "sortingMethod": "alphabetical"
+        "sortingMethod": "alphabetical",
+        "noiseSuppressionIntensity": "0.5"
     },
     "statistics": {
-        "appOpenTime": 0,
         "filesRecorded": 0,
         "filesAccepted": 0,
         "filesRejected": 0,

@@ -88,6 +88,8 @@ export const settings = {
       description: "",
       type: "string",
       onChange: async(value: string) => {
+        const num = +value;
+        if(isNaN(num) || num < 0) return;
         await setValue('settings.recordStartDelay', +value);
       },
       getValue: async(): Promise<string> => {
@@ -99,6 +101,8 @@ export const settings = {
       description: "",
       type: "string",
       onChange: async(value: string) => {
+        const num = +value;
+        if(isNaN(num) || num < 0) return;
         await setValue('settings.recordEndDelay', +value);
       },
       getValue: async(): Promise<string> => {
@@ -115,6 +119,19 @@ export const settings = {
       getValue: async(): Promise<boolean> => {
         return (await getValue('settings.allowNoiseSuppression'));
       },
+    },
+    {
+      name: "Noise Suppression Intensity",
+      description: "How much noise should be suppressed (Decimal Value between 0 and 1)",
+      type: "string",
+      onChange: async(value: string) => {
+        const num = +value;
+        if(isNaN(num) || num > 1 || num < 0) return;
+        await setValue('settings.noiseSuppressionIntensity', value);
+      },
+      getValue: async(): Promise<string> => {
+        return (await getValue('settings.noiseSuppressionIntensity'));
+      }
     },
     {
       name: "Auto-Accept Recordings",

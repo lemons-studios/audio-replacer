@@ -19,13 +19,6 @@
 
   const statistics = [
     {
-      name: "Time with Audio Replacer Open",
-      getValue: async(): Promise<string> => {
-        const rawTime = await getValue("statistics.appOpenTime"); // Time statistic will be measured in seconds
-        return rawTime === 0 ? '0 Hours' : `${(rawTime / 3600).toFixed(1)} Hours`; // Similar to how Steam displays time played in games
-      }
-    },
-    {
       name: "Files Recorded",
       getValue: async(): Promise<string> => {
         return format(await getValue("statistics.filesRecorded"));

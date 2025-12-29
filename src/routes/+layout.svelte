@@ -13,7 +13,6 @@
   import NavBar from "../Components/NavBar.svelte";
 
   let { children } = $props();
-  const appLaunchTime = Date.now(); // For app open time statistic tracking
 
   async function checkForUpdates() {
     try {
@@ -63,13 +62,6 @@
     if(allowUpdates && !isDev) await checkForUpdates();
   });
 
-  onDestroy(async() => {
-    await info("App close requested");
-    const currentTime = await getValue("statistics.appOpenTime");
-    const appCloseTime = Date.now() - appLaunchTime;
-    await setValue("statistics.appOpenTime", currentTime + appCloseTime);
-  })
-
   onNavigate((navigation) => {
     if(!document.startViewTransition) return;
 
@@ -83,17 +75,17 @@
 
 </script>
 
-<style>
-  * {
-  user-select: none;
-  -webkit-user-select: none;
-  -ms-user-select: none;
-  }
-</style>
-
 <main class="dark:bg-primary-d bg-primary flex flex-row grow dark:text-white items-stretch w-screen h-screen overflow-y-hidden">
   <NavBar />
   <div class="flex-1 flex flex-col overflow-hidden w-screen h-screen p-5.5">
     {@render children?.()}
   </div>
 </main>
+
+<style>
+  * {
+    user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+  }
+</style>
