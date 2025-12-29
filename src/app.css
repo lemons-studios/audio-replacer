@@ -32,8 +32,8 @@
   --color-info: oklch(0.6343 0.1337 240.73);
   --color-info-shadow: oklch(0.6343 0.1337 240.73 / 20%);
 
-  --color-progress: oklch(0.5279 0.2131 321.35);
-  --color-progress-shadow: oklch(0.5279 0.2131 321.35 / 20%);
+  --color-progress: oklch(0.5059 0.1949 283.44);
+  --color-progress-shadow: oklch(0.5059 0.1949 283.44 / 20%);
 
   --color-navigation-hover: oklch(0.8932 0.0051 325.78);
   --color-navigation-hover-d: oklch(0.3042 0.0051 325.78);
@@ -80,6 +80,19 @@ body {
 }
 .app-btn:disabled {
   @apply bg-tertiary-d
+}
+
+.app-btn-secondary {
+  @apply w-1/8 border-white/10 border transition duration-200 hover:bg-navigation-hover dark:hover:bg-navigation-hover-d focus:bg-navigation-focus drop-shadow-navigation-focus-shadow-d px-3 py-1.5 rounded-sm flex flex-row text-center items-center justify-center gap-2;
+}
+
+.app-btn-secondary:focus {
+  @media (prefers-color-scheme: dark) {
+    box-shadow: inset 0 0 1em oklch(0.1929 0.0048 325.72 / 60%);
+  }
+  @media (prefers-color-scheme: light) {
+    box-shadow: inset 0 0 1em oklch(0.9228 0.0048 325.72 / 90%);
+  }
 }
 
 .checkbox {

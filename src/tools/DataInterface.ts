@@ -26,7 +26,7 @@ const defaultSettings = {
 } as const
 
 type ValidData = 'settings.theme' | 'settings.autoAcceptRecordings' | 'settings.updateCheck' | 'settings.recentProjectPaths' | 'settings.recordStartDelay'
-                | 'settings.recordEndDelay'  | 'settings.enableTranscription' | 'settings.enableRichPresence' | 'settings.allowNoiseSuppression'
+                | 'settings.recordEndDelay'  | 'settings.enableTranscription' | 'settings.enableRichPresence' | 'settings.allowNoiseSuppression' | 'settings.allowStatistics'
                 | 'settings.sortingMethod' | 'statistics.appOpenTime'  | 'statistics.filesRecorded' | 'statistics.filesAccepted'
                 | 'statistics.filesRejected' | 'statistics.filesSkipped'| 'statistics.recordingsCancelled';
 
@@ -56,6 +56,8 @@ export async function setValue(name: ValidData, value: number | string | boolean
     if(!dataContents) await initializeData();
 
     const split = name.split(".");
+    if(!(await getValue('settings.allowStatistics')) && split[0] === 'statistics') return; // Checking here rather than in all places where the statistics stuff is implemented saves my time and produces less boilerplate
+
     dataContents[split[0]][split[1]] = value;
     await writeContent();
 }

@@ -143,13 +143,13 @@
 </script>
 
 {#if volumeVisible}
-    <div class="min-w-50 rounded-lg bg-neutral-300 dark:bg-neutral-900 p-2 flex flex-row justify-between items-center text-center mb-2">
+    <div class="min-w-50 rounded-lg bg-tertiary dark:bg-tertiary-d p-2 flex flex-row justify-between items-center text-center mb-2">
         <input type="range" class="w-3/4" min="0" max="100" step="1" value={audioVolume * 100} oninput={updateVolume} bind:this={volumeSlider}>
         <p>{Math.round(audioVolume * 100)}%</p>
     </div>
 {/if}
 
-<div class="flex flex-row justify-center gap-4 bg-neutral-300 dark:bg-neutral-900 rounded-lg mx-auto items-center shadow-lg pl-3 pr-4 py-2 mb-2 w-3/4">
+<div class="flex flex-row justify-center gap-4 bg-tertiary dark:bg-tertiary-d rounded-lg mx-auto items-center shadow-lg pl-3 pr-4 py-2 mb-2 w-3/4">
     <audio ontimeupdate={audioPlayerTimeUpdate} onended={onAudioEnded} bind:this={audioPlayer} preload="auto" volume={audioVolume}></audio>
     <div class="flex flex-row gap-3 items-center">
         <!--Play/Pause Button-->

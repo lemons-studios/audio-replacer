@@ -1,6 +1,7 @@
 {
     "settings": {
         "theme": "dark",
+        "allowStatistics": true,
         "autoAcceptRecordings": false,
         "updateCheck": true,
         "recentProjectPaths": [],

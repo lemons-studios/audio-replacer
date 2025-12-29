@@ -8,6 +8,7 @@ import {getValue, setValue} from "./DataInterface";
 import {message} from "@tauri-apps/plugin-dialog";
 import {goto} from '$app/navigation';
 import {platform} from "@tauri-apps/plugin-os";
+import { openPath } from "@tauri-apps/plugin-opener";
 
 /**
  * @description points to the output folder in the installation directory (installDir/output)
@@ -125,19 +126,13 @@ export async function getAllFiles(folder: string): Promise<string[]> {
 }
 
 async function getAllDirectoryNames(folder: string) {
+    const dirSeparator = platform() === 'windows' ? '\\' : '/';
     const folders = (await getAllDirectories(folder));
     const names = [];
 
-    const directorySeparator = () => {
-        return platform() === 'windows' ? '\\' : '/'
-    }
-
-    if(folders.length === 0) {
-        return [];
-    }
-
+    if(folders.length === 0) return [];
     for(let i = 0; i < folders.length; i++) {
-        names.push(folders[i].split(`${folder}${directorySeparator()}`)[1]);
+        names.push(folders[i].split(`${folder}${dirSeparator}`)[1]);
     }
     return names
 }
@@ -314,9 +309,12 @@ export async function getArprojProperty(key: string) {
 }
 
 export async function updateArprojStats(key: string, value: any) {
-    console.log(`Setting ${key} to ${value}`);
     const arproj = JSON.parse(await readTextFile(currentLoadedProject));
     arproj[key] = value;
     await writeTextFile(currentLoadedProject, JSON.stringify(arproj));
-    console.log(arproj);
+}
+
+export async function openOutputFolder() {
+    if(!projectLoaded) return;
+    await openPath(outputFolder);
 }

@@ -203,12 +203,12 @@
                 </div>
             {/each}
             <div class="flex justify-end items-center w-full h-auto gap-2.5">
-                <button class="w-1/8 border-white/10 border transition duration-200 hover:bg-navigation-hover dark:hover:bg-navigation-hover-d focus:bg-navigation-focus drop-shadow-navigation-focus-shadow-d px-3 py-1.5 rounded-sm flex flex-row text-center items-center justify-center gap-2 import-button"
+                <button class="app-btn-secondary"
                         onclick={async(e) => {e.currentTarget.blur(); await exportData()}}
                         onmouseleave={(e) => {e.currentTarget.blur()}}>
                     <Upload class="button-icon"/>Export
                 </button>
-                <button class="w-1/8 border-white/10 border transition duration-200 hover:bg-navigation-hover dark:hover:bg-navigation-hover-d focus:bg-navigation-focus drop-shadow-navigation-focus-shadow-d px-3 py-1.5 rounded-sm flex flex-row text-center items-center justify-center gap-2 import-button"
+                <button class="app-btn-secondary"
                         onclick={async(e) => {e.currentTarget.blur(); await importData()}}
                         onmouseleave={(e) => {e.currentTarget.blur()}}>
                     <Download class="button-icon"/>Import
@@ -224,14 +224,3 @@
 {:else}
     <NoProjectLoaded />
 {/if}
-
-<style>
-    .import-button:focus {
-        @media (prefers-color-scheme: dark) {
-            box-shadow: inset 0 0 1em oklch(0.1929 0.0048 325.72 / 60%);
-        }
-        @media (prefers-color-scheme: light) {
-            box-shadow: inset 0 0 1em oklch(0.9228 0.0048 325.72 / 90%);
-        }
-    }
-</style>

@@ -3,9 +3,8 @@
   import { invoke } from "@tauri-apps/api/core";
   import { onDestroy, onMount } from "svelte";
   import { onNavigate } from '$app/navigation';
-  import { startRichPresence } from "../tools/DiscordPresenceManager";
   import { attemptRelaunch, formatVersion, getMic } from "../tools/OsTools";
-  import { info } from "@tauri-apps/plugin-log";
+  import {info, warn} from "@tauri-apps/plugin-log";
   import { createAdditionalData } from "../tools/ProjectHandler";
   import { setTheme } from "@tauri-apps/api/app";
   import { check, Update } from "@tauri-apps/plugin-updater";
@@ -17,22 +16,27 @@
   const appLaunchTime = Date.now(); // For app open time statistic tracking
 
   async function checkForUpdates() {
-    const update: Update | null = await check();
-    if(update) {
-      const confirmation = await ask(`Version Update Found\nCurrent: ${await formatVersion()}\nLatest: ${update.version}`, {
-        title: 'Update Found',
-        kind: 'info',
-      });
-      if(confirmation) {
-        await update.downloadAndInstall();
-        const restart = await ask('Update downloaded. Restart now?', {
-          title: 'Update Complete',
+    try {
+      const update: Update | null = await check();
+      if(update) {
+        const confirmation = await ask(`Version Update Found\nCurrent: ${await formatVersion()}\nLatest: ${update.version}`, {
+          title: 'Update Found',
           kind: 'info',
         });
+        if(confirmation) {
+          await update.downloadAndInstall();
+          const restart = await ask('Update downloaded. Restart now?', {
+            title: 'Update Complete',
+            kind: 'info',
+          });
 
-        if(restart) await attemptRelaunch();
-        else await message('App will update on close.', { kind: 'info' });
+          if(restart) await attemptRelaunch();
+          else await message('App will update on close.', { kind: 'info' });
+        }
       }
+    }
+    catch(e: any) {
+      await warn("Checking for updates has failed! it might be due to a misconfigured update server")
     }
   }
 
@@ -56,10 +60,7 @@
     }
 
     const allowUpdates = await getValue('settings.updateCheck');
-    if(allowUpdates) await checkForUpdates();
-
-    const allowRichPresence = await getValue('settings.enableRichPresence');
-    if(allowRichPresence) await startRichPresence();
+    if(allowUpdates && !isDev) await checkForUpdates();
   });
 
   onDestroy(async() => {

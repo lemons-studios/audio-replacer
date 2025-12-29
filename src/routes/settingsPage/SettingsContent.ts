@@ -11,7 +11,7 @@ export const settings = {
   General: [
     {
       name: 'Theme',
-      description: 'Choose the app theme',
+      description: 'Set the app theme',
       type: 'dropdown',
       choices: [
         "Light",
@@ -32,7 +32,7 @@ export const settings = {
     },
     {
       name: "Check for updates",
-      description: "You will be prompted to install the update after the update is downloaded",
+      description: "",
       type: "boolean",
       onChange: async(value: boolean) => {
         // Updates checked on next restart, no need to check
@@ -43,8 +43,19 @@ export const settings = {
       },
     },
     {
+      name: "Enable Usage Statistics",
+      description: "Tracks some information about your usage on Audio Replacer to display on the home page. All statistics stay on-device",
+      type: "boolean",
+      onChange: async(value: boolean) => {
+        await setValue('settings.allowStatistics', value);
+      },
+      getValue: async(): Promise<boolean> => {
+        return (await getValue('settings.allowNoiseSuppression'));
+      }
+    },
+    {
       name: "Enable Audio Transcription",
-      description: "Enable Whisper audio-to-text transcription. Runs 100% locally on your device",
+      description: "Enable Whisper audio-to-text transcription. Runs on-device",
       type: "boolean",
       onChange: async(value: boolean) => {
         await setValue("settings.enableTranscription", value);
@@ -55,7 +66,7 @@ export const settings = {
     },
     {
       name: "Enable Discord Rich Presence",
-      description: "Displays general info on what you're doing to all your friends on Discord",
+      description: "Displays custom status on your Discord profile while Audio Replacer is running",
       type: "boolean",
       onChange: async(value: boolean) => {
         await setValue('settings.enableRichPresence', value);
@@ -74,7 +85,7 @@ export const settings = {
   Recording: [
     {
       name: "Record Start Delay",
-      description: "Measured in milliseconds",
+      description: "",
       type: "string",
       onChange: async(value: string) => {
         await setValue('settings.recordStartDelay', +value);
@@ -85,7 +96,7 @@ export const settings = {
     },
     {
       name: "Record End Delay",
-      description: "Measured in milliseconds",
+      description: "",
       type: "string",
       onChange: async(value: string) => {
         await setValue('settings.recordEndDelay', +value);
@@ -118,7 +129,7 @@ export const settings = {
     },
     {
       name: "File Sorting Order",
-      description: "What order Audio Replacer will sort audio files in. Takes effect after reloading a project",
+      description: "If a project is loaded, this takes effect on the next file",
       type: "dropdown",
       choices: [
           "Alphabetical",

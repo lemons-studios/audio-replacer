@@ -1,7 +1,7 @@
 <script lang="ts">
   import { getValue, setValue } from "../tools/DataInterface";
   import { onMount } from "svelte";
-  import { setPresenceDetails } from "../tools/DiscordPresenceManager";
+  import {setPresenceDetails, startRichPresence} from "../tools/DiscordPresenceManager";
   import { exists, readTextFile, writeTextFile } from "@tauri-apps/plugin-fs";
   import {format, saveFile, selectFile, selectFolder, sleep, timestampToLegible} from "../tools/OsTools";
   import { createArProj, setActiveProject, updateArprojStats } from "../tools/ProjectHandler";
@@ -10,7 +10,6 @@
   import { ArrowRight, Save, FilePlus, BookOpenText } from "@lucide/svelte";
   import Notification from "../Components/Notification.svelte";
   import { openUrl } from "@tauri-apps/plugin-opener";
-  import Dropdown from "../Components/Dropdown.svelte";
 
   let recentProjectPaths: string[] = $state([]);
   let recentProjectObjs: any[] = $state([]);
@@ -60,6 +59,7 @@
 
   onMount(async() => {
     await initializeData();
+    await startRichPresence();
     await setPresenceDetails("Home Page");
 
     recentProjectPaths = await getValue("settings.recentProjectPaths");
@@ -144,7 +144,7 @@
                   }}
                   onmouseleave={(e) => e.currentTarget.blur()}
                   onmouseup={(e) => e.currentTarget.blur()}>
-            <Save class="w-4 h-4" /> Load Project
+            <Save class="w-4 h-4" />Load Project
           </button>
         </div>
       </div>

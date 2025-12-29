@@ -1,14 +1,17 @@
 <script lang="ts">
   import { onDestroy, onMount } from "svelte";
   import { setPresenceDetails, setPresenceState } from "../../tools/DiscordPresenceManager";
-  import { calculateCompletion, countInputFiles, currentFile, discardFile, fileTranscription, localPath, outputFile, projectLoaded, skipFile, submitFile } from "../../tools/ProjectHandler";
+  import {
+    calculateCompletion, countInputFiles, currentFile, discardFile, fileTranscription, localPath,
+    openOutputFolder, outputFile, projectLoaded, skipFile, submitFile
+  } from "../../tools/ProjectHandler";
   import { cancelRecording, effectFilterNames, endRecording, pitchFilterNames, startCapture } from "./AudioManager";
   import { format } from "../../tools/OsTools";
   import AudioPlayer from "../../Components/AudioPlayer.svelte";
   import { register, unregisterAll } from "@tauri-apps/plugin-global-shortcut";
   import { exists } from "@tauri-apps/plugin-fs";
   import { getValue } from "../../tools/DataInterface";
-  import { ArrowRightLeft, X, Mic, SkipForward, Slash, Square, Check } from "@lucide/svelte";
+  import { ArrowRightLeft, X, Mic, SkipForward, Slash, Square, Check, ExternalLink } from "@lucide/svelte";
   import NoProjectLoaded from "../../Components/NoProjectLoaded.svelte";
   import ToggleSwitch from "../../Components/ToggleSwitch.svelte";
   import ProgressBar from "../../Components/ProgressBar.svelte";
@@ -220,11 +223,11 @@
   <div class="flex flex-col justify-center items-center w-5/8 card rounded-lg">
     <h1 class="font-medium text-2xl text-center">{file}</h1>
     <h3 class="font-light text-sm text-gray-400 mb-5">Files Remaining: {filesRemaining} ({progressPercentage})</h3>
-    <div class="flex flex-row gap-1.5 w-8/10 justify-center mb-15 text-center items-center text-gray-500 text-xs">
+    <div class="flex flex-row gap-1.5 w-8/10 justify-center mb-15 text-center items-center dark:text-gray-500 text-gray-700 text-xs">
      0% <ProgressBar completion={rawProgress}/> 100%
     </div>
     <AudioPlayer bind:this={audioPlayer} source={audioSource}></AudioPlayer>
-    <h3 class="font-light text-gray-300 text-center w-4/5 mb-5">{transcription}</h3>
+    <h3 class=" text-gray-800 dark:text-gray-300 text-center w-4/5 mb-5">{transcription}</h3>
     <div class="flex flex-row gap-5">
       {#each getActiveState() as button}
         <button class="app-btn min-w-30"
@@ -256,6 +259,11 @@
       <ToggleSwitch onClick={extraEdits = !extraEdits} enabled={extraEdits}/>
       <p>Extra Edits Required?</p>
     </div>
+    <button class="app-btn-secondary min-w-60"
+            onmouseleave={(e) => e.currentTarget.blur}
+            onclick={async(e) => {e.currentTarget.blur(); await openOutputFolder()}}>
+      <ExternalLink class="button-icon"/>Open Output Folder
+    </button>
   </div>
 </div>
 {:else}

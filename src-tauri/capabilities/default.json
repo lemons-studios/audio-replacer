@@ -21,13 +21,20 @@
         }
       ]
     },
+    {
+      "identifier": "opener:allow-open-path",
+      "allow": [
+        {
+          "path": "$HOME/**"
+        }
+      ]
+    },
     "audio-recorder:default",
     "core:window:default",
     "core:window:allow-start-dragging",
     "core:app:allow-set-app-theme",
     "dialog:default",
     "drpc:default",
-    "drpc:allow-clear-activity",
     "global-shortcut:allow-register",
     "global-shortcut:allow-unregister-all",
     "fs:allow-home-read-recursive",

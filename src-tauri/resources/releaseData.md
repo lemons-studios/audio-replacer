@@ -16,7 +16,7 @@ Instead of a clunky and hard-to-use text-based data editor, the new Effect Edito
 Audio Replacer can (optionally) track your usage of the app and display it on the Home page as your stats. Don't worry, stats stay on your device and can be deleted at any time
 
 ### Linux Support
-The switch from the Windows App SDK to Tauri has enabled me to create builds for Linux. Currently, only .deb and .rpm packages are available. In the future, I may work on snapcraft of flatpak support, but probably not anytime soon
+The switch from the Windows App SDK to Tauri has enabled me to create builds for Linux. Currently, only .deb and .rpm packages are available.
 
 ## Changes
 ### Improved App Performance

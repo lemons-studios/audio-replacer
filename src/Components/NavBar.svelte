@@ -62,13 +62,21 @@
     <!--Top Menu Items-->
     <div class="menu-container gap-0.5">
         {#each navbarContents.top as item}
-            <button class="nav-btn min-w-30 flex flex-row text-center items-center justify-stretch gap-2" onmouseleave={(e) => e.currentTarget.blur()} onclick={async() => await navigateToPage(item.route)}><item.icon class="w-5 h-5" />{item.name}</button>
+            <button class="nav-btn min-w-30 flex flex-row text-center items-center justify-stretch gap-2"
+                    onmouseleave={(e) => e.currentTarget.blur()}
+                    onclick={async() => await navigateToPage(item.route)}>
+                <item.icon class="w-5 h-5" />{item.name}
+            </button>
         {/each}
     </div>
     <!--Bottom Menu Items-->
     <div class="menu-container gap-0.5">
         {#each navbarContents.bottom as item}
-            <button class="nav-btn min-w-30 flex flex-row text-center items-center justify-start gap-2" onmouseleave={(e) => e.currentTarget.blur()} onclick={async() => await navigateToPage(item.route)}><item.icon class="w-5 h-5" />{item.name}</button>
+            <button class="nav-btn min-w-30 flex flex-row text-center items-center justify-start gap-2"
+                    onmouseleave={(e) => e.currentTarget.blur()}
+                    onclick={async() => await navigateToPage(item.route)}>
+                <item.icon class="w-5 h-5" />{item.name}
+            </button>
         {/each}
         <p class="text-xs text-gray-400">{buildText}</p>
     </div>
