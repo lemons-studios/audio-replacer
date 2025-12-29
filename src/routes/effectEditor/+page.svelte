@@ -26,6 +26,10 @@
     type Filter = { name: string, value: string };
 
     onMount(async() => {
+        if(!projectLoaded) {
+            await setPresenceDetails("Projectless")
+            return;
+        }
         await setPresenceDetails("Editing Effects")
         updateFilters();
     });

@@ -2,7 +2,8 @@
     import { Pause, Play, Infinity, Volume2 } from '@lucide/svelte';
     import { exists, readFile } from "@tauri-apps/plugin-fs";
     import { error, warn } from "@tauri-apps/plugin-log";
-    import { untrack } from "svelte";
+    import { onMount, untrack } from "svelte";
+    import { slide } from "svelte/transition";
 
     let { source } = $props();
     let audioCompletion = $state(0.0);
@@ -19,6 +20,23 @@
 
     // svelte-ignore non_reactive_update
     let volumeSlider: HTMLInputElement;
+
+    // svelte-ignore non_reactive_update
+    let volumeSliderDiv: HTMLDivElement;
+
+    onMount(() => {
+        const handleOutsideClick = (e: MouseEvent) => {
+            const target = e.target as Node;
+            if(volumeSliderDiv && !volumeSliderDiv.contains(target) && volumeVisible) {
+                volumeVisible = false;
+            }
+        }
+
+        document.addEventListener('click', handleOutsideClick);
+        return () => {
+            document.removeEventListener('click', handleOutsideClick);
+        }
+    })
 
     $effect(() => {
         source;
@@ -142,18 +160,13 @@
 
 </script>
 
-{#if volumeVisible}
-    <div class="min-w-50 rounded-lg bg-tertiary dark:bg-tertiary-d p-2 flex flex-row justify-between items-center text-center mb-2">
-        <input type="range" class="w-3/4" min="0" max="100" step="1" value={audioVolume * 100} oninput={updateVolume} bind:this={volumeSlider}>
-        <p>{Math.round(audioVolume * 100)}%</p>
-    </div>
-{/if}
+
 
 <div class="flex flex-row justify-center gap-4 bg-tertiary dark:bg-tertiary-d rounded-lg mx-auto items-center shadow-lg pl-3 pr-4 py-2 mb-2 w-3/4">
     <audio ontimeupdate={audioPlayerTimeUpdate} onended={onAudioEnded} bind:this={audioPlayer} preload="auto" volume={audioVolume}></audio>
     <div class="flex flex-row gap-3 items-center">
         <!--Play/Pause Button-->
-        <div class="transition hover:bg-navigation-hover dark:hover:bg-navigation-hover-d focus:bg-navigation-focus rounded-sm p-0.5">
+        <div class="transition hover:text-neutral-400 focus:text-navigation-focus rounded-sm p-0.5">
             {#if audioPlaying}
                 <Pause class="w-5 h-5" onclick={toggleAudio}></Pause>
             {:else}
@@ -161,7 +174,25 @@
             {/if}
         </div>
         <!--Volume Slider-->
-        <Volume2 class="w-5 h-5" onclick={() => volumeVisible = !volumeVisible}/>
+        <div class="relative flex items-center" bind:this={volumeSliderDiv}>
+            <Volume2 class="w-5 h-5 hover:text-neutral-400"
+                     onclick={() => volumeVisible = !volumeVisible}
+            />
+            {#if volumeVisible}
+                <div class="absolute bottom-full left-1/2 -translate-x-1/2 min-w-50 rounded-lg bg-tertiary dark:bg-tertiary-d p-2 flex flex-row justify-between
+                            items-center text-center mb-2"
+                     transition:slide={{duration: 75}}>
+                    <input type="range"
+                           class="w-3/4"
+                           min="0" max="100"
+                           step="1"
+                           value={audioVolume * 100}
+                           oninput={updateVolume}
+                           bind:this={volumeSlider}>
+                    <p>{Math.round(audioVolume * 100)}%</p>
+                </div>
+            {/if}
+        </div>
 
         <!--Loop Button-->
         {#if loopEnabled}

@@ -51,7 +51,7 @@
             {values[selectedIndex] ?? "No Values"}
         </button>
         {#if dropdownOpen}
-            <div class="absolute dark:bg-tertiary-d bg-tertiary top-full left-0 w-full z-50 flex flex-col max-h-60 overflow-y-auto " transition:slide={{duration: 250}}>
+            <div class="absolute dark:bg-tertiary-d bg-tertiary top-full left-0 w-full z-50 flex flex-col max-h-60 overflow-y-auto " transition:slide={{duration: 175}}>
                 {#each values as label, index}
                     <button class={` dark:text-white font-medium hover:bg-accent focus:bg-accent-secondary transition-colors duration-200 px-4 py-2 w-full text-left border-white/20 ${index === values.length - 1 ? 'border-b border-l border-r rounded-b-lg' : 'border-l border-r'}`}
                             onclick={async() => {await changeSelection(index)}}

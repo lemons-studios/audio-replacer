@@ -2,21 +2,23 @@
   import { onDestroy, onMount } from "svelte";
   import { setPresenceDetails, setPresenceState } from "../../tools/DiscordPresenceManager";
   import {
-    calculateCompletion, countInputFiles, currentFile, discardFile, fileTranscription, localPath,
-    openOutputFolder, outputFile, projectLoaded, skipFile, submitFile
+    calculateCompletion, countInputFiles, currentFile, discardFile,
+    fileTranscription, getArprojProperty, localPath, openOutputFolder,
+    outputFile, projectLoaded, skipFile, submitFile
   } from "../../tools/ProjectHandler";
   import { cancelRecording, effectFilterNames, endRecording, pitchFilterNames, startCapture } from "./AudioManager";
   import { format } from "../../tools/OsTools";
-  import AudioPlayer from "../../Components/AudioPlayer.svelte";
   import { register, unregisterAll } from "@tauri-apps/plugin-global-shortcut";
   import { exists } from "@tauri-apps/plugin-fs";
   import { getValue } from "../../tools/DataInterface";
   import { ArrowRightLeft, X, Mic, SkipForward, Slash, Square, Check, ExternalLink } from "@lucide/svelte";
+  import AudioPlayer from "../../Components/AudioPlayer.svelte";
   import NoProjectLoaded from "../../Components/NoProjectLoaded.svelte";
   import ToggleSwitch from "../../Components/ToggleSwitch.svelte";
   import ProgressBar from "../../Components/ProgressBar.svelte";
   import Notification from "../../Components/Notification.svelte";
   import Dropdown from "../../Components/Dropdown.svelte";
+  import { ask } from "@tauri-apps/plugin-dialog";
 
   let file = $state("No Project Opened");
   let audioSource = $state("");
@@ -40,15 +42,14 @@
   // svelte-ignore non_reactive_update
   let notificationManager: Notification;
 
-  // svelte-ignore non_reactive_update
-  let audioPlayer: AudioPlayer;
-
   const buttons = {
     idle: [
       {
         label: "Skip",
         icon: SkipForward,
         action: async() => {
+          const confirmation = await ask('Are you sure you want to skip this file?', { title: 'Skip File', kind: 'warning' });
+          if(!confirmation) return;
           await skipFile();
           notificationManager.addToNotification('success', 'Success!', 'Skipped File', true, 5000);
           updateContent();
@@ -186,28 +187,31 @@
     filesRemaining = format(countInputFiles());
     transcription = fileTranscription;
     audioSource = currentFile;
-    setPresenceState(`Files Remaining: ${filesRemaining}`);
+    setPresenceState(`Files Remaining: ${filesRemaining} (${progressPercentage})`);
   }
 
   onMount(async() => {
-    if(!projectLoaded) return;
-    await setPresenceDetails("Recording Audio");
+    if(!projectLoaded) {
+      await setPresenceDetails("Projectless")
+      return;
+    }
+    await setPresenceDetails(`Recording Audio in ${await getArprojProperty("name")}`);
 
     // Only refresh on page refresh since the only way they would change is if someone navigated to the editor route
     effects = effectFilterNames;
     pitch = pitchFilterNames;
 
+    updateContent();
+
     for(let i = 0; i < shortcuts.length; i++) {
       await register(shortcuts[i].combination, shortcuts[i].action);
     }
-
-    updateContent();
   });
 
   onDestroy(async() => {
     await setPresenceState(""); // Remove presence state as the rest of the app doesn't use it
     await unregisterAll(); // Unregister all shortcuts
-  });
+  })
 
   function getActiveState() {
     return (idle ? buttons.idle : recording ? buttons.recording : buttons.reviewing)
@@ -226,7 +230,7 @@
     <div class="flex flex-row gap-1.5 w-8/10 justify-center mb-15 text-center items-center dark:text-gray-500 text-gray-700 text-xs">
      0% <ProgressBar completion={rawProgress}/> 100%
     </div>
-    <AudioPlayer bind:this={audioPlayer} source={audioSource}></AudioPlayer>
+    <AudioPlayer source={audioSource}/>
     <h3 class=" text-gray-800 dark:text-gray-300 text-center w-4/5 mb-5">{transcription}</h3>
     <div class="flex flex-row gap-5">
       {#each getActiveState() as button}

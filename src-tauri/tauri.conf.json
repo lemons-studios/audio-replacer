@@ -14,11 +14,10 @@
       {
         "label": "audio-replacer",
         "title": "Audio Replacer",
-        "width": 1265,
-        "minWidth": 1265,
-        "height": 875,
-        "minHeight": 875,
-        "decorations": true
+        "width": 1200,
+        "minWidth": 1200,
+        "height": 900,
+        "minHeight": 900
       }
     ],
     "security": {
