@@ -9,6 +9,7 @@
     import { mount, onMount, unmount } from "svelte";
     import { ask } from "@tauri-apps/plugin-dialog";
     import Notification from "../../Components/Notification.svelte";
+    import {setPresenceDetails} from "../../tools/DiscordPresenceManager";
 
     let pitchValues: string[] = $state([]);
     let pitchNames: string[] = $state([]);
@@ -24,7 +25,8 @@
     let notificationManager: Notification;
     type Filter = { name: string, value: string };
 
-    onMount(() => {
+    onMount(async() => {
+        await setPresenceDetails("Editing Effects")
         updateFilters();
     });
 
