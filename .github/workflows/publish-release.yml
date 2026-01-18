@@ -26,7 +26,7 @@ jobs:
       - name: Setup NodeJS
         uses: actions/setup-node@v4
         with:
-          node-version: latest
+          node-version: lts
 
       - name: install Rust stable
         uses: dtolnay/rust-toolchain@stable
@@ -51,7 +51,6 @@ jobs:
       - name: install frontend dependencies
         run: |
           corepack enable
-          corepack use yarn@v4
           yarn
 
       - uses: tauri-apps/tauri-action@v0
