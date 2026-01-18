@@ -11,19 +11,23 @@
     }
 
     $effect(() => {
-        if(modalEnabled) dialog.showModal();
-        if(!modalEnabled) dialog.close();
+        if (modalEnabled) dialog.showModal();
+        if (!modalEnabled) dialog.close();
     });
 </script>
 
 {#if modalEnabled}
-    <dialog bind:this={dialog}
-            class="duration-300 flex border-2 text-wrap justify-center align-middle items-center p-5 h-auto w-auto dark:text-white dark:border-tertiary-d border-tertiary dark:bg-secondary-d bg-secondary rounded-xl"
-            oncancel={() => modalEnabled = false}>
+    <dialog
+        bind:this={dialog}
+        class="duration-300 flex border-2 text-wrap justify-center align-middle items-center p-5 h-auto w-auto dark:text-white dark:border-tertiary-d border-tertiary dark:bg-secondary-d bg-secondary rounded-xl"
+        oncancel={() => (modalEnabled = false)}
+    >
         {#if closeable}
-        <button class="close-btn rounded-sm align-top mr-2.5"
-                onclick={() => modalEnabled = false}
-                onmouseleave={(e) => e.currentTarget.blur()}><X/></button>
+            <button
+                class="close-btn rounded-sm align-top mr-2.5"
+                onclick={() => (modalEnabled = false)}
+                onmouseleave={(e) => e.currentTarget.blur()}><X /></button
+            >
         {/if}
         <div class="text-wrap px-2 py-4 w-full h-full">
             {@render children?.()}
@@ -37,12 +41,14 @@
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);
-        margin: 0
+        margin: 0;
     }
 
     ::backdrop {
         backdrop-filter: blur(7px);
-        -webkit-backdrop-filter: blur(7px); /*For Linux (Webkit2Gtk) and MacOS (Regular Webkit)*/
+        -webkit-backdrop-filter: blur(
+            7px
+        ); /*For Linux (Webkit2Gtk) and MacOS (Regular Webkit)*/
         background-color: oklch(0.1574 0 82 / 65%);
         z-index: 1000;
     }

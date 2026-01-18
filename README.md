@@ -17,13 +17,16 @@
 </p>
 
 ## ❓ About
+
 Audio Replacer is a tool designed to streamline dubbing over video game voice-overs (or any set of audio files). Originally developed for a future project of mine, but can work for any use case!
 
 ### ✅ Use cases:
+
 - Voice-Over translation mods
 - Have your friend(s) dub over a video game you all love (This is what audio replacer was created for)
 
 ## 🖥️ Features
+
 - Create custom pitch/effect files, powered by FFMpeg
 - Built-in custom data editor
 - Support for Discord Rich presence
@@ -31,17 +34,21 @@ Audio Replacer is a tool designed to streamline dubbing over video game voice-ov
 - Noise suppression supported with RNNNoise
 - Automatic app updates (Windows Only)
 - Hotkeys for common tasks
-  
+
 ## 💾 Install
+
 You can download the [**latest release here**](https://github.com/lemons-studios/audio-replacer/releases/latest).
 
 ### Requirements
+
 - Windows 10, 11, or a Debian/Fedora-based Linux distribution (macOS is <u>unsupported</u>, other Linux builds can work if compiled from sratch)
 - A 64-bit CPU
 - 70-100Mb of free storage space, depending on platform
 
 ## ⚙️ Build From Source
+
 Refer to the [wiki](https://github.com/lemons-studios/audio-replacer/wiki/Developing-Audio-Replacer)
 
 ## ➕ Contributing
+
 Read [CONTRIBUTING.md](https://github.com/lemons-studios/audio-replacer/CONTRIBUTING.md)

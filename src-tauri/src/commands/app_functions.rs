@@ -23,7 +23,7 @@ pub fn in_dev_env() -> bool {
 
 #[command]
 pub fn get_username() -> String {
-    whoami::username()
+    whoami::username().unwrap()
 }
 
 #[command]

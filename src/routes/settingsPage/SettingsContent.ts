@@ -1,174 +1,171 @@
-import { getValue, resetAll, resetSettings, resetStatistics, setValue } from "../../tools/DataInterface";
-import { clearRichPresence, startRichPresence } from "../../tools/DiscordPresenceManager";
+import {
+  getValue,
+  resetAll,
+  resetSettings,
+  resetStatistics,
+  setValue,
+} from "../../tools/DataInterface";
+import {
+  clearRichPresence,
+  startRichPresence,
+} from "../../tools/DiscordPresenceManager";
 import { ask, message } from "@tauri-apps/plugin-dialog";
 import { attemptRelaunch } from "../../tools/OsTools";
 import { Trash2 } from "@lucide/svelte";
 import { setTheme } from "@tauri-apps/api/app";
 import { projectLoaded, sortInputFiles } from "../../tools/ProjectHandler";
-import type {Theme} from "@tauri-apps/api/window";
+import type { Theme } from "@tauri-apps/api/window";
 
 export const settings = {
   General: [
     {
-      name: 'Theme',
-      description: 'Set the app theme',
-      type: 'dropdown',
-      choices: [
-        "Light",
-        "Dark"
-      ],
-      choiceValues: [
-        "light",
-        "dark"
-      ],
-      getValue: async(): Promise<string> => {
-        return (await getValue('settings.theme'));
+      name: "Theme",
+      description: "Set the app theme",
+      type: "dropdown",
+      choices: ["Light", "Dark"],
+      choiceValues: ["light", "dark"],
+      getValue: async (): Promise<string> => {
+        return await getValue("settings.theme");
       },
-      onChange: async(value: string) => {
-        await setValue('settings.theme', value);
-        const verifiedValue: Theme = value === 'dark' ? 'dark' : 'light';  // Fixes error
+      onChange: async (value: string) => {
+        await setValue("settings.theme", value);
+        const verifiedValue: Theme = value === "dark" ? "dark" : "light"; // Fixes error
         await setTheme(verifiedValue);
-      }
+      },
     },
     {
       name: "Check for updates",
       description: "",
       type: "boolean",
-      onChange: async(value: boolean) => {
+      onChange: async (value: boolean) => {
         // Updates checked on next restart, no need to check
-        await setValue('settings.updateCheck', value);
+        await setValue("settings.updateCheck", value);
       },
-      getValue: async(): Promise<boolean> => {
-        return (await getValue('settings.updateCheck'));
+      getValue: async (): Promise<boolean> => {
+        return await getValue("settings.updateCheck");
       },
     },
     {
       name: "Enable Usage Statistics",
-      description: "Tracks some information about your usage on Audio Replacer to display on the home page. All statistics stay on-device",
+      description:
+        "Tracks some information about your usage on Audio Replacer to display on the home page. All statistics stay on-device",
       type: "boolean",
-      onChange: async(value: boolean) => {
-        await setValue('settings.allowStatistics', value);
+      onChange: async (value: boolean) => {
+        await setValue("settings.allowStatistics", value);
       },
-      getValue: async(): Promise<boolean> => {
-        return (await getValue('settings.allowNoiseSuppression'));
-      }
+      getValue: async (): Promise<boolean> => {
+        return await getValue("settings.allowNoiseSuppression");
+      },
     },
     {
       name: "Enable Audio Transcription",
       description: "Enable Whisper audio-to-text transcription. Runs on-device",
       type: "boolean",
-      onChange: async(value: boolean) => {
+      onChange: async (value: boolean) => {
         await setValue("settings.enableTranscription", value);
       },
-      getValue: async(): Promise<boolean> => {
-        return (await getValue('settings.enableTranscription'));
+      getValue: async (): Promise<boolean> => {
+        return await getValue("settings.enableTranscription");
       },
     },
     {
       name: "Enable Discord Rich Presence",
-      description: "Displays custom status on your Discord profile while Audio Replacer is running",
+      description:
+        "Displays custom status on your Discord profile while Audio Replacer is running",
       type: "boolean",
-      onChange: async(value: boolean) => {
-        await setValue('settings.enableRichPresence', value);
-        if(value) {
+      onChange: async (value: boolean) => {
+        await setValue("settings.enableRichPresence", value);
+        if (value) {
           await startRichPresence();
-        }
-        else {
+        } else {
           await clearRichPresence();
         }
       },
-      getValue: async(): Promise<boolean> => {
-        return (await getValue('settings.enableRichPresence'));
+      getValue: async (): Promise<boolean> => {
+        return await getValue("settings.enableRichPresence");
       },
-    }
+    },
   ],
   Recording: [
     {
       name: "Record Start Delay",
       description: "",
       type: "string",
-      onChange: async(value: string) => {
+      onChange: async (value: string) => {
         const num = +value;
-        if(isNaN(num) || num < 0) return;
-        await setValue('settings.recordStartDelay', +value);
+        if (isNaN(num) || num < 0) return;
+        await setValue("settings.recordStartDelay", +value);
       },
-      getValue: async(): Promise<string> => {
-        return (await getValue('settings.recordStartDelay'));
+      getValue: async (): Promise<string> => {
+        return await getValue("settings.recordStartDelay");
       },
     },
     {
       name: "Record End Delay",
       description: "",
       type: "string",
-      onChange: async(value: string) => {
+      onChange: async (value: string) => {
         const num = +value;
-        if(isNaN(num) || num < 0) return;
-        await setValue('settings.recordEndDelay', +value);
+        if (isNaN(num) || num < 0) return;
+        await setValue("settings.recordEndDelay", +value);
       },
-      getValue: async(): Promise<string> => {
-        return (await getValue('settings.recordEndDelay'));
+      getValue: async (): Promise<string> => {
+        return await getValue("settings.recordEndDelay");
       },
     },
     {
       name: "Enable Noise Suppression",
       description: "Apply noise suppression on your recordings",
       type: "boolean",
-      onChange: async(value: boolean) => {
-        await setValue('settings.allowNoiseSuppression', value);
+      onChange: async (value: boolean) => {
+        await setValue("settings.allowNoiseSuppression", value);
       },
-      getValue: async(): Promise<boolean> => {
-        return (await getValue('settings.allowNoiseSuppression'));
+      getValue: async (): Promise<boolean> => {
+        return await getValue("settings.allowNoiseSuppression");
       },
     },
     {
       name: "Noise Suppression Intensity",
-      description: "How much noise should be suppressed (Decimal Value between 0 and 1)",
+      description:
+        "How much noise should be suppressed (Decimal Value between 0 and 1)",
       type: "string",
-      onChange: async(value: string) => {
+      onChange: async (value: string) => {
         const num = +value;
-        if(isNaN(num) || num > 1 || num < 0) return;
-        await setValue('settings.noiseSuppressionIntensity', value);
+        if (isNaN(num) || num > 1 || num < 0) return;
+        await setValue("settings.noiseSuppressionIntensity", value);
       },
-      getValue: async(): Promise<string> => {
-        return (await getValue('settings.noiseSuppressionIntensity'));
-      }
+      getValue: async (): Promise<string> => {
+        return await getValue("settings.noiseSuppressionIntensity");
+      },
     },
     {
       name: "Auto-Accept Recordings",
       description: "You are committed!",
       type: "boolean",
-      onChange: async(value: boolean) => {
-        await setValue('settings.autoAcceptRecordings', value);
+      onChange: async (value: boolean) => {
+        await setValue("settings.autoAcceptRecordings", value);
       },
-      getValue: async(): Promise<boolean> => {
-        return (await getValue('settings.autoAcceptRecordings'));
+      getValue: async (): Promise<boolean> => {
+        return await getValue("settings.autoAcceptRecordings");
       },
     },
     {
       name: "File Sorting Order",
       description: "If a project is loaded, this takes effect on the next file",
       type: "dropdown",
-      choices: [
-          "Alphabetical",
-          "Reverse Alphabetical",
-          "Random"
-      ],
-      choiceValues: [
-          "alphabetical",
-          "reverseAlphabetical",
-          "random"
-      ],
-      getValue: async(): Promise<string> => {
-        return (await getValue('settings.sortingMethod'));
+      choices: ["Alphabetical", "Reverse Alphabetical", "Random"],
+      choiceValues: ["alphabetical", "reverseAlphabetical", "random"],
+      getValue: async (): Promise<string> => {
+        return await getValue("settings.sortingMethod");
       },
-      onChange: async(value: string) => {
-        console.log(`Setting sorting method to ${value}`)
-        await setValue('settings.sortingMethod', value);
-        if(projectLoaded) {
+      onChange: async (value: string) => {
+        console.log(`Setting sorting method to ${value}`);
+        await setValue("settings.sortingMethod", value);
+        if (projectLoaded) {
           await sortInputFiles();
         }
-      }
-    }
+      },
+    },
   ],
   "Danger Zone": [
     {
@@ -177,9 +174,9 @@ export const settings = {
       type: "button",
       buttonText: "Reset",
       icon: Trash2,
-      onClick: async() => {
-        await deletionConfirmation('Statistics');
-      }
+      onClick: async () => {
+        await deletionConfirmation("Statistics");
+      },
     },
     {
       name: "Reset Settings",
@@ -189,7 +186,7 @@ export const settings = {
       icon: Trash2,
       onClick: async () => {
         await deletionConfirmation("Settings");
-      }
+      },
     },
     {
       name: "Reset Settings & Statistics",
@@ -199,18 +196,21 @@ export const settings = {
       icon: Trash2,
       onClick: async () => {
         await deletionConfirmation("All data");
-      }
-    }
-  ]
+      },
+    },
+  ],
 } as const;
 
-const deletionConfirmation = async(dataType: string) => {
-  const confirmation = await ask('Are you sure? This action cannot be reverted', {
-    title: 'Confirm?',
-    kind: 'warning'
-  });
-  if(confirmation) {
-    switch(dataType) {
+const deletionConfirmation = async (dataType: string) => {
+  const confirmation = await ask(
+    "Are you sure? This action cannot be reverted",
+    {
+      title: "Confirm?",
+      kind: "warning",
+    },
+  );
+  if (confirmation) {
+    switch (dataType) {
       case "Statistics":
         await resetStatistics();
         break;
@@ -224,4 +224,4 @@ const deletionConfirmation = async(dataType: string) => {
     await message(`${dataType} reset completed. App will now restart`);
     await attemptRelaunch();
   }
-}
+};

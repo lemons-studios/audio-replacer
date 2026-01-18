@@ -24,9 +24,7 @@
       "csp": null,
       "assetProtocol": {
         "enable": true,
-        "scope": [
-          "**"
-        ]
+        "scope": ["$HOME/**"]
       }
     }
   },
@@ -49,9 +47,7 @@
       "resources/releaseData.md",
       "resources/data.json"
     ],
-    "externalBin": [
-      "binaries/ffmpeg"
-    ],
+    "externalBin": ["binaries/ffmpeg"],
     "linux": {
       "deb": {
         "files": {}

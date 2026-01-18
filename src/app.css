@@ -4,143 +4,144 @@
 
 @plugin "@tailwindcss/typography";
 @theme {
-  /* Light Mode */
-  --color-primary: oklch(0.97 0 0);
-  --color-secondary: oklch(1 0 0);
-  --color-tertiary: oklch(0.94 0 0);
+    /* Light Mode */
+    --color-primary: oklch(0.97 0 0);
+    --color-secondary: oklch(1 0 0);
+    --color-tertiary: oklch(0.94 0 0);
 
-  /* Dark Mode */
-  --color-primary-d: oklch(0.196 0 325);
-  --color-secondary-d: oklch(0.242 0 325);
-  --color-tertiary-d: oklch(0.304 0 325);
+    /* Dark Mode */
+    --color-primary-d: oklch(0.196 0 325);
+    --color-secondary-d: oklch(0.242 0 325);
+    --color-tertiary-d: oklch(0.304 0 325);
 
-  /* Shared Dark/Light Mode colours */
-  --color-accent: oklch(0.5998 0.1398 289.83);
-  --color-accent-secondary: oklch(0.7645 0.1205 289.7);
-  --color-accent-tertiary: oklch(0.1857 0.0223 292.42);
-  --color-accent-shadow: oklch(0.7645 0.1205 289.7 / 20%);
+    /* Shared Dark/Light Mode colours */
+    --color-accent: oklch(0.5998 0.1398 289.83);
+    --color-accent-secondary: oklch(0.7645 0.1205 289.7);
+    --color-accent-tertiary: oklch(0.1857 0.0223 292.42);
+    --color-accent-shadow: oklch(0.7645 0.1205 289.7 / 20%);
 
-  --color-success: oklch(0.67 0.1732 143.19);
-  --color-success-shadow: oklch(0.7227 0.2058 142.98 / 20%);
+    --color-success: oklch(0.67 0.1732 143.19);
+    --color-success-shadow: oklch(0.7227 0.2058 142.98 / 20%);
 
-  --color-warning: oklch(0.9 0.1727 103.76);
-  --color-warning-shadow: oklch(0.9 0.1727 103.76 / 20%);
+    --color-warning: oklch(0.9 0.1727 103.76);
+    --color-warning-shadow: oklch(0.9 0.1727 103.76 / 20%);
 
-  --color-error: oklch(0.5506 0.1828 29.12);
-  --color-error-shadow: oklch(0.5506 0.1828 29.12 / 20%);
+    --color-error: oklch(0.5506 0.1828 29.12);
+    --color-error-shadow: oklch(0.5506 0.1828 29.12 / 20%);
 
-  --color-info: oklch(0.6343 0.1337 240.73);
-  --color-info-shadow: oklch(0.6343 0.1337 240.73 / 20%);
+    --color-info: oklch(0.6343 0.1337 240.73);
+    --color-info-shadow: oklch(0.6343 0.1337 240.73 / 20%);
 
-  --color-progress: oklch(0.5059 0.1949 283.44);
-  --color-progress-shadow: oklch(0.5059 0.1949 283.44 / 20%);
+    --color-progress: oklch(0.5059 0.1949 283.44);
+    --color-progress-shadow: oklch(0.5059 0.1949 283.44 / 20%);
 
-  --color-navigation-hover: oklch(0.8932 0.0051 325.78);
-  --color-navigation-hover-d: oklch(0.3042 0.0051 325.78);
+    --color-navigation-hover: oklch(0.8932 0.0051 325.78);
+    --color-navigation-hover-d: oklch(0.3042 0.0051 325.78);
 
-  --color-navigation-focus-shadow: oklch(0.9228 0.0048 325.72 / 60%);
-  --color-navigation-focus-shadow-d: oklch(0.1929 0.0048 325.72 / 60%);
+    --color-navigation-focus-shadow: oklch(0.9228 0.0048 325.72 / 60%);
+    --color-navigation-focus-shadow-d: oklch(0.1929 0.0048 325.72 / 60%);
 
-  --color-navigation-focus: oklch(1 0 0 / 10%); /* Works on both light and dark mode */
+    --color-navigation-focus: oklch(
+        1 0 0 / 10%
+    ); /* Works on both light and dark mode */
 }
 
 * {
-  font-family: "Poppins", sans-serif;
+    font-family: "Poppins", sans-serif;
 }
 
 html {
-  overflow: hidden;
-  height: 100%;
+    overflow: hidden;
+    height: 100%;
 }
 
 body {
-  height: 100%;
-  overflow: auto;
+    height: 100%;
+    overflow: auto;
 }
 
-
 .media-control-button {
-  @apply transition p-0.5;
+    @apply transition p-0.5;
 }
 
 .notification-overlay {
-  position: fixed !important; 
-  top: 1em;
-  left: 50%;
-  translate: -50%;
-  align-content: center;
+    position: fixed !important;
+    top: 1em;
+    left: 50%;
+    translate: -50%;
+    align-content: center;
 }
 
 .card {
-  @apply dark:bg-secondary-d dark:border-tertiary-d border-tertiary border-2 bg-secondary rounded-xl
+    @apply dark:bg-secondary-d dark:border-tertiary-d border-tertiary border-2 bg-secondary rounded-xl;
 }
 
 .app-btn {
-  @apply transition border-white/10 border bg-accent dark:hover:bg-tertiary-d hover:bg-tertiary px-3 py-1.5 rounded-sm text-lg focus:bg-navigation-focus flex flex-row text-center items-center justify-center gap-2
+    @apply transition border-white/10 border bg-accent dark:hover:bg-tertiary-d hover:bg-tertiary px-3 py-1.5 rounded-sm text-lg focus:bg-navigation-focus flex flex-row text-center items-center justify-center gap-2;
 }
 .app-btn:disabled {
-  @apply bg-tertiary-d
+    @apply bg-tertiary-d;
 }
 
 .app-btn-secondary {
-  @apply w-1/8 border-white/10 border transition duration-200 hover:bg-navigation-hover dark:hover:bg-navigation-hover-d focus:bg-navigation-focus drop-shadow-navigation-focus-shadow-d px-3 py-1.5 rounded-sm flex flex-row text-center items-center justify-center gap-2;
+    @apply w-1/8 border-white/10 border transition duration-200 hover:bg-navigation-hover dark:hover:bg-navigation-hover-d focus:bg-navigation-focus drop-shadow-navigation-focus-shadow-d px-3 py-1.5 rounded-sm flex flex-row text-center items-center justify-center gap-2;
 }
 
 .app-btn-secondary:focus {
-  @media (prefers-color-scheme: dark) {
-    box-shadow: inset 0 0 1em oklch(0.1929 0.0048 325.72 / 60%);
-  }
-  @media (prefers-color-scheme: light) {
-    box-shadow: inset 0 0 1em oklch(0.9228 0.0048 325.72 / 90%);
-  }
+    @media (prefers-color-scheme: dark) {
+        box-shadow: inset 0 0 1em oklch(0.1929 0.0048 325.72 / 60%);
+    }
+    @media (prefers-color-scheme: light) {
+        box-shadow: inset 0 0 1em oklch(0.9228 0.0048 325.72 / 90%);
+    }
 }
 
 .checkbox {
-  @apply w-5 h-5 border rounded-xs bg-accent focus:bg-accent focus:ring-accent-secondary
+    @apply w-5 h-5 border rounded-xs bg-accent focus:bg-accent focus:ring-accent-secondary;
 }
 
 .nav-btn {
-  @apply transition;
-  background: none;
-  width: 10rem;
-  border-radius: 5px;
-  padding: 6px 8px;
-  display: flex;
-  flex-direction: row;
-  align-content: center;
-  align-items: center;
-  column-gap: calc(0.25rem * 2.25);
-  margin-bottom: 3px;
-  z-index: 1024; /* Ensures that the notification overlay will be rendered in front of everything */
+    @apply transition;
+    background: none;
+    width: 10rem;
+    border-radius: 5px;
+    padding: 6px 8px;
+    display: flex;
+    flex-direction: row;
+    align-content: center;
+    align-items: center;
+    column-gap: calc(0.25rem * 2.25);
+    margin-bottom: 3px;
+    z-index: 1024; /* Ensures that the notification overlay will be rendered in front of everything */
 }
 
 .nav-btn {
-  @apply flex flex-row text-center items-center gap-2;
+    @apply flex flex-row text-center items-center gap-2;
 }
 
 .nav-btn:hover {
-  @media (prefers-color-scheme: dark) {
-    background-color: oklch(0.3042 0.0051 325.78);
-  }
-  @media (prefers-color-scheme: light) {
-    background-color: oklch(0.8932 0.0051 325.78);
-  }
+    @media (prefers-color-scheme: dark) {
+        background-color: oklch(0.3042 0.0051 325.78);
+    }
+    @media (prefers-color-scheme: light) {
+        background-color: oklch(0.8932 0.0051 325.78);
+    }
 }
 
 .nav-btn:focus {
-  background-color: oklch(1 0 0 / 10%);
-  @media (prefers-color-scheme: dark) {
-    box-shadow: inset 0 0 1em oklch(0.1929 0.0048 325.72 / 60%);
-  }
-  @media (prefers-color-scheme: light) {
-    box-shadow: inset 0 0 1em oklch(0.9228 0.0048 325.72 / 90%);
-  }
+    background-color: oklch(1 0 0 / 10%);
+    @media (prefers-color-scheme: dark) {
+        box-shadow: inset 0 0 1em oklch(0.1929 0.0048 325.72 / 60%);
+    }
+    @media (prefers-color-scheme: light) {
+        box-shadow: inset 0 0 1em oklch(0.9228 0.0048 325.72 / 90%);
+    }
 }
 
 .dropdown {
-  color: black;
+    color: black;
 }
 
 .button-icon {
-  @apply w-4 h-4;
+    @apply w-4 h-4;
 }

@@ -1,6 +1,6 @@
-<div class='min-w-full'>
-    <div class='h-2.5 min-w-full dark:bg-tertiary-d bg-tertiary overflow-hidden rounded-xl'>
-        <div class='progress min-w-full h-full bg-accent left-right rounded-xl'></div>
+<div class="min-w-full">
+    <div class="h-2.5 min-w-full dark:bg-tertiary-d bg-tertiary overflow-hidden rounded-xl">
+        <div class="progress min-w-full h-full bg-accent left-right rounded-xl"></div>
     </div>
 </div>
 

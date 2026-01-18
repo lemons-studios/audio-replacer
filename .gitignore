@@ -18,3 +18,6 @@ src-tauri/binaries/*
 
 # The rust-analyser extension is being funny and generating a target folder in the project root. Ignore it
 target
+
+# Yarn install Folder
+.yarn/

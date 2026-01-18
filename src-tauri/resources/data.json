@@ -1,23 +1,23 @@
 {
-    "settings": {
-        "theme": "dark",
-        "allowStatistics": true,
-        "autoAcceptRecordings": false,
-        "updateCheck": true,
-        "recentProjectPaths": [],
-        "recordStartDelay": 250,
-        "recordEndDelay": 250,
-        "enableTranscription": true,
-        "enableRichPresence": true,
-        "allowNoiseSuppression": true,
-        "sortingMethod": "alphabetical",
-        "noiseSuppressionIntensity": "0.5"
-    },
-    "statistics": {
-        "filesRecorded": 0,
-        "filesAccepted": 0,
-        "filesRejected": 0,
-        "filesSkipped": 0,
-        "recordingsCancelled": 0
-    }
+  "settings": {
+    "theme": "dark",
+    "allowStatistics": true,
+    "autoAcceptRecordings": false,
+    "updateCheck": true,
+    "recentProjectPaths": [],
+    "recordStartDelay": 250,
+    "recordEndDelay": 250,
+    "enableTranscription": true,
+    "enableRichPresence": true,
+    "allowNoiseSuppression": true,
+    "sortingMethod": "alphabetical",
+    "noiseSuppressionIntensity": "0.5"
+  },
+  "statistics": {
+    "filesRecorded": 0,
+    "filesAccepted": 0,
+    "filesRejected": 0,
+    "filesSkipped": 0,
+    "recordingsCancelled": 0
+  }
 }
