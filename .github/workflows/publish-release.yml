@@ -27,6 +27,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: latest
+          cache: yarn
 
       - name: install Rust stable
         uses: dtolnay/rust-toolchain@stable
@@ -50,8 +51,8 @@ jobs:
       
       - name: install frontend dependencies
         run: |
-          npm i -g yarn@4.12.0
-          corepack use yarn@v4
+          corepack enable
+          corepack prepare yarn@4.12.0 --activate
           yarn
 
       - uses: tauri-apps/tauri-action@v0
@@ -60,7 +61,7 @@ jobs:
           TAURI_SIGNING_PRIVATE_KEY: ${{secrets.AUDIO_REPLACER_PRIVATE_KEY}}
           TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{secrets.AUDIO_REPLACER_PRIVATE_KEY_PASSWORD}}
         with:
-          tagName: __VERSION__ # the action automatically replaces \_\_VERSION\_\_ with the app version.
+          tagName: __VERSION__
           releaseName: "__VERSION__"
           releaseBody: "Change before publishing draft"
           releaseDraft: true
