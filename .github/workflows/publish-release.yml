@@ -52,7 +52,7 @@ jobs:
       - name: install frontend dependencies
         run: |
           corepack enable
-          corepack prepare yarn@4.12.0 --activate
+          corepack use yarn@v4
           yarn
 
       - uses: tauri-apps/tauri-action@v0
